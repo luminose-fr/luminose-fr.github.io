@@ -1,0 +1,23 @@
+body {margin-top:6em;background-color: #FAFAFA; text-align: center;}
+body * {font-family: 'Poiret One', cursive;}
+.main {
+  display: inline-block;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding:1em;
+  font-size: 1.8em;
+  line-height: 0.3em;
+  -webkit-box-shadow: 0px 2px 23px 0px rgba(1,240,255,0.54);
+  box-shadow: 0px 2px 23px 0px rgba(1,240,255,0.54);
+  margin-bottom: 1em;
+}
+.main .link {margin:3em 1.2em 2em 1.2em;}
+.main a.rdv {
+  margin-top:3em;
+  background-color: #01F0FF;
+  color: #014E52;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.7em;
+  padding:1em 1.7em;
+}
