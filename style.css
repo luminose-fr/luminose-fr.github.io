@@ -22,6 +22,24 @@ body * {font-family: 'Poiret One', cursive;}
   padding:1em 1.7em;
 }
 
-@media only screen and (max-width: 438px) {
-
+@media only screen and (max-width: 480px) {
+  body {
+    margin-top:2em;
+    font-size: 15px;
+  }
+  h1 img.logo {
+    width:60%;
+  }
+  .main {
+    padding:0.4em;
+  }
+  .main .link {
+    margin:2em 0em 1em 0em;
+  }
+  .main img.florent {
+    width:60%;
+  }
+  .footer {
+    padding-bottom: 3em;
+  }
 }
