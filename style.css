@@ -21,3 +21,7 @@ body * {font-family: 'Poiret One', cursive;}
   font-size: 0.7em;
   padding:1em 1.7em;
 }
+
+@media only screen and (max-width: 438px) {
+
+}
