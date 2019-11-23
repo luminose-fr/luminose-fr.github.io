@@ -2,51 +2,91 @@
 @import url("https://fast.fonts.net/lt/1.css?apiType=css&c=7d5eecea-6a78-405f-9101-8527f4dd7b18&fontids=5313918");
 @font-face{
     font-family:"Abril Display W05 Italic";
-    src:url("Fonts/5197317/0a5d5485-b415-4692-bc4d-bf1f30dcf946.eot?#iefix");
-    src:url("Fonts/5197317/0a5d5485-b415-4692-bc4d-bf1f30dcf946.eot?#iefix") format("eot"),url("Fonts/5197317/e95ab4d7-0b64-43c7-88ec-c70de2273848.woff2") format("woff2"),url("Fonts/5197317/65d70e48-ef4e-48c6-90b9-3cb9f247dcfd.woff") format("woff"),url("Fonts/5197317/6be7e520-0945-476a-8ac2-10c029effcfe.ttf") format("truetype");
+    src:url("fonts/5197317/0a5d5485-b415-4692-bc4d-bf1f30dcf946.eot?#iefix");
+    src:url("fonts/5197317/0a5d5485-b415-4692-bc4d-bf1f30dcf946.eot?#iefix") format("eot"),url("Fonts/5197317/e95ab4d7-0b64-43c7-88ec-c70de2273848.woff2") format("woff2"),url("Fonts/5197317/65d70e48-ef4e-48c6-90b9-3cb9f247dcfd.woff") format("woff"),url("Fonts/5197317/6be7e520-0945-476a-8ac2-10c029effcfe.ttf") format("truetype");
 }
 @font-face{
     font-family:"Futura LT W05 Book";
-    src:url("Fonts/5313918/a411c21e-f439-48c1-bddb-887ec08b5224.eot?#iefix");
-    src:url("Fonts/5313918/a411c21e-f439-48c1-bddb-887ec08b5224.eot?#iefix") format("eot"),url("Fonts/5313918/7a337894-f253-4a5d-a63e-0d8275cedec5.woff2") format("woff2"),url("Fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff") format("woff"),url("Fonts/5313918/feaf9b77-0958-45fa-96c3-1afc445987ef.ttf") format("truetype");
+    src:url("fonts/5313918/a411c21e-f439-48c1-bddb-887ec08b5224.eot?#iefix");
+    src:url("fonts/5313918/a411c21e-f439-48c1-bddb-887ec08b5224.eot?#iefix") format("eot"),url("Fonts/5313918/7a337894-f253-4a5d-a63e-0d8275cedec5.woff2") format("woff2"),url("Fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff") format("woff"),url("Fonts/5313918/feaf9b77-0958-45fa-96c3-1afc445987ef.ttf") format("truetype");
 }
 
-body {margin-top:4em;background-color: #FAFAFA; text-align: center; color:#6163A5;}
-body * {font-family: 'Futura LT W05 Book', sans-serif;}
+body {
+  font-size: 17px;
+  margin-top:4em;
+  background-color: #FAFAFA;
+  text-align: center;
+  color:#6163A5;
+}
+body,
+body * {
+  font-family: 'Futura LT W05 Book', sans-serif;
+  letter-spacing: 0.03em;
+}
+hr {
+    display:block;
+    border:0px;
+    height:27px;
+    background-image:url('images/hr.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+@media
+  (-webkit-min-device-pixel-ratio: 2),
+  (min-resolution: 192dpi) {
+  hr {
+    background-image:url('images/hr@2x.png');
+  }
+}
 h1 img.logo {
   margin-bottom:1em;
+}
+h2 {
+  font-size: 1em;
+  text-transform: uppercase;
 }
 .main {
   display: inline-block;
   background-color: #FFFFFF;
   border-radius: 8px;
   padding:1em;
-  font-size: 1.7em;
-  line-height: 0.3em;
   -webkit-box-shadow: 0px 2px 23px 0px rgba(97,99,165,0.2);
   box-shadow: 0px 2px 23px 0px rgba(97,99,165,0.2);
   margin-bottom: 1em;
 }
-.main .job {font-family:"Abril Display W05 Italic";}
+.main .person { font-size: 1.7em; line-height: 0.3em;}
+.main .job {font-family:"Abril Display W05 Italic"; font-size: 1.2em; line-height: 0.3em;}
 .main .link {margin:3em 1.2em 2em 1.2em; }
-.main .note {color:#555555; width: 20em;font-size: 0.6em; line-height: 1.2em;}
+.main .note {color:#555555; width: 17em; padding: 1em; }
 .main a.rdv {
   margin-top:3em;
   background-color: #6163A5;
   color: #ffffff;
   text-decoration: none;
   border-radius: 8px;
-  font-size: 0.7em;
   padding:1em 1.7em;
+  transition: 0.3s;
+}
+.main a.rdv:hover {
+  background-color: #60407F;
+  color: #ffffff;
+}
+.main .motivations {
+
+}
+.footer {
+
 }
 
 @media only screen and (max-width: 480px) {
   body {
-    margin-top:2em;
+    margin-top:1em;
     font-size: 15px;
   }
   h1 img.logo {
     width:60%;
+    margin-bottom:0;
   }
   .main {
     padding:0.4em;
