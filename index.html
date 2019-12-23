@@ -1,33 +1,157 @@
+---
+title: Luminose - Florent Jaouali - Hypnothérapie
+excerpt: L’hypnose vous ouvre l'accès à vos ressources inconscientes en créeant un état de conscience élargi. L'hypnothérapie est l'utilisation de cet état pour vous permettre d'atteindre vos objectifs de mieux être et d'épanouissement.
+---
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Luminose - Florent Jaouali - Hypnothérapie</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="author" content="Florent Jaouali">
-<link href="https://fonts.googleapis.com/css?family=Poiret+One&display=swap" rel="stylesheet">
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="style.css">
-<link rel="icon" type="image/png" href="favicon.png" />
+  <meta charset="UTF-8">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Florent Jaouali">
+  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% endif %}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  {% if jekyll.environment == "production" %}
+  <link rel="stylesheet" href="/css/luminose.min.css">
+  {% else %}
+  <link rel="stylesheet" href="/css/luminose.css">
+  {% endif %}
+  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+  <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
 </head>
 
 <body>
-  <h1><img class="logo" src="images/luminose-logo.png" srcset="images/luminose-logo.png, images/luminose-logo@2x.png 2x" alt="Luminose"></h1>
-  <div class="main">
-    <img class="florent" src="images/florent.png" srcset="images/florent.png, images/florent@2x.png 2x" alt="Florent Jaouali">
-    <p class="person">Florent Jaouali</p>
-    <p class="job">Hypnothérapie</p>
-    <div class="link">
-      <a class="rdv" href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/luminose/rdv?text_color=014e52&primary_color=03A3CE'});return false;">Prendre un rendez-vous</a>
+  <section class="section">
+    <div class="container has-text-centered">
+      <h1><img class="logo" src="images/luminose-logo.png" srcset="images/luminose-logo.png, images/luminose-logo@2x.png 2x" alt="Luminose"></h1>
+      <div class="box main">
+        <div class="columns is-vcentered">
+          <div class="column is-half picture">
+            <img class="florent" src="images/florent.png" srcset="images/florent.png, images/florent@2x.png 2x" alt="Florent Jaouali">
+          </div>
+          <div class="column is-narrow">
+            <div class="has-text-centered">
+              <h2 class="title is-2 person">Florent Jaouali</h2>
+              <h3 class="subtitle is-3 job">Hypnothérapeute</h3>
+              <div class="link">
+                <a class="button is-primary is-medium" href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/luminose/rdv?text_color=014e52&primary_color=03A3CE'});return false;">Prendre un rendez-vous</a>
+              </div>
+              <p class="content is-small">D’autres dates peuvent être possibles.<br /> Contactez-moi par téléphone : 06 37 33 26 55.</p>
+            </div>
+          </div>
+          <div class="column">
+          </div>
+      </div>
     </div>
-    <p class="note">Si aucune date ne vous convient, téléphonez pour que nous en trouvions une autre.</p>
-  </div>
+  </section>
+  <section class="section">
+    <div class="container has-text-centered">
+      <h2 class="title is-2">À quoi sert l’hypnothérapie ?</h2>
+      <p>L’hypnose vous ouvre l'accès à vos ressources inconscientes en créeant un état de conscience élargi. L'hypnothérapie est l'utilisation de cet état pour vous permettre d'atteindre vos objectifs de mieux être et d'épanouissement.</p>
+    </div>
+  </section>
+  <section class="section light-bg">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <h3 class="subtitle is-3 has-text-centered">Libérez-vous</h3>
+          <div class="content">
+            <p>Dépassez les difficultés que vous rencontrez :</p>
+            <ul>
+              <li><strong>Changez vos habitudes</strong> et comportements (cigarette, alcool, alimentation, addictions, etc.).</li>
+              <li><strong>Régulez vos émotions</strong> (stress, angoisses, peurs, phobies, etc.).</li>
+              <li><strong>Traversez les moments de vie difficiles</strong> (traumatismes, burn-out, séparations, deuils, troubles du sommeil, etc.).</li>
+              <li><strong>Apaisez vos douleurs</strong> (aigues et chroniques).</li>
+              <li><strong>Gagnez de la confiance en vous</strong>, de la sérénité, de la joie.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="vsplitter column"></div>
+        <div class="column">
+          <h3 class="subtitle is-3 has-text-centered">Révélez-vous</h3>
+            <div class="content">
+              <p>Devenez pleinement vous :</p>
+              <ul>
+                <li><strong>Découvrez-vous</strong> (valeurs, motivations, questionnements existentiels, but de vie, etc.).</li>
+                <li><strong>Clarifiez votre chemin de vie</strong> (orientation professionnelle, personnelle, familiale, choix de vie etc.).</li>
+                <li><strong>Déployez-vous</strong> (développez vos compétences, définissez et atteignez vos objectifs, etc.).</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="light-bg"/>
+
+  <section class="section seances">
+    <div class="container has-text-centered">
+      <h2 class="title is-2">Les séances</h2>
+    </div>
+    <div class="container">
+      <div class="columns has-text-centered">
+        <div class="column">
+          <h3 class="subtitle is-3">Durée</h3>
+          <div class="content">
+            <span class="tag is-medium">~1h15</span>
+          </div>
+        </div>
+        <div class="column">
+          <h3 class="subtitle is-3">Tarifs</h3>
+          <div class="content">
+            <span class="tag is-medium">80€</span>
+            <p class="content is-small">Payable par chèque ou espèce.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <h3 class="subtitle is-3 has-text-centered">Déroulement</h3>
+          <div class="content">
+            <p>Les séances se déroulent en 3 temps :</p>
+            <ol>
+              <li>Définition de votre objectif</li>
+              <li>Travail hypnotique</li>
+              <li>Discussion</li>
+            </ol>
+            <p>Elles peuvent contenir de la formation à l’auto-hypnose et des conseils de travail à domicile.</p>
+          </div>
+        </div>
+        <div class="column">
+          <h3 class="subtitle is-3 has-text-centered">Nombre de séances</h3>
+          <div class="content">
+            <p>Le nombre de séances dépend principalement de votre objectif.</p>
+            <p>Dans la majeure partie des cas, quelques séances suffisent (1 à 4).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <hr />
-  <div class="footer">
-    <p>95 avenue de Saint Ouen, 75 017 Paris <br />
-    06 37 33 26 55</p>
-  </div>
+
+  <section class="section light-bg">
+    <div class="container has-text-centered">
+      <h2 class="title is-2">Le lieu</h2>
+      <p>Les séances se déroulent à mon domicile au 95 avenue de Saint Ouen, 75 017 Paris.</p>
+      <p>Il n’y a donc pas de salle d’attente mais je peux vous accueillir quelques minutes avant l’heure de votre rendez-vous.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>Florent Jaouali</p>
+      <p>95 avenue de Saint Ouen, 75 017 Paris</p>
+      <p>06 37 33 26 55 - florent@luminose.fr</p>
+    </div>
+  </footer>
+  <div class="content has-text-centered copyright">© 2019-2020, Luminose.fr</div>
 </body>
 
 </html>
