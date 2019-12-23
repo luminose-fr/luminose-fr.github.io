@@ -49,7 +49,20 @@ $footer-background-color: $purple-heavy;
 $footer-color: #FFFFFF;
 $footer-padding: 1.5rem;
 
-@import "../_modules/bulma-0.8.0/bulma.sass";
+//@import "../_modules/bulma-0.8.0/bulma.sass";
+
+// Import only what you need from Bulma
+@import "../_modules/bulma-0.8.0/sass/utilities/_all.sass";
+@import "../_modules/bulma-0.8.0/sass/base/_all.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/button.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/container.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/content.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/title.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/box.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/tag.sass";
+@import "../_modules/bulma-0.8.0/sass/grid/columns.sass";
+@import "../_modules/bulma-0.8.0/sass/layout/footer.sass";
+@import "../_modules/bulma-0.8.0/sass/layout/section.sass";
 
 body,
 body * {
