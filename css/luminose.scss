@@ -18,6 +18,14 @@
         url("/fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff") format("woff"),
         url("/fonts/5313918/feaf9b77-0958-45fa-96c3-1afc445987ef.ttf") format("truetype");
 }
+@font-face{
+    font-family:"Futura LT W05 Medium";
+    src:url("/fonts/ext/ext2.eot?#iefix");
+    src:url("/fonts/ext/ext2.eot?#iefix") format("eot"),
+        url("/fonts/ext/ext2.woff2") format("woff2"),
+        url("/fonts/ext/ext2.woff") format("woff"),
+        url("/fonts/ext/ext2.ttf") format("truetype");
+}
 
 // Set your brand colors
 $purple: #6163A5;
@@ -67,6 +75,9 @@ $footer-padding: 1.5rem;
 body,
 body * {
   letter-spacing: 0.02em;
+}
+strong {
+  font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
 }
 .title.is-2 {
   font-size: 1.8em;
