@@ -1,0 +1,101 @@
+---
+title: Effectuez votre paiement - Luminose
+excerpt: A rédiger
+---
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{{ page.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Florent Jaouali">
+  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% endif %}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  {% if jekyll.environment == "production" %}
+  <link rel="stylesheet" href="/css/luminose.min.css">
+  {% else %}
+  <link rel="stylesheet" href="/css/luminose.css">
+  {% endif %}
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Load Stripe.js on your website. -->
+  <script src="https://js.stripe.com/v3"></script>
+</head>
+
+<body>
+  <section class="section">
+    <div class="container has-text-centered">
+
+      <!-- Create a button that your customers click to complete their purchase. Customize the styling to suit your branding. -->
+      <button
+        style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+        id="checkout-button-sku_Gx1K8uZHwT5Obc"
+        role="link"
+      >
+        Checkout
+      </button>
+
+      <div id="error-message"></div>
+
+      <script>
+      (function() {
+        var stripe = Stripe('pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg');
+
+        var checkoutButton = document.getElementById('checkout-button-sku_Gx1K8uZHwT5Obc');
+        checkoutButton.addEventListener('click', function () {
+          // When the customer clicks on the button, redirect
+          // them to Checkout.
+          stripe.redirectToCheckout({
+            items: [{sku: 'sku_Gx1K8uZHwT5Obc', quantity: 1}],
+
+            // Do not rely on the redirect to the successUrl for fulfilling
+            // purchases, customers may not always reach the success_url after
+            // a successful payment.
+            // Instead use one of the strategies described in
+            // https://stripe.com/docs/payments/checkout/fulfillment
+            successUrl: 'https://www.luminose.fr/success',
+            cancelUrl: 'https://www.luminose.fr/canceled',
+          })
+          .then(function (result) {
+            if (result.error) {
+              // If `redirectToCheckout` fails due to a browser or network
+              // error, display the localized error message to your customer.
+              var displayError = document.getElementById('error-message');
+              displayError.textContent = result.error.message;
+            }
+          });
+        });
+      })();
+      </script>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>Florent Jaouali</p>
+      <p>95 avenue de Saint Ouen, 75 017 Paris</p>
+      <p>06 37 33 26 55 - florent@luminose.fr</p>
+    </div>
+  </footer>
+  <div class="content has-text-centered copyright">© 2019-2020, Luminose.fr</div>
+
+  {% if jekyll.environment == "production" %}
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-754802-11"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-754802-11');
+  </script>
+  {% endif %}
+
+
+</body>
+
+</html>
