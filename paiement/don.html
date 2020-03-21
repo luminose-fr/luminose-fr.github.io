@@ -55,7 +55,7 @@ title: Effectuez votre paiement - Luminose
 
   <script>
   (function() {
-    var stripe = Stripe('pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo');
+    var stripe = Stripe('pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg');
 
     // Test :       pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo
     // Production : pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg
@@ -70,7 +70,7 @@ title: Effectuez votre paiement - Luminose
       if ((amountField.value != '') && (!isNaN(amountField.value))) {
         quantity = parseInt(amountField.value);
         stripe.redirectToCheckout({
-          items: [{sku: 'sku_Gx1Z6Ilpxeq8Hv', quantity: quantity}],
+          items: [{sku: 'sku_Gx1K8uZHwT5Obc', quantity: quantity}],
           // Test :        sku_Gx1Z6Ilpxeq8Hv
           // Production :  sku_Gx1K8uZHwT5Obc
 
