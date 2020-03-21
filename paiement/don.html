@@ -1,6 +1,5 @@
 ---
 title: Effectuez votre paiement - Luminose
-excerpt: A rédiger
 ---
 <!DOCTYPE html>
 <html>
@@ -9,7 +8,6 @@ excerpt: A rédiger
   <title>{{ page.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="author" content="Florent Jaouali">
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% endif %}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   {% if jekyll.environment == "production" %}
   <link rel="stylesheet" href="/css/luminose.min.css">
@@ -24,64 +22,79 @@ excerpt: A rédiger
 
   <!-- Load Stripe.js on your website. -->
   <script src="https://js.stripe.com/v3"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 
-<body>
+<body class="paiement">
   <section class="section">
     <div class="container has-text-centered">
+      <h1><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></h1>
+      <div class="box main">
+        <h2 class="title is-2">Don conscient</h2>
+        <p class="content">Vous avez réalisé une séance d'accompagnement à distance proposée exceptionnement pendant la période de confinement suite au COVID-19.</p>
+        <p class="content">Choisissez le montant que vous souhaitez payer. Vous serez ensuite redirigés vers la page de paiement sécurisé.</p>
+        <label class="label">Quel montant souhaitez-vous payer ?</label>
+          <div class="field">
+            <div class="control has-icons-right amount-input">
+              <input id="montant-paiement" class="input is-medium">
+              <span class="icon is-small is-right">
+                <i class="fas fa-euro-sign"></i>
+              </span>
+            </div><!--
+         --><div class="control submit">
+              <button id="bouton-paiement" class="button is-link is-primary is-medium" role="link">Payer</button>
+            </div>
+          </div>
 
-      <!-- Create a button that your customers click to complete their purchase. Customize the styling to suit your branding. -->
-      <button
-        style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
-        id="checkout-button-sku_Gx1K8uZHwT5Obc"
-        role="link"
-      >
-        Checkout
-      </button>
-
-      <div id="error-message"></div>
-
-      <script>
-      (function() {
-        var stripe = Stripe('pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg');
-
-        var checkoutButton = document.getElementById('checkout-button-sku_Gx1K8uZHwT5Obc');
-        checkoutButton.addEventListener('click', function () {
-          // When the customer clicks on the button, redirect
-          // them to Checkout.
-          stripe.redirectToCheckout({
-            items: [{sku: 'sku_Gx1K8uZHwT5Obc', quantity: 1}],
-
-            // Do not rely on the redirect to the successUrl for fulfilling
-            // purchases, customers may not always reach the success_url after
-            // a successful payment.
-            // Instead use one of the strategies described in
-            // https://stripe.com/docs/payments/checkout/fulfillment
-            successUrl: 'https://www.luminose.fr/success',
-            cancelUrl: 'https://www.luminose.fr/canceled',
-          })
-          .then(function (result) {
-            if (result.error) {
-              // If `redirectToCheckout` fails due to a browser or network
-              // error, display the localized error message to your customer.
-              var displayError = document.getElementById('error-message');
-              displayError.textContent = result.error.message;
-            }
-          });
-        });
-      })();
-      </script>
+        <div id="error-message"></div>
+      </div>
     </div>
   </section>
 
-  <footer class="footer">
-    <div class="content has-text-centered">
-      <p>Florent Jaouali</p>
-      <p>95 avenue de Saint Ouen, 75 017 Paris</p>
-      <p>06 37 33 26 55 - florent@luminose.fr</p>
-    </div>
-  </footer>
   <div class="content has-text-centered copyright">© 2019-2020, Luminose.fr</div>
+
+  <script>
+  (function() {
+    var stripe = Stripe('pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo');
+
+    // Test :       pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo
+    // Production : pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg
+
+    var checkoutButton = document.getElementById('bouton-paiement');
+    var amountField = document.getElementById('montant-paiement');
+    var quantity = 1;
+    checkoutButton.addEventListener('click', function () {
+      // When the customer clicks on the button, redirect
+      // them to Checkout.
+
+      if ((amountField.value != '') && (!isNaN(amountField.value))) {
+        quantity = parseInt(amountField.value);
+        stripe.redirectToCheckout({
+          items: [{sku: 'sku_Gx1Z6Ilpxeq8Hv', quantity: quantity}],
+          // Test :        sku_Gx1Z6Ilpxeq8Hv
+          // Production :  sku_Gx1K8uZHwT5Obc
+
+          // Do not rely on the redirect to the successUrl for fulfilling
+          // purchases, customers may not always reach the success_url after
+          // a successful payment.
+          // Instead use one of the strategies described in
+          // https://stripe.com/docs/payments/checkout/fulfillment
+          successUrl: 'https://www.luminose.fr/paiement/confirmation.html',
+          cancelUrl: 'https://www.luminose.fr/paiement/annulation.html',
+        })
+        .then(function (result) {
+          if (result.error) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer.
+            var displayError = document.getElementById('error-message');
+            displayError.textContent = result.error.message;
+            displayError.className = "notification is-danger"
+          }
+        });
+      }
+    });
+  })();
+  </script>
 
   {% if jekyll.environment == "production" %}
   <!-- Global site tag (gtag.js) - Google Analytics -->

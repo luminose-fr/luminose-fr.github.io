@@ -1,0 +1,54 @@
+---
+title: Votre paiement est terminé - Luminose
+---
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{{ page.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Florent Jaouali">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  {% if jekyll.environment == "production" %}
+  <link rel="stylesheet" href="/css/luminose.min.css">
+  {% else %}
+  <link rel="stylesheet" href="/css/luminose.css">
+  {% endif %}
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+</head>
+
+<body class="paiement">
+  <section class="section">
+    <div class="container has-text-centered">
+      <h1><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></h1>
+      <div class="box main">
+        <h2 class="title is-2">Paiement terminé !</h2>
+        <p class="content">Votre paiement a bien été effectué.</p>
+        <p class="content">Merci :)</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="content has-text-centered copyright">© 2019-2020, Luminose.fr</div>
+
+  {% if jekyll.environment == "production" %}
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-754802-11"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-754802-11');
+  </script>
+  {% endif %}
+
+
+</body>
+
+</html>

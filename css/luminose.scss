@@ -65,9 +65,14 @@ $footer-padding: 1.5rem;
 @import "../_modules/bulma-0.8.0/sass/elements/button.sass";
 @import "../_modules/bulma-0.8.0/sass/elements/container.sass";
 @import "../_modules/bulma-0.8.0/sass/elements/content.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/icon.sass";
+@import "../_modules/bulma-0.8.0/sass/elements/notification.sass";
 @import "../_modules/bulma-0.8.0/sass/elements/title.sass";
 @import "../_modules/bulma-0.8.0/sass/elements/box.sass";
 @import "../_modules/bulma-0.8.0/sass/elements/tag.sass";
+@import "../_modules/bulma-0.8.0/sass/form/shared.sass";
+@import "../_modules/bulma-0.8.0/sass/form/input-textarea.sass";
+@import "../_modules/bulma-0.8.0/sass/form/tools.sass";
 @import "../_modules/bulma-0.8.0/sass/grid/columns.sass";
 @import "../_modules/bulma-0.8.0/sass/layout/footer.sass";
 @import "../_modules/bulma-0.8.0/sass/layout/section.sass";
@@ -156,6 +161,25 @@ hr.light-bg {
   border-bottom: 3rem $purple-light solid;
   background-image:url('/images/hr-heavy.png');
 }
+.paiement .box.main {
+  padding: 5em;
+}
+.paiement .box.main .control.amount-input {
+  width: 120px;
+  display: inline-block;
+}
+.paiement .box.main .control.submit {
+  display: inline-block;
+}
+.paiement .box.main .control.amount-input input {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.paiement .box.main .control.submit button {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
 @media
   (-webkit-min-device-pixel-ratio: 2),
   (min-resolution: 192dpi) {
