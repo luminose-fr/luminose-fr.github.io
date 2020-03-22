@@ -3817,4 +3817,7 @@ hr.light-bg {
     background-image: url("/images/hr-heavy@2x.png"); } }
 @media only screen and (max-width: 768px) {
   .main .column.picture {
-    text-align: center; } }
+    text-align: center; }
+
+  .paiement .box.main {
+    padding: 1.25rem; } }
