@@ -57,25 +57,26 @@ $footer-background-color: $purple-heavy;
 $footer-color: #FFFFFF;
 $footer-padding: 1.5rem;
 
-//@import "../_modules/bulma-0.8.0/bulma.sass";
+//@import "../_modules/bulma-0.8.2/bulma.sass";
 
 // Import only what you need from Bulma
-@import "../_modules/bulma-0.8.0/sass/utilities/_all.sass";
-@import "../_modules/bulma-0.8.0/sass/base/_all.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/button.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/container.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/content.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/icon.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/notification.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/title.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/box.sass";
-@import "../_modules/bulma-0.8.0/sass/elements/tag.sass";
-@import "../_modules/bulma-0.8.0/sass/form/shared.sass";
-@import "../_modules/bulma-0.8.0/sass/form/input-textarea.sass";
-@import "../_modules/bulma-0.8.0/sass/form/tools.sass";
-@import "../_modules/bulma-0.8.0/sass/grid/columns.sass";
-@import "../_modules/bulma-0.8.0/sass/layout/footer.sass";
-@import "../_modules/bulma-0.8.0/sass/layout/section.sass";
+@import "../_modules/bulma-0.8.2/sass/utilities/_all.sass";
+@import "../_modules/bulma-0.8.2/sass/base/_all.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/button.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/container.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/content.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/icon.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/notification.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/title.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/box.sass";
+@import "../_modules/bulma-0.8.2/sass/elements/tag.sass";
+@import "../_modules/bulma-0.8.2/sass/components/modal.sass";
+@import "../_modules/bulma-0.8.2/sass/form/shared.sass";
+@import "../_modules/bulma-0.8.2/sass/form/input-textarea.sass";
+@import "../_modules/bulma-0.8.2/sass/form/tools.sass";
+@import "../_modules/bulma-0.8.2/sass/grid/columns.sass";
+@import "../_modules/bulma-0.8.2/sass/layout/footer.sass";
+@import "../_modules/bulma-0.8.2/sass/layout/section.sass";
 
 body,
 body * {
@@ -178,6 +179,58 @@ hr.light-bg {
 .paiement .box.main .control.submit button {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+}
+
+.delete {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: rgba(10, 10, 10, .2);
+    border: none;
+    border-radius: 290486px;
+    cursor: pointer;
+    pointer-events: auto;
+    display: inline-block;
+    flex-grow: 0;
+    flex-shrink: 0;
+    font-size: 0;
+    height: 20px;
+    max-height: 20px;
+    max-width: 20px;
+    min-height: 20px;
+    min-width: 20px;
+    outline: 0;
+    position: relative;
+    vertical-align: top;
+    width:20px
+}
+
+.delete::after, .delete::before {
+    background-color: #fff;
+    content: "";
+    display: block;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    transform-origin:center center
+}
+
+.delete::before {
+    height: 2px;
+    width:50%
+}
+
+.delete::after {
+    height: 50%;
+    width:2px
+}
+
+.delete:focus, .delete:hover {
+    background-color:rgba(10, 10, 10, .3)
+}
+
+.delete:active {
+    background-color:rgba(10, 10, 10, .4)
 }
 
 @media

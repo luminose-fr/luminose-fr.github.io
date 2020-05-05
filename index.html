@@ -11,12 +11,13 @@ excerpt: L’hypnose vous ouvre l'accès à vos ressources inconscientes en cré
   <meta name="author" content="Florent Jaouali">
   <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% endif %}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
   {% if jekyll.environment == "production" %}
   <link rel="stylesheet" href="/css/luminose.min.css">
   {% else %}
   <link rel="stylesheet" href="/css/luminose.css">
   {% endif %}
-  
+
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -150,7 +151,43 @@ excerpt: L’hypnose vous ouvre l'accès à vos ressources inconscientes en cré
       <p>06 37 33 26 55 - florent@luminose.fr</p>
     </div>
   </footer>
-  <div class="content has-text-centered copyright">© 2019-2020, Luminose.fr</div>
+
+  <div class="content has-text-centered copyright">
+    <p><a href="#" id="bt-mentions-legales">Mentions légales</a></p>
+    <p>© 2019-2020, Luminose.fr</p>
+  </div>
+
+
+  <div id="md-mentions-legales" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Mentions légales</p>
+        <button class="delete" aria-label="close" data-bulma-modal="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="content">
+          <h3>Hypnothérapie et médecine</h3>
+          <p>Je ne suis ni médecin, ni psychiatre. Je ne fais donc pas de diagnostics, ne soigne pas et ne guéris pas. Les séances sont réalisées dans le cadre d’un accompagnement et de démarche de solutions à l’exclusion de tout objectif médical (ou paramédical) et ne peuvent en aucun cas se substituer à un avis médical. Elles ne dispensent en aucun cas de consulter un professionnel de la santé, chaque fois que cela est nécessaire. Seul un médecin est habilité à poser des diagnostics, prescrire, modifier ou supprimer tout traitement médical. Toute question relevant du domaine médical est à poser à votre médecin traitant.</p>
+          <h3>Médiation à la consommation</h3>
+          <p>Conformément aux articles L.616-1 et R.616-1 du code de la consommation, notre société a mis en place un dispositif de médiation de la consommation. L'entité de médiation retenue est : SAS CNPM - MÉDIATION - CONSOMMATION. En cas de litige, le consommateur pourra déposer sa réclamation sur le site : <a href="http://cnpm-mediation-consommation.eu" target="_blank">http://cnpm-mediation-consommation.eu</a> ou par voie postale en écrivant à :</p>
+          <blockquote>CNPM - MÉDIATION - CONSOMMATION<br />27, avenue de la Libération – 42400 SAINT-CHAMOND</blockquote>
+        </div>
+      </section>
+      <footer class="modal-card-foot has-text-centered">
+        <button class="button" data-bulma-modal="close">Fermer</button>
+      </footer>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var btn = document.querySelector('#bt-mentions-legales');
+    var mdl = new BulmaModal("#md-mentions-legales");
+
+    btn.addEventListener("click", function () {
+    	mdl.show();
+    })
+  </script>
 
   {% if jekyll.environment == "production" %}
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -163,7 +200,6 @@ excerpt: L’hypnose vous ouvre l'accès à vos ressources inconscientes en cré
     gtag('config', 'UA-754802-11');
   </script>
   {% endif %}
-
 
 </body>
 
