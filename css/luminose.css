@@ -3890,6 +3890,29 @@ strong {
 .container {
   max-width: 720px; }
 
+.confinement {
+  color: #515151;
+  padding: 0rem 1.5rem 0rem 1.5rem; }
+
+.confinement .container {
+  border: 2px #DBFED2 solid;
+  border-radius: 8px;
+  padding: 1.5em; }
+
+.confinement strong {
+  border-radius: 8px;
+  background-color: #DBFED2;
+  align-items: center;
+  color: #277215;
+  display: inline-flex;
+  height: 2em;
+  justify-content: center;
+  line-height: 1.5;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  white-space: nowrap;
+  font-weight: normal; }
+
 .light-bg {
   background-color: #F9F5FF;
   color: #60407F; }
