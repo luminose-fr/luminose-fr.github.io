@@ -4190,6 +4190,9 @@ body.tools .stop:hover {
   hr.light-bg {
     background-image: url("/images/hr-heavy@2x.png"); } }
 @media only screen and (max-width: 768px) {
+  html {
+    height: -webkit-fill-available; }
+
   .main .column.picture {
     text-align: center; }
 
@@ -4197,7 +4200,8 @@ body.tools .stop:hover {
     padding: 1.25rem; }
 
   body.tools {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
     height: 100vh;
     width: 100vw;
-    background-color: #f9f5ff;
-    border: 2em solid #ffffff; } }
+    background-color: #f9f5ff; } }
