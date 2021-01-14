@@ -27,6 +27,10 @@
         url("/fonts/ext/ext2.ttf") format("truetype");
 }
 
+// Respiration animation
+$animation-speed: 10s;
+$animation-loop: 30; // 30 X 10s = 5 min (par défaut)
+
 // Set your brand colors
 $purple: #6163A5;
 $purple-heavy: #60407F;
@@ -185,6 +189,8 @@ hr.light-bg {
   border-bottom: 3rem $purple-light solid;
   background-image:url('/images/hr-heavy.png');
 }
+
+//************** Paiement *****************/
 .paiement .box.main {
   padding: 5em;
 }
@@ -256,6 +262,183 @@ hr.light-bg {
     background-color:rgba(10, 10, 10, .4)
 }
 
+//************** Respiration *****************/
+
+//
+// html{
+//   height: 100vh;
+//   width: 100vw;
+//
+// }
+
+body.tools {
+  height: 100vh;
+  width: 100vw;
+  background-color: #f9f5ff;
+}
+
+body.tools *{
+  border: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@-webkit-keyframes loader {
+  0%{
+    background: $purple-heavy;
+    height:100%;
+  }50%{
+    background: $purple-heavy;
+    height:0%;
+  }100%{
+    background: $purple-heavy;
+    height:100%;
+  }
+}
+@keyframes loader {
+  0%{
+    background: $purple-heavy;
+    height:100%;
+  }50%{
+    background: $purple-heavy;
+    height:0%;
+  }100%{
+    background: $purple-heavy;
+    height:100%;
+  }
+}
+
+body.tools .loader{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+body.tools .loader__bar{
+  display: flex;
+  flex: 1;
+  position: relative;
+  width: 100%;
+}
+
+body.tools .loader__bar:before{
+  -webkit-animation: loader ease $animation-speed $animation-loop;
+          animation: loader ease $animation-speed $animation-loop;
+  -webkit-animation-delay: 0ms;
+          animation-delay: 0ms;
+  background: $purple-heavy;
+  background-size: 200% 200%;
+  content: "";
+  height:0%;
+  width: 100%;
+}
+
+body.tools .loader__bar.paused:before{
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+body.tools .playpause {
+  all: unset;
+
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 20em;
+  width:5em;
+  height:5em;
+  text-align: center;
+  background: transparent;
+  border:3px $purple solid;
+  transition: 500ms all ease;
+}
+
+body.tools .playpause.paused {
+  background: #ffffff;
+  border:3px $purple-heavy solid;
+  transition: 500ms all ease;
+}
+
+body.tools .playpause span {
+  font-size: 0.3em;
+  display: block;
+  box-sizing: border-box;
+  width: 0;
+  height: 7.4em;
+  transition: 500ms all ease;
+
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-color: transparent transparent transparent $purple;
+  border-style: double;
+  border-width: 0 0 0 6em;
+}
+
+body.tools .playpause.paused span {
+  transition: 500ms all ease;
+
+  border-color: transparent transparent transparent $purple-heavy;
+  border-style: solid;
+  border-width: 3.7em 0 3.7em 6em;
+}
+
+body.tools .stop {
+  all: unset;
+  transition: 500ms all ease;
+
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-230%, -50%);
+
+  border-radius: 20em;
+  width:2em;
+  height:2em;
+  text-align: center;
+  background: #ffffff;
+  border:3px $purple-heavy solid;
+}
+body.tools .stop.running {
+  background: transparent;
+  transition: 500ms all ease;
+  border:3px $purple solid;
+}
+
+body.tools .stop span {
+  transition: 500ms all ease;
+  display: block;
+  box-sizing: border-box;
+  width: 0.8em;
+  height: 0.8em;
+  background: $purple-heavy;
+
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+body.tools .stop.running span {
+  transition: 500ms all ease;
+  background: $purple;
+}
+
+body.tools .playpause:hover,
+body.tools .playpause.paused:hover,
+body.tools .stop:hover {
+  border:3px #ffffff solid;
+  transition: 500ms all ease;
+}
+
+//************** Petits écrans et téléphones mobiles *****************/
 @media
   (-webkit-min-device-pixel-ratio: 2),
   (min-resolution: 192dpi) {
