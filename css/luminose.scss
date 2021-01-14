@@ -283,6 +283,9 @@ body.tools *{
   margin: 0;
   padding: 0;
 }
+body.tools button {
+  all: unset;
+}
 
 @-webkit-keyframes loader {
   0%{
@@ -342,14 +345,11 @@ body.tools .loader__bar.paused:before{
 }
 
 body.tools .playpause {
-  all: unset;
-
   cursor: pointer;
   display: inline-block;
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-
   border-radius: 20em;
   width:5em;
   height:5em;
@@ -372,11 +372,9 @@ body.tools .playpause span {
   width: 0;
   height: 7.4em;
   transition: 500ms all ease;
-
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-
   border-color: transparent transparent transparent $purple;
   border-style: double;
   border-width: 0 0 0 6em;
@@ -384,22 +382,18 @@ body.tools .playpause span {
 
 body.tools .playpause.paused span {
   transition: 500ms all ease;
-
   border-color: transparent transparent transparent $purple-heavy;
   border-style: solid;
   border-width: 3.7em 0 3.7em 6em;
 }
 
 body.tools .stop {
-  all: unset;
   transition: 500ms all ease;
-
   cursor: pointer;
   display: inline-block;
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-230%, -50%);
-
   border-radius: 20em;
   width:2em;
   height:2em;
@@ -407,6 +401,7 @@ body.tools .stop {
   background: #ffffff;
   border:3px $purple-heavy solid;
 }
+
 body.tools .stop.running {
   background: transparent;
   transition: 500ms all ease;
@@ -420,7 +415,6 @@ body.tools .stop span {
   width: 0.8em;
   height: 0.8em;
   background: $purple-heavy;
-
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -456,6 +450,12 @@ body.tools .stop:hover {
   }
   .paiement .box.main {
     padding: 1.25rem;
+  }
+  body.tools {
+    height: 100vh;
+    width: 100vw;
+    background-color: #f9f5ff;
+    border:2em solid #ffffff;
   }
   // body {
   //   margin-top:1em;

@@ -4049,6 +4049,9 @@ body.tools * {
   margin: 0;
   padding: 0; }
 
+body.tools button {
+  all: unset; }
+
 @-webkit-keyframes loader {
   0% {
     background: #60407F;
@@ -4098,7 +4101,6 @@ body.tools .loader__bar.paused:before {
   animation-play-state: paused; }
 
 body.tools .playpause {
-  all: unset;
   cursor: pointer;
   display: inline-block;
   position: absolute;
@@ -4140,7 +4142,6 @@ body.tools .playpause.paused span {
   border-width: 3.7em 0 3.7em 6em; }
 
 body.tools .stop {
-  all: unset;
   transition: 500ms all ease;
   cursor: pointer;
   display: inline-block;
@@ -4193,4 +4194,10 @@ body.tools .stop:hover {
     text-align: center; }
 
   .paiement .box.main {
-    padding: 1.25rem; } }
+    padding: 1.25rem; }
+
+  body.tools {
+    height: 100vh;
+    width: 100vw;
+    background-color: #f9f5ff;
+    border: 2em solid #ffffff; } }
