@@ -451,14 +451,20 @@ body.tools .stop:hover {
   .paiement .box.main {
     padding: 1.25rem;
   }
-  body {
-    min-height: 100vh;
-    /* mobile viewport bug fix */
-    min-height: -webkit-fill-available;
-  }
-
   html {
     height: -webkit-fill-available;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+
+  main {
+    flex: 1;
   }
 
   // body {
