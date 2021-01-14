@@ -54,8 +54,17 @@ var App = {
   },
 
   run: function() {
-      this._enableButtonMentionsLegales();
-      this._loadRespirationControls();
+    this._setupViewport();
+    this._enableButtonMentionsLegales();
+    this._loadRespirationControls();
+  },
+
+  _setupViewport: function() {
+    window.addEventListener('resize', function () {
+      var vh = window.innerHeight * 0.01;
+      // Then we set the value in the --vh custom property to the root of the document
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
   },
 
   _enableButtonMentionsLegales: function() {
@@ -90,7 +99,7 @@ var App = {
       });
       var before = window.getComputedStyle(progressbar, '::before');
       var iterationsCount = before.getPropertyValue('animation-iteration-count');
-      console.log(iterationsCount);
+      // console.log(iterationsCount);
     }
   }
 }
