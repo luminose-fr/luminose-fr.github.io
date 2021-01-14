@@ -54,12 +54,15 @@ var App = {
   },
 
   run: function() {
-    this._setupViewport();
+    //this._setupViewport();
     this._enableButtonMentionsLegales();
     this._loadRespirationControls();
   },
 
   _setupViewport: function() {
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+
     window.addEventListener('resize', function () {
       var vh = window.innerHeight * 0.01;
       // Then we set the value in the --vh custom property to the root of the document
