@@ -54,7 +54,7 @@ var App = {
   },
 
   run: function() {
-    //this._setupViewport();
+    this._setupViewport();
     this._enableButtonMentionsLegales();
     this._loadRespirationControls();
   },

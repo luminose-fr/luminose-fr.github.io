@@ -273,7 +273,6 @@ hr.light-bg {
 
 body.tools {
   height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   background-color: #f9f5ff;
 }
@@ -451,6 +450,10 @@ body.tools .stop:hover {
   }
   .paiement .box.main {
     padding: 1.25rem;
+  }
+
+  body.tools {
+    height: calc(var(--vh, 1vh) * 100);
   }
 
   // body {
