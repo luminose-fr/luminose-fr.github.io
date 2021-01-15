@@ -646,7 +646,7 @@ body.tools .panel-config .setting .values span {
   border-radius: 8px;
   color: #6163a5;
   display: inline-flex;
-  font-size: 1rem;
+  font-size: 1em;
   height: 2em;
   justify-content: center;
   line-height: 1.5;
@@ -682,25 +682,30 @@ body.tools .panel-config .setting .values span.is-active {
   body.tools {
     height: calc(var(--vh, 1vh) * 100);
   }
-
-  // body {
-  //   margin-top:1em;
-  //   font-size: 15px;
-  // }
-  // h1 img.logo {
-  //   width:60%;
-  //   margin-bottom:0;
-  // }
-  // .main {
-  //   padding:0.4em;
-  // }
-  // .main .link {
-  //   margin:2em 0em 1em 0em;
-  // }
-  // .main img.florent {
-  //   width:60%;
-  // }
-  // .footer {
-  //   padding-bottom: 3em;
-  // }
+  body.tools,
+  body.tools * {
+    font-size:14px;
+  }
+}
+@media only screen and (max-height: 736px) {
+  body.tools,
+  body.tools * {
+    font-size:14px;
+  }
+  body.tools .playpause {
+    top: 40%;
+  }
+  body.tools .stop {
+    top: 40%;
+  }
+  body.tools .configure {
+    top: 40%;
+  }
+  body.tools .track-progress {
+    top: 50%;
+  }
+  body.tools .panel-config {
+    top: 55%;
+    width: 90%;
+  }
 }
