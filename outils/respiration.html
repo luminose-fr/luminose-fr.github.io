@@ -6,10 +6,26 @@ excerpt: L’hypnose vous ouvre l'accès à vos ressources inconscientes en cré
 ---
 
   <div class="loader">
-    <div id="pg-respiration" class="loader__bar paused"></div>
+    <div id="pg-respiration" class="loader__bar length5min speed5sec paused"></div>
   </div>
 
   <div id="bt-respiration-start" class="playpause paused"><span></span></div>
   <div id="bt-respiration-stop" class="stop"><span></span></div>
-  <!-- <div id="bt-loop-5min" class="bt-loop-length">5 min</div>
-  <div id="bt-loop-10min" class="bt-loop-length">10 min<span></span></div> -->
+  <div id="bt-config" class="configure"><span></span></div>
+
+  <div id="pg-track" class="track-progress"><div class="completed length5min"></div></div>
+
+  <div id="dp-config" class="panel-config">
+    <div class="setting set-speed">
+      <span class="label">Durée de l'inspiration :</span>
+      <span class="values">
+        <span>3</span> <span>4</span> <span class="is-active">5</span> <span>6</span> <span>7</span> secondes.
+      </span>
+    </div>
+    <div class="setting set-length">
+      <span class="label">Durée de la séance :</span>
+      <span class="values">
+        <span id="length5min" class="is-active">5 min</span> <span id="length10min">10 min</span> <span id="lengthinfinite">Infinie</span>
+      </span>
+    </div>
+  </div>

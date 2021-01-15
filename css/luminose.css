@@ -4049,9 +4049,6 @@ body.tools * {
   margin: 0;
   padding: 0; }
 
-body.tools button {
-  all: unset; }
-
 @-webkit-keyframes loader {
   0% {
     background: #60407F;
@@ -4072,6 +4069,20 @@ body.tools button {
   100% {
     background: #60407F;
     height: 100%; } }
+@-webkit-keyframes trackprogress {
+  0% {
+    background: #6163A5;
+    width: 0%; }
+  100% {
+    background: #6163A5;
+    width: 100%; } }
+@keyframes trackprogress {
+  0% {
+    background: #6163A5;
+    width: 0%; }
+  100% {
+    background: #6163A5;
+    width: 100%; } }
 body.tools .loader {
   display: flex;
   flex-direction: column;
@@ -4086,8 +4097,10 @@ body.tools .loader__bar {
   width: 100%; }
 
 body.tools .loader__bar:before {
-  -webkit-animation: loader ease 10s 30;
-  animation: loader ease 10s 30;
+  -webkit-animation-name: loader;
+  animation-name: loader;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
   -webkit-animation-delay: 0ms;
   animation-delay: 0ms;
   background: #60407F;
@@ -4095,6 +4108,70 @@ body.tools .loader__bar:before {
   content: "";
   height: 0%;
   width: 100%; }
+
+body.tools .loader__bar.speed3sec:before {
+  -webkit-animation-duration: 6s;
+  animation-duration: 6s; }
+
+body.tools .loader__bar.speed4sec:before {
+  -webkit-animation-duration: 8s;
+  animation-duration: 8s; }
+
+body.tools .loader__bar.speed5sec:before {
+  -webkit-animation-duration: 10s;
+  animation-duration: 10s; }
+
+body.tools .loader__bar.speed6sec:before {
+  -webkit-animation-duration: 12s;
+  animation-duration: 12s; }
+
+body.tools .loader__bar.speed7sec:before {
+  -webkit-animation-duration: 14s;
+  animation-duration: 14s; }
+
+body.tools .loader__bar.speed3sec.length5min:before {
+  -webkit-animation-iteration-count: 50;
+  animation-iteration-count: 50; }
+
+body.tools .loader__bar.speed4sec.length5min:before {
+  -webkit-animation-iteration-count: 36;
+  animation-iteration-count: 36; }
+
+body.tools .loader__bar.speed5sec.length5min:before {
+  -webkit-animation-iteration-count: 30;
+  animation-iteration-count: 30; }
+
+body.tools .loader__bar.speed6sec.length5min:before {
+  -webkit-animation-iteration-count: 25;
+  animation-iteration-count: 25; }
+
+body.tools .loader__bar.speed7sec.length5min:before {
+  -webkit-animation-iteration-count: 22;
+  animation-iteration-count: 22; }
+
+body.tools .loader__bar.speed3sec.length10min:before {
+  -webkit-animation-iteration-count: 100;
+  animation-iteration-count: 100; }
+
+body.tools .loader__bar.speed4sec.length10min:before {
+  -webkit-animation-iteration-count: 75;
+  animation-iteration-count: 75; }
+
+body.tools .loader__bar.speed5sec.length10min:before {
+  -webkit-animation-iteration-count: 60;
+  animation-iteration-count: 60; }
+
+body.tools .loader__bar.speed6sec.length10min:before {
+  -webkit-animation-iteration-count: 50;
+  animation-iteration-count: 50; }
+
+body.tools .loader__bar.speed7sec.length10min:before {
+  -webkit-animation-iteration-count: 43;
+  animation-iteration-count: 43; }
+
+body.tools .loader__bar.lengthinfinite:before {
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite; }
 
 body.tools .loader__bar.paused:before {
   -webkit-animation-play-state: paused;
@@ -4148,10 +4225,10 @@ body.tools .stop {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-230%, -50%);
+  transform: translate(-250%, -50%);
   border-radius: 20em;
-  width: 2em;
-  height: 2em;
+  width: 2.2em;
+  height: 2.2em;
   text-align: center;
   background: #ffffff;
   border: 3px #60407F solid; }
@@ -4177,11 +4254,147 @@ body.tools .stop.running span {
   transition: 500ms all ease;
   background: #6163A5; }
 
+body.tools .configure {
+  transition: 500ms all ease;
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(150%, -50%);
+  border-radius: 20em;
+  width: 2.2em;
+  height: 2.2em;
+  text-align: center;
+  background: #ffffff;
+  border: 3px #60407F solid; }
+
+body.tools .configure span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+
+body.tools .configure span:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translate(-200%, -50%); }
+
+body.tools .configure span:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translate(100%, -50%); }
+
+body.tools .configure span,
+body.tools .configure span:before,
+body.tools .configure span:after {
+  border-radius: 50%;
+  border: solid 0.16em #60407F; }
+
+body.tools .configure.running {
+  background: transparent;
+  transition: 500ms all ease;
+  border: 3px #6163A5 solid; }
+
+body.tools .configure.running span,
+body.tools .configure.running span:before,
+body.tools .configure.running span:after {
+  border: solid 0.16em #6163A5; }
+
+body.tools .configure.running.is-active {
+  background: #fff; }
+
 body.tools .playpause:hover,
 body.tools .playpause.paused:hover,
-body.tools .stop:hover {
+body.tools .stop:hover,
+body.tools .configure:hover {
   border: 3px #ffffff solid;
   transition: 500ms all ease; }
+
+body.tools .track-progress {
+  display: block;
+  position: absolute;
+  top: 56.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border-radius: 8px;
+  width: 220px;
+  box-shadow: 0 0.7em 2em 0 rgba(96, 64, 127, 0.16);
+  color: #6163a5;
+  height: .3rem; }
+
+body.tools .track-progress div.completed {
+  display: block;
+  height: .3rem;
+  border-radius: 8px;
+  width: 0%;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  -webkit-animation-name: trackprogress;
+  animation-name: trackprogress;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-delay: 0ms;
+  animation-delay: 0ms;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused; }
+
+body.tools .track-progress div.completed.length5min {
+  -webkit-animation-duration: 300s;
+  animation-duration: 300s; }
+
+body.tools .track-progress div.completed.length10min {
+  -webkit-animation-duration: 600s;
+  animation-duration: 600s; }
+
+body.tools .track-progress div.completed.lengthinfinite {
+  -webkit-animation-duration: infinite;
+  animation-duration: infinite; }
+
+body.tools .track-progress div.completed.running {
+  -webkit-animation-play-state: running;
+  animation-play-state: running; }
+
+body.tools .panel-config {
+  display: none;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0.7em 2em 0 rgba(96, 64, 127, 0.16);
+  color: #6163a5;
+  padding: 1.25rem; }
+
+body.tools .panel-config.is-active {
+  display: block; }
+
+body.tools .panel-config .setting:first-of-type {
+  padding-bottom: 1.5em; }
+
+body.tools .panel-config .setting .values span {
+  transition: 500ms all ease;
+  cursor: pointer;
+  align-items: center;
+  background-color: #f9f5ff;
+  border-radius: 8px;
+  color: #6163a5;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2em;
+  justify-content: center;
+  line-height: 1.5;
+  padding-left: .75em;
+  padding-right: .75em;
+  white-space: nowrap; }
+
+body.tools .panel-config .setting .values span.is-active {
+  background: #60407F;
+  color: #ffffff; }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   hr {
