@@ -116,6 +116,10 @@ var App = {
           btSpeed.classList.add("is-active");
         });
       })
+      progressbar.addEventListener('animationend', function() {
+        buttonStop.click();
+      });
+
       var bt5min = dropdownConfig.querySelector('#length5min'),
           bt10min = dropdownConfig.querySelector('#length10min'),
           btinfinite = dropdownConfig.querySelector('#lengthinfinite');

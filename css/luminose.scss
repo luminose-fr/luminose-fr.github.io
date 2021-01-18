@@ -63,26 +63,27 @@ $footer-padding: 1.5rem;
 
 $gear_icon_size: 1em;
 
-//@import "../_modules/bulma-0.8.2/bulma.sass";
+//@import "../_modules/bulma-0.9.1/bulma.sass";
 
 // Import only what you need from Bulma
-@import "../_modules/bulma-0.8.2/sass/utilities/_all.sass";
-@import "../_modules/bulma-0.8.2/sass/base/_all.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/button.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/container.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/content.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/icon.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/notification.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/title.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/box.sass";
-@import "../_modules/bulma-0.8.2/sass/elements/tag.sass";
-@import "../_modules/bulma-0.8.2/sass/components/modal.sass";
-@import "../_modules/bulma-0.8.2/sass/form/shared.sass";
-@import "../_modules/bulma-0.8.2/sass/form/input-textarea.sass";
-@import "../_modules/bulma-0.8.2/sass/form/tools.sass";
-@import "../_modules/bulma-0.8.2/sass/grid/columns.sass";
-@import "../_modules/bulma-0.8.2/sass/layout/footer.sass";
-@import "../_modules/bulma-0.8.2/sass/layout/section.sass";
+@import "../_modules/bulma-0.9.1/sass/utilities/_all.sass";
+@import "../_modules/bulma-0.9.1/sass/base/_all.sass";
+@import "../_modules/bulma-0.9.1/sass/helpers/_all.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/button.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/container.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/content.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/icon.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/notification.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/title.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/box.sass";
+@import "../_modules/bulma-0.9.1/sass/elements/tag.sass";
+@import "../_modules/bulma-0.9.1/sass/components/modal.sass";
+@import "../_modules/bulma-0.9.1/sass/form/shared.sass";
+@import "../_modules/bulma-0.9.1/sass/form/input-textarea.sass";
+@import "../_modules/bulma-0.9.1/sass/form/tools.sass";
+@import "../_modules/bulma-0.9.1/sass/grid/columns.sass";
+@import "../_modules/bulma-0.9.1/sass/layout/footer.sass";
+@import "../_modules/bulma-0.9.1/sass/layout/section.sass";
 
 body,
 body * {
@@ -686,6 +687,12 @@ body.tools .panel-config .setting .values span.is-active {
   body.tools * {
     font-size:14px;
   }
+  body.tools .panel-config {
+    width: 90%;
+  }
+  body.tools .track-progress {
+    width: 90%;
+  }
 }
 @media only screen and (max-height: 736px) {
   body.tools,
@@ -693,19 +700,18 @@ body.tools .panel-config .setting .values span.is-active {
     font-size:14px;
   }
   body.tools .playpause {
-    top: 40%;
+    top: 90%;
   }
   body.tools .stop {
-    top: 40%;
+    top: 90%;
   }
   body.tools .configure {
-    top: 40%;
+    top: 90%;
   }
   body.tools .track-progress {
-    top: 50%;
+    top: 10%;
   }
   body.tools .panel-config {
-    top: 55%;
-    width: 90%;
+    top: 50%;
   }
 }
