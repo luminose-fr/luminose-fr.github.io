@@ -1,5 +1,6 @@
 {% if jekyll.environment == "production" %}
 
+  <script src="{{ "/js/howler.core.min.js" | prepend: site.baseurl }}"></script>
   <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -14,6 +15,7 @@
 
 {% else %}
 
+  <script src="{{ "/js/howler.core.min.js" | prepend: site.baseurl }}"></script>
   <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
 
 {% endif %}

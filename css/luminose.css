@@ -4890,7 +4890,8 @@ body.tools .configure span,
 body.tools .configure span:before,
 body.tools .configure span:after {
   border-radius: 50%;
-  border: solid 0.16em #60407F; }
+  border: solid 0.16em #60407F;
+  background: #60407F; }
 
 body.tools .configure.running {
   background: transparent;

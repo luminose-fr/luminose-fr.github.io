@@ -548,6 +548,7 @@ body.tools .configure span:before,
 body.tools .configure span:after {
   border-radius: 50%;
   border: solid 0.16em $purple-heavy;
+  background: $purple-heavy;
 }
 
 body.tools .configure.running {
