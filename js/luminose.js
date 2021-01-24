@@ -90,6 +90,7 @@ var App = {
       var that = this;
       if (that.animations.stopped) {
         that.animations.stopped = false;
+        that.animations._setupIterationTimer();
         that.sounds._setupSoundTimers();
         that.play();
       } else {
@@ -103,39 +104,21 @@ var App = {
 
     play:function() {
       var that = this;
-      that.animations.main.classList.remove("paused");
-      that.animations.progress.classList.add("running");
-      that.buttons.play.classList.remove("paused");
-      that.buttons.stop.classList.add("running");
-      that.buttons.config.classList.add("running");
+      that.animations.play();
       that.sounds.play();
-      that.animations.paused = false;
+      that.buttons.play();
     },
-
     pause:function() {
       var that = this;
-      that.animations.main.classList.add("paused");
-      that.animations.progress.classList.remove("running");
-      that.buttons.play.classList.add("paused");
-      that.buttons.stop.classList.remove("running");
-      that.buttons.config.classList.remove("running");
+      that.animations.pause();
       that.sounds.pause();
-      that.animations.paused = true;
+      that.buttons.pause();
     },
-
     stop:function() {
       var that = this;
       that.sounds.stop();
-      that.animations.main.classList.remove("loader__bar", "paused");
-      that.animations.progress.classList.remove("running", "completed");
-      that.buttons.stop.classList.remove("running");
-      that.buttons.config.classList.remove("running");
-      void that.animations.main.offsetWidth;
-      that.animations.main.classList.add("loader__bar", "paused");
-      that.animations.progress.classList.add("completed");
-      that.buttons.play.classList.add("paused");
-      that.animations.stopped = true;
-      that.animations.paused = true;
+      that.animations.stop();
+      that.buttons.stop();
     },
 
     setRecurringTimer: function(callback, delay, initialStartDelay) {
@@ -172,6 +155,8 @@ var App = {
       progressContainer: null,
       stopped: true,
       paused: true,
+      newSpeed: null,
+      _iterationTimer: null,
       _parent: null,
 
       _load: function(caller) {
@@ -182,22 +167,73 @@ var App = {
 
         var that = this;
 
-        this.main.addEventListener('animationend', function() {
-          console.log('end');
+        this.progress.addEventListener('animationend', function() {
           that._parent.stop();
         });
 
-        // this.main.addEventListener('animationiteration', function() {
-        //   console.log('iteration');
-        //   that._parent._onIteration();
-        // });
+      },
+
+      _setupIterationTimer: function(animationDuration){
+        var that = this;
+        if (animationDuration == null) {
+          animationDuration = parseInt(window.getComputedStyle(that.main, "::before").animationDuration);
+        }
+        that._iterationTimer = new that._parent.setRecurringTimer(function () {
+            that.onAnimationIteration();
+        }, animationDuration * 1000, 0);
+        that._iterationTimer.pause();
+      },
+
+      onAnimationIteration: function() {
+        var that = this;
+
+        if (that.newSpeed != null && that.newSpeed > 0) {
+          that._parent.sounds.updateSpeed(that.newSpeed)
+          that.updateSpeed(that.newSpeed)
+          that.newSpeed = null;
+
+          var btSpeed = that._parent.buttons.configPanel.querySelector('.set-speed span.is-waiting');
+          btSpeed.classList.remove("is-waiting");
+          btSpeed.classList.add("is-active");
+        }
+      },
+      play: function() {
+        this._iterationTimer.resume();
+        this.main.classList.remove("paused");
+        this.progress.classList.add("running");
+        this.paused = false;
+      },
+      pause: function() {
+        this._iterationTimer.pause();
+        this.main.classList.add("paused");
+        this.progress.classList.remove("running");
+        this.paused = true;
+      },
+      stop: function() {
+        this._iterationTimer.stop();
+        this.main.classList.remove("loader__bar", "paused");
+        this.progress.classList.remove("running", "completed");
+        void this.main.offsetWidth;
+        this.main.classList.add("loader__bar", "paused");
+        this.progress.classList.add("completed");
+        this.stopped = true;
+        this.paused = true;
+      },
+      updateSpeed: function(newSpeed) {
+        this._iterationTimer.stop();
+        this._setupIterationTimer(newSpeed*2);
+        this._iterationTimer.resume();
+
+        this.main.classList.remove("loader__bar","speed3sec", "speed4sec", "speed5sec", "speed6sec", "speed7sec");
+        void this.main.offsetWidth;
+        this.main.classList.add("speed" + newSpeed + "sec", "loader__bar");
       }
     },
 
     buttons: {
-      play: null,
-      stop: null,
-      config: null,
+      playButton: null,
+      stopButton: null,
+      configButton: null,
       configPanel: null,
       _parent: null,
 
@@ -205,51 +241,52 @@ var App = {
         this._parent = caller;
 
         if (this._parent.animations.main !== null) {
-          this.play         = document.querySelector('#bt-respiration-start');
-          this.stop         = document.querySelector('#bt-respiration-stop');
-          this.config       = document.querySelector('#bt-config');
+          this.playButton   = document.querySelector('#bt-respiration-start');
+          this.stopButton   = document.querySelector('#bt-respiration-stop');
+          this.configButton = document.querySelector('#bt-config');
           this.configPanel  = document.querySelector('#dp-config');
 
-          if ((this.play !== null) && (this.stop !== null) && (this.config !== null) && (this.configPanel !== null)) {
+          if ((this.playButton !== null) && (this.stopButton !== null) && (this.configButton !== null) && (this.configPanel !== null)) {
 
             var that = this,
                 bt5min = that.configPanel.querySelector('#length5min'),
                 bt10min = that.configPanel.querySelector('#length10min'),
-                btinfinite = that.configPanel.querySelector('#lengthinfinite');
+                btinfinite = that.configPanel.querySelector('#lengthinfinite'),
+                btSoundOn = that.configPanel.querySelector('#sound-on'),
+                btSoundOff = that.configPanel.querySelector('#sound-off');
 
-            that.play.addEventListener('click', function () {
+            that.playButton.addEventListener('click', function () {
               that._parent.startPause();
             });
 
-            that.stop.addEventListener('click', function () {
+            that.stopButton.addEventListener('click', function () {
               that._parent.stop();
             });
 
-            that.config.addEventListener('click', function () {
-              that.config.classList.toggle("is-active");
+            that.configButton.addEventListener('click', function () {
+              that.configButton.classList.toggle("is-active");
               that.configPanel.classList.toggle("is-active");
             });
 
             that.configPanel.querySelectorAll('.set-speed span.values span').forEach(function(btSpeed) {
               btSpeed.addEventListener('click', function () {
-                ////////
-                ///////
-                //////
-                /////
-                //// A revoir avec le son + ajouter [mute] en config
                 var value = btSpeed.innerText;
-                that._parent.animations.main.classList.remove("speed3sec", "speed4sec", "speed5sec", "speed6sec", "speed7sec");
-                that._parent.animations.main.classList.add("speed" + value + "sec");
-                that.configPanel.querySelector('.set-speed span.is-active').classList.remove("is-active");
-                btSpeed.classList.add("is-active");
+                that._parent.animations.newSpeed = value;
+                var activeButtons = that.configPanel.querySelector('.set-speed span.is-active');
+                var waitingButtons = that.configPanel.querySelector('.set-speed span.is-waiting');
+                if (activeButtons != null) {
+                  activeButtons.classList.remove("is-active");
+                }
+                if (waitingButtons != null) {
+                  waitingButtons.classList.remove("is-waiting");
+                }
+                btSpeed.classList.add("is-waiting");
               });
             });
 
             bt5min.addEventListener('click', function () {
               if (!bt5min.classList.contains("is-active")) {
-                that._parent.animations.main.classList.remove("length10min", "lengthinfinite");
                 that._parent.animations.progress.classList.remove("length10min", "lengthinfinite");
-                that._parent.animations.main.classList.add("length5min");
                 that._parent.animations.progress.classList.add("length5min");
                 that._parent.animations.progressContainer.style.display = "block";
                 that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
@@ -259,9 +296,7 @@ var App = {
 
             bt10min.addEventListener('click', function () {
               if (!bt10min.classList.contains("is-active")) {
-                that._parent.animations.main.classList.remove("length5min", "lengthinfinite");
                 that._parent.animations.progress.classList.remove("length5min", "lengthinfinite");
-                that._parent.animations.main.classList.add("length10min");
                 that._parent.animations.progress.classList.add("length10min");
                 that._parent.animations.progressContainer.style.display = "block";
                 that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
@@ -271,42 +306,74 @@ var App = {
 
             btinfinite.addEventListener('click', function () {
               if (!btinfinite.classList.contains("is-active")) {
-                that._parent.animations.main.classList.remove("length5min", "length10min");
                 that._parent.animations.progress.classList.remove("length5min", "length10min");
-                that._parent.animations.main.classList.add("lengthinfinite");
                 that._parent.animations.progress.classList.add("lengthinfinite")
                 that._parent.animations.progressContainer.style.display = "none";
                 that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
                 btinfinite.classList.add("is-active");
               }
             });
+
+            btSoundOn.addEventListener('click', function () {
+              that._parent.sounds.mute = false;
+              btSoundOff.classList.remove("is-active");
+              btSoundOn.classList.add("is-active");
+            });
+
+            btSoundOff.addEventListener('click', function () {
+              that._parent.sounds.mute = true;
+              btSoundOn.classList.remove("is-active");
+              btSoundOff.classList.add("is-active");
+            });
           }
         }
+      },
+      play: function() {
+        this.playButton.classList.remove("paused");
+        this.stopButton.classList.add("running");
+        this.configButton.classList.add("running");
+      },
+      pause: function() {
+        this.playButton.classList.add("paused");
+        this.stopButton.classList.remove("running");
+        this.configButton.classList.remove("running");
+      },
+      stop: function() {
+        this.stopButton.classList.remove("running");
+        this.configButton.classList.remove("running");
+        this.playButton.classList.add("paused");
       }
     },
 
     sounds: {
       in: null,
       out: null,
+      mute: false,
       _parent: null,
 
       _load: function(caller) {
         this._parent = caller;
         this.in = new Howl({
-          src: ['/audio/in.wav']
+          src: ['/audio/in.mp3']
         });
         this.out = new Howl({
-          src: ['/audio/out.wav']
+          src: ['/audio/out.mp3']
         });
       },
-      _setupSoundTimers: function() {
+      _setupSoundTimers: function(animationDuration) {
         var that = this;
-        var animationDuration = parseInt(window.getComputedStyle(that._parent.animations.main, "::before").animationDuration);
+        if (animationDuration == null) {
+          animationDuration = parseInt(window.getComputedStyle(that._parent.animations.main, "::before").animationDuration);
+        }
         that._parent._runningTimer = new that._parent.setRecurringTimer(function () {
+          if (!that.mute) {
             that.out.play();
+          }
         }, animationDuration*1000, 0); // ex. 10s pour un cycle total => 5000ms pour le deuxième son
         that._parent._runningTimer2 = new that._parent.setRecurringTimer(function () {
+          if (!that.mute) {
             that.in.play();
+          }
         }, animationDuration*1000, animationDuration*1000/2); // ex. 10s pour un cycle total => 5000ms pour le deuxième son
         that._parent._runningTimer.pause();
         that._parent._runningTimer2.pause();
@@ -315,26 +382,19 @@ var App = {
         this._parent._runningTimer.resume();
         this._parent._runningTimer2.resume();
       },
-
       pause:function() {
         this._parent._runningTimer.pause();
         this._parent._runningTimer2.pause();
       },
-
       stop:function() {
         this._parent._runningTimer.stop();
         this._parent._runningTimer2.stop();
+      },
+      updateSpeed: function(newSpeed) {
+        this.stop();
+        this._setupSoundTimers(newSpeed*2);
+        this.play();
       }
-      // _onIteration:function() {
-      //   var that = this,
-      //       animationDuration = parseInt(window.getComputedStyle(that.animations.main, "::before").animationDuration);
-      //
-      //   that.sounds.in.play();
-      //
-      //   that._runningTimer = new that.setTimer(function () {
-      //       that.sounds.out.play();
-      //   }, (animationDuration/2)*1000); // ex. 10s pour un cycle total => 5000ms pour le deuxième son
-      // }
     }
   }
 }

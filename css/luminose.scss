@@ -292,7 +292,7 @@ body.tools * {
     background: $purple-heavy;
     height:100%;
   }50%{
-    background: $purple-heavy;
+    background: $purple;
     height:0%;
   }100%{
     background: $purple-heavy;
@@ -304,7 +304,7 @@ body.tools * {
     background: $purple-heavy;
     height:100%;
   }50%{
-    background: $purple-heavy;
+    background: $purple;
     height:0%;
   }100%{
     background: $purple-heavy;
@@ -352,6 +352,8 @@ body.tools .loader__bar:before{
           animation-timing-function: ease;
   -webkit-animation-delay: 0ms;
           animation-delay: 0ms;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
   background: $purple-heavy;
   background-size: 200% 200%;
   content: "";
@@ -378,53 +380,6 @@ body.tools .loader__bar.speed7sec:before{
   -webkit-animation-duration : 14s;
           animation-duration : 14s;
 }
-body.tools .loader__bar.speed3sec.length5min:before{
-  -webkit-animation-iteration-count : 50; // 50 X 6s = 300 sec = 5 min
-          animation-iteration-count : 50;
-}
-body.tools .loader__bar.speed4sec.length5min:before{
-  -webkit-animation-iteration-count : 36;
-          animation-iteration-count : 36;
-}
-body.tools .loader__bar.speed5sec.length5min:before{
-  -webkit-animation-iteration-count : 30; // 30 X 10s = 300 sec = 5 min (par défaut)
-          animation-iteration-count : 30;
-}
-body.tools .loader__bar.speed6sec.length5min:before{
-  -webkit-animation-iteration-count : 25;
-          animation-iteration-count : 25;
-}
-body.tools .loader__bar.speed7sec.length5min:before{
-  -webkit-animation-iteration-count : 22;
-          animation-iteration-count : 22;
-}
-
-body.tools .loader__bar.speed3sec.length10min:before{
-  -webkit-animation-iteration-count : 100;
-          animation-iteration-count : 100;
-}
-body.tools .loader__bar.speed4sec.length10min:before{
-  -webkit-animation-iteration-count : 75;
-          animation-iteration-count : 75;
-}
-body.tools .loader__bar.speed5sec.length10min:before{
-  -webkit-animation-iteration-count : 60; // 30 X 10s = 300 sec = 5 min (par défaut)
-          animation-iteration-count : 60;
-}
-body.tools .loader__bar.speed6sec.length10min:before{
-  -webkit-animation-iteration-count : 50;
-          animation-iteration-count : 50;
-}
-body.tools .loader__bar.speed7sec.length10min:before{
-  -webkit-animation-iteration-count : 43;
-          animation-iteration-count : 43;
-}
-
-body.tools .loader__bar.lengthinfinite:before{
-  -webkit-animation-iteration-count : infinite;
-          animation-iteration-count : infinite;
-}
-
 body.tools .loader__bar.paused:before{
   -webkit-animation-play-state: paused;
           animation-play-state: paused;
@@ -607,6 +562,8 @@ body.tools .track-progress div.completed {
 body.tools .track-progress div.completed.length5min {
   -webkit-animation-duration : 300s; // defaut pour 5 min
           animation-duration : 300s;
+  // -webkit-animation-duration : 37s; // debug
+  //         animation-duration : 37s;
 }
 body.tools .track-progress div.completed.length10min {
   -webkit-animation-duration : 600s;
@@ -637,8 +594,11 @@ body.tools .panel-config {
 body.tools .panel-config.is-active {
   display: block;
 }
-body.tools .panel-config .setting:first-of-type {
+body.tools .panel-config .setting {
   padding-bottom: 1.5em;
+}
+body.tools .panel-config .setting:last-of-type {
+  padding-bottom: 0;
 }
 body.tools .panel-config .setting .values span {
   transition: 500ms all ease;
@@ -660,6 +620,19 @@ body.tools .panel-config .setting .values span.is-active {
   background: $purple-heavy;
   color: #ffffff;
 }
+body.tools .panel-config .setting .values span.is-waiting {
+  background: $purple;
+  animation: blinkingBackground 2s infinite;
+  color: #ffffff;
+}
+@keyframes blinkingBackground{
+	0%		{ background-color: $purple;}
+	25%		{ background-color: $purple-light;}
+	50%		{ background-color: $purple;}
+	75%		{ background-color: $purple-light;}
+	100%	{ background-color: $purple;}
+}
+
 
 //************** Petits écrans et téléphones mobiles *****************/
 @media
@@ -713,6 +686,6 @@ body.tools .panel-config .setting .values span.is-active {
     top: 10%;
   }
   body.tools .panel-config {
-    top: 50%;
+    top: 35%;
   }
 }
