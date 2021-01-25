@@ -81,9 +81,11 @@ var App = {
     _runningTimer2: null,
 
     run: function() {
-      this.animations._load(this);
-      this.sounds._load(this);
-      this.buttons._load(this);
+      if (document.querySelector('#pg-respiration') !== null) {
+        this.animations._load(this);
+        this.sounds._load(this);
+        this.buttons._load(this);
+      }
     },
 
     startPause:function() {
@@ -246,86 +248,84 @@ var App = {
           this.configButton = document.querySelector('#bt-config');
           this.configPanel  = document.querySelector('#dp-config');
 
-          if ((this.playButton !== null) && (this.stopButton !== null) && (this.configButton !== null) && (this.configPanel !== null)) {
+          var that = this,
+              bt5min = that.configPanel.querySelector('#length5min'),
+              bt10min = that.configPanel.querySelector('#length10min'),
+              btinfinite = that.configPanel.querySelector('#lengthinfinite'),
+              btSoundOn = that.configPanel.querySelector('#sound-on'),
+              btSoundOff = that.configPanel.querySelector('#sound-off');
 
-            var that = this,
-                bt5min = that.configPanel.querySelector('#length5min'),
-                bt10min = that.configPanel.querySelector('#length10min'),
-                btinfinite = that.configPanel.querySelector('#lengthinfinite'),
-                btSoundOn = that.configPanel.querySelector('#sound-on'),
-                btSoundOff = that.configPanel.querySelector('#sound-off');
+          that.playButton.addEventListener('click', function () {
+            that._parent.startPause();
+          });
 
-            that.playButton.addEventListener('click', function () {
-              that._parent.startPause();
-            });
+          that.stopButton.addEventListener('click', function () {
+            that._parent.stop();
+          });
 
-            that.stopButton.addEventListener('click', function () {
-              that._parent.stop();
-            });
+          that.configButton.addEventListener('click', function () {
+            that.configButton.classList.toggle("is-active");
+            that.configPanel.classList.toggle("is-active");
+          });
 
-            that.configButton.addEventListener('click', function () {
-              that.configButton.classList.toggle("is-active");
-              that.configPanel.classList.toggle("is-active");
-            });
-
-            that.configPanel.querySelectorAll('.set-speed span.values span').forEach(function(btSpeed) {
-              btSpeed.addEventListener('click', function () {
-                var value = btSpeed.innerText;
-                that._parent.animations.newSpeed = value;
-                var activeButtons = that.configPanel.querySelector('.set-speed span.is-active');
-                var waitingButtons = that.configPanel.querySelector('.set-speed span.is-waiting');
-                if (activeButtons != null) {
-                  activeButtons.classList.remove("is-active");
-                }
-                if (waitingButtons != null) {
-                  waitingButtons.classList.remove("is-waiting");
-                }
-                btSpeed.classList.add("is-waiting");
-              });
-            });
-
-            bt5min.addEventListener('click', function () {
-              if (!bt5min.classList.contains("is-active")) {
-                that._parent.animations.progress.classList.remove("length10min", "lengthinfinite");
-                that._parent.animations.progress.classList.add("length5min");
-                that._parent.animations.progressContainer.style.display = "block";
-                that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
-                bt5min.classList.add("is-active");
+          that.configPanel.querySelectorAll('.set-speed span.values span').forEach(function(btSpeed) {
+            btSpeed.addEventListener('click', function () {
+              var value = btSpeed.innerText;
+              that._parent.animations.newSpeed = value;
+              var activeButtons = that.configPanel.querySelector('.set-speed span.is-active');
+              var waitingButtons = that.configPanel.querySelector('.set-speed span.is-waiting');
+              if (activeButtons != null) {
+                activeButtons.classList.remove("is-active");
               }
-            });
-
-            bt10min.addEventListener('click', function () {
-              if (!bt10min.classList.contains("is-active")) {
-                that._parent.animations.progress.classList.remove("length5min", "lengthinfinite");
-                that._parent.animations.progress.classList.add("length10min");
-                that._parent.animations.progressContainer.style.display = "block";
-                that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
-                bt10min.classList.add("is-active");
+              if (waitingButtons != null) {
+                waitingButtons.classList.remove("is-waiting");
               }
+              btSpeed.classList.add("is-waiting");
             });
+          });
 
-            btinfinite.addEventListener('click', function () {
-              if (!btinfinite.classList.contains("is-active")) {
-                that._parent.animations.progress.classList.remove("length5min", "length10min");
-                that._parent.animations.progress.classList.add("lengthinfinite")
-                that._parent.animations.progressContainer.style.display = "none";
-                that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
-                btinfinite.classList.add("is-active");
-              }
-            });
+          bt5min.addEventListener('click', function () {
+            if (!bt5min.classList.contains("is-active")) {
+              that._parent.animations.progress.classList.remove("length10min", "lengthinfinite");
+              that._parent.animations.progress.classList.add("length5min");
+              that._parent.animations.progressContainer.style.display = "block";
+              that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
+              bt5min.classList.add("is-active");
+            }
+          });
 
-            btSoundOn.addEventListener('click', function () {
-              that._parent.sounds.mute = false;
-              btSoundOff.classList.remove("is-active");
-              btSoundOn.classList.add("is-active");
-            });
+          bt10min.addEventListener('click', function () {
+            if (!bt10min.classList.contains("is-active")) {
+              that._parent.animations.progress.classList.remove("length5min", "lengthinfinite");
+              that._parent.animations.progress.classList.add("length10min");
+              that._parent.animations.progressContainer.style.display = "block";
+              that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
+              bt10min.classList.add("is-active");
+            }
+          });
 
-            btSoundOff.addEventListener('click', function () {
-              that._parent.sounds.mute = true;
-              btSoundOn.classList.remove("is-active");
-              btSoundOff.classList.add("is-active");
-            });
-          }
+          btinfinite.addEventListener('click', function () {
+            if (!btinfinite.classList.contains("is-active")) {
+              that._parent.animations.progress.classList.remove("length5min", "length10min");
+              that._parent.animations.progress.classList.add("lengthinfinite")
+              that._parent.animations.progressContainer.style.display = "none";
+              that.configPanel.querySelector('.set-length span.is-active').classList.remove("is-active");
+              btinfinite.classList.add("is-active");
+            }
+          });
+
+          btSoundOn.addEventListener('click', function () {
+            that._parent.sounds.mute = false;
+            btSoundOff.classList.remove("is-active");
+            btSoundOn.classList.add("is-active");
+          });
+
+          btSoundOff.addEventListener('click', function () {
+            that._parent.sounds.mute = true;
+            btSoundOn.classList.remove("is-active");
+            btSoundOff.classList.add("is-active");
+          });
+
         }
       },
       play: function() {
