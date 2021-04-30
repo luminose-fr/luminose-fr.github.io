@@ -63,6 +63,8 @@ $footer-padding: 1.5rem;
 
 $gear_icon_size: 1em;
 
+$navbar-height: 6.50rem;
+
 //@import "../_modules/bulma-0.9.1/bulma.sass";
 
 // Import only what you need from Bulma
@@ -78,6 +80,7 @@ $gear_icon_size: 1em;
 @import "../_modules/bulma-0.9.1/sass/elements/box.sass";
 @import "../_modules/bulma-0.9.1/sass/elements/tag.sass";
 @import "../_modules/bulma-0.9.1/sass/components/modal.sass";
+@import "../_modules/bulma-0.9.1/sass/components/navbar.sass";
 @import "../_modules/bulma-0.9.1/sass/form/shared.sass";
 @import "../_modules/bulma-0.9.1/sass/form/input-textarea.sass";
 @import "../_modules/bulma-0.9.1/sass/form/tools.sass";
@@ -99,8 +102,14 @@ strong {
   text-transform: uppercase;
   font-size: 1.2em;
 }
+.navbar-item img.logo {
+  max-height: none;
+}
 .container {
   max-width: 720px;
+}
+.block:not(:last-child) {
+  margin-bottom: 1.5rem;
 }
 .confinement {
   color: #515151;
@@ -132,6 +141,9 @@ strong {
 .light-bg .title,
 .light-bg .subtitle {
   color: $purple-heavy;
+}
+.newsletter {
+  padding-bottom: 6rem;
 }
 
 div.copyright {
