@@ -1,0 +1,25 @@
+<header class="section header">
+  <div class="container has-text-centered">
+    <nav id="main-navbar" class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <h1><a href="{{ site.baseurl }}/"><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></a></h1>
+        <div id="mobile-navigation" class="nav-buttons is-hidden-desktop has-text-centered">
+        <a id="bt-navigation" role="button" class="button is-white is-purple-bordered" aria-label="menu" aria-expanded="false" data-target="main-navigation">Menu</a>
+        <a href="https://www.doctolib.fr/hypnotherapeute/villefranche-de-lauragais/florent-jaouali?utm_medium=referral&utm_campaign=website-button&utm_content=option-2&utm_term=florent-jaouali&utm_source=florent-jaouali-website-button" target="_blank" class="navbar-item button is-primary">Prendre un rendez-vous</a>
+        </div>
+      </div>
+
+      <div id="main-navigation" class="navbar-menu">
+        <img class="logo is-hidden-desktop" src="images/luminose-logo.png" srcset="images/luminose-logo.png, images/luminose-logo@2x.png 2x" alt="Luminose">
+        <div class="navbar-start">
+          <a href="{{ site.baseurl }}/" class="navbar-item {% if page.section == "accueil" %}is-active{% endif %}">Accueil</a>
+          <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">Hypnothérapie</a>
+          <a href="{{ site.baseurl }}/seance-hypnose.html" class="navbar-item {% if page.section == "seances" %}is-active{% endif %}">Séances</a>
+          <a href="{{ site.baseurl }}/florent-jaouali.html" class="navbar-item {% if page.section == "qui" %}is-active{% endif %}">Qui suis-je ?</a>
+          <a href="{{ site.baseurl }}/outils.html" class="navbar-item {% if page.section == "outils" %}is-active{% endif %}">Outils</a>
+          <a href="https://www.doctolib.fr/hypnotherapeute/villefranche-de-lauragais/florent-jaouali?utm_medium=referral&utm_campaign=website-button&utm_content=option-2&utm_term=florent-jaouali&utm_source=florent-jaouali-website-button" target="_blank" class="navbar-item button is-primary is-hidden-touch">Prendre un rendez-vous</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

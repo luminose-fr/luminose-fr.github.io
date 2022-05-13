@@ -1,3 +1,25 @@
+(() => {
+    let oldPushState = history.pushState;
+    history.pushState = function pushState() {
+        let ret = oldPushState.apply(this, arguments);
+        window.dispatchEvent(new Event('pushstate'));
+        window.dispatchEvent(new Event('locationchange'));
+        return ret;
+    };
+
+    let oldReplaceState = history.replaceState;
+    history.replaceState = function replaceState() {
+        let ret = oldReplaceState.apply(this, arguments);
+        window.dispatchEvent(new Event('replacestate'));
+        window.dispatchEvent(new Event('locationchange'));
+        return ret;
+    };
+
+    window.addEventListener('popstate', () => {
+        window.dispatchEvent(new Event('locationchange'));
+    });
+})();
+
 class BulmaModal {
   constructor(selector) {
     this.elem = document.querySelector(selector)
@@ -49,12 +71,13 @@ var App = {
   },
 
   run: function() {
-    this._setupViewport();
-    this._enableButtonMentionsLegales();
+    this.setupViewport();
+    this.setupNavigation();
+    // this._enableButtonMentionsLegales();
     this.respiration.run();
   },
 
-  _setupViewport: function() {
+  setupViewport: function() {
     var vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 
@@ -63,6 +86,126 @@ var App = {
       // Then we set the value in the --vh custom property to the root of the document
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     });
+  },
+
+  setupNavigation: function() {
+    if (this.navbar == null) {
+      this.navbar = document.getElementById("main-navbar");
+      this.navbarHeight = this.navbar.offsetHeight;
+      this.navbarMenuHeight = document.getElementById('main-navigation').offsetHeight;
+      this.navbarMobileMenuHeight = document.getElementById('mobile-navigation').offsetHeight;
+      this.burgerButton = document.querySelector('#bt-navigation');
+    }
+    if (this.navbar !== null) {
+      this._stickNavigation();
+      this._enableButtonBurger();
+    }
+    if (this.hypnotherapyTabs == null) {
+      this.hypnotherapyTabs = document.getElementById("hypnotherapy-tabs");
+    }
+    if (this.hypnotherapyTabs !== null && this.hypnotherapyTabs !== undefined) {
+      var that = this;
+      that.hypnotherapyTabs.items = that.hypnotherapyTabs.querySelectorAll('.tabs ul li a');
+      that.hypnotherapyTabs.tabs = that.hypnotherapyTabs.querySelectorAll('.tab-content');
+
+      // Track clicks on the menu
+      that.hypnotherapyTabs.items.forEach(function(item) {
+        item.addEventListener("click", function(event) {
+          event.preventDefault();
+          // that._selectNavigationItem(item.getAttribute("href"));
+          history.pushState({}, '', item.getAttribute("href"));
+        });
+      });
+
+      // Load the good tab depending on anchor
+      if (window.location.hash !== '') {
+        that._selectNavigationItem(window.location.hash)
+        that.hypnotherapyTabs.scrollIntoView();
+        setTimeout(function() {
+          that.hypnotherapyTabs.scrollIntoView();
+        }, 3);
+      }
+
+      // Track URL change (<previous | next> from browser)
+      window.addEventListener('locationchange', function(event) {
+        that._selectNavigationItem(window.location.hash)
+      });
+    }
+  },
+
+  _selectNavigationItem: function(hash) {
+    var that = this;
+    var item, selectedTab;
+    if (hash !== '') {
+      item = that.hypnotherapyTabs.querySelector('a[href="' + hash + '"]');
+    } else {
+      item = that.hypnotherapyTabs.querySelector('a');
+      hash = item.getAttribute("href");
+    }
+    selectedTab = that.hypnotherapyTabs.querySelector(hash);
+
+    that.hypnotherapyTabs.items.forEach(function(i) {
+      i.classList.remove('is-active');
+    });
+    that.hypnotherapyTabs.tabs.forEach(function(t) {
+      t.classList.remove('is-active');
+    });
+    item.classList.add('is-active');
+    selectedTab.classList.add('is-active');
+  },
+
+  _stickNavigation: function() {
+    var that = this;
+    window.addEventListener('scroll', function () {
+      var realblockHeight = that.navbarHeight - that.navbarMenuHeight - that.navbarMobileMenuHeight;
+      if (!that.burgerButton.classList.contains('is-active')) {
+
+        if (document.body.scrollTop > (realblockHeight) || document.documentElement.scrollTop > (realblockHeight)) {
+          that.navbar.classList.add("is-fixed-top");
+
+          document.body.style.padding = (realblockHeight) + "px 0 0 0";
+        } else {
+          that.navbar.classList.remove("is-fixed-top");
+          document.body.style.padding = "0";
+        }
+      }
+    });
+  },
+
+  _enableButtonBurger: function() {
+    var that = this;
+    var button = that.burgerButton;
+
+    if (button !== null) {
+      button.addEventListener("click", function () {
+        // Get the target from the "data-target" attribute
+        const target = button.dataset.target;
+        const $target = document.getElementById(target);
+        var isShowing = !button.classList.contains('is-active');
+        var navIsFixed = that.navbar.classList.contains('is-fixed-top');
+
+        if (isShowing) {
+          that.currentScroll = document.documentElement.scrollTop;
+          document.body.classList.add('menu-active');
+          // console.log("Opening------");
+          // console.log("Current scroll : " + that.currentScroll);
+          if (!navIsFixed) {
+            that.navbar.classList.add("is-fixed-top");
+          }
+        } else {
+          // console.log("Closing------");
+          document.body.classList.remove('menu-active');
+          that.navbar.classList.remove("is-fixed-top");
+          // console.log("Scroll to : " + that.currentScroll);
+          window.scrollBy(0, that.currentScroll);
+          // currentScroll = 0;
+        }
+
+        button.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+
+      });
+    }
   },
 
   _enableButtonMentionsLegales: function() {
@@ -75,7 +218,7 @@ var App = {
     }
   },
 
-  respiration: {
+    respiration: {
 
     _runningTimer: null,
     _runningTimer2: null,
