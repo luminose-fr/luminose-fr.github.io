@@ -91,12 +91,12 @@ var App = {
   setupNavigation: function() {
     if (this.navbar == null) {
       this.navbar = document.getElementById("main-navbar");
-      this.navbarHeight = this.navbar.offsetHeight;
-      this.navbarMenuHeight = document.getElementById('main-navigation').offsetHeight;
-      this.navbarMobileMenuHeight = document.getElementById('mobile-navigation').offsetHeight;
       this.burgerButton = document.querySelector('#bt-navigation');
     }
     if (this.navbar !== null) {
+      this.navbarMenuHeight = document.getElementById('main-navigation').offsetHeight;
+      this.navbarMobileMenuHeight = document.getElementById('mobile-navigation').offsetHeight;
+      this.navbarHeight = this.navbar.offsetHeight;
       this._stickNavigation();
       this._enableButtonBurger();
     }
@@ -117,13 +117,19 @@ var App = {
         });
       });
 
-      // Load the good tab depending on anchor
+      // Load the good tab depending on anchor and scroll accorgingly
+      var realblockHeight = that.navbarHeight - that.navbarMenuHeight - that.navbarMobileMenuHeight;
+      var elementPosition = that.hypnotherapyTabs.getBoundingClientRect().top;
+      var offsetPosition = elementPosition + window.pageYOffset - realblockHeight;
+
       if (window.location.hash !== '') {
         that._selectNavigationItem(window.location.hash)
-        that.hypnotherapyTabs.scrollIntoView();
         setTimeout(function() {
-          that.hypnotherapyTabs.scrollIntoView();
-        }, 3);
+          window.scrollTo({
+               top: offsetPosition,
+               behavior: "smooth"
+          });
+        }, 5);
       }
 
       // Track URL change (<previous | next> from browser)
@@ -157,13 +163,21 @@ var App = {
   _stickNavigation: function() {
     var that = this;
     window.addEventListener('scroll', function () {
-      var realblockHeight = that.navbarHeight - that.navbarMenuHeight - that.navbarMobileMenuHeight;
+      // var realblockHeight = that.navbarHeight - that.navbarMenuHeight - that.navbarMobileMenuHeight;
+      // setTimeout(function() {
+      //   window.scrollTo({
+      //        top: offsetPosition,
+      //        behavior: "smooth"
+      //   });
+      // }, 5);
+      var realblockHeight = 190;
       if (!that.burgerButton.classList.contains('is-active')) {
 
+        // console.log("Scroll top: " + document.documentElement.scrollTop);
+        // console.log("realblockHeight: " + realblockHeight);
         if (document.body.scrollTop > (realblockHeight) || document.documentElement.scrollTop > (realblockHeight)) {
           that.navbar.classList.add("is-fixed-top");
-
-          document.body.style.padding = (realblockHeight) + "px 0 0 0";
+          document.body.style.padding = (realblockHeight + 80) + "px 0 0 0";
         } else {
           that.navbar.classList.remove("is-fixed-top");
           document.body.style.padding = "0";

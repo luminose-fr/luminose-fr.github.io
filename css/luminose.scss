@@ -13,35 +13,94 @@ body * {
 strong {
   font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
 }
+body .section.article {
+  padding: 3rem 0 3rem 0;
+}
+body .section.article:first-of-type {
+  padding: 0 0 3rem 0;
+}
 .article .content h1 {
-  font-size: 2.4em;
+  font-size: $size-1;
   color: $purple;
 }
 .title.is-2,
 .article .content h2 {
-  font-size: 1.8em;
-}
-.article .content h2 {
   color: $purple;
+  font-size: $size-2;
   font-family: "Abril Display W05 Italic",serif;
   font-weight: 300;
   line-height: 1.125;
 }
-.subtitle.is-3 {
+.is-3,
+.article .content h3 {
+  font-family: 'Futura LT W05 Book', sans-serif;
+  font-weight: 300;
+  font-size: $size-6;
+  color: $purple;
   text-transform: uppercase;
-  font-size: 1.2em;
+}
+.article .citation {
+  text-align: center;
+  color: $purple-heavy;
+  font-size: $size-1;
+  font-family: "Abril Display W05 Italic",serif;
+  font-weight: 300;
+  padding: $block-spacing 3em;
+}
+.article .achat {
+  margin-top: $block-spacing;
+
+  .infos {
+    display: inline-block;
+    vertical-align: top;
+
+    .ligne {
+      font-size: $size-5;
+      margin-right: 2em;
+
+      span.nom {
+        line-height:2.5em;
+        display: inline-block;
+        vertical-align: top;
+        text-transform: uppercase;
+        margin-right:1em;
+      }
+      span.valeur {
+        display: inline-block;
+        border-radius: $tag-radius;
+        background-color: $purple-light;
+        padding: 1em;
+        padding-bottom: calc(0.5em - 1px);
+        padding-top: calc(0.5em - 1px);
+        height: 2.5em;
+        margin-right:0.3em;
+      }
+      span.taxe {
+        display: inline-block;
+        font-size:$size-7;
+      }
+    }
+  }
+
+  .actions {
+    display: inline-block;
+
+    a {
+      display: block;
+    }
+  }
 }
 .block:not(:last-child) {
-  margin-bottom: 1.5rem;
+  margin-bottom: $block-spacing;
 }
 .confinement {
   color: #515151;
-  padding: 0rem 1.5rem 0rem 1.5rem;
+  padding: 0rem $block-spacing 0rem $block-spacing;
 }
 .confinement .container {
   border: 2px #DBFED2 solid;
   border-radius: 8px;
-  padding: 1.5em;
+  padding: $block-spacing;
 }
 .confinement strong {
   border-radius: 8px;
@@ -61,13 +120,13 @@ strong {
   text-align: center;
   background-color: $grey-light;
   color: $purple-heavy;
-  padding: 1.5rem;
+  padding: $block-spacing;
   border-radius: $tag-radius;
   letter-spacing: 0;
 
   .title {
     font-family: 'Futura LT W05 Book', sans-serif;
-    font-size: 1.2em;
+    font-size: $size-4;
     text-transform: uppercase;
 
   }
@@ -82,20 +141,23 @@ strong {
 }
 .content .light-bg {
   color: $purple-heavy;
-  padding: 1.5rem;
+  padding: $block-spacing;
   border-radius: $tag-radius;
 }
 .purple-border {
   border: 2px $purple-light-border solid;
-  padding: 1.5rem;
+  padding: $block-spacing;
   border-radius: $tag-radius;
+}
+.is-styled-tag {
+  display: inline-block;
+  border-radius: $tag-radius;
+  background-color: $purple-light;
+  padding: 0.2rem 0.5rem;
+  margin: 0 0.5em;
 }
 i.big-icon {
   font-size:10rem;
-}
-div.copyright {
-  border-top: 10px $purple-light solid;
-  padding: 1.5rem 1.5rem 3rem;
 }
 h1 {
   margin-bottom:2em;
@@ -117,12 +179,15 @@ hr.light-bg {
   border-bottom: 3rem $purple-light solid;
   background-image:url('/images/hr-heavy.png');
 }
+footer.footer {
+  padding-bottom: 6rem;
+}
 
 //********************************************/
 //***************** Buttons *****************/
 //********************************************/
 a.button.is-primary {
-  margin-bottom:1em;
+  margin-bottom:0.5em;
   background: $purple;
   transition: background-color 0.3s ease;
 }
@@ -182,7 +247,7 @@ input.is-purple-bordered:hover  {
 }
 #main-navbar .navbar-brand h1 {
   display: block;
-  padding-top:1.5rem;
+  padding-top:$block-spacing;
 }
 #main-navbar .navbar-brand a {
   display: inline-block;
@@ -194,7 +259,7 @@ input.is-purple-bordered:hover  {
   margin:0;
 }
 #main-navbar .navbar-start {
-  padding:1.5rem 0;
+  padding:$block-spacing 0;
   display: block;
   width: 100%;
 }
@@ -295,7 +360,7 @@ section.hypnotherapie {
     }
 
     span {
-      font-size: 1.2rem;
+      font-size: $size-5;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -304,7 +369,7 @@ section.hypnotherapie {
     }
 
     strong {
-      font-size: 1.7rem;
+      font-size: $size-3;
     }
   }
   a.bt-highlight:hover {
@@ -315,7 +380,7 @@ section.hypnotherapie {
 
 section.article div.highlight {
   border-radius: $tag-radius;
-  padding: 1.5rem;
+  padding: $block-spacing;
 
   .title,
   .subtitle {
@@ -325,25 +390,25 @@ section.article div.highlight {
 
   .title {
     font-family: 'Futura LT W05 Book', sans-serif;
-    font-size: 1.8em;
+    font-size: $size-3;
     text-transform: uppercase;
-    margin-top: 1.5rem;
+    margin-top: $block-spacing;
     margin-bottom: 1em;
   }
   .subtitle {
     font-family: "Abril Display W05 Italic",serif;
     font-weight: 300;
-    font-size: 1.2rem;
+    font-size: $size-4;
   }
 
   .tabs-wrapper {
-    display: flex;
-    flex-wrap: nowrap;
+
   }
 
   .tabs {
-    margin-bottom: 0;
     display: block;
+    width: 100%;
+    margin-right: $size-7;
 
     ul {
       margin:0;
@@ -363,7 +428,7 @@ section.article div.highlight {
           color:#ffffff;
           display: block;
           position: relative;
-          padding-right: 2rem;
+          padding: 0.5em 2rem 0.5em 0.5em;
         }
         a.is-active {
           border-radius: $tag-radius;
@@ -373,7 +438,7 @@ section.article div.highlight {
           content:'\0042';
           position: absolute;
           right: 0.5rem;
-          font-size: 0.8rem;
+          font-size: $size-7;
           padding-top:0.4rem;
           font-family: 'luminose';
           font-style: normal;
@@ -385,17 +450,19 @@ section.article div.highlight {
       }
     }
     ul:not(:last-child) {
-      margin-bottom:1.5rem;
+      margin-bottom:$block-spacing;
     }
   }
   .content-wrap {
-    margin-left: 1.5rem;
-    padding: 1.5rem;
+    // margin-left: $block-spacing;
+    padding: $block-spacing;
     color: $purple;
     background: #FFFFFF;
     border-radius: $tag-radius;
-    display: flex;
-    flex-grow: 1;
+    display: block;
+    width: 100%;
+    // display: flex;
+    // flex-grow: 1;
 
     .tab-content {
       display: none;
@@ -410,7 +477,7 @@ section.article div.highlight {
         text-align: center;
         font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
         font-weight: 600;
-        font-size: 1rem;
+        font-size: $size-6;
       }
 
       .illustration {
@@ -426,6 +493,8 @@ section.article div.highlight {
 
 
 section.oracle {
+  color: $purple-heavy;
+
   background-attachment: fixed;
   background-image: url("/images/interface/pattern-oracle.png");
   background-image:
@@ -438,11 +507,22 @@ section.oracle {
     url("/images/interface/pattern-oracle.png") 1x,
     url("/images/interface/pattern-oracle@2x.png") 2x,
     );
+  .title,
+  .subtitle {
+    color: $purple-heavy;
+  }
 }
 .column section.oracle {
+  color: $purple-heavy;
+
   border-radius: $tag-radius;
-  margin-bottom: 1.5rem;
+  margin-bottom: $block-spacing;
   padding: 0;
+
+  .title,
+  .subtitle {
+    color: $purple-heavy;
+  }
 
   img {
     border-top-left-radius: $tag-radius;
@@ -477,8 +557,22 @@ section.florent {
 }
 .column section.florent {
   border-radius: $tag-radius;
-  margin-bottom: 1.5rem;
+  margin-bottom: $block-spacing;
   padding: 1rem;
+  .button.is-primary {
+    margin-bottom: $block-spacing;
+  }
+  .nom {
+    display: block;
+    text-transform: uppercase;
+  }
+  .adresse {
+    display: block;
+  }
+  .valeur {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 section.florent .container{
@@ -497,11 +591,6 @@ section.florent .content .ligne span.nom {
   vertical-align: top;
   text-transform: uppercase;
 }
-section.florent .content .ligne span.valeur {
-  border-radius: $tag-radius;
-  background-color: $purple-light;
-  padding: 0.2rem 0.5rem;
-}
 section.florent h2.title.is-2.person {
   font-family: $family-sans-serif;
   color: $purple;
@@ -510,6 +599,12 @@ section.florent h3.subtitle.is-3.job {
   font-family: $family-serif;
   color: $purple;
   text-transform: none;
+}
+
+.infos-seance .ligne span.nom {
+  display: inline-block;
+  width: 11rem;
+  vertical-align: middle;
 }
 
 section.newsletter img.illustration {
@@ -600,13 +695,13 @@ section.newsletter img.illustration {
 //
 // }
 
-body.tools {
+body.outil-respiration {
   height: 100vh;
   width: 100vw;
   background-color: #f9f5ff;
 }
 
-body.tools * {
+body.outil-respiration * {
   border: 0;
   box-sizing: border-box;
   margin: 0;
@@ -656,7 +751,7 @@ body.tools * {
   }
 }
 
-body.tools .loader{
+body.outil-respiration .loader{
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -664,14 +759,14 @@ body.tools .loader{
   position: relative;
 }
 
-body.tools .loader__bar{
+body.outil-respiration .loader__bar{
   display: flex;
   flex: 1;
   position: relative;
   width: 100%;
 }
 
-body.tools .loader__bar:before{
+body.outil-respiration .loader__bar:before{
   -webkit-animation-name: loader;
           animation-name: loader;
   -webkit-animation-timing-function: ease;
@@ -686,32 +781,32 @@ body.tools .loader__bar:before{
   height:0%;
   width: 100%;
 }
-body.tools .loader__bar.speed3sec:before{
+body.outil-respiration .loader__bar.speed3sec:before{
   -webkit-animation-duration : 6s;
           animation-duration : 6s;
 }
-body.tools .loader__bar.speed4sec:before{
+body.outil-respiration .loader__bar.speed4sec:before{
   -webkit-animation-duration : 8s;
           animation-duration : 8s;
 }
-body.tools .loader__bar.speed5sec:before{
+body.outil-respiration .loader__bar.speed5sec:before{
   -webkit-animation-duration : 10s;
           animation-duration : 10s;
 }
-body.tools .loader__bar.speed6sec:before{
+body.outil-respiration .loader__bar.speed6sec:before{
   -webkit-animation-duration : 12s;
           animation-duration : 12s;
 }
-body.tools .loader__bar.speed7sec:before{
+body.outil-respiration .loader__bar.speed7sec:before{
   -webkit-animation-duration : 14s;
           animation-duration : 14s;
 }
-body.tools .loader__bar.paused:before{
+body.outil-respiration .loader__bar.paused:before{
   -webkit-animation-play-state: paused;
           animation-play-state: paused;
 }
 
-body.tools .playpause {
+body.outil-respiration .playpause {
   cursor: pointer;
   display: inline-block;
   position: absolute;
@@ -726,13 +821,13 @@ body.tools .playpause {
   transition: 500ms all ease;
 }
 
-body.tools .playpause.paused {
+body.outil-respiration .playpause.paused {
   background: #ffffff;
   border:3px $purple-heavy solid;
   transition: 500ms all ease;
 }
 
-body.tools .playpause span {
+body.outil-respiration .playpause span {
   font-size: 0.3em;
   display: block;
   box-sizing: border-box;
@@ -747,14 +842,14 @@ body.tools .playpause span {
   border-width: 0 0 0 6em;
 }
 
-body.tools .playpause.paused span {
+body.outil-respiration .playpause.paused span {
   transition: 500ms all ease;
   border-color: transparent transparent transparent $purple-heavy;
   border-style: solid;
   border-width: 3.7em 0 3.7em 6em;
 }
 
-body.tools .stop {
+body.outil-respiration .stop {
   transition: 500ms all ease;
   cursor: pointer;
   display: inline-block;
@@ -769,13 +864,13 @@ body.tools .stop {
   border:3px $purple-heavy solid;
 }
 
-body.tools .stop.running {
+body.outil-respiration .stop.running {
   background: transparent;
   transition: 500ms all ease;
   border:3px $purple solid;
 }
 
-body.tools .stop span {
+body.outil-respiration .stop span {
   transition: 500ms all ease;
   display: block;
   box-sizing: border-box;
@@ -787,12 +882,12 @@ body.tools .stop span {
   transform: translate(-50%, -50%);
 }
 
-body.tools .stop.running span {
+body.outil-respiration .stop.running span {
   transition: 500ms all ease;
   background: $purple;
 }
 
-body.tools .configure {
+body.outil-respiration .configure {
   transition: 500ms all ease;
   cursor: pointer;
   display: inline-block;
@@ -806,55 +901,55 @@ body.tools .configure {
   background: #ffffff;
   border:3px $purple-heavy solid;
 }
-body.tools .configure span {
+body.outil-respiration .configure span {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
 }
-body.tools .configure span:before {
+body.outil-respiration .configure span:before {
   content: '';
   position: absolute;
   top: 50%;
   transform: translate(-200%, -50%);
 }
 
-body.tools .configure span:after {
+body.outil-respiration .configure span:after {
   content: '';
   position: absolute;
   top: 50%;
   transform: translate(100%, -50%);
 }
-body.tools .configure span,
-body.tools .configure span:before,
-body.tools .configure span:after {
+body.outil-respiration .configure span,
+body.outil-respiration .configure span:before,
+body.outil-respiration .configure span:after {
   border-radius: 50%;
   border: solid 0.16em $purple-heavy;
   background: $purple-heavy;
 }
 
-body.tools .configure.running {
+body.outil-respiration .configure.running {
   background: transparent;
   transition: 500ms all ease;
   border:3px $purple solid;
 }
-body.tools .configure.running span,
-body.tools .configure.running span:before,
-body.tools .configure.running span:after {
+body.outil-respiration .configure.running span,
+body.outil-respiration .configure.running span:before,
+body.outil-respiration .configure.running span:after {
   border: solid 0.16em $purple;
 }
-body.tools .configure.running.is-active {
+body.outil-respiration .configure.running.is-active {
   background: #fff;
 }
 
-body.tools .playpause:hover,
-body.tools .playpause.paused:hover,
-body.tools .stop:hover,
-body.tools .configure:hover {
+body.outil-respiration .playpause:hover,
+body.outil-respiration .playpause.paused:hover,
+body.outil-respiration .stop:hover,
+body.outil-respiration .configure:hover {
   border:3px #ffffff solid;
   transition: 500ms all ease;
 }
 
-body.tools .track-progress {
+body.outil-respiration .track-progress {
   display: block;
   position: absolute;
   top: 56.5%; left: 50%;
@@ -869,7 +964,7 @@ body.tools .track-progress {
   height:.3rem;
   // padding: .1rem;
 }
-body.tools .track-progress div.completed {
+body.outil-respiration .track-progress div.completed {
   display: block;
   height:.3rem;
   border-radius: 8px;
@@ -885,26 +980,26 @@ body.tools .track-progress div.completed {
   -webkit-animation-play-state: paused;
           animation-play-state: paused;
 }
-body.tools .track-progress div.completed.length5min {
+body.outil-respiration .track-progress div.completed.length5min {
   -webkit-animation-duration : 300s; // defaut pour 5 min
           animation-duration : 300s;
   // -webkit-animation-duration : 37s; // debug
   //         animation-duration : 37s;
 }
-body.tools .track-progress div.completed.length10min {
+body.outil-respiration .track-progress div.completed.length10min {
   -webkit-animation-duration : 600s;
           animation-duration : 600s;
 }
-body.tools .track-progress div.completed.lengthinfinite {
+body.outil-respiration .track-progress div.completed.lengthinfinite {
   -webkit-animation-duration : infinite;
           animation-duration : infinite;
 }
-body.tools .track-progress div.completed.running {
+body.outil-respiration .track-progress div.completed.running {
   -webkit-animation-play-state: running;
           animation-play-state: running;
 }
 
-body.tools .panel-config {
+body.outil-respiration .panel-config {
   display: none;
 
   position: absolute;
@@ -917,16 +1012,16 @@ body.tools .panel-config {
   color: #6163a5;
   padding: 1.25rem;
 }
-body.tools .panel-config.is-active {
+body.outil-respiration .panel-config.is-active {
   display: block;
 }
-body.tools .panel-config .setting {
+body.outil-respiration .panel-config .setting {
   padding-bottom: 1.5em;
 }
-body.tools .panel-config .setting:last-of-type {
+body.outil-respiration .panel-config .setting:last-of-type {
   padding-bottom: 0;
 }
-body.tools .panel-config .setting .values span {
+body.outil-respiration .panel-config .setting .values span {
   transition: 500ms all ease;
   cursor: pointer;
   align-items: center;
@@ -942,11 +1037,11 @@ body.tools .panel-config .setting .values span {
   padding-right: .75em;
   white-space: nowrap;
 }
-body.tools .panel-config .setting .values span.is-active {
+body.outil-respiration .panel-config .setting .values span.is-active {
   background: $purple-heavy;
   color: #ffffff;
 }
-body.tools .panel-config .setting .values span.is-waiting {
+body.outil-respiration .panel-config .setting .values span.is-waiting {
   background: $purple;
   animation: blinkingBackground 2s infinite;
   color: #ffffff;
@@ -980,38 +1075,71 @@ body.tools .panel-config .setting .values span.is-waiting {
     padding: 1.25rem;
   }
 
-  body.tools {
+  body.outil-respiration {
     height: calc(var(--vh, 1vh) * 100);
   }
-  body.tools,
-  body.tools * {
+  body.outil-respiration,
+  body.outil-respiration * {
     font-size:14px;
   }
-  body.tools .panel-config {
+  body.outil-respiration .panel-config {
     width: 90%;
   }
-  body.tools .track-progress {
+  body.outil-respiration .track-progress {
     width: 90%;
   }
 }
 @media only screen and (max-height: 736px) {
-  body.tools,
-  body.tools * {
+  body.outil-respiration,
+  body.outil-respiration * {
     font-size:14px;
   }
-  body.tools .playpause {
+  body.outil-respiration .playpause {
     top: 90%;
   }
-  body.tools .stop {
+  body.outil-respiration .stop {
     top: 90%;
   }
-  body.tools .configure {
+  body.outil-respiration .configure {
     top: 90%;
   }
-  body.tools .track-progress {
+  body.outil-respiration .track-progress {
     top: 10%;
   }
-  body.tools .panel-config {
+  body.outil-respiration .panel-config {
     top: 35%;
   }
+}
+@include fullhd {
+  // Styles applied
+  // above $fullhd
+  html {
+    font-size: 19px;
+  }
+}
+@include widescreen-only {
+  // Styles applied
+  // between $widescreen
+  // and $fullhd
+  html {
+    font-size: 17px;
+  }
+}
+@include desktop-only {
+  // Styles applied
+  // between $desktop
+  // and $widescreen
+  html {
+    font-size: 16px;
+  }
+  section.article div.highlight .tile.is-half-desktop {
+    width:50%;
+  }
+}
+@include touch {
+  html {
+    font-size: 14px;
+  }
+  // Styles applied
+  // below $desktop
 }
