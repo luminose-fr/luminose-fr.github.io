@@ -278,49 +278,7 @@ input.is-purple-bordered:hover  {
   background-color: $purple-light;
   color: $purple-heavy;
 }
-@media screen and (max-width: 1023px) {
 
-  #main-navbar .navbar-brand {
-    padding: 1rem;
-  }
-  body.menu-active {
-    position: fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-    overflow: hidden;
-  }
-  body.menu-active #main-navbar {
-    position: fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-  }
-  #main-navbar .navbar-menu.is-active {
-    background-color: $purple-light;
-    padding-top:8rem;
-    max-height: none;
-    position: absolute;
-    // bottom:0;
-    left:0;
-    right:0;
-    height: 100%;
-  }
-
-  #main-navbar .navbar-brand a#bt-navigation.is-active {
-    background-color: $purple-light;
-    color: $purple-heavy;
-  }
-
-  #main-navbar .navbar-menu.is-active .navbar-start>a {
-    display: block;
-  }
-
-
-
-}
 //********************************************/
 //***************** Modules bandeaux *****************/
 //********************************************/
@@ -328,10 +286,20 @@ section .main {
   padding: 1rem;
 }
 
+section.accroche {
+  .title {
+    padding: 1rem 8rem;
+  }
+}
+
 section.highlight,
 section.article div.highlight {
   background-image: linear-gradient(135deg, $purple, $purple-heavy);
   color:#ffffff;
+
+  i.icon {
+    color:#ffffff;
+  }
 }
 
 section.hypnotherapie {
@@ -607,8 +575,13 @@ section.florent h3.subtitle.is-3.job {
   vertical-align: middle;
 }
 
-section.newsletter img.illustration {
-  padding-left: 3rem;
+section.newsletter {
+  input.input.is-purple-bordered {
+    border-right:0;
+  }
+  i.icon {
+    padding-left: 6rem;
+  }
 }
 //********************************************/
 //***************** Paiement *****************/
@@ -1137,9 +1110,180 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
   }
 }
 @include touch {
-  html {
-    font-size: 14px;
+  h1 .logo {
+    width:70%;
   }
-  // Styles applied
-  // below $desktop
+  .button.is-medium {
+    font-size: $size-6;
+  }
+  i.big-icon {
+    font-size:5rem;
+    width:5rem;
+    height:5rem;
+  }
+  html {
+    font-size: 16px;
+  }
+  .section {
+    padding-top:1.5rem;
+    padding-bottom:1.5rem;
+  }
+  body .section.article,
+  body .section.article:first-of-type {
+    padding-left:1.5rem;
+    padding-right:1.5rem;
+  }
+  section .main {
+    padding: 0.75rem;
+  }
+  section.newsletter {
+    .main {
+      padding: 0rem;
+
+      .has-text-right {
+        text-align: left !important;
+      }
+      .columns:not(.has-text-right) {
+        text-align: center;
+      }
+      i.icon {
+        display: inline-block;
+        padding:0;
+      }
+      form .field.has-addons {
+        display: block;
+
+        .control {
+          display: block;
+          width:100%;
+          input.input.is-purple-bordered {
+            border-radius: $tag-radius;
+            margin-bottom: $size-7;
+            border: 2px $purple-light-border solid;
+          }
+
+          button.button {
+            border-radius: $tag-radius;
+            margin-bottom: $size-7;
+          }
+        }
+      }
+    }
+  }
+  .article .content h1 {
+    font-size: $size-1;
+  }
+  .title.is-2,
+  .article .content h2 {
+    font-size: $size-3;
+    font-weight: 300;
+    line-height: 1.125;
+  }
+
+  section.accroche {
+    padding-top:0.5rem;
+    .title {
+      font-size: $size-4;
+      padding: 0;
+      font-family: 'Futura LT W05 Book', sans-serif;
+      font-weight: 300;
+    }
+  }
+
+  section.hypnotherapie.highlight {
+    .has-text-centered {
+      text-align: left;
+
+      .columns {
+        margin: 0;
+        margin-bottom: calc(1.5rem - .75rem);
+        text-align: left;
+
+        .column {
+          text-align: left;
+          padding: 0.25rem 0;
+        }
+      }
+    }
+    a.bt-highlight {
+      display: flex;
+      flex-direction: row;
+      text-align: left;
+      padding: 0.25rem;
+      height: 5rem;
+      line-height: 1.5rem;
+
+      i.big-icon{
+        font-size:2.5rem;
+        width:20%;
+        padding-left: 0.5rem;
+        height:7rem;
+        margin-bottom: 0;
+        display: inline-flex;
+      }
+
+      span {
+        padding-left:$size-7;
+        width:80%;
+        font-size: $size-6;
+        display: inline-flex;
+        align-items: start;
+      }
+
+      strong {
+        font-size: $size-4;
+      }
+    }
+  }
+
+  section.florent {
+    .content .ligne.adresse span.valeur {
+      display: block;
+      margin: 0;
+    }
+  }
+
+
+  #main-navbar .navbar-brand {
+    padding: 1rem;
+  }
+  body.menu-active {
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    overflow: hidden;
+  }
+  body.menu-active #main-navbar {
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+  }
+  #main-navbar .navbar-start {
+    padding:1.5rem;
+  }
+  #main-navbar .navbar-menu.is-active {
+    background-color: $purple-light;
+    padding-top:5rem;
+    max-height: none;
+    position: absolute;
+    // bottom:0;
+    left:0;
+    right:0;
+    height: 100%;
+  }
+
+  #main-navbar .navbar-brand a#bt-navigation.is-active,
+  #main-navbar .navbar-start>.navbar-item.is-active {
+    background-color: #FFFFFF;
+    color: $purple-heavy;
+  }
+
+  #main-navbar .navbar-menu.is-active .navbar-start>a {
+    display: block;
+    text-align: left;
+  }
 }
