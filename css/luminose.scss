@@ -49,10 +49,12 @@ body .section.article:first-of-type {
 }
 .article .achat {
   margin-top: $block-spacing;
+  margin-bottom: $block-spacing;
 
   .infos {
     display: inline-block;
     vertical-align: top;
+    margin-bottom: $size-7;
 
     .ligne {
       font-size: $size-5;
@@ -296,10 +298,10 @@ section.highlight,
 section.article div.highlight {
   background-image: linear-gradient(135deg, $purple, $purple-heavy);
   color:#ffffff;
-
-  i.icon {
-    color:#ffffff;
-  }
+}
+section.highlight i.icon,
+section.article div.highlight i.big-icon {
+  color:#ffffff;
 }
 
 section.hypnotherapie {
@@ -402,6 +404,7 @@ section.article div.highlight {
           border-radius: $tag-radius;
           background-color: rgba(0, 0, 0, 0.27);
         }
+
         a:before{
           content:'\0042';
           position: absolute;
@@ -424,6 +427,7 @@ section.article div.highlight {
   .content-wrap {
     // margin-left: $block-spacing;
     padding: $block-spacing;
+    padding-top: $size-3;
     color: $purple;
     background: #FFFFFF;
     border-radius: $tag-radius;
@@ -1109,7 +1113,35 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
     width:50%;
   }
 }
-@include touch {
+@include tablet-only {
+  html {
+    font-size: 16px;
+  }
+  .navbar-menu {
+    display: block;
+    box-shadow: none;
+  }
+  .section {
+    padding-top:1.5rem;
+    padding-bottom:1.5rem;
+  }
+  body .section.article,
+  body .section.article:first-of-type {
+    padding-left:1.5rem;
+    padding-right:1.5rem;
+  }
+  section .main {
+    padding: 0.75rem;
+  }
+  section.accroche .title {
+    padding: 1rem 1.5rem;
+  }
+}
+@include mobile {
+  .button {
+    white-space: normal;
+    height: auto;
+  }
   h1 .logo {
     width:70%;
   }
@@ -1171,11 +1203,11 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
     }
   }
   .article .content h1 {
-    font-size: $size-1;
+    font-size: $size-3;
   }
   .title.is-2,
   .article .content h2 {
-    font-size: $size-3;
+    font-size: $size-4;
     font-weight: 300;
     line-height: 1.125;
   }
@@ -1234,6 +1266,43 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
         font-size: $size-4;
       }
     }
+  }
+
+  section.article div.highlight {
+    .title {
+      font-size: $size-4;
+    }
+    .subtitle {
+      font-size: $size-5;
+    }
+    .tabs ul li {
+      a.is-active {
+        background-color: transparent;
+      }
+      a:before {
+        content: '';
+      }
+    }
+    .content-wrap {
+      position: relative;
+      padding: $size-3 $size-7 4rem $size-7;
+
+      #mobile-tabs-toggle {
+        position: absolute;
+        bottom:$size-7;
+        left:$size-7;
+        right:$size-7;
+      }
+    }
+  }
+
+  .article .citation {
+    text-align: center;
+    color: $purple-heavy;
+    font-size: $size-4;
+    font-family: "Abril Display W05 Italic",serif;
+    font-weight: 300;
+    padding: 0;
   }
 
   section.florent {

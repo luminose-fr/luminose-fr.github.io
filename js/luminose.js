@@ -107,6 +107,8 @@ var App = {
       var that = this;
       that.hypnotherapyTabs.items = that.hypnotherapyTabs.querySelectorAll('.tabs ul li a');
       that.hypnotherapyTabs.tabs = that.hypnotherapyTabs.querySelectorAll('.tab-content');
+      that.hypnotherapyTabs.tabsContainer = that.hypnotherapyTabs.querySelector('.tabs');
+      that.hypnotherapyTabs.contentContainer = that.hypnotherapyTabs.querySelector('.content-wrap');
 
       // Track clicks on the menu
       that.hypnotherapyTabs.items.forEach(function(item) {
@@ -131,6 +133,17 @@ var App = {
           });
         }, 5);
       }
+
+      // Setup mobile button for Tabs menu
+      var mobileTabsButton = that.hypnotherapyTabs.querySelector('#mobile-tabs-toggle');
+      if (mobileTabsButton !== null) {
+        mobileTabsButton.addEventListener("click", function () {
+          that.hypnotherapyTabs.contentContainer.classList.add('is-hidden-mobile');
+          that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
+        });
+      }
+
+
 
       // Track URL change (<previous | next> from browser)
       window.addEventListener('locationchange', function(event) {
@@ -158,6 +171,10 @@ var App = {
     });
     item.classList.add('is-active');
     selectedTab.classList.add('is-active');
+
+    // Mobile events
+    that.hypnotherapyTabs.contentContainer.classList.remove('is-hidden-mobile');
+    that.hypnotherapyTabs.tabsContainer.classList.add('is-hidden-mobile');
   },
 
   _stickNavigation: function() {
