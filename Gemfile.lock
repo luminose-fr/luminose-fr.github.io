@@ -279,6 +279,7 @@ PLATFORMS
 DEPENDENCIES
   github-pages
   jekyll (>= 3.6.3)
+  jekyll-seo-tag
   nokogiri (>= 1.10.4)
 
 BUNDLED WITH
