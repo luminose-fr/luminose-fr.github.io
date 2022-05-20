@@ -1,9 +1,7 @@
 <head>
   <meta charset="UTF-8">
-  <title>{% if page.title %}{{ page.title }}{% endif %}{% if page.section != "home" %} - {{ site.title }}{% endif %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="author" content="Florent Jaouali">
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% endif %}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   {% if jekyll.environment == "production" %}
