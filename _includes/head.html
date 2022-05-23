@@ -4,6 +4,8 @@
   <meta name="author" content="Florent Jaouali">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+  <title>{% if page.title %}{{ page.title }}{% endif %}</title>
+
   {% if jekyll.environment == "production" %}
   <link rel="stylesheet" href="/css/luminose.min.css">
   {% else %}
@@ -16,5 +18,5 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  {% seo %}
+  {% seo title=false %}
 </head>

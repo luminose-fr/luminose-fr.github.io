@@ -185,6 +185,13 @@ footer.footer {
   padding-bottom: 6rem;
 }
 
+.element-invisible {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
 //********************************************/
 //***************** Buttons *****************/
 //********************************************/
@@ -240,19 +247,18 @@ input.is-purple-bordered:hover  {
   box-shadow: 0 2px 23px 0 $purple-light;
   transition: box-shadow 0.3s ease-in-out;
 }
-#main-navbar.is-fixed-top .navbar-brand h1 {
+#main-navbar.is-fixed-top .navbar-brand .master-logo {
   display: none;
 }
 #main-navbar .navbar-brand {
   min-height: 0;
   display: block;
 }
-#main-navbar .navbar-brand h1 {
-  display: block;
-  padding-top:$block-spacing;
-}
 #main-navbar .navbar-brand a {
   display: inline-block;
+}
+#main-navbar .navbar-brand a.master-logo {
+  padding-top:$block-spacing;
 }
 #main-navbar .navbar-brand .nav-buttons {
   display: block;
@@ -260,8 +266,11 @@ input.is-purple-bordered:hover  {
 #main-navbar .navbar-brand a.button {
   margin:0;
 }
+#main-navbar .navbar-menu {
+  padding:0;
+}
 #main-navbar .navbar-start {
-  padding:$block-spacing 0;
+  padding:1rem 0;
   display: block;
   width: 100%;
 }
@@ -1142,9 +1151,6 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
     white-space: normal;
     height: auto;
   }
-  h1 .logo {
-    width:70%;
-  }
   .button.is-medium {
     font-size: $size-6;
   }
@@ -1314,6 +1320,9 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
 
 
   #main-navbar .navbar-brand {
+    // padding: 1rem;
+  }
+  #main-navbar #mobile-navigation {
     padding: 1rem;
   }
   body.menu-active {

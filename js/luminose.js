@@ -187,14 +187,14 @@ var App = {
       //        behavior: "smooth"
       //   });
       // }, 5);
-      var realblockHeight = 190;
+      var realblockHeight = 156;
       if (!that.burgerButton.classList.contains('is-active')) {
 
         // console.log("Scroll top: " + document.documentElement.scrollTop);
         // console.log("realblockHeight: " + realblockHeight);
         if (document.body.scrollTop > (realblockHeight) || document.documentElement.scrollTop > (realblockHeight)) {
           that.navbar.classList.add("is-fixed-top");
-          document.body.style.padding = (realblockHeight + 80) + "px 0 0 0";
+          document.body.style.padding = (realblockHeight + 72) + "px 0 0 0";
         } else {
           that.navbar.classList.remove("is-fixed-top");
           document.body.style.padding = "0";
