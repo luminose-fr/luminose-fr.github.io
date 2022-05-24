@@ -23,6 +23,16 @@ body .section.article:first-of-type {
   font-size: $size-1;
   color: $purple;
 }
+.article .content a:not(.button) {
+  text-decoration: underline;
+  color: inherit;
+  background: transparent;
+}
+.article .content a:hover:not(.button) {
+  text-decoration: underline;
+  color: inherit;
+  background: $purple-light;
+}
 .title.is-2,
 .article .content h2 {
   color: $purple;
@@ -477,16 +487,16 @@ section.oracle {
   color: $purple-heavy;
 
   background-attachment: fixed;
-  background-image: url("/images/interface/pattern-oracle.png");
+  background-image: url("/images/interface/pattern-oracle.jpg");
   background-image:
     -webkit-image-set(
-      url("/images/interface/pattern-oracle.png") 1x,
-      url("/images/interface/pattern-oracle@2x.png") 2x,
+      url("/images/interface/pattern-oracle.jpg") 1x,
+      url("/images/interface/pattern-oracle@2x.jpg") 2x,
     );
   background-image:
     image-set(
-    url("/images/interface/pattern-oracle.png") 1x,
-    url("/images/interface/pattern-oracle@2x.png") 2x,
+    url("/images/interface/pattern-oracle.jpg") 1x,
+    url("/images/interface/pattern-oracle@2x.jpg") 2x,
     );
   .title,
   .subtitle {
@@ -521,19 +531,19 @@ section.florent {
   background: $purple-light;
   background-attachment: fixed;
   background-image: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%);
-  background-image: url("/images/interface/pattern-seigaiha-light.png");
-  background-image: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%), url("/images/interface/pattern-seigaiha-light.png");
+  background-image: url("/images/interface/pattern-seigaiha-light.jpg");
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%), url("/images/interface/pattern-seigaiha-light.jpg");
   background-image:
     -webkit-image-set(
       linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%),
-      url("/images/interface/pattern-seigaiha-light.png") 1x,
-      url("/images/interface/pattern-seigaiha-light@2x.png") 2x,
+      url("/images/interface/pattern-seigaiha-light.jpg") 1x,
+      url("/images/interface/pattern-seigaiha-light@2x.jpg") 2x,
     );
   background-image:
     image-set(
       linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%),
-      url("/images/interface/pattern-seigaiha-light.png") 1x,
-      url("/images/interface/pattern-seigaiha-light@2x.png") 2x,
+      url("/images/interface/pattern-seigaiha-light.jpg") 1x,
+      url("/images/interface/pattern-seigaiha-light@2x.jpg") 2x,
     );
 }
 .column section.florent {
