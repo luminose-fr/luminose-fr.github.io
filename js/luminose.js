@@ -140,6 +140,8 @@ var App = {
         mobileTabsButton.addEventListener("click", function () {
           that.hypnotherapyTabs.contentContainer.classList.add('is-hidden-mobile');
           that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
+          // console.log(window.location);
+          history.pushState({}, '', window.location.origin + window.location.pathname);
         });
       }
 
@@ -157,9 +159,14 @@ var App = {
     var item, selectedTab;
     if (hash !== '') {
       item = that.hypnotherapyTabs.querySelector('a[href="' + hash + '"]');
+      // Mobile events
+      that.hypnotherapyTabs.contentContainer.classList.remove('is-hidden-mobile');
+      that.hypnotherapyTabs.tabsContainer.classList.add('is-hidden-mobile');
     } else {
       item = that.hypnotherapyTabs.querySelector('a');
       hash = item.getAttribute("href");
+      that.hypnotherapyTabs.contentContainer.classList.add('is-hidden-mobile');
+      that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
     }
     selectedTab = that.hypnotherapyTabs.querySelector(hash);
 
@@ -172,9 +179,7 @@ var App = {
     item.classList.add('is-active');
     selectedTab.classList.add('is-active');
 
-    // Mobile events
-    that.hypnotherapyTabs.contentContainer.classList.remove('is-hidden-mobile');
-    that.hypnotherapyTabs.tabsContainer.classList.add('is-hidden-mobile');
+
   },
 
   _stickNavigation: function() {

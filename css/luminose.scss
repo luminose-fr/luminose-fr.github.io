@@ -413,13 +413,17 @@ section.article div.highlight {
 
         a {
           border: none;
-          maring:0;
+          margin:0 0 2px 0;
           color:#ffffff;
           display: block;
           position: relative;
+          text-decoration: none;
+          background: transparent;
           padding: 0.5em 2rem 0.5em 0.5em;
         }
-        a.is-active {
+        a.is-active,
+        a:hover {
+          text-decoration: none;
           border-radius: $tag-radius;
           background-color: rgba(0, 0, 0, 0.27);
         }
@@ -1157,6 +1161,12 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
   }
 }
 @include mobile {
+  html, body {
+    overflow-x: hidden;
+  }
+  body {
+    position: relative;
+  }
   .button {
     white-space: normal;
     height: auto;
@@ -1292,8 +1302,14 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
       font-size: $size-5;
     }
     .tabs ul li {
+      a, a:hover, a.is-active, a.is-active:hover {
+        text-decoration: underline;
+      }
       a.is-active {
         background-color: transparent;
+      }
+      a.is-active:hover {
+        background-color: rgba(0,0,0,0.27);
       }
       a:before {
         content: '';
