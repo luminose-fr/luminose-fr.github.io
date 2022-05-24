@@ -4,13 +4,13 @@
   <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-754802-11"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y21R3X1FY1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'UA-754802-11');
+    gtag('config', 'G-Y21R3X1FY1');
   </script>
 
 {% else %}
@@ -21,5 +21,7 @@
 {% endif %}
 
 <script type="text/javascript">
-  App.run();
+  document.addEventListener("DOMContentLoaded", function() {
+    App.run();
+  });
 </script>

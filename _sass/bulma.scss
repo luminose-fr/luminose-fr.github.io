@@ -1,0 +1,57 @@
+// Set your brand colors
+$purple: #6163A5;
+$purple-heavy: #60407F;
+$purple-light: #F9F5FF;
+$purple-light-border: #E8DEF6;
+$grey-light: #F2F2F2;
+
+$family-sans-serif: 'Futura LT W05 Book', sans-serif;
+$family-serif: 'Abril Display W05 Italic', serif;
+
+$family-secondary: $family-serif ;
+$text	: $purple;
+$text-strong: $purple-heavy;
+$title-family: $family-secondary;
+$title-color: $purple;
+$body-size: 16px;
+$primary: $purple;
+$link: $purple-heavy;
+$title-weight: 300;
+$subtitle-weight: 300;
+
+$radius-large : 8px;
+$box-shadow: 0 0.7em 2em 0 rgba($purple-heavy, 0.16);
+
+$tag-radius : 8px;
+$tag-background-color: $purple-light;
+
+$footer-background-color: #FFFFFF;
+$footer-color: $purple;
+$footer-padding: 1.5rem;
+
+$gear_icon_size: 1em;
+
+//@import "../_modules/bulma-0.9.4/bulma.sass";
+
+// Import only what you need from Bulma
+@import "bulma-0.9.4/sass/utilities/_all.sass";
+@import "bulma-0.9.4/sass/base/_all.sass";
+@import "bulma-0.9.4/sass/helpers/_all.sass";
+@import "bulma-0.9.4/sass/elements/button.sass";
+@import "bulma-0.9.4/sass/elements/container.sass";
+@import "bulma-0.9.4/sass/elements/content.sass";
+@import "bulma-0.9.4/sass/elements/icon.sass";
+@import "bulma-0.9.4/sass/elements/notification.sass";
+@import "bulma-0.9.4/sass/elements/title.sass";
+@import "bulma-0.9.4/sass/elements/box.sass";
+@import "bulma-0.9.4/sass/elements/tag.sass";
+@import "bulma-0.9.4/sass/components/modal.sass";
+@import "bulma-0.9.4/sass/components/navbar.sass";
+@import "bulma-0.9.4/sass/components/tabs.sass";
+@import "bulma-0.9.4/sass/form/shared.sass";
+@import "bulma-0.9.4/sass/form/input-textarea.sass";
+@import "bulma-0.9.4/sass/form/tools.sass";
+@import "bulma-0.9.4/sass/grid/columns.sass";
+@import "bulma-0.9.4/sass/grid/tiles.sass";
+@import "bulma-0.9.4/sass/layout/footer.sass";
+@import "bulma-0.9.4/sass/layout/section.sass";

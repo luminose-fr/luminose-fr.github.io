@@ -1,92 +1,10 @@
+---
+---
+
 @charset "utf-8";
-
-/* This CSS resource incorporates links to font software which is the valuable copyrighted property of Monotype and/or its suppliers. You may not attempt to copy, install, redistribute, convert, modify or reverse engineer this font software. Please contact Monotype with any questions regarding Web Fonts: https://www.linotype.com */
-@import url("https://fast.fonts.net/lt/1.css?apiType=css&c=7d5eecea-6a78-405f-9101-8527f4dd7b18&fontids=5313918");
-@font-face{
-    font-family:"Abril Display W05 Italic";
-    src:url("/fonts/5197317/0a5d5485-b415-4692-bc4d-bf1f30dcf946.eot?#iefix");
-    src:url("/fonts/5197317/0a5d5485-b415-4692-bc4d-bf1f30dcf946.eot?#iefix") format("eot"),
-        url("/fonts/5197317/e95ab4d7-0b64-43c7-88ec-c70de2273848.woff2") format("woff2"),
-        url("/fonts/5197317/65d70e48-ef4e-48c6-90b9-3cb9f247dcfd.woff") format("woff"),
-        url("/fonts/5197317/6be7e520-0945-476a-8ac2-10c029effcfe.ttf") format("truetype");
-}
-@font-face{
-    font-family:"Futura LT W05 Book";
-    src:url("/fonts/5313918/a411c21e-f439-48c1-bddb-887ec08b5224.eot?#iefix");
-    src:url("/fonts/5313918/a411c21e-f439-48c1-bddb-887ec08b5224.eot?#iefix") format("eot"),
-        url("/fonts/5313918/7a337894-f253-4a5d-a63e-0d8275cedec5.woff2") format("woff2"),
-        url("/fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff") format("woff"),
-        url("/fonts/5313918/feaf9b77-0958-45fa-96c3-1afc445987ef.ttf") format("truetype");
-}
-@font-face{
-    font-family:"Futura LT W05 Medium";
-    src:url("/fonts/ext/ext2.eot?#iefix");
-    src:url("/fonts/ext/ext2.eot?#iefix") format("eot"),
-        url("/fonts/ext/ext2.woff2") format("woff2"),
-        url("/fonts/ext/ext2.woff") format("woff"),
-        url("/fonts/ext/ext2.ttf") format("truetype");
-}
-
-// Respiration animation
-$default-animation-speed: 10s;
-$default-animation-loop: 30; // 30 X 10s = 5 min (par défaut)
-
-// Set your brand colors
-$purple: #6163A5;
-$purple-heavy: #60407F;
-$purple-light: #F9F5FF;
-
-$family-sans-serif: 'Futura LT W05 Book', sans-serif;
-$family-serif: 'Abril Display W05 Italic', serif;
-
-$family-secondary: $family-serif ;
-$text	: $purple;
-$text-strong: $purple-heavy;
-$title-family: $family-secondary;
-$title-color: $purple;
-$body-size: 16px;
-$grey-light: $purple-light;
-$primary: $purple;
-$link: $purple-heavy;
-$title-weight: 300;
-$subtitle-weight: 300;
-
-$radius-large : 8px;
-$box-shadow: 0 0.7em 2em 0 rgba($purple-heavy, 0.16);
-
-$tag-radius : 8px;
-$tag-background-color: $purple-light;
-
-$footer-background-color: $purple-heavy;
-$footer-color: #FFFFFF;
-$footer-padding: 1.5rem;
-
-$gear_icon_size: 1em;
-
-$navbar-height: 6.50rem;
-
-//@import "../_modules/bulma-0.9.1/bulma.sass";
-
-// Import only what you need from Bulma
-@import "../_modules/bulma-0.9.1/sass/utilities/_all.sass";
-@import "../_modules/bulma-0.9.1/sass/base/_all.sass";
-@import "../_modules/bulma-0.9.1/sass/helpers/_all.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/button.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/container.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/content.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/icon.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/notification.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/title.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/box.sass";
-@import "../_modules/bulma-0.9.1/sass/elements/tag.sass";
-@import "../_modules/bulma-0.9.1/sass/components/modal.sass";
-@import "../_modules/bulma-0.9.1/sass/components/navbar.sass";
-@import "../_modules/bulma-0.9.1/sass/form/shared.sass";
-@import "../_modules/bulma-0.9.1/sass/form/input-textarea.sass";
-@import "../_modules/bulma-0.9.1/sass/form/tools.sass";
-@import "../_modules/bulma-0.9.1/sass/grid/columns.sass";
-@import "../_modules/bulma-0.9.1/sass/layout/footer.sass";
-@import "../_modules/bulma-0.9.1/sass/layout/section.sass";
+@import "fonts.scss";
+@import "bulma.scss";
+@import "respiration.scss";
 
 body,
 body * {
@@ -95,30 +13,106 @@ body * {
 strong {
   font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
 }
-.title.is-2 {
-  font-size: 1.8em;
+body .section.article {
+  padding: 3rem 0 3rem 0;
 }
-.subtitle.is-3 {
+body .section.article:first-of-type {
+  padding: 0 0 3rem 0;
+}
+.article .content h1 {
+  font-size: $size-1;
+  color: $purple;
+}
+.article .content a:not(.button) {
+  text-decoration: underline;
+  color: inherit;
+  background: transparent;
+}
+.article .content a:hover:not(.button) {
+  text-decoration: underline;
+  color: inherit;
+  background: $purple-light;
+}
+.title.is-2,
+.article .content h2 {
+  color: $purple;
+  font-size: $size-2;
+  font-family: "Abril Display W05 Italic",serif;
+  font-weight: 300;
+  line-height: 1.125;
+}
+.is-3,
+.article .content h3 {
+  font-family: 'Futura LT W05 Book', sans-serif;
+  font-weight: 300;
+  font-size: $size-6;
+  color: $purple;
   text-transform: uppercase;
-  font-size: 1.2em;
 }
-.navbar-item img.logo {
-  max-height: none;
+.article .citation {
+  text-align: center;
+  color: $purple-heavy;
+  font-size: $size-1;
+  font-family: "Abril Display W05 Italic",serif;
+  font-weight: 300;
+  padding: $block-spacing 3em;
 }
-.container {
-  max-width: 720px;
+.article .achat {
+  margin-top: $block-spacing;
+  margin-bottom: $block-spacing;
+
+  .infos {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: $size-7;
+
+    .ligne {
+      font-size: $size-5;
+      margin-right: 2em;
+
+      span.nom {
+        line-height:2.5em;
+        display: inline-block;
+        vertical-align: top;
+        text-transform: uppercase;
+        margin-right:1em;
+      }
+      span.valeur {
+        display: inline-block;
+        border-radius: $tag-radius;
+        background-color: $purple-light;
+        padding: 1em;
+        padding-bottom: calc(0.5em - 1px);
+        padding-top: calc(0.5em - 1px);
+        height: 2.5em;
+        margin-right:0.3em;
+      }
+      span.taxe {
+        display: inline-block;
+        font-size:$size-7;
+      }
+    }
+  }
+
+  .actions {
+    display: inline-block;
+
+    a {
+      display: block;
+    }
+  }
 }
 .block:not(:last-child) {
-  margin-bottom: 1.5rem;
+  margin-bottom: $block-spacing;
 }
 .confinement {
   color: #515151;
-  padding: 0rem 1.5rem 0rem 1.5rem;
+  padding: 0rem $block-spacing 0rem $block-spacing;
 }
 .confinement .container {
   border: 2px #DBFED2 solid;
   border-radius: 8px;
-  padding: 1.5em;
+  padding: $block-spacing;
 }
 .confinement strong {
   border-radius: 8px;
@@ -134,6 +128,21 @@ strong {
   white-space: nowrap;
   font-weight: normal;
 }
+.light-grey-bg {
+  text-align: center;
+  background-color: $grey-light;
+  color: $purple-heavy;
+  padding: $block-spacing;
+  border-radius: $tag-radius;
+  letter-spacing: 0;
+
+  .title {
+    font-family: 'Futura LT W05 Book', sans-serif;
+    font-size: $size-4;
+    text-transform: uppercase;
+
+  }
+}
 .light-bg {
   background-color: $purple-light;
   color: $purple-heavy;
@@ -142,51 +151,29 @@ strong {
 .light-bg .subtitle {
   color: $purple-heavy;
 }
-.newsletter {
-  padding-bottom: 6rem;
+.content .light-bg {
+  color: $purple-heavy;
+  padding: $block-spacing;
+  border-radius: $tag-radius;
 }
-
-div.copyright {
-  border-top: 10px $purple-light solid;
-  padding: 1.5rem 1.5rem 3rem;
+.purple-border {
+  border: 2px $purple-light-border solid;
+  padding: $block-spacing;
+  border-radius: $tag-radius;
+}
+.is-styled-tag {
+  display: inline-block;
+  border-radius: $tag-radius;
+  background-color: $purple-light;
+  padding: 0.2rem 0.5rem;
+  margin: 0 0.5em;
+}
+i.big-icon {
+  font-size:10rem;
 }
 h1 {
   margin-bottom:2em;
 }
-
-.main .column.picture {
-  text-align: right;
-}
-.main h2.title.is-2.person {
-  font-family: $family-sans-serif;
-  color: $purple;
-}
-.main h3.subtitle.is-3.job {
-  font-family: $family-serif;
-  color: $purple;
-  text-transform: none;
-}
-.vsplitter.column {
-  flex-grow:0;
-  padding:0 0.36em;
-  background: white;
-  border-radius: 5em;
-}
-.main p.is-small {
-
-}
-.main a.button.is-primary {
-  margin-bottom:1em;
-  background: $purple;
-  transition: 0.3s;
-}
-.main a.button.is-primary:hover {
-  background: $purple-heavy;
-}
-section.seances h3.subtitle.is-3 {
-  margin-top: 2em;
-}
-
 hr {
     margin:0;
     display:block;
@@ -204,8 +191,424 @@ hr.light-bg {
   border-bottom: 3rem $purple-light solid;
   background-image:url('/images/hr-heavy.png');
 }
+footer.footer {
+  padding-bottom: 6rem;
+}
 
-//************** Paiement *****************/
+.element-invisible {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+//********************************************/
+//***************** Buttons *****************/
+//********************************************/
+a.button.is-primary {
+  margin-bottom:0.5em;
+  background: $purple;
+  transition: background-color 0.3s ease;
+}
+#main-navbar .navbar-start > .navbar-item.button.is-primary {
+  color:#ffffff;
+}
+a.button.is-primary:hover {
+  background: $purple-heavy;
+}
+a.button.is-white {
+  color:$purple-heavy;
+  transition: background-color 0.3s ease;
+}
+a.button.is-white:hover,
+button.button.is-white:hover {
+  background: $purple-light;
+  color:$purple-heavy;
+}
+a.button.is-purple-bordered,
+button.button.is-purple-bordered,
+input.is-purple-bordered,
+a.button.is-purple-bordered:hover ,
+button.button.is-purple-bordered:hover ,
+input.is-purple-bordered:hover  {
+  color:$purple-heavy;
+  border: 2px $purple-light-border solid;
+  box-shadow: none;
+}
+.field.has-addons .control:last-child:not(:only-child) .button.is-purple-bordered {
+  // border-left:2px;
+}
+
+//********************************************/
+//***************** Navigation *****************/
+//********************************************/
+.section.header {
+  padding:0;
+}
+#main-navbar {
+  min-height: 0;
+}
+@media screen and (min-width: 1024px) {
+    #main-navbar.navbar {
+      flex-direction: column;
+    }
+}
+#main-navbar.is-fixed-top {
+  box-shadow: 0 2px 23px 0 $purple-light;
+  transition: box-shadow 0.3s ease-in-out;
+}
+#main-navbar.is-fixed-top .navbar-brand .master-logo {
+  display: none;
+}
+#main-navbar .navbar-brand {
+  min-height: 0;
+  display: block;
+}
+#main-navbar .navbar-brand a {
+  display: inline-block;
+}
+#main-navbar .navbar-brand a.master-logo {
+  padding-top:$block-spacing;
+}
+#main-navbar .navbar-brand .nav-buttons {
+  display: block;
+}
+#main-navbar .navbar-brand a.button {
+  margin:0;
+}
+#main-navbar .navbar-menu {
+  padding:0;
+}
+#main-navbar .navbar-start {
+  padding:1rem 0;
+  display: block;
+  width: 100%;
+}
+#main-navbar .navbar-start a.button {
+  margin:0;
+}
+#main-navbar .navbar-start>.navbar-item,
+#main-navbar .navbar-start .navbar-link {
+  display: inline-block;
+  border-radius: $tag-radius;
+  color: $purple-heavy;
+
+}
+#main-navbar .navbar-start>.navbar-item.is-active {
+  border-radius: $tag-radius;
+  background-color: $purple-light;
+  color: $purple-heavy;
+}
+
+//********************************************/
+//***************** Modules bandeaux *****************/
+//********************************************/
+section .main {
+  padding: 1rem;
+}
+
+section.accroche {
+  .title {
+    padding: 1rem 8rem;
+  }
+}
+
+section.highlight,
+section.article div.highlight {
+  background-image: linear-gradient(135deg, $purple, $purple-heavy);
+  color:#ffffff;
+}
+section.highlight i.icon,
+section.article div.highlight i.big-icon {
+  color:#ffffff;
+}
+
+section.hypnotherapie {
+  .is-2 {
+    color: #FFFFFF;
+  }
+  .columns {
+    margin: 2.25rem;
+  }
+  a.bt-highlight {
+    background-color: rgba(0, 0, 0, 0.12);
+    color:#FFFFFF;
+    border-radius: $tag-radius;
+    padding: 1rem;
+    height: 14rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    transition: background-color 0.3s ease;
+
+    i.big-icon{
+      font-size:4rem;
+      margin-bottom: 2rem;
+    }
+
+    span {
+      font-size: $size-5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-wrap: nowrap;
+    }
+
+    strong {
+      font-size: $size-3;
+    }
+  }
+  a.bt-highlight:hover {
+    background-color: rgba(0, 0, 0, 0.30);
+  }
+}
+
+
+section.article div.highlight {
+  border-radius: $tag-radius;
+  padding: $block-spacing;
+
+  .title,
+  .subtitle {
+    color: #ffffff;
+    text-align: center;
+  }
+
+  .title {
+    font-family: 'Futura LT W05 Book', sans-serif;
+    font-size: $size-3;
+    text-transform: uppercase;
+    margin-top: $block-spacing;
+    margin-bottom: 1em;
+  }
+  .subtitle {
+    font-family: "Abril Display W05 Italic",serif;
+    font-weight: 300;
+    font-size: $size-4;
+  }
+
+  .tabs-wrapper {
+
+  }
+
+  .tabs {
+    display: block;
+    width: 100%;
+    margin-right: $size-7;
+
+    ul {
+      margin:0;
+      padding:0.5rem;
+      display: block;
+      border-radius: $tag-radius;
+      background-color: rgba(0, 0, 0, 0.12);
+      text-align: left;
+      border-bottom-color: transparent !important;
+
+      li {
+        display: block;
+
+        a {
+          border: none;
+          maring:0;
+          color:#ffffff;
+          display: block;
+          position: relative;
+          padding: 0.5em 2rem 0.5em 0.5em;
+        }
+        a.is-active {
+          border-radius: $tag-radius;
+          background-color: rgba(0, 0, 0, 0.27);
+        }
+
+        a:before{
+          content:'\0042';
+          position: absolute;
+          right: 0.5rem;
+          font-size: $size-7;
+          padding-top:0.4rem;
+          font-family: 'luminose';
+          font-style: normal;
+          font-weight: normal;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+      }
+    }
+    ul:not(:last-child) {
+      margin-bottom:$block-spacing;
+    }
+  }
+  .content-wrap {
+    // margin-left: $block-spacing;
+    padding: $block-spacing;
+    padding-top: $size-3;
+    color: $purple;
+    background: #FFFFFF;
+    border-radius: $tag-radius;
+    display: block;
+    width: 100%;
+    // display: flex;
+    // flex-grow: 1;
+
+    .tab-content {
+      display: none;
+
+      &.is-active {
+        display: block;
+        width: 100%;
+      }
+
+      .title {
+        color: $purple;
+        text-align: center;
+        font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+        font-weight: 600;
+        font-size: $size-6;
+      }
+
+      .illustration {
+        text-align: center;
+
+        i.icon {
+          font-size: 4rem;
+        }
+      }
+    }
+  }
+}
+
+
+section.oracle {
+  color: $purple-heavy;
+
+  background-attachment: fixed;
+  background-image: url("/images/interface/pattern-oracle.jpg");
+  background-image:
+    -webkit-image-set(
+      url("/images/interface/pattern-oracle.jpg") 1x,
+      url("/images/interface/pattern-oracle@2x.jpg") 2x,
+    );
+  background-image:
+    image-set(
+    url("/images/interface/pattern-oracle.jpg") 1x,
+    url("/images/interface/pattern-oracle@2x.jpg") 2x,
+    );
+  .title,
+  .subtitle {
+    color: $purple-heavy;
+  }
+}
+.column section.oracle {
+  color: $purple-heavy;
+
+  border-radius: $tag-radius;
+  margin-bottom: $block-spacing;
+  padding: 0;
+
+  .title,
+  .subtitle {
+    color: $purple-heavy;
+  }
+
+  img {
+    border-top-left-radius: $tag-radius;
+    border-top-right-radius: $tag-radius;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+}
+
+
+
+section.florent {
+  background: $purple-light;
+  background-attachment: fixed;
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%);
+  background-image: url("/images/interface/pattern-seigaiha-light.jpg");
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%), url("/images/interface/pattern-seigaiha-light.jpg");
+  background-image:
+    -webkit-image-set(
+      linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%),
+      url("/images/interface/pattern-seigaiha-light.jpg") 1x,
+      url("/images/interface/pattern-seigaiha-light@2x.jpg") 2x,
+    );
+  background-image:
+    image-set(
+      linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(249,245,255,0.7) 100%),
+      url("/images/interface/pattern-seigaiha-light.jpg") 1x,
+      url("/images/interface/pattern-seigaiha-light@2x.jpg") 2x,
+    );
+}
+.column section.florent {
+  border-radius: $tag-radius;
+  margin-bottom: $block-spacing;
+  padding: 1rem;
+  .button.is-primary {
+    margin-bottom: $block-spacing;
+  }
+  .nom {
+    display: block;
+    text-transform: uppercase;
+  }
+  .adresse {
+    display: block;
+  }
+  .valeur {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+section.florent .container{
+  border:2px $purple-light-border solid;
+  border-radius: $tag-radius;
+  background-color: $white;
+}
+section.florent .button.is-primary {
+  margin-bottom: 0;
+}
+section.florent .content .ligne span {
+  display: inline-block;
+}
+section.florent .content .ligne span.nom {
+  width: 4rem;
+  vertical-align: top;
+  text-transform: uppercase;
+}
+section.florent h2.title.is-2.person {
+  font-family: $family-sans-serif;
+  color: $purple;
+}
+section.florent h3.subtitle.is-3.job {
+  font-family: $family-serif;
+  color: $purple;
+  text-transform: none;
+}
+
+.infos-seance .ligne span.nom {
+  display: inline-block;
+  width: 11rem;
+  vertical-align: middle;
+}
+
+section.newsletter {
+  input.input.is-purple-bordered {
+    border-right:0;
+  }
+  i.icon {
+    padding-left: 6rem;
+  }
+}
+//********************************************/
+//***************** Paiement *****************/
+//********************************************/
 .paiement .box.main {
   padding: 5em;
 }
@@ -277,7 +680,9 @@ hr.light-bg {
     background-color:rgba(10, 10, 10, .4)
 }
 
+//********************************************/
 //************** Respiration *****************/
+//********************************************/
 
 //
 // html{
@@ -286,13 +691,13 @@ hr.light-bg {
 //
 // }
 
-body.tools {
+body.outil-respiration {
   height: 100vh;
   width: 100vw;
   background-color: #f9f5ff;
 }
 
-body.tools * {
+body.outil-respiration * {
   border: 0;
   box-sizing: border-box;
   margin: 0;
@@ -342,7 +747,7 @@ body.tools * {
   }
 }
 
-body.tools .loader{
+body.outil-respiration .loader{
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -350,14 +755,14 @@ body.tools .loader{
   position: relative;
 }
 
-body.tools .loader__bar{
+body.outil-respiration .loader__bar{
   display: flex;
   flex: 1;
   position: relative;
   width: 100%;
 }
 
-body.tools .loader__bar:before{
+body.outil-respiration .loader__bar:before{
   -webkit-animation-name: loader;
           animation-name: loader;
   -webkit-animation-timing-function: ease;
@@ -372,32 +777,32 @@ body.tools .loader__bar:before{
   height:0%;
   width: 100%;
 }
-body.tools .loader__bar.speed3sec:before{
+body.outil-respiration .loader__bar.speed3sec:before{
   -webkit-animation-duration : 6s;
           animation-duration : 6s;
 }
-body.tools .loader__bar.speed4sec:before{
+body.outil-respiration .loader__bar.speed4sec:before{
   -webkit-animation-duration : 8s;
           animation-duration : 8s;
 }
-body.tools .loader__bar.speed5sec:before{
+body.outil-respiration .loader__bar.speed5sec:before{
   -webkit-animation-duration : 10s;
           animation-duration : 10s;
 }
-body.tools .loader__bar.speed6sec:before{
+body.outil-respiration .loader__bar.speed6sec:before{
   -webkit-animation-duration : 12s;
           animation-duration : 12s;
 }
-body.tools .loader__bar.speed7sec:before{
+body.outil-respiration .loader__bar.speed7sec:before{
   -webkit-animation-duration : 14s;
           animation-duration : 14s;
 }
-body.tools .loader__bar.paused:before{
+body.outil-respiration .loader__bar.paused:before{
   -webkit-animation-play-state: paused;
           animation-play-state: paused;
 }
 
-body.tools .playpause {
+body.outil-respiration .playpause {
   cursor: pointer;
   display: inline-block;
   position: absolute;
@@ -412,13 +817,13 @@ body.tools .playpause {
   transition: 500ms all ease;
 }
 
-body.tools .playpause.paused {
+body.outil-respiration .playpause.paused {
   background: #ffffff;
   border:3px $purple-heavy solid;
   transition: 500ms all ease;
 }
 
-body.tools .playpause span {
+body.outil-respiration .playpause span {
   font-size: 0.3em;
   display: block;
   box-sizing: border-box;
@@ -433,14 +838,14 @@ body.tools .playpause span {
   border-width: 0 0 0 6em;
 }
 
-body.tools .playpause.paused span {
+body.outil-respiration .playpause.paused span {
   transition: 500ms all ease;
   border-color: transparent transparent transparent $purple-heavy;
   border-style: solid;
   border-width: 3.7em 0 3.7em 6em;
 }
 
-body.tools .stop {
+body.outil-respiration .stop {
   transition: 500ms all ease;
   cursor: pointer;
   display: inline-block;
@@ -455,13 +860,13 @@ body.tools .stop {
   border:3px $purple-heavy solid;
 }
 
-body.tools .stop.running {
+body.outil-respiration .stop.running {
   background: transparent;
   transition: 500ms all ease;
   border:3px $purple solid;
 }
 
-body.tools .stop span {
+body.outil-respiration .stop span {
   transition: 500ms all ease;
   display: block;
   box-sizing: border-box;
@@ -473,12 +878,12 @@ body.tools .stop span {
   transform: translate(-50%, -50%);
 }
 
-body.tools .stop.running span {
+body.outil-respiration .stop.running span {
   transition: 500ms all ease;
   background: $purple;
 }
 
-body.tools .configure {
+body.outil-respiration .configure {
   transition: 500ms all ease;
   cursor: pointer;
   display: inline-block;
@@ -492,55 +897,55 @@ body.tools .configure {
   background: #ffffff;
   border:3px $purple-heavy solid;
 }
-body.tools .configure span {
+body.outil-respiration .configure span {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
 }
-body.tools .configure span:before {
+body.outil-respiration .configure span:before {
   content: '';
   position: absolute;
   top: 50%;
   transform: translate(-200%, -50%);
 }
 
-body.tools .configure span:after {
+body.outil-respiration .configure span:after {
   content: '';
   position: absolute;
   top: 50%;
   transform: translate(100%, -50%);
 }
-body.tools .configure span,
-body.tools .configure span:before,
-body.tools .configure span:after {
+body.outil-respiration .configure span,
+body.outil-respiration .configure span:before,
+body.outil-respiration .configure span:after {
   border-radius: 50%;
   border: solid 0.16em $purple-heavy;
   background: $purple-heavy;
 }
 
-body.tools .configure.running {
+body.outil-respiration .configure.running {
   background: transparent;
   transition: 500ms all ease;
   border:3px $purple solid;
 }
-body.tools .configure.running span,
-body.tools .configure.running span:before,
-body.tools .configure.running span:after {
+body.outil-respiration .configure.running span,
+body.outil-respiration .configure.running span:before,
+body.outil-respiration .configure.running span:after {
   border: solid 0.16em $purple;
 }
-body.tools .configure.running.is-active {
+body.outil-respiration .configure.running.is-active {
   background: #fff;
 }
 
-body.tools .playpause:hover,
-body.tools .playpause.paused:hover,
-body.tools .stop:hover,
-body.tools .configure:hover {
+body.outil-respiration .playpause:hover,
+body.outil-respiration .playpause.paused:hover,
+body.outil-respiration .stop:hover,
+body.outil-respiration .configure:hover {
   border:3px #ffffff solid;
   transition: 500ms all ease;
 }
 
-body.tools .track-progress {
+body.outil-respiration .track-progress {
   display: block;
   position: absolute;
   top: 56.5%; left: 50%;
@@ -555,7 +960,7 @@ body.tools .track-progress {
   height:.3rem;
   // padding: .1rem;
 }
-body.tools .track-progress div.completed {
+body.outil-respiration .track-progress div.completed {
   display: block;
   height:.3rem;
   border-radius: 8px;
@@ -571,26 +976,26 @@ body.tools .track-progress div.completed {
   -webkit-animation-play-state: paused;
           animation-play-state: paused;
 }
-body.tools .track-progress div.completed.length5min {
+body.outil-respiration .track-progress div.completed.length5min {
   -webkit-animation-duration : 300s; // defaut pour 5 min
           animation-duration : 300s;
   // -webkit-animation-duration : 37s; // debug
   //         animation-duration : 37s;
 }
-body.tools .track-progress div.completed.length10min {
+body.outil-respiration .track-progress div.completed.length10min {
   -webkit-animation-duration : 600s;
           animation-duration : 600s;
 }
-body.tools .track-progress div.completed.lengthinfinite {
+body.outil-respiration .track-progress div.completed.lengthinfinite {
   -webkit-animation-duration : infinite;
           animation-duration : infinite;
 }
-body.tools .track-progress div.completed.running {
+body.outil-respiration .track-progress div.completed.running {
   -webkit-animation-play-state: running;
           animation-play-state: running;
 }
 
-body.tools .panel-config {
+body.outil-respiration .panel-config {
   display: none;
 
   position: absolute;
@@ -603,16 +1008,16 @@ body.tools .panel-config {
   color: #6163a5;
   padding: 1.25rem;
 }
-body.tools .panel-config.is-active {
+body.outil-respiration .panel-config.is-active {
   display: block;
 }
-body.tools .panel-config .setting {
+body.outil-respiration .panel-config .setting {
   padding-bottom: 1.5em;
 }
-body.tools .panel-config .setting:last-of-type {
+body.outil-respiration .panel-config .setting:last-of-type {
   padding-bottom: 0;
 }
-body.tools .panel-config .setting .values span {
+body.outil-respiration .panel-config .setting .values span {
   transition: 500ms all ease;
   cursor: pointer;
   align-items: center;
@@ -628,11 +1033,11 @@ body.tools .panel-config .setting .values span {
   padding-right: .75em;
   white-space: nowrap;
 }
-body.tools .panel-config .setting .values span.is-active {
+body.outil-respiration .panel-config .setting .values span.is-active {
   background: $purple-heavy;
   color: #ffffff;
 }
-body.tools .panel-config .setting .values span.is-waiting {
+body.outil-respiration .panel-config .setting .values span.is-waiting {
   background: $purple;
   animation: blinkingBackground 2s infinite;
   color: #ffffff;
@@ -666,38 +1071,307 @@ body.tools .panel-config .setting .values span.is-waiting {
     padding: 1.25rem;
   }
 
-  body.tools {
+  body.outil-respiration {
     height: calc(var(--vh, 1vh) * 100);
   }
-  body.tools,
-  body.tools * {
+  body.outil-respiration,
+  body.outil-respiration * {
     font-size:14px;
   }
-  body.tools .panel-config {
+  body.outil-respiration .panel-config {
     width: 90%;
   }
-  body.tools .track-progress {
+  body.outil-respiration .track-progress {
     width: 90%;
   }
 }
 @media only screen and (max-height: 736px) {
-  body.tools,
-  body.tools * {
+  body.outil-respiration,
+  body.outil-respiration * {
     font-size:14px;
   }
-  body.tools .playpause {
+  body.outil-respiration .playpause {
     top: 90%;
   }
-  body.tools .stop {
+  body.outil-respiration .stop {
     top: 90%;
   }
-  body.tools .configure {
+  body.outil-respiration .configure {
     top: 90%;
   }
-  body.tools .track-progress {
+  body.outil-respiration .track-progress {
     top: 10%;
   }
-  body.tools .panel-config {
+  body.outil-respiration .panel-config {
     top: 35%;
+  }
+}
+@include fullhd {
+  // Styles applied
+  // above $fullhd
+  html {
+    font-size: 19px;
+  }
+}
+@include widescreen-only {
+  // Styles applied
+  // between $widescreen
+  // and $fullhd
+  html {
+    font-size: 17px;
+  }
+}
+@include desktop-only {
+  // Styles applied
+  // between $desktop
+  // and $widescreen
+  html {
+    font-size: 16px;
+  }
+  section.article div.highlight .tile.is-half-desktop {
+    width:50%;
+  }
+}
+@include tablet-only {
+  html {
+    font-size: 16px;
+  }
+  .navbar-menu {
+    display: block;
+    box-shadow: none;
+  }
+  .section {
+    padding-top:1.5rem;
+    padding-bottom:1.5rem;
+  }
+  body .section.article,
+  body .section.article:first-of-type {
+    padding-left:1.5rem;
+    padding-right:1.5rem;
+  }
+  section .main {
+    padding: 0.75rem;
+  }
+  section.accroche .title {
+    padding: 1rem 1.5rem;
+  }
+}
+@include mobile {
+  .button {
+    white-space: normal;
+    height: auto;
+  }
+  .button.is-medium {
+    font-size: $size-6;
+  }
+  i.big-icon {
+    font-size:5rem;
+    width:5rem;
+    height:5rem;
+  }
+  html {
+    font-size: 16px;
+  }
+  .section {
+    padding-top:1.5rem;
+    padding-bottom:1.5rem;
+  }
+  body .section.article,
+  body .section.article:first-of-type {
+    padding-left:1.5rem;
+    padding-right:1.5rem;
+  }
+  section .main {
+    padding: 0.75rem;
+  }
+  section.newsletter {
+    .main {
+      padding: 0rem;
+
+      .has-text-right {
+        text-align: left !important;
+      }
+      .columns:not(.has-text-right) {
+        text-align: center;
+      }
+      i.icon {
+        display: inline-block;
+        padding:0;
+      }
+      form .field.has-addons {
+        display: block;
+
+        .control {
+          display: block;
+          width:100%;
+          input.input.is-purple-bordered {
+            border-radius: $tag-radius;
+            margin-bottom: $size-7;
+            border: 2px $purple-light-border solid;
+          }
+
+          button.button {
+            border-radius: $tag-radius;
+            margin-bottom: $size-7;
+          }
+        }
+      }
+    }
+  }
+  .article .content h1 {
+    font-size: $size-3;
+  }
+  .title.is-2,
+  .article .content h2 {
+    font-size: $size-4;
+    font-weight: 300;
+    line-height: 1.125;
+  }
+
+  section.accroche {
+    padding-top:0.5rem;
+    .title {
+      font-size: $size-4;
+      padding: 0;
+      font-family: 'Futura LT W05 Book', sans-serif;
+      font-weight: 300;
+    }
+  }
+
+  section.hypnotherapie.highlight {
+    .has-text-centered {
+      text-align: left;
+
+      .columns {
+        margin: 0;
+        margin-bottom: calc(1.5rem - .75rem);
+        text-align: left;
+
+        .column {
+          text-align: left;
+          padding: 0.25rem 0;
+        }
+      }
+    }
+    a.bt-highlight {
+      display: flex;
+      flex-direction: row;
+      text-align: left;
+      padding: 0.25rem;
+      height: 5rem;
+      line-height: 1.5rem;
+
+      i.big-icon{
+        font-size:2.5rem;
+        width:20%;
+        padding-left: 0.5rem;
+        height:7rem;
+        margin-bottom: 0;
+        display: inline-flex;
+      }
+
+      span {
+        padding-left:$size-7;
+        width:80%;
+        font-size: $size-6;
+        display: inline-flex;
+        align-items: start;
+      }
+
+      strong {
+        font-size: $size-4;
+      }
+    }
+  }
+
+  section.article div.highlight {
+    .title {
+      font-size: $size-4;
+    }
+    .subtitle {
+      font-size: $size-5;
+    }
+    .tabs ul li {
+      a.is-active {
+        background-color: transparent;
+      }
+      a:before {
+        content: '';
+      }
+    }
+    .content-wrap {
+      position: relative;
+      padding: $size-3 $size-7 4rem $size-7;
+
+      #mobile-tabs-toggle {
+        position: absolute;
+        bottom:$size-7;
+        left:$size-7;
+        right:$size-7;
+      }
+    }
+  }
+
+  .article .citation {
+    text-align: center;
+    color: $purple-heavy;
+    font-size: $size-4;
+    font-family: "Abril Display W05 Italic",serif;
+    font-weight: 300;
+    padding: 0;
+  }
+
+  section.florent {
+    .content .ligne.adresse span.valeur {
+      display: block;
+      margin: 0;
+    }
+  }
+
+
+  #main-navbar .navbar-brand {
+    // padding: 1rem;
+  }
+  #main-navbar #mobile-navigation {
+    padding: 1rem;
+  }
+  body.menu-active {
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    overflow: hidden;
+  }
+  body.menu-active #main-navbar {
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+  }
+  #main-navbar .navbar-start {
+    padding:1.5rem;
+  }
+  #main-navbar .navbar-menu.is-active {
+    background-color: $purple-light;
+    padding-top:5rem;
+    max-height: none;
+    position: absolute;
+    // bottom:0;
+    left:0;
+    right:0;
+    height: 100%;
+  }
+
+  #main-navbar .navbar-brand a#bt-navigation.is-active,
+  #main-navbar .navbar-start>.navbar-item.is-active {
+    background-color: #FFFFFF;
+    color: $purple-heavy;
+  }
+
+  #main-navbar .navbar-menu.is-active .navbar-start>a {
+    display: block;
+    text-align: left;
   }
 }

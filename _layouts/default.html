@@ -5,10 +5,18 @@
 
   <body class="{{ page.section }}">
 
+    {% include navigation.html %}
+
     {{ content }}
 
+    {% include bandeau-florent.html %}
+
+    {% include bandeau-newsletter.html %}
+
+    {% include footer.html %}
+
     {% include scripts.html %}
-    
+
   </body>
 
 </html>
