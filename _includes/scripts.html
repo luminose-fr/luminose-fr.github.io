@@ -1,8 +1,7 @@
+<script src="{{ "/js/howler.core.min.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
+
 {% if jekyll.environment == "production" %}
-
-  <script src="{{ "/js/howler.core.min.js" | prepend: site.baseurl }}"></script>
-  <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
-
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y21R3X1FY1"></script>
   <script>
@@ -12,12 +11,6 @@
 
     gtag('config', 'G-Y21R3X1FY1');
   </script>
-
-{% else %}
-
-  <script src="{{ "/js/howler.core.min.js" | prepend: site.baseurl }}"></script>
-  <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
-
 {% endif %}
 
 <script type="text/javascript">
