@@ -4,6 +4,7 @@
 @charset "utf-8";
 @import "fonts.scss";
 @import "bulma.scss";
+@import "bulma-tooltip.min.scss";
 @import "respiration.scss";
 
 body,
@@ -12,6 +13,7 @@ body * {
 }
 strong {
   font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+  letter-spacing: 0;
 }
 body .section.article {
   padding: 3rem 0 3rem 0;
@@ -23,15 +25,20 @@ body .section.article:first-of-type {
   font-size: $size-1;
   color: $purple;
 }
-.article .content a:not(.button) {
+.article .content a:not(.button):not(.tag) {
   text-decoration: underline;
   color: inherit;
   background: transparent;
 }
-.article .content a:hover:not(.button) {
+.article .content a:hover:not(.button):not(.tag) {
   text-decoration: underline;
   color: inherit;
   background: $purple-light;
+}
+.article .content .highlight a:hover:not(.button) {
+  text-decoration: underline;
+  color: inherit;
+  background: $purple-heavy;
 }
 .title.is-2,
 .article .content h2 {
@@ -128,6 +135,24 @@ body .section.article:first-of-type {
   white-space: nowrap;
   font-weight: normal;
 }
+[data-tooltip]:not(.is-disabled).has-tooltip-primary:before,
+[data-tooltip]:not(.is-loading).has-tooltip-primary:before,
+[data-tooltip]:not([disabled]).has-tooltip-primary:before,
+[data-tooltip]:not(.is-disabled).has-tooltip-primary.has-tooltip-right:after,
+[data-tooltip]:not(.is-loading).has-tooltip-primary.has-tooltip-right:after,
+[data-tooltip]:not([disabled]).has-tooltip-primary.has-tooltip-right:after {
+  background-color: $grey-light;
+  color: $purple-heavy;
+}
+span[data-tooltip].has-tooltip-primary {
+  border-bottom-color: $purple;
+}
+[data-tooltip]:not(.is-disabled).has-tooltip-primary:after,
+[data-tooltip]:not(.is-loading).has-tooltip-primary:after,
+[data-tooltip]:not([disabled]).has-tooltip-primary:after {
+  border-color: $grey-light transparent transparent !important;
+}
+
 .light-grey-bg {
   text-align: center;
   background-color: $grey-light;
@@ -148,7 +173,9 @@ body .section.article:first-of-type {
   color: $purple-heavy;
 }
 .light-bg .title,
-.light-bg .subtitle {
+.light-bg .subtitle,
+.content .light-bg h2,
+.content .light-bg h3 {
   color: $purple-heavy;
 }
 .content .light-bg {
@@ -156,8 +183,45 @@ body .section.article:first-of-type {
   padding: $block-spacing;
   border-radius: $tag-radius;
 }
+.blog .content {
+  .light-bg {
+    margin-bottom: $block-spacing;
+
+    h3 {
+      text-align: center;
+    }
+    h3:not(:first-child) {
+      margin-top: 0.3333em;
+    }
+  }
+  h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: $family-serif;
+    text-transform: none;
+  }
+
+  .illustration {
+    text-align: center;
+    padding-top:1em;
+
+    i.icon {
+      font-size: 4rem;
+    }
+  }
+}
+
+p.with-text-icon i.icon {
+  vertical-align: bottom;
+}
+
 .purple-border {
   border: 2px $purple-light-border solid;
+  padding: $block-spacing;
+  border-radius: $tag-radius;
+}
+.heavy-purple-border {
+  border: 2px $purple-heavy-border solid;
   padding: $block-spacing;
   border-radius: $tag-radius;
 }
@@ -167,6 +231,15 @@ body .section.article:first-of-type {
   background-color: $purple-light;
   padding: 0.2rem 0.5rem;
   margin: 0 0.5em;
+}
+.tile.is-ancestor .tile:first-of-type {
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.tile.is-ancestor .tile:not(:first-of-type) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 i.big-icon {
   font-size:10rem;
@@ -319,7 +392,9 @@ section.article div.highlight {
   color:#ffffff;
 }
 section.highlight i.icon,
-section.article div.highlight i.big-icon {
+section.article div.highlight i.big-icon,
+section.highlight strong,
+section.article div.highlight strong {
   color:#ffffff;
 }
 
@@ -411,7 +486,7 @@ section.article div.highlight {
       li {
         display: block;
 
-        a {
+        a:not(.button):not(.tag) {
           border: none;
           margin:0 0 2px 0;
           color:#ffffff;
@@ -421,8 +496,8 @@ section.article div.highlight {
           background: transparent;
           padding: 0.5em 2rem 0.5em 0.5em;
         }
-        a.is-active,
-        a:hover {
+        a.is-active:not(.button):not(.tag),
+        a:hover:not(.button):not(.tag) {
           text-decoration: none;
           border-radius: $tag-radius;
           background-color: rgba(0, 0, 0, 0.27);
