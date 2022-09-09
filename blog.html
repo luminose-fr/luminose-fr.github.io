@@ -1,0 +1,29 @@
+---
+layout: colonne
+title: Blog de développement personnel et d'hypnose
+section: blog
+description: Découvrez des ressources sur le développement personnel et la réalisation de soi. Comprenez comment l'hypnose peut vous aider.
+---
+
+<section class="section article">
+  <div class="container">
+    <div class="content">
+      <h1>Blog</h1>
+      {% for post in site.posts %}
+        <div class="light-bg">
+          <div class="columns">
+            <div class="column is-2">
+              <div class="illustration"><i class="icon icon-famille"></i></div>
+            </div>
+            <div class="column is-10">
+              <h2>{{ post.title }}</h2>
+              <p>{{ post.description }}</p>
+              <a class="button is-white is-purple-bordered is-medium" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
