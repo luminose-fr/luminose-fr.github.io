@@ -4,26 +4,22 @@ title: Blog de développement personnel et d'hypnose
 section: blog
 description: Découvrez des ressources sur le développement personnel et la réalisation de soi. Comprenez comment l'hypnose peut vous aider.
 ---
-
 <section class="section article">
   <div class="container">
     <div class="content">
       <h1>Blog</h1>
-      {% for post in site.posts %}
-        <div class="light-bg">
-          <div class="columns">
-            <div class="column is-2">
-              <div class="illustration"><i class="icon icon-famille"></i></div>
+        <div class="columns is-multiline">
+        {% for post in site.posts %}
+            <div class="column is-half blog-card-container">
+              <div class="illustration"><a href="{{ post.url }}"><span class="banner-image-container"><img class="banner" src="/images/blog/les-langages-de-amour.jpg" srcset="/images/blog/les-langages-de-amour.jpg, /images/blog/les-langages-de-amour@2x.jpg 2x" alt="{{ post.title }}"></span></a></div>
+              <div class="light-grey-bg has-text-left">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.description }}</p>
+                <a class="button is-white is-purple-bordered" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
+              </div>
             </div>
-            <div class="column is-10">
-              <h2>{{ post.title }}</h2>
-              <p>{{ post.description }}</p>
-              <a class="button is-white is-purple-bordered is-medium" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
-            </div>
-          </div>
-
+        {% endfor %}
         </div>
-      {% endfor %}
     </div>
   </div>
 </section>
