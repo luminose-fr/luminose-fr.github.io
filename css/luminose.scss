@@ -230,29 +230,42 @@ span[data-tooltip].has-tooltip-primary {
             width:100%;
             height:100%;
             object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
           }
         }
       }
+      a:hover:not(.button):not(.tag) {
+        background: transparent;
+
+      }
     }
 
-    a:hover:not(.button):not(.tag) {
-      background: transparent;
-
-    }
     .light-grey-bg {
       padding-top: 11em;
       border-radius: 0;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
     }
   }
-  .summary-container {
+  .summary-container.columns {
+    margin-left: 0;
+    margin-right: 0;
+
     .column {
       padding: 0;
     }
-    .banner-image-container {
+
+    span.banner-image-container {
       line-height: 0;
       display: block;
+      height: 100%;
+      width:100%;
 
-      img {
+      img.banner {
+        width:100%;
+        height:100%;
+        object-fit: cover;
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
       }
@@ -1471,6 +1484,23 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
     .content .ligne.adresse span.valeur {
       display: block;
       margin: 0;
+    }
+  }
+
+  .blog .content .summary-container.columns {
+    .purple-border {
+      border: 2px #E8DEF6 solid;
+      border-top: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: 8px;
+    }
+    span.banner-image-container {
+      height:10em;
+
+      img.banner {
+        border-top-right-radius: 8px;
+        border-bottom-left-radius: 0;
+      }
     }
   }
 
