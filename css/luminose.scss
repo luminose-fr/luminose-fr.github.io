@@ -6,6 +6,7 @@
 @import "bulma.scss";
 @import "bulma-tooltip.min.scss";
 @import "respiration.scss";
+@import "zoom-vanilla.scss";
 
 body,
 body * {
@@ -56,7 +57,7 @@ body .section.article:first-of-type {
   color: $purple;
   text-transform: uppercase;
 }
-.article .citation {
+.article .citation.fat {
   text-align: center;
   color: $purple-heavy;
   font-size: $size-1;
@@ -111,6 +112,19 @@ body .section.article:first-of-type {
 }
 .block:not(:last-child) {
   margin-bottom: $block-spacing;
+}
+.citation {
+  border: 2px $grey-lighter solid;
+  background:$white-ter;
+  font-style: italic;
+  padding: $block-spacing;
+  border-radius: $tag-radius;
+  color: $grey;
+  margin-bottom: $block-spacing;
+  
+  strong {
+    color: $grey-darker;
+  }
 }
 .confinement {
   color: #515151;
@@ -184,6 +198,15 @@ span[data-tooltip].has-tooltip-primary {
   border-radius: $tag-radius;
 }
 .blog .content {
+  figure {
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
+      
+      figcaption {
+        text-align: center;
+      }
+  }
   .light-bg {
     margin-bottom: $block-spacing;
 
@@ -195,10 +218,88 @@ span[data-tooltip].has-tooltip-primary {
     }
   }
   h3 {
-    font-size: 1.4rem;
+    font-size: 1.7rem; //$size-4;
     font-weight: 700;
     font-family: $family-serif;
     text-transform: none;
+  }
+  h4 {
+    font-size: 1.3rem; //$size-6;
+    color: $purple-heavy;
+  }
+  h4:not(:first-child) {
+    margin-top: 1.3333em;
+  }
+  .highlight h4 {
+    color:#ffffff;
+  }
+  
+  .fiche-methodologique {
+    margin-bottom: $block-spacing;
+    border: 2px $purple-heavy-border solid;
+    background-color: $purple-heavy;
+    color:#ffffff;
+    padding: $block-spacing;
+    border-radius: $tag-radius;
+    
+    .tabs.is-toggle.is-toggle-rounded {
+      a {
+        text-decoration: none;
+        border: 0;
+        color: $purple-heavy;
+        background: #ffffff;
+      }
+      a.is-active {
+        color:#ffffff;
+        border: 0;
+        background-color: rgba(0, 0, 0, 0.27);
+      }
+      a:hover {
+        color:#ffffff;
+        background: $purple-heavy;
+      }
+    }
+    .content-wrap {
+      // margin-left: $block-spacing;
+      padding: $block-spacing;
+      padding-top: $size-3;
+      color: $purple;
+      background: #FFFFFF;
+      border-radius: $tag-radius;
+      display: block;
+      width: 100%;
+      // display: flex;
+      // flex-grow: 1;
+    
+      .tab-content {
+        display: none;
+    
+        &.is-active {
+          display: block;
+          width: 100%;
+        }
+    
+        .title {
+          color: $purple;
+          text-align: center;
+          font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+          font-weight: 600;
+          font-size: $size-6;
+        }
+    
+      }
+    }
+  }
+  
+  table.is-purple-bordered {
+    thead td, th {
+      color:#ffffff;
+      background: $purple-heavy;
+    }
+    td, th {
+      border-color: $purple-heavy-border;
+      border-width: 2px;
+    }
   }
   .illustration {
     text-align: center;
@@ -210,7 +311,16 @@ span[data-tooltip].has-tooltip-primary {
   }
   .blog-card-container {
     position: relative;
-
+    
+    h2 {
+      font-size: $size-3;
+    }
+    
+    .button.is-purple-bordered {
+      white-space: normal;
+      height: auto;
+    }
+    
     .illustration {
       text-align: center;
 
@@ -278,6 +388,7 @@ span[data-tooltip].has-tooltip-primary {
     }
   }
 }
+// END - .blog .content
 
 p.with-text-icon i.icon {
   vertical-align: bottom;
@@ -319,8 +430,9 @@ hr {
     margin:0;
     display:block;
     border:0px;
-    height:calc(62px + 3rem);
-    border-bottom: 3rem transparent solid;
+    height:calc(62px + 4rem);
+    border-top: 2rem transparent solid;
+    border-bottom: 2rem transparent solid;
     background-color: transparent;
     background-image:url('/images/hr.png');
     background-size: contain;
@@ -1469,15 +1581,6 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
         right:$size-7;
       }
     }
-  }
-
-  .article .citation {
-    text-align: center;
-    color: $purple-heavy;
-    font-size: $size-4;
-    font-family: "Abril Display W05 Italic",serif;
-    font-weight: 300;
-    padding: 0;
   }
 
   section.florent {

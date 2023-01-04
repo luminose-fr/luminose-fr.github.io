@@ -30,6 +30,8 @@ $footer-background-color: #FFFFFF;
 $footer-color: $purple;
 $footer-padding: 1.5rem;
 
+$table-head-background-color: $purple-heavy;
+
 $gear_icon_size: 1em;
 
 //@import "../_modules/bulma-0.9.4/bulma.sass";
@@ -44,6 +46,7 @@ $gear_icon_size: 1em;
 @import "bulma-0.9.4/sass/elements/icon.sass";
 @import "bulma-0.9.4/sass/elements/notification.sass";
 @import "bulma-0.9.4/sass/elements/title.sass";
+@import "bulma-0.9.4/sass/elements/table.sass";
 @import "bulma-0.9.4/sass/elements/box.sass";
 @import "bulma-0.9.4/sass/elements/tag.sass";
 @import "bulma-0.9.4/sass/components/modal.sass";

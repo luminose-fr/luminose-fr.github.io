@@ -145,11 +145,37 @@ var App = {
         });
       }
 
-
-
       // Track URL change (<previous | next> from browser)
       window.addEventListener('locationchange', function(event) {
         that._selectNavigationItem(window.location.hash)
+      });
+    }
+    
+    if (this.ficheMethodologiqueTabs == null) {
+      this.ficheMethodologiqueTabs = document.querySelectorAll(".fiche-methodologique");
+    }
+    if (this.ficheMethodologiqueTabs !== null && this.ficheMethodologiqueTabs !== undefined) {
+      var that = this;
+      
+      that.ficheMethodologiqueTabs.forEach(function(tabsContainer) {
+        tabsContainer.items = tabsContainer.querySelectorAll('.tabs ul li a');
+        tabsContainer.tabs = tabsContainer.querySelectorAll('.tab-content');
+        tabsContainer.items.forEach(function(item) {
+          item.addEventListener("click", function(event) {
+            var hash = item.getAttribute("href");
+            event.preventDefault();
+            selectedItem = tabsContainer.querySelector('a[href="' + hash + '"]');
+            selectedTab = tabsContainer.querySelector(hash);
+            tabsContainer.items.forEach(function(i) {
+              i.classList.remove('is-active');
+            });
+            tabsContainer.tabs.forEach(function(t) {
+              t.classList.remove('is-active');
+            });
+            selectedItem.classList.add('is-active');
+            selectedTab.classList.add('is-active');
+          });
+        });
       });
     }
   },
@@ -168,6 +194,7 @@ var App = {
       that.hypnotherapyTabs.contentContainer.classList.add('is-hidden-mobile');
       that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
     }
+    
     selectedTab = that.hypnotherapyTabs.querySelector(hash);
 
     that.hypnotherapyTabs.items.forEach(function(i) {
