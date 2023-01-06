@@ -2,18 +2,6 @@
 <script src="{{ "/js/zoom-vanilla.min.js" | prepend: site.baseurl }}"></script>
 <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
 
-{% if jekyll.environment == "production" %}
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y21R3X1FY1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-Y21R3X1FY1');
-  </script>
-{% endif %}
-
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function() {
     App.run();
