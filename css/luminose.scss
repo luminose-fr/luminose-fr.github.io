@@ -58,12 +58,32 @@ body .section.article:first-of-type {
   text-transform: uppercase;
 }
 .article .citation.fat {
+  background: transparent;
+  border: 0;
   text-align: center;
   color: $purple-heavy;
   font-size: $size-1;
   font-family: "Abril Display W05 Italic",serif;
   font-weight: 300;
-  padding: $block-spacing 3em;
+}
+.video-responsive {
+  overflow:hidden; 
+  padding-bottom:56.25%; 
+  position:relative; 
+  height:0;
+
+  iframe {
+    left:0; 
+    top:0; 
+    height:100%;
+    width:100%;
+    position:absolute;
+  }
+}
+img.fill {
+  width:100%;
+  height:100%;
+  object-fit: cover;
 }
 .article .achat {
   margin-top: $block-spacing;
