@@ -749,6 +749,23 @@ section.article div.highlight {
         font-weight: 600;
         font-size: $size-6;
       }
+      
+      .subtitle {
+        margin-top:6rem;
+        color: $purple;
+        // text-align: left;
+        font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+        font-weight: 600;
+        font-size: $size-6;
+        text-transform: uppercase;
+        text-align: left;
+        margin-left: 1.2em;
+        margin-bottom: 0;
+      }
+      
+      a:hover {
+        background-color:$purple-light;
+      }
 
       .illustration {
         text-align: center;
