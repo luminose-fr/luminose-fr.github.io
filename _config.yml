@@ -33,3 +33,10 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-redirect-from
+
+defaults:
+  -
+    scope:
+      path:            "google76d39b4cffa5fbc0.html"
+    values:
+      sitemap:         false
