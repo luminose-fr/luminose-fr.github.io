@@ -1,11 +1,9 @@
 User-agent: *
 Sitemap: /sitemap.xml
 Disallow: /_modules/
+Disallow: /_drafts/
 Disallow: /_sass/
 Disallow: /_layout/
 Disallow: /_includes/
 Disallow: /_sites/
 Disallow: /paiement/
-Disallow: /js/
-Disallow: /fonts/
-Disallow: /css/
