@@ -16,6 +16,10 @@ module FrenchDates
     def datePublication(date)
         'Le ' + dateFrancaise(date) + ' à ' + time(date).strftime("%H:%M")
     end
+    
+    def datePublicationArticle(date)
+        'Publié le ' + dateFrancaise(date)
+    end
 end
 end
 

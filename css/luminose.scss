@@ -3,6 +3,7 @@
 
 @charset "utf-8";
 @import "fonts.scss";
+@import "fontawesome.scss";
 @import "bulma.scss";
 @import "bulma-tooltip.min.scss";
 @import "respiration.scss";
@@ -55,6 +56,12 @@ body .section.article:first-of-type {
   font-weight: 300;
   font-size: $size-6;
   color: $purple;
+  text-transform: uppercase;
+}
+.article .tag.is-white {
+  color: $purple;
+  font-family: "Futura LT W05 Medium","Futura LT W05 Book",sans-serif;
+  font-weight: 600;
   text-transform: uppercase;
 }
 .article .citation.fat {
