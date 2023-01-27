@@ -280,7 +280,7 @@ var App = {
         link.addEventListener("click", function(event) {
           if (window.getComputedStyle(firstLinkText, null).display == 'block' ? true : false) {
             var url = link.getAttribute("href");
-            var params = 'scrollbars=no,status=no,location=no,toolbar=no,menubar=no,width=700,height=400';
+            var params = 'scrollbars=no,status=no,location=no,toolbar=no,menubar=no,width=700,height=700';
             window.open(url, '', params);
             event.preventDefault();
           }
