@@ -234,6 +234,9 @@ span[data-tooltip].has-tooltip-primary {
         text-align: center;
       }
   }
+  .liens-partager {
+    margin-bottom: $block-spacing;
+  }
   .light-bg {
     margin-bottom: $block-spacing;
 
@@ -257,8 +260,12 @@ span[data-tooltip].has-tooltip-primary {
   h4:not(:first-child) {
     margin-top: 1.3333em;
   }
-  .highlight h4 {
-    color:#ffffff;
+  .highlight {
+    margin-bottom: $block-spacing;
+    
+    h4 {
+      color:#ffffff;
+    }
   }
   
   .fiche-methodologique {
@@ -517,6 +524,12 @@ input.is-purple-bordered:hover  {
 }
 .field.has-addons .control:last-child:not(:only-child) .button.is-purple-bordered {
   // border-left:2px;
+}
+.liens-partager .button.is-static {
+  background-color: transparent;
+  border: 0;
+  color: $purple;
+  padding-left:0;
 }
 
 //********************************************/

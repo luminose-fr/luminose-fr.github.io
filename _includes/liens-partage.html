@@ -4,44 +4,47 @@
 	{% assign pageurl = page.url %}
 {% endif %}
 
+{% assign pageTitle = page.title | replace: "'", "’" %}
 
 
-<div class="field has-addons">
-  <p class="control">
-	  <a class="button is-static is-small">
-		Partager cet article :
-	  </a>
-	</p>
-  <p class="control">
-	<a class="button is-small is-white" href="http://www.facebook.com/share.php?u={{ site.url }}{{ pageurl }}" target="_blank">
-	  <span class="icon is-small">
-		<i class="fas fa-brands fa-facebook"></i>
-	  </span>
-	  <span>Facebook</span>
-	</a>
-  </p>
-  <p class="control">
-	<a class="button is-small is-white" href="http://twitter.com/home?status={{ site.url }}{{ pageurl }}" target="_blank">
-	  <span class="icon is-small">
-		<i class="fas fa-brands fa-twitter"></i>
-	  </span>
-	  <span>Twitter</span>
-	</a>
-  </p>
-  <p class="control">
-	  <a class="button is-small is-white" href="https://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ pageurl }}&title=&summary=&source=" target="_blank">
-		<span class="icon is-small">
-		  <i class="fas fa-brands fa-linkedin"></i>
-		</span>
-		<span>LinkedIn</span>
-	  </a>
-	</p>
-  <p class="control">
-	<a class="button is-small is-white" href="mailto:?&body={{ site.url }}{{ pageurl }}">
-	  <span class="icon is-small">
-		<i class="fas fa-envelope"></i>
-	  </span>
-	  <span>E-mail</span>
-	</a>
-  </p>
+<div class="liens-partager">
+	<div class="field has-addons">
+  		<div class="control">
+	  		<a class="button is-static">
+				Partager cet article :
+	  		</a>
+		</div>		
+  		<div class="control">
+			<a class="button is-white social-link" href="https://www.facebook.com/sharer/sharer.php?u={{ site.url }}{{ page.url }}&src=sdkpreparse" target="_blank">
+	  		<span class="icon">
+				<i class="fas fa-brands fa-facebook"></i>
+	  		</span>
+	  		<span class="is-hidden-touch">Facebook</span>
+			</a>
+  		</div>
+  		<div class="control">
+			<a class="button is-white social-link" href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ site.url }}{{ site.baseurl }}{{ page.url }}" target="_blank">
+	  		<span class="icon">
+				<i class="fas fa-brands fa-twitter"></i>
+	  		</span>
+	  		<span class="is-hidden-touch">Twitter</span>
+			</a>
+  		</div>
+  		<div class="control">
+	  		<a class="button is-white social-link" href="https://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ pageurl }}" target="_blank">
+				<span class="icon">
+		  		<i class="fas fa-brands fa-linkedin"></i>
+				</span>
+				<span class="is-hidden-touch">LinkedIn</span>
+	  		</a>
+		</div>
+  		<div class="control">
+			<a class="button is-white" href='mailto:?subject=Lire "{{ pageTitle }}" sur {{ site.title }}&body={{ site.url }}{{ pageurl }}'>
+	  		<span class="icon">
+				<i class="fas fa-envelope"></i>
+	  		</span>
+	  		<span class="is-hidden-touch">E-mail</span>
+			</a>
+  		</div>
+	</div>
 </div>

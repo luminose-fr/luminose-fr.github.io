@@ -74,6 +74,7 @@ var App = {
     this.setupViewport();
     this.setupNavigation();
     // this._enableButtonMentionsLegales();
+    this.setupSocialLinks();
     this.respiration.run();
   },
 
@@ -269,6 +270,22 @@ var App = {
 
       });
     }
+  },
+  
+  setupSocialLinks: function() {
+    var links = document.querySelectorAll('a.social-link');
+    var firstLinkText = document.querySelector(".liens-partager .is-hidden-touch");
+    
+    links.forEach(function(link) {
+        link.addEventListener("click", function(event) {
+          if (window.getComputedStyle(firstLinkText, null).display == 'block' ? true : false) {
+            var url = link.getAttribute("href");
+            var params = 'scrollbars=no,status=no,location=no,toolbar=no,menubar=no,width=700,height=400';
+            window.open(url, '', params);
+            event.preventDefault();
+          }
+      });
+    });
   },
 
   _enableButtonMentionsLegales: function() {

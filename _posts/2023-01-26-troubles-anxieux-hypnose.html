@@ -11,7 +11,9 @@ description: L'anxiété est une réaction émotionnelle normale face à une sit
   <div class="container">
 	<div class="content">
 	  <h1>Les troubles anxieux et l’hypnose</h1>
-
+	  
+	  {% include liens-partage.html %}
+		  
 	  {% comment %}
 	  <p>Catégorie : <a href="{{ site.baseurl }}/blog/{{ page.category }}.html" class="tag is-medium">{{ page.category | capitalize }}</a></p>
 	  {% endcomment %}
@@ -137,9 +139,30 @@ description: L'anxiété est une réaction émotionnelle normale face à une sit
 		  </ul>
 		<p>Pour celles et ceux qui ressentent un besoin d’accompagnement pour de l'anxiété, des angoisses ou une phobie <a href="https://www.doctolib.fr/hypnotherapeute/villefranche-de-lauragais/florent-jaouali?utm_medium=referral&utm_campaign=website-button&utm_content=option-2&utm_term=florent-jaouali&utm_source=florent-jaouali-website-button" target="_blank">je reste disponible pour vous accompagner</a>.</p>
 	  </div>
+	  
+	  {% include liens-partage.html %}
 	</div>
 
+	{% include bandeau-auteur.html %}
 	
 	{% include bandeau-plus-loin-promo.html %}
   </div>
 </section>
+
+
+
+<div id="social-links" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+	<header class="modal-card-head">
+	  <p class="modal-card-title">Partager cet article</p>
+	  <button class="delete" aria-label="close" data-bulma-modal="close"></button>
+	</header>
+	<section class="modal-card-body">
+	  <iframe></iframe>
+	</section>
+	<footer class="modal-card-foot">
+	  <button class="button" data-bulma-modal="close">Annuler</button>
+	</footer>
+  </div>
+</div>
