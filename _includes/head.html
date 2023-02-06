@@ -3,6 +3,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="author" content="Florent Jaouali">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  {% if page.sitemap == false %}<meta name="robots" content="noindex">{% endif %}
   <title>{% if page.title %}{{ page.title }}{% endif %}</title>
   <link rel="stylesheet" href="/css/luminose.css">
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
