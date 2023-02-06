@@ -50,7 +50,7 @@ body .section.article:first-of-type {
   font-weight: 300;
   line-height: 1.125;
 }
-.is-3,
+.title.is-3,
 .article .content h3 {
   font-family: 'Futura LT W05 Book', sans-serif;
   font-weight: 300;
@@ -86,6 +86,9 @@ body .section.article:first-of-type {
     width:100%;
     position:absolute;
   }
+}
+.border-top-white {
+  border-top: 2px #ffffff solid;
 }
 img.fill {
   width:100%;
@@ -209,6 +212,13 @@ span[data-tooltip].has-tooltip-primary {
 
   }
 }
+.white-bg {
+  background-color: #FFFFFF;
+  padding: .75rem;
+  border-radius: $tag-radius;
+  color: $purple;
+}
+
 .light-bg {
   background-color: $purple-light;
   color: $purple-heavy;
@@ -423,6 +433,55 @@ span[data-tooltip].has-tooltip-primary {
   }
 }
 // END - .blog .content
+
+.blog .temoignages {
+  padding-top: $block-spacing;
+  
+  h3 {
+    margin-bottom: $block-spacing;
+  }
+  .temoignage {
+    
+    .metadata-container {
+      padding: .75rem;
+      
+      small {
+        color: $purple;
+        font-size:$size-7;
+      }
+    }
+    
+    .texte {
+      font-family: "Abril Display W05 Italic",serif;
+      font-weight: 300;
+    }
+  }
+  
+  .light-bg {
+    color: $purple-heavy;
+    padding: $block-spacing;
+    border-radius: $tag-radius;
+  
+    h3 {
+      font-size: 1.7rem; //$size-4;
+      font-weight: 700;
+      font-family: $family-serif;
+      text-transform: none;
+      text-align: center;
+    }
+    h3:not(:first-child) {
+      margin-top: 0.3333em;
+    }
+  }
+  .illustration {
+    text-align: center;
+    padding-top: 1em;
+  
+      i.icon {
+      font-size: 4rem;
+    }
+  }
+}
 
 p.with-text-icon i.icon {
   vertical-align: bottom;
@@ -922,6 +981,57 @@ section.newsletter {
     padding-left: 6rem;
   }
 }
+
+//********************************************/
+//***************** Confirmation achat *****************/
+//********************************************/
+.confirmation-achat {
+  
+  margin-top:$block-spacing;
+  
+  .content {
+    h1 {
+      font-family: $family-serif;
+      font-weight: normal;
+      font-size: $size-3;
+    }
+    .columns.light-bg {
+      padding: 0.75rem;
+      margin: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      .column {
+        font-size: $size-7;
+      }
+    }
+    .columns.is-gapless:not(:last-child),
+    .columns.is-gapless:last-child  {
+      margin: 0;
+      padding-top:0.3rem;
+      padding-bottom:0.3rem;
+    }
+  }
+  
+  .purple-border {
+    padding:0;
+  }
+  .block {
+    padding:$block-spacing;
+  }
+  .illustration {
+    text-align: center;
+    padding-top: 3em;
+  
+      i.icon {
+        font-size: 6rem;
+      }
+      i.icon.icon-confirmation {
+        color:#39B66B;
+      }
+  }
+}
+
+
 //********************************************/
 //***************** Paiement *****************/
 //********************************************/

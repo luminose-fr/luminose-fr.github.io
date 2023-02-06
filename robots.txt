@@ -7,3 +7,4 @@ Disallow: /_layout/
 Disallow: /_includes/
 Disallow: /_sites/
 Disallow: /paiement/
+Disallow: /outils/oracle/confirmation-achat.html
