@@ -2,7 +2,7 @@
 layout: colonne
 title: Blog de développement personnel et d'hypnose
 section: blog
-description: Découvrez des ressources sur le développement personnel et la réalisation de soi. Comprenez comment l'hypnose peut vous aider.
+description: Découvrez comment l'hypnose peut aider à surmonter les troubles mentaux et physiques, améliorer le bien-être et favoriser le développement personnel et la réalisation de soi sur notre blog Luminose.
 ---
 <section class="section article">
   <div class="container">
@@ -14,7 +14,7 @@ description: Découvrez des ressources sur le développement personnel et la ré
               <div class="illustration"><a href="{{ post.url }}"><span class="banner-image-container"><img class="banner" src="/images/blog/{{ post.image_name }}.jpg" srcset="/images/blog/{{ post.image_name }}.jpg, /images/blog/{{ post.image_name }}@2x.jpg 2x" alt="{{ post.title }}"></span></a></div>
               <div class="light-grey-bg has-text-left">
                 <h2>{{ post.title }}</h2>
-                <p>{{ post.description }}</p>
+                {{ post.summary }}
                 <a class="button is-white is-purple-bordered is-hidden-tablet-only is-hidden-desktop-only" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
                 <a class="button is-white is-purple-bordered is-hidden-mobile is-hidden-widescreen-only is-hidden-fullhd" href="{{ post.url }}">Lire l'article</a>
               </div>

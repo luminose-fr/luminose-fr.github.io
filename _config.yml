@@ -10,6 +10,9 @@ title: Luminose
 email: florent@luminose.fr
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.luminose.fr" # the base hostname & protocol for your site
+author: Florent Jaouali
+logo: /images/luminose-logo.png
+locale: fr_FR
 
 # Build settings
 markdown: kramdown
