@@ -162,11 +162,11 @@ img.fill {
 }
 .confinement .container {
   border: 2px #DBFED2 solid;
-  border-radius: 8px;
+  border-radius: $radius-large;
   padding: $block-spacing;
 }
 .confinement strong {
-  border-radius: 8px;
+  border-radius: $radius-large;
   background-color: #DBFED2;
   align-items: center;
   color: #277215;
@@ -384,8 +384,8 @@ span[data-tooltip].has-tooltip-primary {
             width:100%;
             height:100%;
             object-fit: cover;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+            border-top-left-radius: $radius-large;
+            border-top-right-radius: $radius-large;
           }
         }
       }
@@ -398,8 +398,8 @@ span[data-tooltip].has-tooltip-primary {
     .light-grey-bg {
       padding-top: 11em;
       border-radius: 0;
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
+      border-bottom-left-radius: $radius-large;
+      border-bottom-right-radius: $radius-large;
     }
   }
   .summary-container.columns {
@@ -420,8 +420,8 @@ span[data-tooltip].has-tooltip-primary {
         width:100%;
         height:100%;
         object-fit: cover;
-        border-top-left-radius: 8px;
-        border-bottom-left-radius: 8px;
+        border-top-left-radius: $radius-large;
+        border-bottom-left-radius: $radius-large;
       }
     }
     .purple-border {
@@ -551,6 +551,9 @@ footer.footer {
 //********************************************/
 //***************** Buttons *****************/
 //********************************************/
+.button {
+  border-radius: $radius-large;
+}
 a.button.is-primary {
   margin-bottom:0.5em;
   background: $purple;
@@ -1107,6 +1110,65 @@ section.newsletter {
 }
 
 //********************************************/
+//************** Modal *****************/
+//********************************************/
+
+#md-prise-rdv {
+  .box {
+    a.button.is-purple-bordered {
+      border-radius: 0;
+      border-bottom:0;
+    }
+    a.button.is-purple-bordered:first-of-type {
+      border-top-left-radius: $radius-large;
+      border-top-right-radius: $radius-large;
+    }
+    a.button.is-purple-bordered:last-of-type {
+      border-bottom: 2px $purple-light-border solid;
+      border-bottom-left-radius: $radius-large;
+      border-bottom-right-radius: $radius-large;
+    }
+    
+    a.button.is-purple-bordered,
+    div.fake-button {
+      white-space: normal;
+      height: auto;
+      display: block;
+      transition: background-color .3s ease;
+      padding: 1.5rem;
+      
+      .title {
+        font-family: 'Futura LT W05 Book', sans-serif;
+        text-transform: none;
+        font-size: $size-6;
+        color: $purple-heavy;
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+      }
+      .description {
+        font-size: $size-7;
+        color: $purple;
+      }
+      
+      span {
+        display: block;
+      }
+    }
+    .button.is-purple-bordered:hover {
+      background: $purple-light;
+    }
+  } 
+}
+
+
+//********************************************/
+//************** Calendly *****************/
+//********************************************/
+.calendly-overlay .calendly-popup {
+  max-height: 750px;
+}
+
+//********************************************/
 //************** Respiration *****************/
 //********************************************/
 
@@ -1378,7 +1440,7 @@ body.outil-respiration .track-progress {
   transform: translateX(-50%);
 
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: $radius-large;
   // height:0.1em;
   width:220px;
   box-shadow: 0 .7em 2em 0 rgba(96,64,127,.16);
@@ -1389,7 +1451,7 @@ body.outil-respiration .track-progress {
 body.outil-respiration .track-progress div.completed {
   display: block;
   height:.3rem;
-  border-radius: 8px;
+  border-radius: $radius-large;
   width:0%;
   -webkit-animation-iteration-count : 1;
           animation-iteration-count : 1;
@@ -1429,7 +1491,7 @@ body.outil-respiration .panel-config {
   transform: translateX(-50%);
 
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: $radius-large;
   box-shadow: 0 .7em 2em 0 rgba(96,64,127,.16);
   color: #6163a5;
   padding: 1.25rem;
@@ -1448,7 +1510,7 @@ body.outil-respiration .panel-config .setting .values span {
   cursor: pointer;
   align-items: center;
   background-color: #f9f5ff;
-  border-radius: 8px;
+  border-radius: $radius-large;
   color: #6163a5;
   display: inline-flex;
   font-size: 1em;
@@ -1765,13 +1827,13 @@ body.outil-respiration .panel-config .setting .values span.is-waiting {
       border: 2px #E8DEF6 solid;
       border-top: 0;
       border-top-right-radius: 0;
-      border-bottom-left-radius: 8px;
+      border-bottom-left-radius: $radius-large;
     }
     span.banner-image-container {
       height:10em;
 
       img.banner {
-        border-top-right-radius: 8px;
+        border-top-right-radius: $radius-large;
         border-bottom-left-radius: 0;
       }
     }

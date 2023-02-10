@@ -5,6 +5,8 @@ $purple-light: #F9F5FF;
 $purple-light-border: #E8DEF6;
 $purple-heavy-border: #6163A5;
 $grey-light: #F2F2F2;
+$modal-background-background-color: rgba(31, 31, 31, .4);
+
 
 $family-sans-serif: 'Futura LT W05 Book', sans-serif;
 $family-serif: 'Abril Display W05 Italic', serif;
@@ -22,6 +24,7 @@ $subtitle-weight: 300;
 
 $radius-large : 8px;
 $box-shadow: 0 0.7em 2em 0 rgba($purple-heavy, 0.16);
+$modal-content-width: 440px;
 
 $tag-radius : 8px;
 $tag-background-color: $purple-light;
