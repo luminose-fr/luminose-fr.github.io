@@ -261,49 +261,50 @@ var App = {
   
   
   setupButtonPriseRdv: function() {
-    var modal = new BulmaModal("#md-prise-rdv");
-    var btSeanceAdulte = document.querySelector('#bt-seance-adulte');
-    var btSeanceCouple = document.querySelector('#bt-seance-couple');
-    var btSeanceEnfant = document.querySelector('#bt-seance-enfant');
-    
-    var buttons = document.querySelectorAll('.bt-prise-rdv');
-    buttons.forEach(function(button) {
-      button.addEventListener("click", function (event) {
-        event.preventDefault();
-        modal.show();
+    if (document.querySelector('#md-prise-rdv') !== null) {
+      var modal = new BulmaModal("#md-prise-rdv");
+      var btSeanceAdulte = document.querySelector('#bt-seance-adulte');
+      var btSeanceCouple = document.querySelector('#bt-seance-couple');
+      var btSeanceEnfant = document.querySelector('#bt-seance-enfant');
+      
+      var buttons = document.querySelectorAll('.bt-prise-rdv');
+      buttons.forEach(function(button) {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          modal.show();
+        });
       });
-    });
-    
-    if (btSeanceAdulte !== null) {
-      btSeanceAdulte.addEventListener("click", function (event) {
-        event.preventDefault();
-        modal.close();
-        Calendly.initPopupWidget({
-          url: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
-        });        
-      });
+      
+      if (btSeanceAdulte !== null) {
+        btSeanceAdulte.addEventListener("click", function (event) {
+          event.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({
+            url: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
+          });        
+        });
+      }
+      
+      if (btSeanceCouple !== null) {
+        btSeanceCouple.addEventListener("click", function (event) {
+          event.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({
+            url: 'https://calendly.com/luminose/seance-hypnose-couple?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
+          });        
+        });
+      }
+      
+      if (btSeanceEnfant !== null) {
+        btSeanceEnfant.addEventListener("click", function (event) {
+          event.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({
+            url: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
+          });        
+        });
+      }
     }
-    
-    if (btSeanceCouple !== null) {
-      btSeanceCouple.addEventListener("click", function (event) {
-        event.preventDefault();
-        modal.close();
-        Calendly.initPopupWidget({
-          url: 'https://calendly.com/luminose/seance-hypnose-couple?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
-        });        
-      });
-    }
-    
-    if (btSeanceEnfant !== null) {
-      btSeanceEnfant.addEventListener("click", function (event) {
-        event.preventDefault();
-        modal.close();
-        Calendly.initPopupWidget({
-          url: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
-        });        
-      });
-    }
-    
     
   },
   
