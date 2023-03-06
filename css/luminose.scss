@@ -196,7 +196,28 @@ span[data-tooltip].has-tooltip-primary {
 [data-tooltip]:not([disabled]).has-tooltip-primary:after {
   border-color: $grey-light transparent transparent !important;
 }
-
+.light-red-bg {
+  background-color: #ffd6d4;
+  color: #804d4b;
+  padding: $block-spacing;
+  border-radius: $tag-radius;
+  letter-spacing: 0;
+}
+.light-red-bg .title,
+.article .content .light-red-bg h3 {
+  color: #804d4b;
+}
+.light-green-bg {
+  background-color: #b4ffc8;
+  color: #335b3e;
+  padding: $block-spacing;
+  border-radius: $tag-radius;
+  letter-spacing: 0;
+}
+.light-green-bg .title,
+.article .content .light-green-bg h3 {
+  color: #335b3e;
+}
 .light-grey-bg {
   text-align: center;
   background-color: $grey-light;
@@ -247,7 +268,9 @@ span[data-tooltip].has-tooltip-primary {
   .liens-partager {
     margin-bottom: $block-spacing;
   }
-  .light-bg {
+  .light-bg,
+  .light-green-bg,
+  .light-red-bg {
     margin-bottom: $block-spacing;
 
     h3 {
