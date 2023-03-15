@@ -5,8 +5,12 @@ $purple-light: #F9F5FF;
 $purple-light-border: #E8DEF6;
 $purple-heavy-border: #6163A5;
 $grey-light: #F2F2F2;
-$modal-background-background-color: rgba(31, 31, 31, .4);
 
+$modal-background-background-color: rgba(31, 31, 31, .4); // identique à Calendly
+$modal-card-head-background-color: $purple-heavy;
+$modal-card-head-border-bottom: 0;
+$modal-card-title-color: #ffffff;
+$modal-card-title-size: 1rem;
 
 $family-sans-serif: 'Futura LT W05 Book', sans-serif;
 $family-serif: 'Abril Display W05 Italic', serif;

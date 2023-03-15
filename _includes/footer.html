@@ -8,32 +8,38 @@
 
 <div id="md-prise-rdv" class="modal">
   <div class="modal-background"></div>
-  <div class="modal-content">
-    <div class="box">
-    <div class="block">
-    <a id="bt-seance-adulte" class="button is-purple-bordered" href="">
-      <span class="title">Séance adulte ou adolescent</span>
-      <span class="description">Parking, salle d'attente & accessible aux personnes à mobilité réduite.</span>
-    </a>
-    {% comment %}
-    <a id="bt-seance-couple" class="button is-purple-bordered" href="">
-      <span class="title">Séance pour le couple</span>
-      <span class="description">Un peu de détail sur la séance</span>
-    </a>
-    {% endcomment %}
-    
-    <a id="bt-seance-enfant" class="button is-purple-bordered" href="">
-      <span class="title">Séance enfant</span>
-      <span class="description">Pour les enfants de moins de 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
-    </a>
-    </div>
-    <div class="block">
-    <div class="fake-button light-grey-bg">
-      <span class="title">Séance à domicile</span>
-      <span class="description">Pour les séances à domicile, merci de me contacter par téléphone : <a href="tel:+33637332655">06 37 33 26 55</a></span>
-    </div>
-    </div>
-    </div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Prendre un rendez-vous</p>
+    </header>
+    <section class="modal-card-body">
+
+        <div class="block">
+        <a id="bt-seance-adulte" class="button is-purple-bordered" href="">
+          <span class="title">Séance adulte ou adolescent</span>
+          <span class="description">Parking, salle d'attente & accessible aux personnes à mobilité réduite.</span>
+        </a>
+        {% comment %}
+        <a id="bt-seance-couple" class="button is-purple-bordered" href="">
+          <span class="title">Séance pour le couple</span>
+          <span class="description">Un peu de détail sur la séance</span>
+        </a>
+        {% endcomment %}
+        
+        <a id="bt-seance-enfant" class="button is-purple-bordered" href="">
+          <span class="title">Séance enfant</span>
+          <span class="description">Pour les enfants de moins de 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
+        </a>
+        </div>
+        <div class="block">
+          <div class="fake-button light-grey-bg">
+            <span class="title">Séance à domicile</span>
+            <span class="description">Pour les séances à domicile, merci de me contacter par téléphone : <a href="tel:+33637332655">06 37 33 26 55</a></span>
+          </div>
+
+        </div>
+    </section>
   </div>
+  
   <button class="modal-close is-large" aria-label="close" data-bulma-modal="close"></button>
 </div>

@@ -176,7 +176,7 @@ var App = {
       var elementPosition = that.hypnotherapyTabs.getBoundingClientRect().top;
       var offsetPosition = elementPosition + window.pageYOffset - realblockHeight;
 
-      if (window.location.hash !== '') {
+      if (window.location.hash !== '' && window.location.hash !== '#prise-rdv') {
         that._selectNavigationItem(window.location.hash)
         setTimeout(function() {
           window.scrollTo({
@@ -247,16 +247,18 @@ var App = {
       that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
     }
     
-    selectedTab = that.hypnotherapyTabs.querySelector(hash);
-
-    that.hypnotherapyTabs.items.forEach(function(i) {
-      i.classList.remove('is-active');
-    });
-    that.hypnotherapyTabs.tabs.forEach(function(t) {
-      t.classList.remove('is-active');
-    });
-    item.classList.add('is-active');
-    selectedTab.classList.add('is-active');
+    if (item !== null) {
+      selectedTab = that.hypnotherapyTabs.querySelector(hash);
+  
+      that.hypnotherapyTabs.items.forEach(function(i) {
+        i.classList.remove('is-active');
+      });
+      that.hypnotherapyTabs.tabs.forEach(function(t) {
+        t.classList.remove('is-active');
+      });
+      item.classList.add('is-active');
+      selectedTab.classList.add('is-active');
+    }
   },
   
   
@@ -304,8 +306,17 @@ var App = {
           });        
         });
       }
+      
+      if (window.location.hash === '#prise-rdv') {
+        event.preventDefault;
+        modal.show();
+        var uri = window.location.toString();
+        if (uri.indexOf("#") > 0) {
+            var clean_uri = uri.substring(0, uri.indexOf("#"));
+            window.history.replaceState({}, document.title, clean_uri);
+        }
+      }
     }
-    
   },
   
   getParamFromCurrentPage: function(param_name) {

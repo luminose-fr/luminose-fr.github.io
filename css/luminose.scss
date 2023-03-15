@@ -1188,7 +1188,10 @@ section.newsletter {
 //********************************************/
 
 #md-prise-rdv {
-  .box {
+    .modal-card-body {
+      border-bottom-left-radius: $radius-large;
+      border-bottom-right-radius: $radius-large;
+    }
     a.button.is-purple-bordered {
       border-radius: 0;
       border-bottom:0;
@@ -1231,7 +1234,7 @@ section.newsletter {
     .button.is-purple-bordered:hover {
       background: $purple-light;
     }
-  } 
+  
 }
 
 
