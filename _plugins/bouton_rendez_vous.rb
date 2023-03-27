@@ -5,7 +5,7 @@ class BoutonRendezVousTag < Liquid::Tag
   end
 
   def render(context)
-	doctolib = true
+	doctolib = false
 	doctolib_url = "https://www.doctolib.fr/hypnotherapeute/villefranche-de-lauragais/florent-jaouali?utm_medium=referral&amp;utm_campaign=website-button&amp;utm_content=option-2&amp;utm_term=florent-jaouali&amp;utm_source=florent-jaouali-website-button"
 	
 	  
