@@ -71,62 +71,11 @@ var App = {
   },
 
   run: function() {
-    this.appendUTMParamsToLinks();
     this.setupViewport();
     this.setupNavigation();
     this.setupButtonPriseRdv();
     this.setupSocialLinks();
     this.respiration.run();
-  },
-  
-  appendUTMParamsToLinks: function() {
-    var that = this;
-    var vpt_information = ls.get('vpt_information');
-    if (vpt_information==null) {
-      var vpt_information = {
-        vpt_source: that.getParamFromCurrentPage("vpt_source"),
-        vpt_medium: that.getParamFromCurrentPage("vpt_medium"),
-        vpt_campaign: decodeURI(that.getParamFromCurrentPage("vpt_campaign_name")),
-        vpt_term: that.getParamFromCurrentPage("vpt_term"),
-        vpt_content: {
-          AdGroupName: that.getParamFromCurrentPage("vpt_adgroup_name"),
-          Ad: that.getParamFromCurrentPage("vpt_ad"),
-          MatchType: that.getParamFromCurrentPage("vpt_matchtype"),
-          Device: that.getParamFromCurrentPage("vpt_device"),
-          GeoLoc: that.getParamFromCurrentPage("vpt_geo_loc"),
-          Placement: that.getParamFromCurrentPage("vpt_placement"),
-          Network: that.getParamFromCurrentPage("vpt_network")
-        }
-      };
-      var utm_information = {
-        utm_source: that.getParamFromCurrentPage("utm_source"),
-        utm_content: that.getParamFromCurrentPage("utm_content"),
-        utm_medium: that.getParamFromCurrentPage("utm_medium"),
-        utm_term: that.getParamFromCurrentPage("utm_term"),
-        utm_campaign: that.getParamFromCurrentPage("utm_campaign")
-      }
-      if ((vpt_information.vpt_source == '') && (utm_information.utm_source != '')) {
-        vpt_information.vpt_source = utm_information.utm_source;
-        vpt_information.vpt_content = utm_information.utm_content;
-        vpt_information.vpt_medium = utm_information.utm_medium;
-        vpt_information.vpt_term = utm_information.utm_term;
-        vpt_information.vpt_campaign = utm_information.utm_campaign;
-      }
-      ls.set('vpt_information', vpt_information, { ttl: 7776000 }); // 90 jours
-    }
-    
-    // Stripe Payment Link
-    document.querySelectorAll("a.is-stripe-link").forEach(function(link) {
-      link.href += "?utm_source=" + vpt_information.vpt_source;
-      link.href += "&utm_campaign=" + vpt_information.vpt_campaign;
-      link.href += "&utm_medium=" + vpt_information.vpt_medium;
-      link.href += "&utm_term=" + vpt_information.vpt_term;
-      link.href += "&utm_content=" + JSON.stringify(vpt_information.vpt_content);
-    });
-    
-    // Calendly Embed
-    // @TODO
-    
   },
 
   setupViewport: function() {
