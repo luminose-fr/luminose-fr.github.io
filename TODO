@@ -1,4 +1,5 @@
 Commentaires :
+- Incorporer les avis Google
 - Vérifier l'URL retour et/ou Javascript
 - Affichage joli et testé sur divers navigateurs
 - Bug avec les input en blur
