@@ -210,10 +210,21 @@ var App = {
     }
   },
   
+  _getUtmParams: function() {
+    var utm_params = {
+        utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
+        utmSource: this.getParamFromCurrentPage("utm_source"),
+        utmMedium: this.getParamFromCurrentPage("utm_medium"),
+        utmContent: this.getParamFromCurrentPage("utm_content"),
+        utmTerm: this.getParamFromCurrentPage("utm_term")
+    }
+    return utm_params;
+  },
   
   setupButtonPriseRdv: function() {
     if (document.querySelector('#md-prise-rdv') !== null) {
       var modal = new BulmaModal("#md-prise-rdv");
+      var that = this;
       var btSeanceAdulte = document.querySelector('#bt-seance-adulte');
       var btSeanceCouple = document.querySelector('#bt-seance-couple');
       var btSeanceEnfant = document.querySelector('#bt-seance-enfant');
@@ -231,7 +242,8 @@ var App = {
           event.preventDefault();
           modal.close();
           Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
+            url: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+            utm: that._getUtmParams() 
           });        
         });
       }
@@ -241,7 +253,8 @@ var App = {
           event.preventDefault();
           modal.close();
           Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose-couple?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
+            url: 'https://calendly.com/luminose/seance-hypnose-couple?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+            utm: that._getUtmParams()
           });        
         });
       }
@@ -251,7 +264,8 @@ var App = {
           event.preventDefault();
           modal.close();
           Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5'
+            url: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+            utm: that._getUtmParams()
           });        
         });
       }
