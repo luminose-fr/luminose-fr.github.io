@@ -1,19 +1,35 @@
-{% if site.data.temoignages[page.slug] %}
+{% if site.data.temoignages %}
+	{% if page.slug == 'accueil' %}
+		{% assign temoignages = site.data.temoignages | slice: 0,6 %}
+	{% else %}
+		{% assign temoignages = site.data.temoignages | where_exp: "temoignages", "temoignages.tags contains page.slug" %}
+	{% endif %}
+{% endif %}
+{% if temoignages.size > 0 %}
 <div class="temoignages">
 	<div class="light-bg">
 		<p class="illustration"><i class="icon icon-temoignages"></i></p>
 		<h3>Témoignages</h3>
 		<div class="columns is-multiline">
-		{% assign temoignages = site.data.temoignages[page.slug] %}
-		{% for temoignage in temoignages %}
-		
+
+		{% for temoignage in temoignages %}		
 		<div class="column is-one-third temoignage">
 			<div class="white-bg">
 			  <div class="texte">" {{ temoignage.texte | strip_html }} "</div>
 			</div>
 			<div class="metadata-container">
 			  <div class="auteur">{{ temoignage.auteur | strip_html }}</div>
-			  <small class="ville">{{ temoignage.ville | strip_html }}</small>
+			  <div class="etoiles">
+					  {% for i in (1..5) %}
+					    {% if i > temoignage.etoiles %}
+					      <i class="far fa-star"></i>
+					    {% else %}
+					      <i class="fas fa-star"></i>
+					    {% endif %}
+					  {% endfor %}			    
+			  </div>
+			  <small class="date">{{ temoignage.date | strip_html }}</small>
+			  
 			</div>
 		</div>
 		{% endfor %}
