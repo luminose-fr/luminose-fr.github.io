@@ -1,0 +1,30 @@
+<header class="section header">
+  <div class="container has-text-centered">
+    <nav id="main-navbar" class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a href="{{ site.baseurl }}/" class="master-logo"><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></a>
+        <div id="mobile-navigation" class="nav-buttons is-hidden-tablet has-text-centered">
+        <a id="bt-navigation" role="button" class="button is-white is-purple-bordered" aria-label="menu" aria-expanded="false" data-target="main-navigation">Menu</a>
+        {% bouton_rendez_vous navbar-item %}
+        </div>
+      </div>
+
+      <div id="main-navigation" class="navbar-menu">
+        <a href="{{ site.baseurl }}/" class="is-hidden-tablet"><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></a>
+        <div class="navbar-start">
+          <a href="{{ site.baseurl }}/" class="navbar-item {% if page.section == "accueil" %}is-active{% endif %}">Accueil</a>
+          <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">Hypnothérapie</a>
+          <a href="{{ site.baseurl }}/seance-hypnose.html" class="navbar-item {% if page.section == "seances" %}is-active{% endif %}">Séances</a>
+          <a href="{{ site.baseurl }}/florent-jaouali.html" class="navbar-item {% if page.section == "qui" %}is-active{% endif %}">Qui suis-je ?</a>
+          <a href="{{ site.baseurl }}/blog.html" class="navbar-item {% if page.section == "blog" %}is-active{% endif %}">Blog</a>
+          <a href="{{ site.baseurl }}/outils.html" class="navbar-item {% if page.section == "outils" %}is-active{% endif %}">Outils</a>
+          {% bouton_rendez_vous navbar-item is-hidden-mobile %}
+          {% comment %}
+          <a href="{{ site.baseurl }}/formation-auto-hypnose.html" class="navbar-item {% if page.section == "formation" %}is-active{% endif %}">Formation</a>
+          <a href="{{ site.baseurl }}/ateliers.html" class="navbar-item {% if page.section == "ateliers" %}is-active{% endif %}">Ateliers</a>
+          {% endcomment %}
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

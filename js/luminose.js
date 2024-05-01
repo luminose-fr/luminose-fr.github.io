@@ -90,14 +90,28 @@ var App = {
   },
 
   setupNavigation: function() {
-    if (this.navbar == null) {
-      this.navbar = document.getElementById("main-navbar");
-      this.burgerButton = document.querySelector('#bt-navigation');
+	  this.navbars = {
+		  main: null,
+		  secondary: null,
+		  relative: null,
+		  mobileNavbarBrand: null
+	  };
+	  this.navbarsHeights = {
+		  main: null,
+		  mainNavigation: null,
+		  mobileMenu: null,
+		  secondary :null
+	  };
+    if (this.navbars.main == null) {
+      this.navbars.main = document.getElementById("main-navbar");
+	  this.navbars.relative = document.getElementById('relative-navbar');
+	  this.navbars.secondary = document.getElementById('secondary-navbar');
+	  this.navbars.mobileNavbarBrand = document.getElementById("mobile-navbar-brand");
+	  
+      this.burgerButton = document.getElementById('bt-navigation');
     }
-    if (this.navbar !== null) {
-      this.navbarMenuHeight = document.getElementById('main-navigation').offsetHeight;
-      this.navbarMobileMenuHeight = document.getElementById('mobile-navigation').offsetHeight;
-      this.navbarHeight = this.navbar.offsetHeight;
+    if (this.navbars.main !== null) {
+	  this._loadNavbarsHeights();
       this._stickNavigation();
       this._enableButtonBurger();
     }
@@ -121,9 +135,10 @@ var App = {
       });
 
       // Load the good tab depending on anchor and scroll accorgingly
-      var realblockHeight = that.navbarHeight - that.navbarMenuHeight - that.navbarMobileMenuHeight;
+      var realblockHeight =  this.navbarsHeights.secondary; //this.navbarsHeights.main +
       var elementPosition = that.hypnotherapyTabs.getBoundingClientRect().top;
       var offsetPosition = elementPosition + window.pageYOffset - realblockHeight;
+	  //console.log(offsetPosition);
 
       if (window.location.hash !== '' && window.location.hash !== '#prise-rdv') {
         that._selectNavigationItem(window.location.hash)
@@ -132,7 +147,7 @@ var App = {
                top: offsetPosition,
                behavior: "smooth"
           });
-        }, 5);
+        }, 30);
       }
 
       // Setup mobile button for Tabs menu
@@ -291,29 +306,65 @@ var App = {
 
   _stickNavigation: function() {
     var that = this;
-    window.addEventListener('scroll', function () {
-      // var realblockHeight = that.navbarHeight - that.navbarMenuHeight - that.navbarMobileMenuHeight;
-      // setTimeout(function() {
-      //   window.scrollTo({
-      //        top: offsetPosition,
-      //        behavior: "smooth"
-      //   });
-      // }, 5);
-      var realblockHeight = 156;
-      if (!that.burgerButton.classList.contains('is-active')) {
+	that.sticky = {
+		mainNavigation : that.navbars.main,
+		relativeNavigation : that.navbars.relative,
+		documentBody : document.body,
+		whenToStick : that._findWhenToStickNavigation()
+	};
 
-        // console.log("Scroll top: " + document.documentElement.scrollTop);
-        // console.log("realblockHeight: " + realblockHeight);
-        if (document.body.scrollTop > (realblockHeight) || document.documentElement.scrollTop > (realblockHeight)) {
-          that.navbar.classList.add("is-fixed-top");
-          document.body.style.padding = (realblockHeight + 72) + "px 0 0 0";
+	window.addEventListener('resize', function () {
+		that.sticky.whenToStick = that._findWhenToStickNavigation();
+	  	if (that.sticky.documentBody.classList.contains("has-relative-navbar-fixed-top")) {
+	  		that.sticky.relativeNavigation.style.top = (that.sticky.mainNavigation.offsetHeight - 1) + "px";
+	  	}
+	});
+	
+    window.addEventListener('scroll', function () {
+      if (!that.burgerButton.classList.contains('is-active')) { // Exécuter seulement si le menu mobile est inactif.
+        if (that.sticky.documentBody.scrollTop > (that.sticky.whenToStick) || document.documentElement.scrollTop > (that.sticky.whenToStick)) {
+		  that.sticky.mainNavigation.classList.add("is-fixed-top");
+		  that.sticky.documentBody.classList.add("has-navbar-fixed-top");
+		  
+		  if (that.sticky.relativeNavigation != undefined && window.innerWidth > 768) { // Ne pas sticker sur mobile
+			  that.sticky.relativeNavigation.classList.add("is-fixed-top");
+			  that.sticky.relativeNavigation.style.top = (that.sticky.mainNavigation.offsetHeight - 1) + "px";
+			  that.sticky.documentBody.classList.add("has-relative-navbar-fixed-top");
+		  }
+		  
         } else {
-          that.navbar.classList.remove("is-fixed-top");
-          document.body.style.padding = "0";
+		  that.sticky.mainNavigation.classList.remove("is-fixed-top");
+		  that.sticky.documentBody.classList.remove("has-navbar-fixed-top");
+		  
+		  if (that.sticky.relativeNavigation != undefined && window.innerWidth > 768) { // Ne pas sticker sur mobile
+			  that.sticky.relativeNavigation.classList.remove("is-fixed-top");
+			  that.sticky.relativeNavigation.style.top = 0;
+			  that.sticky.documentBody.classList.remove("has-relative-navbar-fixed-top");
+		  }
         }
       }
     });
   },
+  
+  _loadNavbarsHeights: function() {
+  	  this.navbarsHeights.secondary = this.navbars.secondary.offsetHeight;
+  	  this.navbarsHeights.mainNavigation = this.navbars.main.querySelector('#main-navigation').offsetHeight;
+	  this.navbarsHeights.main = this.navbars.main.offsetHeight;	
+	  this.navbarsHeights.mobileMenu = this.navbars.mobileNavbarBrand.querySelector('#mobile-navigation').offsetHeight;
+  },
+  
+  _findWhenToStickNavigation: function() {
+	  var that = this;
+	  that._loadNavbarsHeights();
+	  var whenToStick = 0;
+	  if (that.navbarsHeights.secondary == 0) { // Vue mobile car la nav est masquée et sa hauteur = 0
+		  whenToStick = that.navbarsHeights.mainNavigation;
+	  } else {
+		  whenToStick = that.navbarsHeights.secondary;
+	  }	  
+	  return whenToStick;
+  },
+
 
   _enableButtonBurger: function() {
     var that = this;
@@ -325,20 +376,21 @@ var App = {
         const target = button.dataset.target;
         const $target = document.getElementById(target);
         var isShowing = !button.classList.contains('is-active');
-        var navIsFixed = that.navbar.classList.contains('is-fixed-top');
+        var navIsFixed = that.sticky.mainNavigation.classList.contains('is-fixed-top');
+		//console.log(navIsFixed);
 
         if (isShowing) {
           that.currentScroll = document.documentElement.scrollTop;
           document.body.classList.add('menu-active');
-          // console.log("Opening------");
+          //console.log("Opening------");
           // console.log("Current scroll : " + that.currentScroll);
           if (!navIsFixed) {
-            that.navbar.classList.add("is-fixed-top");
+            that.sticky.mainNavigation.classList.add("is-fixed-top");
           }
         } else {
-          // console.log("Closing------");
+          console.log("Closing------");
           document.body.classList.remove('menu-active');
-          that.navbar.classList.remove("is-fixed-top");
+          //that.sticky.mainNavigation.classList.remove("is-fixed-top");
           // console.log("Scroll to : " + that.currentScroll);
           window.scrollBy(0, that.currentScroll);
           // currentScroll = 0;
