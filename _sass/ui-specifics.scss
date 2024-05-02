@@ -185,6 +185,11 @@
 	  	  display:block;
 	  }
   }
+  
+  section.article.respiration-holotropique .fixed-grid.has-2-cols .grid {
+  	--bulma-grid-column-count: 1;
+  }
+  
 }
 
 @include mixins.fullhd {

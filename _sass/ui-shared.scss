@@ -38,7 +38,7 @@ body .section.article:first-of-type {
 .title.is-2,
 .article .content h2 {
   color: v.$purple;
-  font-size: var(--bulma-size-2);
+  font-size: var(--bulma-size-3);
   font-family: "Abril Display W05 Italic",serif;
   font-weight: 300;
   line-height: 1.125;
@@ -49,12 +49,11 @@ body .section.article:first-of-type {
   content: "";
   display: block;
   position: absolute;
-  top: 66%;
+  top: 1rem;  //////// @TODO : OK MAIS A REVOIR SELON LES ECRANS
   left: 0;
   width: 7rem;
-  height: 1rem;
+  height: 0.75rem;
   background: v.$green-light;
-  //background: linear-gradient(90deg, v.$green-light 0%, rgba(255,255,255,1) 100%);
   z-index: -1;
   transform: rotate(-3deg);
 }
@@ -1151,6 +1150,74 @@ section.article div.highlight {
     }
   }
 }
+
+section.respiration-holotropique {
+	
+	.grid .highlight {
+	    .title {
+	      text-align: center;
+	      font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+	      font-weight: 600;
+	      font-size: var(--bulma-size-6);
+		  margin: 1rem 0;
+	    }
+
+	    .illustration {
+			margin-top: 1rem;
+	      text-align: center;
+
+	      i.icon {
+	        font-size: 4rem;
+	      }
+	    }
+	}
+	
+	.mini-menu {
+        a:before{
+          content:'\0042';
+          position: absolute;
+          right: 0.5rem;
+          font-size: var(--bulma-size-7);
+          padding-top:0.4rem;
+          font-family: 'luminose';
+          font-style: normal;
+          font-weight: normal;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+		a:not(.button):not(.tag),
+		a:hover:not(.button):not(.tag) {
+			text-decoration: none;
+		}
+		a:first-of-type {
+			border-top-left-radius: var(--bulma-radius-large);
+			border-top-right-radius: var(--bulma-radius-large);
+		}
+		a:last-of-type {
+			border-bottom: 2px v.$purple-light-border solid;
+			border-bottom-left-radius: var(--bulma-radius-large);
+			border-bottom-right-radius: var(--bulma-radius-large);
+		}
+		
+		a {
+			border: 2px v.$purple-light-border solid;
+			border-bottom: 0;
+			padding: 0.75rem var(--bulma-block-spacing);
+			display: flex;
+			align-items: center;
+			
+			strong {
+				width:22%;
+			}
+			span {
+				width:70%;
+			}
+		}
+		
+	}
+}
+
 
 
 section.oracle {
