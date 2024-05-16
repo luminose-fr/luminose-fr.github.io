@@ -1,0 +1,251 @@
+@use "ui-variables" as v;
+
+@media (prefers-color-scheme: dark) {
+  :root {
+	  
+  }
+}
+
+[data-theme=dark],
+.theme-dark {
+	--bulma-body-background-color: #20122E;
+	--bulma-body-color: #BB95DD;
+	--bulma-strong-color: #FFFFFF;
+	
+	.footer {
+		--bulma-footer-background-color: v.$dark-purple-heaviest;
+	}
+	.title,
+	.subtitle,
+	.title.is-2,
+	.title.is-3,
+	.article .content h1,
+	.article .content h2,
+	.article .content h3 {
+		color:v.$dark-purple;
+	}
+	.article .content h2:before {
+	  background: v.$dark-orange-light;
+	  z-index: -1;
+	}
+	
+	a.button.is-primary {
+	  color: v.$purple-heavy;
+	  background: #FFFFFF;
+	}
+	a.button.is-primary:hover {
+	  background: v.$purple-light;
+	}
+	
+	a.button.is-purple-bordered,
+	button.button.is-purple-bordered,
+	input.is-purple-bordered,
+	a.button.is-purple-bordered:hover ,
+	button.button.is-purple-bordered:hover ,
+	input.is-purple-bordered:hover  {
+	  color:v.$purple-light;
+	  border: 2px v.$purple-logo solid;
+	  box-shadow: none;
+	  background: rgba(v.$dark-purple-heavy, 0.50);
+	}
+	a.button.is-purple-bordered:hover ,
+	button.button.is-purple-bordered:hover ,
+	input.is-purple-bordered:hover {
+		background:v.$purple-logo;
+		color:#FFFFFF;
+	}
+	
+	.blog .content .liens-partager a.button.is-white {
+	  background: v.$dark-purple-heaviest;
+	  color:v.$purple;
+	  transition: background-color 0.3s ease;
+	}
+	.blog .content .liens-partager a.button.is-white:hover {
+		background: v.$dark-purple-heavy;
+	}
+	
+	.light-bg {
+	  background-color: v.$dark-purple-heavy;
+	}
+	.content .light-bg {
+	  color:#FFFFFF;
+	}
+	.light-bg,
+	.light-bg .title,
+	.light-bg .subtitle,
+	.content .light-bg h2,
+	.content .light-bg h3,
+	.blog .temoignages .light-bg {
+	  color: v.$dark-purple;
+	}
+
+	.white-bg {
+	  background-color: v.$dark-purple-heaviest;
+	  color: v.$dark-purple;
+	}
+	.light-grey-bg {
+	  background-color: var(--bulma-black-bis);
+	  color: v.$purple-heavy;
+    }
+	.purple-border {
+	  border: 2px v.$dark-purple-heavy solid;
+	}
+	.is-styled-tag {
+	  background-color: v.$dark-purple-heavy;
+	}
+
+	.navbar {
+		background-color: transparent;
+	}
+	  #main-navbar {
+	      background-color: v.$dark-purple-heavy;
+	  
+	  	.navbar-menu {
+	  	  .navbar-start>.navbar-item,
+	  	  .navbar-start .navbar-link {
+	  	      color: v.$purple-light;
+	  	  }
+	  	  .navbar-start>a.navbar-item:hover {
+			  color: #FFFFFF;
+	  		  background-color: v.$purple-logo;
+	  	  }
+  
+	  	  .navbar-start>.navbar-item.is-active {
+	  	    background-color: v.$purple-logo;
+	  	    color: #FFFFFF;
+	  	  }
+  
+	  	  .navbar-end a.button.is-primary {
+	  		color: v.$purple-heavy;
+			transition: background-color 0.3s ease;
+	  	  }
+	  	  .navbar-end a.button.is-primary:hover {
+	  	    background: v.$purple-light;
+	  	  }
+
+	  	}
+	  }
+	  #main-navbar.is-fixed-top {
+	    background-color:v.$dark-purple-heavy;
+	    box-shadow: 0 2px 23px 0 v.$dark-purple-heaviest;
+	  }
+	  #relative-navbar {
+	    background:v.$dark-purple-heaviest;
+		
+	    .navbar-start>.navbar-item,
+	    .navbar-start .navbar-link {
+	      color: v.$dark-orange-lighter;
+	  	  border-top: 2px v.$dark-orange-light solid;
+	  	  border-bottom: 2px v.$dark-orange-light solid;
+	    }
+	    .navbar-start>a.navbar-item:hover {
+	  	  background-color: v.$dark-orange-light;
+	    }
+  
+	    .navbar-start>.navbar-item.is-active,
+	    .navbar-start>.navbar-item.is-active:hover {
+	      background-color: v.$dark-orange-light;
+	      color: v.$dark-orange-lighter;
+	    }
+  
+	    .navbar-start>.navbar-item:first-of-type {
+	  	  border-left: 2px v.$dark-orange-light solid;
+	    }
+	    .navbar-start>.navbar-item:last-of-type {
+	  	  border-right: 2px v.$dark-orange-light solid;
+	    }
+	  
+	 }
+	 #relative-navbar.is-fixed-top {
+	 	background-color:v.$dark-purple-heaviest;
+	 	box-shadow: 0 2px 23px 0 v.$dark-purple-heaviest;
+	 	transition: box-shadow 0.3s ease-in-out;
+	 }
+	  
+  	section.highlight,
+  	section.article div.highlight {
+  	  background-image: linear-gradient(135deg, v.$dark-purple-heaviest, v.$dark-purple-heavy);
+  	  color:#ffffff;
+  	}
+  	section.hypnotherapie {
+  	  a.bt-highlight {
+  	    background-color: rgba(97, 36, 127, 0.25);
+  	  }
+  	  a.bt-highlight:hover {
+  	    background-color: rgba(97, 36, 127, 0.45);
+  	  }
+  	}
+  	section.oracle {
+  	  color: v.$purple-light;
+
+  	  background-attachment: fixed;
+  	  background-image: url("/images/interface/pattern-oracle-dark.jpg");
+  	  background-image:
+  	    -webkit-image-set(
+  	      url("/images/interface/pattern-oracle-dark.jpg") 1x,
+  	      url("/images/interface/pattern-oracle-dark@2x.jpg") 2x,
+  	    );
+  	  background-image:
+  	    image-set(
+  	    url("/images/interface/pattern-oracle-dark.jpg") 1x,
+  	    url("/images/interface/pattern-oracle-dark@2x.jpg") 2x,
+  	    );
+  	  .title,
+  	  .subtitle {
+  	    color: v.$purple-light;
+  	  }
+  	}
+	
+	section.florent {
+	  background: v.$dark-purple-heaviest;
+	  background-attachment: fixed;
+	  background-image: url("/images/interface/pattern-seigaiha-dark.jpg");
+	  background-image:
+	    -webkit-image-set(
+	      url("/images/interface/pattern-seigaiha-dark.jpg") 1x,
+	      url("/images/interface/pattern-seigaiha-dark@2x.jpg") 2x,
+	    );
+	  background-image:
+	    image-set(
+	      url("/images/interface/pattern-seigaiha-dark.jpg") 1x,
+	      url("/images/interface/pattern-seigaiha-dark@2x.jpg") 2x,
+	    );
+	}
+	section.florent .container{
+	  border:2px v.$dark-purple-heavy solid;
+	  background-color: v.$dark-purple-heaviest;
+	}
+	
+	section.newsletter {
+	  border-bottom: 0.7rem v.$dark-orange-light solid;
+	  border-image: linear-gradient(150deg, v.$dark-orange-light 0%, v.$dark-purple-heaviest 100%);
+	  border-image-slice: 1;
+    }
+	
+	section.article div.highlight {
+	    .tabs ul li {
+
+	          a:not(.button):not(.tag) {
+				  color:v.$dark-purple;
+			  }
+	          a.is-active:not(.button):not(.tag),
+	          a:hover:not(.button):not(.tag) {
+	            background-color: v.$dark-purple-heavy;
+				color: #FFFFFF;
+	          }
+		  }
+	    .content-wrap {
+	      color: #FFFFFF; 
+	      background: v.$dark-purple-heavy;
+		  
+	      .title,
+		  .subtitle {
+	        color: #FFFFFF;
+	      }
+		  
+	      .tab-content a:hover {
+	        background-color:v.$dark-purple;
+	      }
+	 	}
+	}
+}
