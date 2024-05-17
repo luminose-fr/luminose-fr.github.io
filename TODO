@@ -1,27 +1,27 @@
 
 
-Contenus :
+Contenus :
 - Respiration holotropique
 - Méditation
 - Evènement + page détail 
 	- stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
-	- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
+	- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
 
-UI :
+UI :
 - Modal "Prendre un rendez-vous"
 	- Ajouter RH solo (date + questionnaire santé si pas encore rempli)
 - Tout vérifier sur mobile (et horizontal)+ divers navigateurs
 
 
-Commentaires :
+Commentaires :
 - Incorporer les avis Google
 - Vérifier l'URL retour et/ou Javascript
 - Affichage joli et testé sur divers navigateurs
 - Bug avec les input en blur
 
-Autres sections :
+Autres sections :
 - Accueil / mise en avant d'un article de blog / Vidéo
 - Hypnothérapie / Illustration bateau
 
-Performance :
+Performance :
 - Vérifier speed (taille images, compression, etc.)

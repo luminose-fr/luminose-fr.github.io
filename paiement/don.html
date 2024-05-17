@@ -34,7 +34,7 @@ sitemap: false
         <h2 class="title is-2">Don conscient</h2>
         <p class="content">Vous avez réalisé une séance d'accompagnement à distance proposée exceptionnement pendant la période de confinement suite au COVID-19.</p>
         <p class="content">Choisissez le montant que vous souhaitez payer. Vous serez ensuite redirigés vers la page de paiement sécurisé.</p>
-        <label class="label">Quel montant souhaitez-vous payer ?</label>
+        <label class="label">Quel montant souhaitez-vous payer ?</label>
           <div class="field">
             <div class="control has-icons-right amount-input">
               <input id="montant-paiement" class="input is-medium">
@@ -58,8 +58,8 @@ sitemap: false
   (function() {
     var stripe = Stripe('pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg');
 
-    // Test :       pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo
-    // Production : pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg
+    // Test :       pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo
+    // Production : pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg
 
     var checkoutButton = document.getElementById('bouton-paiement');
     var amountField = document.getElementById('montant-paiement');
@@ -72,8 +72,8 @@ sitemap: false
         quantity = parseInt(amountField.value);
         stripe.redirectToCheckout({
           items: [{sku: 'sku_Gx1K8uZHwT5Obc', quantity: quantity}],
-          // Test :        sku_Gx1Z6Ilpxeq8Hv
-          // Production :  sku_Gx1K8uZHwT5Obc
+          // Test :        sku_Gx1Z6Ilpxeq8Hv
+          // Production :  sku_Gx1K8uZHwT5Obc
 
           // Do not rely on the redirect to the successUrl for fulfilling
           // purchases, customers may not always reach the success_url after

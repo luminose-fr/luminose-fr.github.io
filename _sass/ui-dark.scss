@@ -28,6 +28,14 @@
 	  background: v.$dark-orange-light;
 	  z-index: -1;
 	}
+	.blog .content .light-bg h3:not(:first-child),
+	.blog .content .light-green-bg h3:not(:first-child),
+	.blog .content .light-red-bg h3:not(:first-child) {
+		color:inherit;
+	}
+	.article .content a:hover:not(.button):not(.tag) {
+	  background: v.$dark-purple-heavy;
+	}
 	
 	a.button.is-primary {
 	  color: v.$purple-heavy;
@@ -93,6 +101,9 @@
 	.is-styled-tag {
 	  background-color: v.$dark-purple-heavy;
 	}
+	.tag.is-light {
+		background-color: v.$dark-purple-heavy;
+	}
 
 	.navbar {
 		background-color: transparent;
@@ -128,6 +139,13 @@
 	  #main-navbar.is-fixed-top {
 	    background-color:v.$dark-purple-heavy;
 	    box-shadow: 0 2px 23px 0 v.$dark-purple-heaviest;
+	  }
+	  #secondary-navbar .navbar-end > .navbar-item {
+	  	color: v.$dark-purple;
+	  }
+	  #secondary-navbar .navbar-end .navbar-item.is-active {
+    	background-color: v.$dark-purple-heavy;
+    	color: v.$dark-purple;
 	  }
 	  #relative-navbar {
 	    background:v.$dark-purple-heaviest;
@@ -248,4 +266,36 @@
 	      }
 	 	}
 	}
+	section.respiration-holotropique {
+
+		.mini-menu {
+			a:last-of-type {
+				border-bottom: 2px v.$dark-purple-heavy solid;
+			}
+		
+			a {
+				border: 2px v.$dark-purple-heavy solid;
+				border-bottom: 0;
+			}
+		
+		}
+	}
+	.blog .content .blog-card-container .light-grey-bg {
+		color: v.$dark-purple;
+	}
+	.article .citation.fat {
+	  color: v.$dark-purple;
+	}
+	.article .achat .infos .ligne span.valeur {
+	    background-color: v.$dark-purple-heavy;
+	  }
+	  .citation {
+	    border: 2px v.$dark-purple solid;
+	    background-color: v.$dark-purple-heavy;
+	    color: v.$dark-purple;
+  
+	    strong {
+	      color: var(--bulma-grey)-darker;
+	    }
+	  }
 }

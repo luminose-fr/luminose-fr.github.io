@@ -1,3 +1,376 @@
+@use "ui-variables" as v;
+
 // Respiration animation
 $default-animation-speed: 10s;
 $default-animation-loop: 30; // 30 X 10s = 5 min (par défaut)
+
+
+//********************************************/
+//************** Respiration *****************/
+//********************************************/
+
+//
+// html{
+//   height: 100vh;
+//   width: 100vw;
+//
+// }
+
+body.outil-respiration {
+  height: 100vh;
+  width: 100vw;
+  background-color: #f9f5ff;
+}
+
+body.outil-respiration * {
+  border: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@-webkit-keyframes loader {
+  0%{
+    background: v.$purple-heavy;
+    height:100%;
+  }50%{
+    background: v.$purple;
+    height:0%;
+  }100%{
+    background: v.$purple-heavy;
+    height:100%;
+  }
+}
+@keyframes loader {
+  0%{
+    background: v.$purple-heavy;
+    height:100%;
+  }50%{
+    background: v.$purple;
+    height:0%;
+  }100%{
+    background: v.$purple-heavy;
+    height:100%;
+  }
+}
+@-webkit-keyframes trackprogress {
+  0%{
+    background: v.$purple;
+    width:0%;
+  }100%{
+    background: v.$purple;
+    width:100%;
+  }
+}
+@keyframes trackprogress {
+  0%{
+    background: v.$purple;
+    width:0%;
+  }100%{
+    background: v.$purple;
+    width:100%;
+  }
+}
+
+body.outil-respiration .loader_container{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+body.outil-respiration .loader__bar{
+  display: flex;
+  flex: 1;
+  position: relative;
+  width: 100%;
+}
+
+body.outil-respiration .loader__bar:before{
+  -webkit-animation-name: loader;
+          animation-name: loader;
+  -webkit-animation-timing-function: ease;
+          animation-timing-function: ease;
+  -webkit-animation-delay: 0ms;
+          animation-delay: 0ms;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  background: v.$purple-heavy;
+  background-size: 200% 200%;
+  content: "";
+  height:0%;
+  width: 100%;
+}
+body.outil-respiration .loader__bar.speed3sec:before{
+  -webkit-animation-duration : 6s;
+          animation-duration : 6s;
+}
+body.outil-respiration .loader__bar.speed4sec:before{
+  -webkit-animation-duration : 8s;
+          animation-duration : 8s;
+}
+body.outil-respiration .loader__bar.speed5sec:before{
+  -webkit-animation-duration : 10s;
+          animation-duration : 10s;
+}
+body.outil-respiration .loader__bar.speed6sec:before{
+  -webkit-animation-duration : 12s;
+          animation-duration : 12s;
+}
+body.outil-respiration .loader__bar.speed7sec:before{
+  -webkit-animation-duration : 14s;
+          animation-duration : 14s;
+}
+body.outil-respiration .loader__bar.paused:before{
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+body.outil-respiration .playpause {
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20em;
+  width:5em;
+  height:5em;
+  text-align: center;
+  background: transparent;
+  border:3px v.$purple solid;
+  transition: 500ms all ease;
+}
+
+body.outil-respiration .playpause.paused {
+  background: #ffffff;
+  border:3px v.$purple-heavy solid;
+  transition: 500ms all ease;
+}
+
+body.outil-respiration .playpause span {
+  font-size: 0.3em;
+  display: block;
+  box-sizing: border-box;
+  width: 0;
+  height: 7.4em;
+  transition: 500ms all ease;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: transparent transparent transparent v.$purple;
+  border-style: double;
+  border-width: 0 0 0 6em;
+}
+
+body.outil-respiration .playpause.paused span {
+  transition: 500ms all ease;
+  border-color: transparent transparent transparent v.$purple-heavy;
+  border-style: solid;
+  border-width: 3.7em 0 3.7em 6em;
+}
+
+body.outil-respiration .stop {
+  transition: 500ms all ease;
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-250%, -50%);
+  border-radius: 20em;
+  width:2.2em;
+  height:2.2em;
+  text-align: center;
+  background: #ffffff;
+  border:3px v.$purple-heavy solid;
+}
+
+body.outil-respiration .stop.running {
+  background: transparent;
+  transition: 500ms all ease;
+  border:3px v.$purple solid;
+}
+
+body.outil-respiration .stop span {
+  transition: 500ms all ease;
+  display: block;
+  box-sizing: border-box;
+  width: 0.8em;
+  height: 0.8em;
+  background: v.$purple-heavy;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+body.outil-respiration .stop.running span {
+  transition: 500ms all ease;
+  background: v.$purple;
+}
+
+body.outil-respiration .configure {
+  transition: 500ms all ease;
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(150%, -50%);
+  border-radius: 20em;
+  width:2.2em;
+  height:2.2em;
+  text-align: center;
+  background: #ffffff;
+  border:3px v.$purple-heavy solid;
+}
+body.outil-respiration .configure span {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+body.outil-respiration .configure span:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translate(-200%, -50%);
+}
+
+body.outil-respiration .configure span:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translate(100%, -50%);
+}
+body.outil-respiration .configure span,
+body.outil-respiration .configure span:before,
+body.outil-respiration .configure span:after {
+  border-radius: 50%;
+  border: solid 0.16em v.$purple-heavy;
+  background: v.$purple-heavy;
+}
+
+body.outil-respiration .configure.running {
+  background: transparent;
+  transition: 500ms all ease;
+  border:3px v.$purple solid;
+}
+body.outil-respiration .configure.running span,
+body.outil-respiration .configure.running span:before,
+body.outil-respiration .configure.running span:after {
+  border: solid 0.16em v.$purple;
+}
+body.outil-respiration .configure.running.is-active {
+  background: #fff;
+}
+
+body.outil-respiration .playpause:hover,
+body.outil-respiration .playpause.paused:hover,
+body.outil-respiration .stop:hover,
+body.outil-respiration .configure:hover {
+  border:3px #ffffff solid;
+  transition: 500ms all ease;
+}
+
+body.outil-respiration .track-progress {
+  display: block;
+  position: absolute;
+  top: 56.5%; left: 50%;
+  transform: translateX(-50%);
+
+  background-color: #fff;
+  border-radius: var(--bulma-radius-large);
+  // height:0.1em;
+  width:220px;
+  box-shadow: 0 .7em 2em 0 rgba(96,64,127,.16);
+  color: #6163a5;
+  height:.3rem;
+  // padding: .1rem;
+}
+body.outil-respiration .track-progress div.completed {
+  display: block;
+  height:.3rem;
+  border-radius: var(--bulma-radius-large);
+  width:0%;
+  -webkit-animation-iteration-count : 1;
+          animation-iteration-count : 1;
+  -webkit-animation-name: trackprogress;
+          animation-name: trackprogress;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-delay: 0ms;
+          animation-delay: 0ms;
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+body.outil-respiration .track-progress div.completed.length5min {
+  -webkit-animation-duration : 300s; // defaut pour 5 min
+          animation-duration : 300s;
+  // -webkit-animation-duration : 37s; // debug
+  //         animation-duration : 37s;
+}
+body.outil-respiration .track-progress div.completed.length10min {
+  -webkit-animation-duration : 600s;
+          animation-duration : 600s;
+}
+body.outil-respiration .track-progress div.completed.lengthinfinite {
+  -webkit-animation-duration : infinite;
+          animation-duration : infinite;
+}
+body.outil-respiration .track-progress div.completed.running {
+  -webkit-animation-play-state: running;
+          animation-play-state: running;
+}
+
+body.outil-respiration .panel-config {
+  display: none;
+
+  position: absolute;
+  top: 60%; left: 50%;
+  transform: translateX(-50%);
+
+  background-color: #fff;
+  border-radius: var(--bulma-radius-large);
+  box-shadow: 0 .7em 2em 0 rgba(96,64,127,.16);
+  color: #6163a5;
+  padding: 1.25rem;
+}
+body.outil-respiration .panel-config.is-active {
+  display: block;
+}
+body.outil-respiration .panel-config .setting {
+  padding-bottom: 1.5em;
+}
+body.outil-respiration .panel-config .setting:last-of-type {
+  padding-bottom: 0;
+}
+body.outil-respiration .panel-config .setting .values span {
+  transition: 500ms all ease;
+  cursor: pointer;
+  align-items: center;
+  background-color: #f9f5ff;
+  border-radius: var(--bulma-radius-large);
+  color: #6163a5;
+  display: inline-flex;
+  font-size: 1em;
+  height: 2em;
+  justify-content: center;
+  line-height: 1.5;
+  padding-left: .75em;
+  padding-right: .75em;
+  white-space: nowrap;
+}
+body.outil-respiration .panel-config .setting .values span.is-active {
+  background: v.$purple-heavy;
+  color: #ffffff;
+}
+body.outil-respiration .panel-config .setting .values span.is-waiting {
+  background: v.$purple;
+  animation: blinkingBackground 2s infinite;
+  color: #ffffff;
+}
+@keyframes blinkingBackground{
+	0%		{ background-color: v.$purple;}
+	25%		{ background-color: v.$purple-light;}
+	50%		{ background-color: v.$purple;}
+	75%		{ background-color: v.$purple-light;}
+	100%	{ background-color: v.$purple;}
+}
