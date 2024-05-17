@@ -1,5 +1,3 @@
-
-
 Contenus :
 - Respiration holotropique
 - Méditation
@@ -8,13 +6,15 @@ Contenus :
 	- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
 
 UI :
+- Trait de couleur en dessous des titres (à voir en fonction des tailles d'écran)
+- Dark mode : mobile
 - Modal "Prendre un rendez-vous"
 	- Ajouter RH solo (date + questionnaire santé si pas encore rempli)
+- Evènements, détails, inscription, etc.
 - Tout vérifier sur mobile (et horizontal)+ divers navigateurs
 
 
 Commentaires :
-- Incorporer les avis Google
 - Vérifier l'URL retour et/ou Javascript
 - Affichage joli et testé sur divers navigateurs
 - Bug avec les input en blur
