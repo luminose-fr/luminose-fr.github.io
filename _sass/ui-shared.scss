@@ -263,6 +263,9 @@ span[data-tooltip].has-tooltip-primary {
   padding: var(--bulma-block-spacing);
   border-radius: var(--bulma-radius-large);
 }
+.content .light-bg:not(:last-child) {
+	margin-bottom: var(--bulma-content-block-margin-bottom);
+}
 .right-column {
 	margin-top: var(--bulma-block-spacing);
 	padding-right:0;
@@ -1336,6 +1339,16 @@ section.florent h3.subtitle.is-3.job {
   display: inline-block;
   width: 11rem;
   vertical-align: middle;
+}
+.rh-tarifs {
+	.purple-border.infos-seance {
+		margin-bottom: var(--bulma-content-block-margin-bottom);
+		
+		table td {
+			border:0;
+		}
+	}
+	
 }
 
 section.newsletter {
