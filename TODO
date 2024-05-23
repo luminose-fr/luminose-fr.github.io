@@ -1,13 +1,18 @@
+Ménage ?
+Cookies + Google Ads
+
 Contenus :
+- Vérifier sur mobile (nav, menu, contenus, popins)
 - Respiration holotropique
+	- Individuel : photo matelas
+	- Collectif : photos salles
 - Méditation
 - Evènement + page détail 
-	- stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
+	- Stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
 	- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
 - SEO Redirect pour hypnose ?
 
 UI :
-- Trait de couleur en dessous des titres (à voir en fonction des tailles d'écran)
 - Dark mode : mobile
 - Modal "Prendre un rendez-vous"
 	- Ajouter RH solo (date + questionnaire santé si pas encore rempli)

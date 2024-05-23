@@ -2,12 +2,12 @@
 @use "bulma-1.0.0/sass" with (
 	$modal-background-background-color: rgba(31, 31, 31, .4), // identique à Calendly
 	$modal-card-head-background-color: v.$purple-heavy,
+	$modal-card-head-padding: 1rem,
+	$modal-card-body-padding: 1rem,
 	$modal-card-title-color: #ffffff,
 	$modal-card-title-size: 1rem,
-	$modal-content-width: 30rem,
-	$modal-card-head-padding:1rem 2rem,
+	$modal-content-width: 24rem,
 	$modal-card-spacing: 1rem,
-	//$modal-content-width: 440px,
 	
 	$family-secondary: v.$family-serif,
 	$text: v.$purple,
@@ -16,7 +16,6 @@
 	$body-family: v.$family-sans-serif,
 	$title-family: v.$family-serif,
 	$title-color: v.$purple,
-
 	$body-size: 16px,
 	$primary: v.$purple,
 	$link: v.$purple-heavy,

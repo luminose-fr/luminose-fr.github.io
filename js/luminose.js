@@ -377,23 +377,17 @@ var App = {
         const $target = document.getElementById(target);
         var isShowing = !button.classList.contains('is-active');
         var navIsFixed = that.sticky.mainNavigation.classList.contains('is-fixed-top');
-		//console.log(navIsFixed);
 
         if (isShowing) {
           that.currentScroll = document.documentElement.scrollTop;
           document.body.classList.add('menu-active');
-          //console.log("Opening------");
-          // console.log("Current scroll : " + that.currentScroll);
           if (!navIsFixed) {
             that.sticky.mainNavigation.classList.add("is-fixed-top");
           }
         } else {
-          console.log("Closing------");
           document.body.classList.remove('menu-active');
-          //that.sticky.mainNavigation.classList.remove("is-fixed-top");
-          // console.log("Scroll to : " + that.currentScroll);
+          that.sticky.mainNavigation.classList.remove("is-fixed-top");
           window.scrollBy(0, that.currentScroll);
-          // currentScroll = 0;
         }
 
         button.classList.toggle('is-active');
