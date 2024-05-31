@@ -286,6 +286,17 @@ span[data-tooltip].has-tooltip-primary {
   color: v.$purple;
 }
 
+.warning-bg {
+  background-color: v.$warning-tag-background;
+  color: v.$warning-tag-color;
+  padding: var(--bulma-block-spacing);
+  border-radius: var(--bulma-radius-large);
+  
+  strong {
+    color:inherit;
+  }
+}
+
 .light-bg {
   background-color: v.$purple-light;
   color: v.$purple-heavy;
