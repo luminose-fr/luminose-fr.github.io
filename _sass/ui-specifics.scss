@@ -220,6 +220,23 @@
     width: 7rem;
     height: 0.75rem;
   }
+  
+  #md-cookies {
+   .modal-content {
+      width:90%;
+      margin-left: auto;
+      margin-right: auto;
+      padding: var(--bulma-block-spacing);
+      .title {
+        font-size:1.8rem;
+      }
+      .illustration {
+        i.icon {
+          font-size: 2.5rem;
+        }
+      }
+    }
+  }
 }
 
 @include mixins.fullhd {

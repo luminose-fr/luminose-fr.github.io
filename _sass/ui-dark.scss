@@ -69,7 +69,7 @@
 		background: v.$dark-purple-heavy;
 	}
 
-	.warning-bg {
+	.notification.is-warning.is-light {
 	  background-color: v.$dark-warning-tag-background;
 	  color: v.$dark-warning-tag-color;
 	}
@@ -121,6 +121,11 @@
 	.navbar {
 		background-color: transparent;
 	}
+	#md-cookies {
+	  .modal-background {
+		background-color: rgba(32, 18, 46, .8)
+	  }
+  	}
 
 	#main-navbar {
 		background-color: v.$dark-purple-heavy;

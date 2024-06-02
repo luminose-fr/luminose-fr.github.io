@@ -1,19 +1,19 @@
 Ménage ?
-Cookies + Google Ads
+Cookies + Google Ads => a vérifier avec clic sur modale
 
 Contenus :
+- Tous : relire les META
 - Vérifier sur mobile (nav, menu, contenus, popins)
 - Respiration holotropique
 	- Individuel : photo matelas
 	- Collectif : photos salles
-- Méditation
+- Méditation : finaliser
 - Evènement + page détail 
 	- Stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
 	- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
 - SEO Redirect pour hypnose ?
 
 UI :
-- Dark mode : mobile
 - Modal "Prendre un rendez-vous"
 	- Ajouter RH solo (date + questionnaire santé si pas encore rempli)
 - Evènements, détails, inscription, etc.

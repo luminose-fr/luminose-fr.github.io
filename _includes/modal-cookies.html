@@ -1,24 +1,13 @@
 <div id="md-cookies" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-content">
-	<p class="title">Cookies et vie privée</p>
-	<p>Ce site utilise des cookies pour vous proposer une meilleure expérience, conformément à notre <a href="#">Politique en matière de cookies</a>.</p>
-	<div class="field is-grouped">
-	  <p class="control">
-		<button id="bt-cookies-reject" class="button is-white">Tout refuser</button>
-	  </p>
-	  <p class="control">
-		<button id="bt-cookies-accept" class="button is-white">Tout accepter</button>
-	  </p>
+	<div class="modal-background is-disabled"></div>
+	<div class="modal-content">
+		<div class="illustration"><i class="icon icon-cookies"></i></div>
+		<div class="title">Cookies et vie privée</div>
+		<p class="content">Ce site utilise des cookies pour vous proposer une meilleure expérience (contenus, fonctionnalités, etc.).</p>
+		<p class="content">Vous êtes libres d'accepter ou de refuser l'utilisation des cookies. Vous pourrez modifier votre choix à tout moment.</p>
+		<div class="buttons">
+			<button id="bt-cookies-reject" class="button is-white">Tout refuser</button>
+			<button id="bt-cookies-accept" class="button is-white">Tout accepter</button>
+		</div>
 	</div>
-  </div>
 </div>
-
-@TODO : 
-- propager les UTM dans les URLs ? OU enregistrer si OK ?
-- cookie pour mémoriser le choix
-- si jamais enregistré => afficher modale
-- quelque soit le choix => enregistrer que ça a été choisi
-- si ok => envoyer à Google
-- permettre de changer le choix ?
-- texte pour expliciter l'usage des cookies

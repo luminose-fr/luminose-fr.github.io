@@ -1,23 +1,23 @@
 (() => {
-    let oldPushState = history.pushState;
-    history.pushState = function pushState() {
-        let ret = oldPushState.apply(this, arguments);
-        window.dispatchEvent(new Event('pushstate'));
-        window.dispatchEvent(new Event('locationchange'));
-        return ret;
-    };
+  let oldPushState = history.pushState;
+  history.pushState = function pushState() {
+    let ret = oldPushState.apply(this, arguments);
+    window.dispatchEvent(new Event('pushstate'));
+    window.dispatchEvent(new Event('locationchange'));
+    return ret;
+  };
 
-    let oldReplaceState = history.replaceState;
-    history.replaceState = function replaceState() {
-        let ret = oldReplaceState.apply(this, arguments);
-        window.dispatchEvent(new Event('replacestate'));
-        window.dispatchEvent(new Event('locationchange'));
-        return ret;
-    };
+  let oldReplaceState = history.replaceState;
+  history.replaceState = function replaceState() {
+    let ret = oldReplaceState.apply(this, arguments);
+    window.dispatchEvent(new Event('replacestate'));
+    window.dispatchEvent(new Event('locationchange'));
+    return ret;
+  };
 
-    window.addEventListener('popstate', () => {
-        window.dispatchEvent(new Event('locationchange'));
-    });
+  window.addEventListener('popstate', () => {
+    window.dispatchEvent(new Event('locationchange'));
+  });
 })();
 
 class BulmaModal {
@@ -37,7 +37,7 @@ class BulmaModal {
   }
 
   close_data() {
-    var modalClose = this.elem.querySelectorAll("[data-bulma-modal='close'], .modal-background")
+    var modalClose = this.elem.querySelectorAll("[data-bulma-modal='close'], .modal-background:not(.is-disabled)")
     var that = this
     modalClose.forEach(function(e) {
       e.addEventListener("click", function() {
@@ -72,9 +72,11 @@ var App = {
 
   run: function() {
     this.setupViewport();
+    this.setupCookiesModal();
     this.setupNavigation();
     this.setupButtonPriseRdv();
     this.setupSocialLinks();
+    this.setupUTMParamsPropagation();
     this.respiration.run();
   },
 
@@ -82,36 +84,88 @@ var App = {
     var vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', function() {
       var vh = window.innerHeight * 0.01;
       // Then we set the value in the --vh custom property to the root of the document
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     });
   },
 
+  setupCookiesModal: function() {
+    var that = this;
+    that.cookiesConsentValue = that._getCookie('cookiesConsent'); // Not set OR denied OR granted
+
+    _modal = document.querySelector('#md-cookies');
+    if (_modal !== null) {
+      var modal = new BulmaModal("#md-cookies");
+      var btCookiesReject = _modal.querySelector('#bt-cookies-reject');
+      var btCookiesAccept = _modal.querySelector('#bt-cookies-accept');
+      var btUpdateCookies = document.querySelector('#bt-cookies-update');
+
+      if (btUpdateCookies !== null) {
+        btUpdateCookies.addEventListener("click", function(event) {
+          event.preventDefault();
+          that._setCookie('cookiesConsent', '', "Thu, 01 Jan 1970 00:00:00 UTC");
+          that.cookiesConsentValue = that._getCookie('cookiesConsent');
+          modal.show();
+        });
+      }
+
+      btCookiesAccept.addEventListener("click", function(event) {
+        event.preventDefault();
+        that._setCookie('cookiesConsent', 'granted', 365);
+        that.cookiesConsentValue = that._getCookie('cookiesConsent');
+        gtag('consent', 'update', {
+          'ad_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted',
+          'analytics_storage': 'granted',
+          'personalization_storage': 'granted',
+          'functionality_storage': 'granted',
+          'security_storage': 'granted'
+        });
+        modal.close();
+      });
+
+      btCookiesReject.addEventListener("click", function(event) {
+        event.preventDefault();
+        that._setCookie('cookiesConsent', 'denied', 365);
+        that.cookiesConsentValue = that._getCookie('cookiesConsent');
+        modal.close();
+      });
+
+      if (that.cookiesConsentValue != 'granted' && that.cookiesConsentValue != 'denied') {
+        modal.show();
+      } else {
+
+      }
+    }
+
+  },
+
   setupNavigation: function() {
-	  this.navbars = {
-		  main: null,
-		  secondary: null,
-		  relative: null,
-		  mobileNavbarBrand: null
-	  };
-	  this.navbarsHeights = {
-		  main: null,
-		  mainNavigation: null,
-		  mobileMenu: null,
-		  secondary :null
-	  };
+    this.navbars = {
+      main: null,
+      secondary: null,
+      relative: null,
+      mobileNavbarBrand: null
+    };
+    this.navbarsHeights = {
+      main: null,
+      mainNavigation: null,
+      mobileMenu: null,
+      secondary: null
+    };
     if (this.navbars.main == null) {
       this.navbars.main = document.getElementById("main-navbar");
-	  this.navbars.relative = document.getElementById('relative-navbar');
-	  this.navbars.secondary = document.getElementById('secondary-navbar');
-	  this.navbars.mobileNavbarBrand = document.getElementById("mobile-navbar-brand");
-	  
+      this.navbars.relative = document.getElementById('relative-navbar');
+      this.navbars.secondary = document.getElementById('secondary-navbar');
+      this.navbars.mobileNavbarBrand = document.getElementById("mobile-navbar-brand");
+
       this.burgerButton = document.getElementById('bt-navigation');
     }
     if (this.navbars.main !== null) {
-	  this._loadNavbarsHeights();
+      this._loadNavbarsHeights();
       this._stickNavigation();
       this._enableButtonBurger();
     }
@@ -135,17 +189,17 @@ var App = {
       });
 
       // Load the good tab depending on anchor and scroll accorgingly
-      var realblockHeight =  this.navbarsHeights.secondary; //this.navbarsHeights.main +
+      var realblockHeight = this.navbarsHeights.secondary; //this.navbarsHeights.main +
       var elementPosition = that.hypnotherapyTabs.getBoundingClientRect().top;
       var offsetPosition = elementPosition + window.pageYOffset - realblockHeight;
-	  //console.log(offsetPosition);
+      //console.log(offsetPosition);
 
       if (window.location.hash !== '' && window.location.hash !== '#prise-rdv') {
         that._selectNavigationItem(window.location.hash)
         setTimeout(function() {
           window.scrollTo({
-               top: offsetPosition,
-               behavior: "smooth"
+            top: offsetPosition,
+            behavior: "smooth"
           });
         }, 30);
       }
@@ -153,7 +207,7 @@ var App = {
       // Setup mobile button for Tabs menu
       var mobileTabsButton = that.hypnotherapyTabs.querySelector('#mobile-tabs-toggle');
       if (mobileTabsButton !== null) {
-        mobileTabsButton.addEventListener("click", function () {
+        mobileTabsButton.addEventListener("click", function() {
           that.hypnotherapyTabs.contentContainer.classList.add('is-hidden-mobile');
           that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
           // console.log(window.location);
@@ -166,13 +220,13 @@ var App = {
         that._selectNavigationItem(window.location.hash)
       });
     }
-    
+
     if (this.ficheMethodologiqueTabs == null) {
       this.ficheMethodologiqueTabs = document.querySelectorAll(".fiche-methodologique");
     }
     if (this.ficheMethodologiqueTabs !== null && this.ficheMethodologiqueTabs !== undefined) {
       var that = this;
-      
+
       that.ficheMethodologiqueTabs.forEach(function(tabsContainer) {
         tabsContainer.items = tabsContainer.querySelectorAll('.tabs ul li a');
         tabsContainer.tabs = tabsContainer.querySelectorAll('.tab-content');
@@ -196,6 +250,121 @@ var App = {
     }
   },
 
+  setupButtonPriseRdv: function() {
+    if (document.querySelector('#md-prise-rdv') !== null) {
+      var modal = new BulmaModal("#md-prise-rdv");
+      var that = this;
+      var btSeanceAdulte = document.querySelector('#bt-seance-adulte');
+      var btSeanceCouple = document.querySelector('#bt-seance-couple');
+      var btSeanceEnfant = document.querySelector('#bt-seance-enfant');
+
+      var buttons = document.querySelectorAll('.bt-prise-rdv');
+      buttons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+          event.preventDefault();
+          modal.show();
+        });
+      });
+
+      if (btSeanceAdulte !== null) {
+        btSeanceAdulte.addEventListener("click", function(event) {
+          event.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({
+            url: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+            utm: that._getUtmParams()
+          });
+        });
+      }
+
+      if (btSeanceCouple !== null) {
+        btSeanceCouple.addEventListener("click", function(event) {
+          event.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({
+            url: 'https://calendly.com/luminose/seance-hypnose-couple?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+            utm: that._getUtmParams()
+          });
+        });
+      }
+
+      if (btSeanceEnfant !== null) {
+        btSeanceEnfant.addEventListener("click", function(event) {
+          event.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({
+            url: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+            utm: that._getUtmParams()
+          });
+        });
+      }
+
+      if (window.location.hash === '#prise-rdv') {
+        event.preventDefault;
+        modal.show();
+        var uri = window.location.toString();
+        if (uri.indexOf("#") > 0) {
+          var clean_uri = uri.substring(0, uri.indexOf("#"));
+          window.history.replaceState({}, document.title, clean_uri);
+        }
+      }
+    }
+  },
+
+  getParamFromCurrentPage: function(param_name) {
+    param_name = param_name.replace(/([\[\]])/g, "\\\$1");
+    var regex = new RegExp("[\\?&]" + param_name + "=([^&#]*)"),
+      results = regex.exec(window.location.href);
+    return results ? results[1] : "";
+  },
+
+  setupSocialLinks: function() {
+    var links = document.querySelectorAll('a.social-link');
+    var firstLinkText = document.querySelector(".liens-partager .is-hidden-touch");
+
+    links.forEach(function(link) {
+      link.addEventListener("click", function(event) {
+        if (window.getComputedStyle(firstLinkText, null).display == 'block' ? true : false) {
+          var url = link.getAttribute("href");
+          var params = 'scrollbars=no,status=no,location=no,toolbar=no,menubar=no,width=700,height=700';
+          window.open(url, '', params);
+          event.preventDefault();
+        }
+      });
+    });
+  },
+
+  setupUTMParamsPropagation: function() {
+    // use URLSerachParams to get strings <- does not work in Internet Explorer
+    let deleteParams = [];
+    const utmParamQueryString = new URLSearchParams(window.location.search);
+    utmParamQueryString.forEach(function(value, key) {
+      if (!key.startsWith("utm_")) deleteParams.push(key);
+    });
+    for (var key in deleteParams) utmParamQueryString.delete(key);
+    if (utmParamQueryString) {
+      // get all the links on the page
+      document.querySelectorAll("a").forEach(function(item) {
+        //console.log(item);
+        const checkUrl = new URL(item.href);
+        // if the links hrefs are not navigating to the same domain, then skip processing them
+        if (checkUrl.host === location.host) {
+          let doNotProcess = false;
+          const linkSearchParams = new URLSearchParams(checkUrl.search);
+          linkSearchParams.forEach(function(value, key) {
+            if (key.startsWith("utm_")) doNotProcess = true;
+          });
+          if (doNotProcess) return;
+          checkUrl.search = new URLSearchParams({
+            ...Object.fromEntries(utmParamQueryString),
+            ...Object.fromEntries(linkSearchParams),
+          });
+          item.href = checkUrl.href;
+        }
+      });
+    }
+  },
+  
   _selectNavigationItem: function(hash) {
     var that = this;
     var item, selectedTab;
@@ -210,7 +379,7 @@ var App = {
       that.hypnotherapyTabs.contentContainer.classList.add('is-hidden-mobile');
       that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
     }
-    
+  
     if (item !== null) {
       selectedTab = that.hypnotherapyTabs.querySelector(hash);
   
@@ -227,157 +396,112 @@ var App = {
   
   _getUtmParams: function() {
     var utm_params = {
-        utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
-        utmSource: this.getParamFromCurrentPage("utm_source"),
-        utmMedium: this.getParamFromCurrentPage("utm_medium"),
-        utmContent: this.getParamFromCurrentPage("utm_content"),
-        utmTerm: this.getParamFromCurrentPage("utm_term")
+      utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
+      utmSource: this.getParamFromCurrentPage("utm_source"),
+      utmMedium: this.getParamFromCurrentPage("utm_medium"),
+      utmContent: this.getParamFromCurrentPage("utm_content"),
+      utmTerm: this.getParamFromCurrentPage("utm_term")
     }
     return utm_params;
   },
   
-  setupButtonPriseRdv: function() {
-    if (document.querySelector('#md-prise-rdv') !== null) {
-      var modal = new BulmaModal("#md-prise-rdv");
-      var that = this;
-      var btSeanceAdulte = document.querySelector('#bt-seance-adulte');
-      var btSeanceCouple = document.querySelector('#bt-seance-couple');
-      var btSeanceEnfant = document.querySelector('#bt-seance-enfant');
-      
-      var buttons = document.querySelectorAll('.bt-prise-rdv');
-      buttons.forEach(function(button) {
-        button.addEventListener("click", function (event) {
-          event.preventDefault();
-          modal.show();
-        });
-      });
-      
-      if (btSeanceAdulte !== null) {
-        btSeanceAdulte.addEventListener("click", function (event) {
-          event.preventDefault();
-          modal.close();
-          Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-            utm: that._getUtmParams() 
-          });        
-        });
-      }
-      
-      if (btSeanceCouple !== null) {
-        btSeanceCouple.addEventListener("click", function (event) {
-          event.preventDefault();
-          modal.close();
-          Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose-couple?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-            utm: that._getUtmParams()
-          });        
-        });
-      }
-      
-      if (btSeanceEnfant !== null) {
-        btSeanceEnfant.addEventListener("click", function (event) {
-          event.preventDefault();
-          modal.close();
-          Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-            utm: that._getUtmParams()
-          });        
-        });
-      }
-      
-      if (window.location.hash === '#prise-rdv') {
-        event.preventDefault;
-        modal.show();
-        var uri = window.location.toString();
-        if (uri.indexOf("#") > 0) {
-            var clean_uri = uri.substring(0, uri.indexOf("#"));
-            window.history.replaceState({}, document.title, clean_uri);
-        }
-      }
-    }
+  _setCookie: function(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   },
   
-  getParamFromCurrentPage: function(param_name) {
-    param_name = param_name.replace(/([\[\]])/g,"\\\$1");
-    var regex = new RegExp("[\\?&]"+param_name+"=([^&#]*)"), 
-      results = regex.exec( window.location.href );
-    return results? results[1]:"";
+  _getCookie: function(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
   },
-
+  
   _stickNavigation: function() {
     var that = this;
-	that.sticky = {
-		mainNavigation : that.navbars.main,
-		relativeNavigation : that.navbars.relative,
-		documentBody : document.body,
-		whenToStick : that._findWhenToStickNavigation()
-	};
-
-	window.addEventListener('resize', function () {
-		that.sticky.whenToStick = that._findWhenToStickNavigation();
-	  	if (that.sticky.documentBody.classList.contains("has-relative-navbar-fixed-top")) {
-	  		that.sticky.relativeNavigation.style.top = (that.sticky.mainNavigation.offsetHeight - 1) + "px";
-	  	}
-	});
-	
-    window.addEventListener('scroll', function () {
+    that.sticky = {
+      mainNavigation: that.navbars.main,
+      relativeNavigation: that.navbars.relative,
+      documentBody: document.body,
+      whenToStick: that._findWhenToStickNavigation()
+    };
+  
+    window.addEventListener('resize', function() {
+      that.sticky.whenToStick = that._findWhenToStickNavigation();
+      if (that.sticky.documentBody.classList.contains("has-relative-navbar-fixed-top")) {
+        that.sticky.relativeNavigation.style.top = (that.sticky.mainNavigation.offsetHeight - 1) + "px";
+      }
+    });
+  
+    window.addEventListener('scroll', function() {
       if (!that.burgerButton.classList.contains('is-active')) { // Exécuter seulement si le menu mobile est inactif.
         if (that.sticky.documentBody.scrollTop > (that.sticky.whenToStick) || document.documentElement.scrollTop > (that.sticky.whenToStick)) {
-		  that.sticky.mainNavigation.classList.add("is-fixed-top");
-		  that.sticky.documentBody.classList.add("has-navbar-fixed-top");
-		  
-		  if (that.sticky.relativeNavigation != undefined && window.innerWidth > 768) { // Ne pas sticker sur mobile
-			  that.sticky.relativeNavigation.classList.add("is-fixed-top");
-			  that.sticky.relativeNavigation.style.top = (that.sticky.mainNavigation.offsetHeight - 1) + "px";
-			  that.sticky.documentBody.classList.add("has-relative-navbar-fixed-top");
-		  }
-		  
+          that.sticky.mainNavigation.classList.add("is-fixed-top");
+          that.sticky.documentBody.classList.add("has-navbar-fixed-top");
+  
+          if (that.sticky.relativeNavigation != undefined && window.innerWidth > 768) { // Ne pas sticker sur mobile
+            that.sticky.relativeNavigation.classList.add("is-fixed-top");
+            that.sticky.relativeNavigation.style.top = (that.sticky.mainNavigation.offsetHeight - 1) + "px";
+            that.sticky.documentBody.classList.add("has-relative-navbar-fixed-top");
+          }
+  
         } else {
-		  that.sticky.mainNavigation.classList.remove("is-fixed-top");
-		  that.sticky.documentBody.classList.remove("has-navbar-fixed-top");
-		  
-		  if (that.sticky.relativeNavigation != undefined && window.innerWidth > 768) { // Ne pas sticker sur mobile
-			  that.sticky.relativeNavigation.classList.remove("is-fixed-top");
-			  that.sticky.relativeNavigation.style.top = 0;
-			  that.sticky.documentBody.classList.remove("has-relative-navbar-fixed-top");
-		  }
+          that.sticky.mainNavigation.classList.remove("is-fixed-top");
+          that.sticky.documentBody.classList.remove("has-navbar-fixed-top");
+  
+          if (that.sticky.relativeNavigation != undefined && window.innerWidth > 768) { // Ne pas sticker sur mobile
+            that.sticky.relativeNavigation.classList.remove("is-fixed-top");
+            that.sticky.relativeNavigation.style.top = 0;
+            that.sticky.documentBody.classList.remove("has-relative-navbar-fixed-top");
+          }
         }
       }
     });
   },
   
   _loadNavbarsHeights: function() {
-  	  this.navbarsHeights.secondary = this.navbars.secondary.offsetHeight;
-  	  this.navbarsHeights.mainNavigation = this.navbars.main.querySelector('#main-navigation').offsetHeight;
-	  this.navbarsHeights.main = this.navbars.main.offsetHeight;	
-	  this.navbarsHeights.mobileMenu = this.navbars.mobileNavbarBrand.querySelector('#mobile-navigation').offsetHeight;
+    this.navbarsHeights.secondary = this.navbars.secondary.offsetHeight;
+    this.navbarsHeights.mainNavigation = this.navbars.main.querySelector('#main-navigation').offsetHeight;
+    this.navbarsHeights.main = this.navbars.main.offsetHeight;
+    this.navbarsHeights.mobileMenu = this.navbars.mobileNavbarBrand.querySelector('#mobile-navigation').offsetHeight;
   },
   
   _findWhenToStickNavigation: function() {
-	  var that = this;
-	  that._loadNavbarsHeights();
-	  var whenToStick = 0;
-	  if (that.navbarsHeights.secondary == 0) { // Vue mobile car la nav est masquée et sa hauteur = 0
-		  whenToStick = that.navbarsHeights.mainNavigation;
-	  } else {
-		  whenToStick = that.navbarsHeights.secondary;
-	  }	  
-	  return whenToStick;
+    var that = this;
+    that._loadNavbarsHeights();
+    var whenToStick = 0;
+    if (that.navbarsHeights.secondary == 0) { // Vue mobile car la nav est masquée et sa hauteur = 0
+      whenToStick = that.navbarsHeights.mainNavigation;
+    } else {
+      whenToStick = that.navbarsHeights.secondary;
+    }
+    return whenToStick;
   },
-
-
+  
+  
   _enableButtonBurger: function() {
     var that = this;
     var button = that.burgerButton;
-
+  
     if (button !== null) {
-      button.addEventListener("click", function () {
+      button.addEventListener("click", function() {
         // Get the target from the "data-target" attribute
         const target = button.dataset.target;
         const $target = document.getElementById(target);
         var isShowing = !button.classList.contains('is-active');
         var navIsFixed = that.sticky.mainNavigation.classList.contains('is-fixed-top');
-
+  
         if (isShowing) {
           that.currentScroll = document.documentElement.scrollTop;
           document.body.classList.add('menu-active');
@@ -389,31 +513,15 @@ var App = {
           that.sticky.mainNavigation.classList.remove("is-fixed-top");
           window.scrollBy(0, that.currentScroll);
         }
-
+  
         button.classList.toggle('is-active');
         $target.classList.toggle('is-active');
-
+  
       });
     }
   },
-  
-  setupSocialLinks: function() {
-    var links = document.querySelectorAll('a.social-link');
-    var firstLinkText = document.querySelector(".liens-partager .is-hidden-touch");
-    
-    links.forEach(function(link) {
-        link.addEventListener("click", function(event) {
-          if (window.getComputedStyle(firstLinkText, null).display == 'block' ? true : false) {
-            var url = link.getAttribute("href");
-            var params = 'scrollbars=no,status=no,location=no,toolbar=no,menubar=no,width=700,height=700';
-            window.open(url, '', params);
-            event.preventDefault();
-          }
-      });
-    });
-  },
 
-    respiration: {
+  respiration: {
 
     _runningTimer: null,
     _runningTimer2: null,
@@ -426,7 +534,7 @@ var App = {
       }
     },
 
-    startPause:function() {
+    startPause: function() {
       var that = this;
       if (that.animations.stopped) {
         that.animations.stopped = false;
@@ -442,19 +550,19 @@ var App = {
       }
     },
 
-    play:function() {
+    play: function() {
       var that = this;
       that.animations.play();
       that.sounds.play();
       that.buttons.play();
     },
-    pause:function() {
+    pause: function() {
       var that = this;
       that.animations.pause();
       that.sounds.pause();
       that.buttons.pause();
     },
-    stop:function() {
+    stop: function() {
       var that = this;
       that.sounds.stop();
       that.animations.stop();
@@ -462,31 +570,31 @@ var App = {
     },
 
     setRecurringTimer: function(callback, delay, initialStartDelay) {
-        var timerId, start, remaining = delay;
-        if (initialStartDelay >= 0) {
-          remaining = initialStartDelay;
-        }
+      var timerId, start, remaining = delay;
+      if (initialStartDelay >= 0) {
+        remaining = initialStartDelay;
+      }
 
-        this.pause = function() {
-            window.clearTimeout(timerId);
-            remaining -= new Date() - start;
-        };
+      this.pause = function() {
+        window.clearTimeout(timerId);
+        remaining -= new Date() - start;
+      };
 
-        this.stop = function() {
-          window.clearTimeout(timerId);
-        }
+      this.stop = function() {
+        window.clearTimeout(timerId);
+      }
 
-        var resume = function() {
-            start = new Date();
-            timerId = window.setTimeout(function() {
-                remaining = delay;
-                resume();
-                callback();
-            }, remaining);
-        };
+      var resume = function() {
+        start = new Date();
+        timerId = window.setTimeout(function() {
+          remaining = delay;
+          resume();
+          callback();
+        }, remaining);
+      };
 
-        this.resume = resume;
-        this.resume();
+      this.resume = resume;
+      this.resume();
     },
 
     animations: {
@@ -502,8 +610,8 @@ var App = {
       _load: function(caller) {
         this._parent = caller;
         this.progressContainer = document.querySelector('#pg-track'),
-        this.progress = document.querySelector('#pg-track .completed'),
-        this.main = document.querySelector('#pg-respiration');
+          this.progress = document.querySelector('#pg-track .completed'),
+          this.main = document.querySelector('#pg-respiration');
 
         var that = this;
 
@@ -513,13 +621,13 @@ var App = {
 
       },
 
-      _setupIterationTimer: function(animationDuration){
+      _setupIterationTimer: function(animationDuration) {
         var that = this;
         if (animationDuration == null) {
           animationDuration = parseInt(window.getComputedStyle(that.main, "::before").animationDuration);
         }
-        that._iterationTimer = new that._parent.setRecurringTimer(function () {
-            that.onAnimationIteration();
+        that._iterationTimer = new that._parent.setRecurringTimer(function() {
+          that.onAnimationIteration();
         }, animationDuration * 1000, 0);
         that._iterationTimer.pause();
       },
@@ -561,10 +669,10 @@ var App = {
       },
       updateSpeed: function(newSpeed) {
         this._iterationTimer.stop();
-        this._setupIterationTimer(newSpeed*2);
+        this._setupIterationTimer(newSpeed * 2);
         this._iterationTimer.resume();
 
-        this.main.classList.remove("loader__bar","speed3sec", "speed4sec", "speed5sec", "speed6sec", "speed7sec");
+        this.main.classList.remove("loader__bar", "speed3sec", "speed4sec", "speed5sec", "speed6sec", "speed7sec");
         void this.main.offsetWidth;
         this.main.classList.add("speed" + newSpeed + "sec", "loader__bar");
       }
@@ -581,33 +689,33 @@ var App = {
         this._parent = caller;
 
         if (this._parent.animations.main !== null) {
-          this.playButton   = document.querySelector('#bt-respiration-start');
-          this.stopButton   = document.querySelector('#bt-respiration-stop');
+          this.playButton = document.querySelector('#bt-respiration-start');
+          this.stopButton = document.querySelector('#bt-respiration-stop');
           this.configButton = document.querySelector('#bt-config');
-          this.configPanel  = document.querySelector('#dp-config');
+          this.configPanel = document.querySelector('#dp-config');
 
           var that = this,
-              bt5min = that.configPanel.querySelector('#length5min'),
-              bt10min = that.configPanel.querySelector('#length10min'),
-              btinfinite = that.configPanel.querySelector('#lengthinfinite'),
-              btSoundOn = that.configPanel.querySelector('#sound-on'),
-              btSoundOff = that.configPanel.querySelector('#sound-off');
+            bt5min = that.configPanel.querySelector('#length5min'),
+            bt10min = that.configPanel.querySelector('#length10min'),
+            btinfinite = that.configPanel.querySelector('#lengthinfinite'),
+            btSoundOn = that.configPanel.querySelector('#sound-on'),
+            btSoundOff = that.configPanel.querySelector('#sound-off');
 
-          that.playButton.addEventListener('click', function () {
+          that.playButton.addEventListener('click', function() {
             that._parent.startPause();
           });
 
-          that.stopButton.addEventListener('click', function () {
+          that.stopButton.addEventListener('click', function() {
             that._parent.stop();
           });
 
-          that.configButton.addEventListener('click', function () {
+          that.configButton.addEventListener('click', function() {
             that.configButton.classList.toggle("is-active");
             that.configPanel.classList.toggle("is-active");
           });
 
           that.configPanel.querySelectorAll('.set-speed span.values span').forEach(function(btSpeed) {
-            btSpeed.addEventListener('click', function () {
+            btSpeed.addEventListener('click', function() {
               var value = btSpeed.innerText;
               that._parent.animations.newSpeed = value;
               var activeButtons = that.configPanel.querySelector('.set-speed span.is-active');
@@ -622,7 +730,7 @@ var App = {
             });
           });
 
-          bt5min.addEventListener('click', function () {
+          bt5min.addEventListener('click', function() {
             if (!bt5min.classList.contains("is-active")) {
               that._parent.animations.progress.classList.remove("length10min", "lengthinfinite");
               that._parent.animations.progress.classList.add("length5min");
@@ -632,7 +740,7 @@ var App = {
             }
           });
 
-          bt10min.addEventListener('click', function () {
+          bt10min.addEventListener('click', function() {
             if (!bt10min.classList.contains("is-active")) {
               that._parent.animations.progress.classList.remove("length5min", "lengthinfinite");
               that._parent.animations.progress.classList.add("length10min");
@@ -642,7 +750,7 @@ var App = {
             }
           });
 
-          btinfinite.addEventListener('click', function () {
+          btinfinite.addEventListener('click', function() {
             if (!btinfinite.classList.contains("is-active")) {
               that._parent.animations.progress.classList.remove("length5min", "length10min");
               that._parent.animations.progress.classList.add("lengthinfinite")
@@ -652,13 +760,13 @@ var App = {
             }
           });
 
-          btSoundOn.addEventListener('click', function () {
+          btSoundOn.addEventListener('click', function() {
             that._parent.sounds.mute = false;
             btSoundOff.classList.remove("is-active");
             btSoundOn.classList.add("is-active");
           });
 
-          btSoundOff.addEventListener('click', function () {
+          btSoundOff.addEventListener('click', function() {
             that._parent.sounds.mute = true;
             btSoundOn.classList.remove("is-active");
             btSoundOff.classList.add("is-active");
@@ -703,16 +811,16 @@ var App = {
         if (animationDuration == null) {
           animationDuration = parseInt(window.getComputedStyle(that._parent.animations.main, "::before").animationDuration);
         }
-        that._parent._runningTimer = new that._parent.setRecurringTimer(function () {
+        that._parent._runningTimer = new that._parent.setRecurringTimer(function() {
           if (!that.mute) {
             that.out.play();
           }
-        }, animationDuration*1000, 0); // ex. 10s pour un cycle total => 5000ms pour le deuxième son
-        that._parent._runningTimer2 = new that._parent.setRecurringTimer(function () {
+        }, animationDuration * 1000, 0); // ex. 10s pour un cycle total => 5000ms pour le deuxième son
+        that._parent._runningTimer2 = new that._parent.setRecurringTimer(function() {
           if (!that.mute) {
             that.in.play();
           }
-        }, animationDuration*1000, animationDuration*1000/2); // ex. 10s pour un cycle total => 5000ms pour le deuxième son
+        }, animationDuration * 1000, animationDuration * 1000 / 2); // ex. 10s pour un cycle total => 5000ms pour le deuxième son
         that._parent._runningTimer.pause();
         that._parent._runningTimer2.pause();
       },
@@ -720,17 +828,17 @@ var App = {
         this._parent._runningTimer.resume();
         this._parent._runningTimer2.resume();
       },
-      pause:function() {
+      pause: function() {
         this._parent._runningTimer.pause();
         this._parent._runningTimer2.pause();
       },
-      stop:function() {
+      stop: function() {
         this._parent._runningTimer.stop();
         this._parent._runningTimer2.stop();
       },
       updateSpeed: function(newSpeed) {
         this.stop();
-        this._setupSoundTimers(newSpeed*2);
+        this._setupSoundTimers(newSpeed * 2);
         this.play();
       }
     }
