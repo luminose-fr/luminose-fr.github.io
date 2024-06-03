@@ -265,8 +265,8 @@ var App = {
       var modal = new BulmaModal("#md-prise-rdv");
       var that = this;
       var btSeanceAdulte = document.querySelector('#bt-seance-adulte');
-      var btSeanceCouple = document.querySelector('#bt-seance-couple');
       var btSeanceEnfant = document.querySelector('#bt-seance-enfant');
+      var btSeanceRespiration = document.querySelector('#bt-seance-respiration');
 
       var buttons = document.querySelectorAll('.bt-prise-rdv');
       buttons.forEach(function(button) {
@@ -286,18 +286,7 @@ var App = {
           });
         });
       }
-
-      if (btSeanceCouple !== null) {
-        btSeanceCouple.addEventListener("click", function(event) {
-          event.preventDefault();
-          modal.close();
-          Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose-couple?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-            utm: that._getUtmParams()
-          });
-        });
-      }
-
+      
       if (btSeanceEnfant !== null) {
         btSeanceEnfant.addEventListener("click", function(event) {
           event.preventDefault();
@@ -308,6 +297,19 @@ var App = {
           });
         });
       }
+
+      if (btSeanceRespiration !== null) {
+        btSeanceRespiration.addEventListener("click", function(event) {
+          event.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({
+            url: 'https://calendly.com/luminose/seance-respiration-holotropique?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+            utm: that._getUtmParams()
+          });
+        });
+      }
+
+      
 
       if (window.location.hash === '#prise-rdv') {
         event.preventDefault;
