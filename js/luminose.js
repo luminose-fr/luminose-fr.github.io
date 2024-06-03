@@ -137,7 +137,17 @@ var App = {
       if (that.cookiesConsentValue != 'granted' && that.cookiesConsentValue != 'denied') {
         modal.show();
       } else {
-
+        if (that.cookiesConsentValue == 'granted') {
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+            'analytics_storage': 'granted',
+            'personalization_storage': 'granted',
+            'functionality_storage': 'granted',
+            'security_storage': 'granted'
+          });
+        }
       }
     }
 
