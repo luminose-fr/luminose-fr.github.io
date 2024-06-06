@@ -785,12 +785,22 @@ button.button.is-white:hover {
 a.button.is-purple-bordered,
 button.button.is-purple-bordered,
 input.is-purple-bordered,
+select.is-purple-bordered,
+textarea.is-purple-bordered,
 a.button.is-purple-bordered:hover,
 button.button.is-purple-bordered:hover,
-input.is-purple-bordered:hover {
+input.is-purple-bordered:hover,
+select.is-purple-bordered:hover,
+textarea.is-purple-bordered:hover, {
   color: v.$purple-heavy;
   border: 2px v.$purple-light-border solid;
   box-shadow: none;
+}
+
+input.is-purple-bordered:hover,
+select.is-purple-bordered:hover,
+textarea.is-purple-bordered:hover, {
+  border: 2px v.$purple-heavy-border solid;
 }
 
 .field.has-addons .control:last-child:not(:only-child) .button.is-purple-bordered {
@@ -1358,6 +1368,7 @@ section.respiration-holotropique {
 
 
 
+
 section.oracle {
   color: v.$purple-heavy;
 
@@ -1499,6 +1510,47 @@ section.florent h3.subtitle.is-3.job {
     }
   }
 
+}
+
+section.questionnaire-sante {
+  
+  .columns.light-bg.field.is-horizontal {
+    margin: var(--bulma-content-block-margin-bottom) 0;
+    
+    .label {
+      color: v.$purple;
+      font-size: var(--bulma-size-4);
+      font-family: "Abril Display W05 Italic", serif;
+      font-weight: 300;
+      line-height: 1.125;
+    }
+    
+    .column.is-9 {
+      
+      .field-body {
+        margin-bottom: var(--bulma-content-block-margin-bottom);
+      }
+
+      .grille-sante {
+        background-color: #FFFFFF;
+        border-radius: var(--bulma-radius-large);
+        
+        td.no-wrap {
+          white-space: nowrap;
+        }
+        td {
+          vertical-align:middle;
+          padding: 0.75rem;
+          border-bottom: 2px v.$purple-light solid;         
+        }
+        tr:last-child td {
+          border-bottom:0;
+        }
+      }  
+    }
+  }
+  
+  
 }
 
 section.newsletter {
