@@ -11,8 +11,8 @@ sitemap: false
 			<p class="subtitle">Questionnaire préalable à la pratique de la respiration holotropique</p>
 			<p>La thérapie par la <a href="{{ site.baseurl }}/respiration-holotropique.html" target="_blank">respiration holotropique de Stanislav Grof®</a> peut impliquer des expériences intenses accompagnées d'une forte libération émotionnelle et physique. Cette pratique n'est pas recommandée pour les femmes enceintes, ni pour les personnes souffrant de problèmes cardiovasculaires, de certains troubles psychiatriques diagnostiqués, d'une chirurgie ou d'une fracture récente, d'une maladie infectieuse aiguë, d'épilepsie, d’antécédents d’AVC, d’asthme sévère, de glaucome ou d'une <a href="https://fr.wikipedia.org/wiki/Crise_spirituelle" target="_blank">urgence spirituelle</a> active.</p>
 			<p>Les réponses aux questions suivantes sont destinées à m'aider à préparer notre entretien préalable et resteront strictement confidentielles.</p>
-
-			<form>
+			<p class="is-warning">@TODO :<br />- Pré-remplir via attributs<br />- Validation JS ET HTML5 des données requises<br />- Affichage confirmation + email.</p>
+			<form action="https://hook.eu1.make.com/32oigrxupo7xlin44bzqayy6cpdqvj83" method="POST">
 				<div class="columns light-bg field is-horizontal">
 					<div class="column is-3">
 						<label class="label">Vos coordonnées</label>
@@ -22,7 +22,7 @@ sitemap: false
 							<div class="field is-narrow">
 								<div class="control">
 									<div class="select is-fullwidth">
-										<select class="is-purple-bordered">
+										<select class="is-purple-bordered" name="coordonnees_participant[genre]">
 											<option></option>
 											<option>Mme</option>
 											<option>M.</option>
@@ -33,55 +33,55 @@ sitemap: false
 							</div>
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Prénom">
+									<input class="input is-purple-bordered" type="text" placeholder="Prénom" name="coordonnees_participant[prenom]">
 								</p>
 							</div>
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Nom">
+									<input class="input is-purple-bordered" type="text" placeholder="Nom" name="coordonnees_participant[nom]">
 								</p>
 							</div>
 						</div>
 						<div class="field-body">
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Adresse">
-								</p>
-							</div>
-						</div>
-						<div class="field-body">
-							<div class="field is-narrow">
-								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Code postal">
-								</p>
-							</div>
-							<div class="field is-expanded">
-								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Ville">
+									<input class="input is-purple-bordered" type="text" placeholder="Adresse" name="coordonnees_participant[adresse]">
 								</p>
 							</div>
 						</div>
 						<div class="field-body">
 							<div class="field is-narrow">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Téléphone">
+									<input class="input is-purple-bordered" type="text" placeholder="Code postal" name="coordonnees_participant[code_postal]">
 								</p>
 							</div>
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="email" placeholder="E-mail">
+									<input class="input is-purple-bordered" type="text" placeholder="Ville" name="coordonnees_participant[ville]">
+								</p>
+							</div>
+						</div>
+						<div class="field-body">
+							<div class="field is-narrow">
+								<p class="control">
+									<input class="input is-purple-bordered" type="text" placeholder="Téléphone" name="coordonnees_participant[telephone]">
+								</p>
+							</div>
+							<div class="field is-expanded">
+								<p class="control">
+									<input class="input is-purple-bordered" type="email" placeholder="E-mail" name="coordonnees_participant[email]">
 								</p>
 							</div>
 						</div>
 						<div class="field-body">
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Profession">
+									<input class="input is-purple-bordered" type="text" placeholder="Profession" name="coordonnees_participant[profession]">
 								</p>
 							</div>
 							<div class="field is-narrow">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Date de naissance">
+									<input class="input is-purple-bordered" type="text" placeholder="Date de naissance" name="coordonnees_participant[date-naissance]">
 								</p>
 							</div>
 						</div>
@@ -98,7 +98,7 @@ sitemap: false
 							<div class="field is-narrow">
 								<div class="control">
 									<div class="select is-fullwidth">
-										<select class="is-purple-bordered">
+										<select class="is-purple-bordered" name="coordonnees_secours[genre]">
 											<option></option>
 											<option>Mme</option>
 											<option>M.</option>
@@ -109,24 +109,24 @@ sitemap: false
 							</div>
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Prénom">
+									<input class="input is-purple-bordered" type="text" placeholder="Prénom" name="coordonnees_secours[prenom]">
 								</p>
 							</div>
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Nom">
+									<input class="input is-purple-bordered" type="text" placeholder="Nom" name="coordonnees_secours[nom]">
 								</p>
 							</div>
 						</div>
 						<div class="field-body">
 							<div class="field is-narrow">
 								<p class="control">
-									<input class="input is-purple-bordered" type="text" placeholder="Téléphone">
+									<input class="input is-purple-bordered" type="text" placeholder="Téléphone" name="coordonnees_secours[telephone]">
 								</p>
 							</div>
 							<div class="field is-expanded">
 								<p class="control">
-									<input class="input is-purple-bordered" type="email" placeholder="E-mail">
+									<input class="input is-purple-bordered" type="email" placeholder="E-mail" name="coordonnees_secours[email]">
 								</p>
 							</div>
 						</div>
@@ -145,9 +145,9 @@ sitemap: false
 								<td class="no-wrap">
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="maladie-cardio1" type="radio" name="maladie-cardio">
+											<input class="is-checkradio" id="maladie-cardio1" type="radio" name="sante[maladie-cardio]" value="oui">
 											<label for="maladie-cardio1">Oui</label>
-											<input class="is-checkradio" id="maladie-cardio2" type="radio" name="maladie-cardio">
+											<input class="is-checkradio" id="maladie-cardio2" type="radio" name="sante[maladie-cardio]" value="non">
 											<label for="maladie-cardio2">Non</label>
 										</div>
 									</div>
@@ -158,9 +158,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="avc1" type="radio" name="avc">
+											<input class="is-checkradio" id="avc1" type="radio" name="sante[avc]" value="oui">
 											<label for="avc1">Oui</label>
-											<input class="is-checkradio" id="avc2" type="radio" name="avc">
+											<input class="is-checkradio" id="avc2" type="radio" name="sante[avc]" value="non">
 											<label for="avc2">Non</label>
 										</div>
 									</div>
@@ -171,9 +171,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="trouble-psy1" type="radio" name="trouble-psy">
+											<input class="is-checkradio" id="trouble-psy1" type="radio" name="sante[trouble-psy]" value="oui">
 											<label for="trouble-psy1">Oui</label>
-											<input class="is-checkradio" id="trouble-psy2" type="radio" name="trouble-psy">
+											<input class="is-checkradio" id="trouble-psy2" type="radio" name="sante[trouble-psy]" value="non">
 											<label for="trouble-psy2">Non</label>
 										</div>
 									</div>
@@ -184,9 +184,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="chirurgie1" type="radio" name="chirurgie">
+											<input class="is-checkradio" id="chirurgie1" type="radio" name="sante[chirurgie]" value="oui">
 											<label for="chirurgie1">Oui</label>
-											<input class="is-checkradio" id="chirurgie2" type="radio" name="chirurgie">
+											<input class="is-checkradio" id="chirurgie2" type="radio" name="sante[chirurgie]" value="non">
 											<label for="chirurgie2">Non</label>
 										</div>
 									</div>
@@ -197,9 +197,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="infection1" type="radio" name="infection">
+											<input class="is-checkradio" id="infection1" type="radio" name="sante[infection]" value="oui">
 											<label for="infection1">Oui</label>
-											<input class="is-checkradio" id="infection2" type="radio" name="infection">
+											<input class="is-checkradio" id="infection2" type="radio" name="sante[infection]" value="non">
 											<label for="infection2">Non</label>
 										</div>
 									</div>
@@ -210,9 +210,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="glaucome1" type="radio" name="glaucome">
+											<input class="is-checkradio" id="glaucome1" type="radio" name="sante[glaucome]" value="oui">
 											<label for="glaucome1">Oui</label>
-											<input class="is-checkradio" id="glaucome2" type="radio" name="glaucome">
+											<input class="is-checkradio" id="glaucome2" type="radio" name="sante[glaucome]" value="non">
 											<label for="glaucome2">Non</label>
 										</div>
 									</div>
@@ -223,9 +223,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="asthme1" type="radio" name="asthme">
+											<input class="is-checkradio" id="asthme1" type="radio" name="sante[asthme]" value="oui">
 											<label for="asthme1">Oui</label>
-											<input class="is-checkradio" id="asthme2" type="radio" name="asthme">
+											<input class="is-checkradio" id="asthme2" type="radio" name="sante[asthme]" value="non">
 											<label for="asthme2">Non</label>
 										</div>
 									</div>
@@ -239,9 +239,9 @@ sitemap: false
 								<td class="no-wrap">
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="enceinte1" type="radio" name="enceinte">
+											<input class="is-checkradio" id="enceinte1" type="radio" name="sante_suite[enceinte]" value="oui">
 											<label for="enceinte1">Oui</label>
-											<input class="is-checkradio" id="enceinte2" type="radio" name="enceinte">
+											<input class="is-checkradio" id="enceinte2" type="radio" name="sante_suite[enceinte]" value="non">
 											<label for="enceinte2">Non</label>
 										</div>
 									</div>
@@ -252,9 +252,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="suivi1" type="radio" name="suivi">
+											<input class="is-checkradio" id="suivi1" type="radio" name="sante_suite[suivi]" value="oui">
 											<label for="suivi1">Oui</label>
-											<input class="is-checkradio" id="suivi2" type="radio" name="suivi">
+											<input class="is-checkradio" id="suivi2" type="radio" name="sante_suite[suivi]" value="non">
 											<label for="suivi2">Non</label>
 										</div>
 									</div>
@@ -265,9 +265,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="deja-rh1" type="radio" name="deja-rh">
+											<input class="is-checkradio" id="deja-rh1" type="radio" name="sante_suite[deja-rh]" value="oui">
 											<label for="deja-rh1">Oui</label>
-											<input class="is-checkradio" id="deja-rh2" type="radio" name="deja-rh">
+											<input class="is-checkradio" id="deja-rh2" type="radio" name="sante_suite[deja-rh]" value="non">
 											<label for="deja-rh2">Non</label>
 										</div>
 									</div>
@@ -278,9 +278,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="spirituel1" type="radio" name="spirituel">
+											<input class="is-checkradio" id="spirituel1" type="radio" name="sante_suite[spirituel]" value="oui">
 											<label for="spirituel1">Oui</label>
-											<input class="is-checkradio" id="spirituel2" type="radio" name="spirituel">
+											<input class="is-checkradio" id="spirituel2" type="radio" name="sante_suite[spirituel]" value="non">
 											<label for="spirituel2">Non</label>
 										</div>
 									</div>
@@ -291,9 +291,9 @@ sitemap: false
 								<td>
 									<div class="field is-narrow">
 										<div class="control">
-											<input class="is-checkradio" id="autre1" type="radio" name="autre">
+											<input class="is-checkradio" id="autre1" type="radio" name="sante_suite[autre]" value="oui">
 											<label for="autre1">Oui</label>
-											<input class="is-checkradio" id="autre2" type="radio" name="autre">
+											<input class="is-checkradio" id="autre2" type="radio" name="sante_suite[autre]" value="non">
 											<label for="autre2">Non</label>
 										</div>
 									</div>
@@ -311,15 +311,35 @@ sitemap: false
 						<p><strong>Merci de partager ici toute information que vous souhaitez porter à ma connaissance.</strong></p>
 						<div class="field-body">
 							<div class="field">
+								<p class="help">Ce champ est facultatif</p>
 								<div class="control">
-									<textarea class="textarea is-purple-bordered"></textarea>
+									<textarea class="textarea is-purple-bordered" name="informations-complementaires"></textarea>
+								</div>
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				
+				<div class="columns light-bg field is-horizontal">
+					<div class="column is-3">
+						<label class="label">Votre déclaration</label>
+					</div>
+					<div class="column is-9">
+						<p><strong>Veuillez lire et valider la déclaration suivante :</strong></p>
+						<div class="field-body">
+							<div class="field">
+								<div class="control white-bg">
+									<input class="is-checkradio" id="declaration-sante" type="checkbox" name="declaration-sante">
+									<label for="declaration-sante">Je confirme par la présente que j'ai lu et compris les informations ci-dessus, que j'ai répondu à toutes les questions de manière complète et honnête et que je n'ai dissimulé aucune information. Pour autant que je sache, mon état de santé générale est bon.</label>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				
-				<div class="columns field is-horizontal">
+				<div class="columns boutons field is-horizontal">
 					<div class="column is-3">
 						
 					</div>
