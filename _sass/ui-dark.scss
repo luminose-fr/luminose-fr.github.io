@@ -43,9 +43,13 @@
 	a.button.is-purple-bordered,
 	button.button.is-purple-bordered,
 	input.is-purple-bordered,
+	select.is-purple-bordered,
+	textarea.is-purple-bordered,
 	a.button.is-purple-bordered:hover,
 	button.button.is-purple-bordered:hover,
-	input.is-purple-bordered:hover {
+	input.is-purple-bordered:hover 
+	select.is-purple-bordered:hover,
+	textarea.is-purple-bordered:hover, {
 		color: v.$purple-light;
 		border: 2px v.$purple-logo solid;
 		box-shadow: none;
@@ -53,10 +57,42 @@
 	}
 
 	a.button.is-purple-bordered:hover,
-	button.button.is-purple-bordered:hover,
-	input.is-purple-bordered:hover {
+	button.button.is-purple-bordered:hover{
 		background: v.$purple-logo;
 		color: #FFFFFF;
+	}
+	input.is-purple-bordered:hover,
+	select.is-purple-bordered:hover,
+	textarea.is-purple-bordered:hover, {
+	  background: v.$purple-logo;
+	  color: #FFFFFF;
+	}
+	
+	input.is-purple-bordered.is-danger,
+	select.is-purple-bordered.is-danger,
+	textarea.is-purple-bordered.is-danger {
+	  border: 2px var(--bulma-danger) solid;
+	}
+	
+	input.is-purple-bordered.is-success,
+	select.is-purple-bordered.is-success,
+	textarea.is-purple-bordered.is-success {
+	  border: 2px var(--bulma-success) solid;
+	}
+
+	
+	.is-checkradio[type=checkbox]+label::before, 
+	.is-checkradio[type=checkbox]+label:before, 
+	.is-checkradio[type=radio]+label::before, 
+	.is-checkradio[type=radio]+label:before {
+		border-color: v.$purple-logo;
+	}
+	
+	.is-checkradio.is-danger[type=checkbox]+label::before, 
+	.is-checkradio.is-danger[type=checkbox]+label:before, 
+	.is-checkradio.is-danger[type=radio]+label::before, 
+	.is-checkradio.is-danger[type=radio]+label:before {
+	  border: 2px var(--bulma-danger) solid;
 	}
 
 	.blog .content .liens-partager a.button.is-white {
@@ -343,6 +379,29 @@
 
 		}
 	}
+	
+	section.questionnaire-sante {
+	  
+	  .columns.light-bg.field.is-horizontal {
+		
+		.label {
+		  color: v.$dark-purple;
+		}
+		
+		.column.is-9 {
+		  
+		  .grille-sante {
+			
+			background-color: v.$dark-purple-heaviest;
+			
+			td {
+				color: v.$dark-purple;
+			    border-bottom: 2px v.$dark-purple-heavy solid;         
+			}
+		  }  
+		}
+	  }
+	}
 
 	.blog .content .blog-card-container .light-grey-bg {
 		color: v.$dark-purple;
@@ -432,7 +491,6 @@
 				border-top: 0;
 			}
 		}
-
 
 	}
 }

@@ -77,6 +77,8 @@ var App = {
     this.setupButtonPriseRdv();
     this.setupSocialLinks();
     this.setupUTMParamsPropagation();
+    this.setupFormPrefill();
+    this.setupFormValidation();
     this.respiration.run();
   },
 
@@ -374,6 +376,124 @@ var App = {
           item.href = checkUrl.href;
         }
       });
+    }
+  },
+  
+  setupFormPrefill: function() {
+    if (document.querySelector('#form-questionnaire-sante') !== null) {
+      var questionnaireSante = document.querySelector('#form-questionnaire-sante');
+      params = new URLSearchParams(document.location.search);
+      params.forEach((value, key) => {
+        var field = questionnaireSante.querySelector('input[name="' + key + '"]')
+        if(field != null) {
+          field.value = value
+        }
+      });
+    }
+  },
+  
+  setupFormValidation: function() {
+    if (document.querySelector('#form-questionnaire-sante') !== null) {
+      var questionnaireSante = document.querySelector('#form-questionnaire-sante');
+      var fields = questionnaireSante.querySelectorAll('input, select');
+      var that = this;
+      
+      questionnaireSante.addEventListener("submit", function(event) {
+        var canSubmit = true;
+        fields.forEach(function(field) {
+          if (!field.validity.valid) {
+            canSubmit = false;
+            that._showInputFieldError(field);
+          } else {
+            that._showInputFieldValid(field);
+          }
+        });
+        if (!canSubmit) {
+          event.preventDefault();  
+        }
+      });
+
+      fields.forEach(function(field) {
+        field.addEventListener("blur", (event) => {
+          if (field.value != '') {
+            if (field.validity.valid) {
+              that._showInputFieldValid(field);
+            } else {
+              that._showInputFieldError(field);
+            }
+          } else {
+            if (!that._hasInputFieldError(field)) {
+              that._hideInputFieldInfos(field); 
+            }
+          }
+        });
+        field.addEventListener("input", (event) => {
+          if (that._hasInputFieldError(field)) {
+            if (field.validity.valid) {
+              if (field.type == 'radio' && field.name != null && field.name != '') {'input[name="satisfied]'
+                var allRadioButtonsFromGroup = questionnaireSante.querySelectorAll('input[type="radio"][name="' + field.name + '"]');
+                allRadioButtonsFromGroup.forEach(function(radio) {
+                  that._hideInputFieldInfos(radio);
+                });
+              }
+              that._showInputFieldValid(field);
+            }
+          }
+          if (that._hasInputFieldValid(field)) {
+            if (!field.validity.valid) {
+              that._showInputFieldError(field);
+            }
+          }
+        });
+      });
+     
+    }
+  },
+  
+  _hasInputFieldError: function(field) {
+      return field.classList.contains("is-danger");
+  },
+  
+  _hasInputFieldValid: function(field) {
+      return field.classList.contains("is-success");
+  },
+  
+  _hideInputFieldInfos: function(field) {
+    if (field != null) {
+      field.classList.remove("is-success");
+      field.classList.remove("is-danger");
+      
+      if (field.nextElementSibling != null && field.nextElementSibling.firstElementChild != null) {
+        icon = field.nextElementSibling.firstElementChild; // icone : <i class="fas"></i>
+        icon.classList.remove("fa-check");
+        icon.classList.remove("fa-exclamation-triangle");
+      }
+    }
+  },
+  
+  _showInputFieldError: function(field) {
+    if (field != null) {
+      field.classList.remove("is-success");
+      field.classList.add("is-danger");
+      
+      if (field.nextElementSibling != null && field.nextElementSibling.firstElementChild != null) {
+        icon = field.nextElementSibling.firstElementChild; // icone : <i class="fas"></i>
+        icon.classList.remove("fa-check");
+        icon.classList.add("fa-exclamation-triangle");
+      }
+    }
+  },
+  
+  _showInputFieldValid: function(field) {
+    if (field != null) {
+      field.classList.remove("is-danger");
+      field.classList.add("is-success");
+
+      if (field.nextElementSibling != null && field.nextElementSibling.firstElementChild != null) {
+        icon = field.nextElementSibling.firstElementChild; // icone : <i class="fas"></i>
+        icon.classList.remove("fa-exclamation-triangle");
+        icon.classList.add("fa-check");
+      }
     }
   },
   

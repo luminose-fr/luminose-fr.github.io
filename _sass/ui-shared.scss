@@ -803,6 +803,26 @@ textarea.is-purple-bordered:hover, {
   border: 2px v.$purple-heavy-border solid;
 }
 
+input.is-purple-bordered.is-danger,
+select.is-purple-bordered.is-danger,
+textarea.is-purple-bordered.is-danger {
+  border: 2px var(--bulma-danger) solid;
+}
+
+input.is-purple-bordered.is-success,
+select.is-purple-bordered.is-success,
+textarea.is-purple-bordered.is-success {
+  border: 2px var(--bulma-success) solid;
+}
+
+.is-checkradio.is-danger[type=checkbox]+label::before, 
+.is-checkradio.is-danger[type=checkbox]+label:before, 
+.is-checkradio.is-danger[type=radio]+label::before, 
+.is-checkradio.is-danger[type=radio]+label:before {
+  border: 2px var(--bulma-danger) solid;
+}
+
+
 .field.has-addons .control:last-child:not(:only-child) .button.is-purple-bordered {
   // border-left:2px;
 }
@@ -1513,6 +1533,15 @@ section.florent h3.subtitle.is-3.job {
 }
 
 section.questionnaire-sante {
+  
+  input::-webkit-contacts-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+  }
+  
   .is-checkradio[type=checkbox]+label {
     display: inline-block;
     padding: 0 0 0 2rem;
