@@ -352,10 +352,16 @@ var App = {
     // use URLSerachParams to get strings <- does not work in Internet Explorer
     let deleteParams = [];
     const utmParamQueryString = new URLSearchParams(window.location.search);
+
     utmParamQueryString.forEach(function(value, key) {
-      if (!key.startsWith("utm_")) deleteParams.push(key);
+      if (!key.startsWith("utm_")) {
+        deleteParams.push(key);
+      }
     });
-    for (var key in deleteParams) utmParamQueryString.delete(key);
+    deleteParams.forEach(function(value, key) {
+      utmParamQueryString.delete(value);
+    });
+
     if (utmParamQueryString) {
       // get all the links on the page
       document.querySelectorAll("a").forEach(function(item) {
@@ -394,12 +400,19 @@ var App = {
   
   setupFormValidation: function() {
     if (document.querySelector('#form-questionnaire-sante') !== null) {
-      var questionnaireSante = document.querySelector('#form-questionnaire-sante');
-      var fields = questionnaireSante.querySelectorAll('input, select');
-      var that = this;
-      
+      var questionnaireSante  = document.querySelector('#form-questionnaire-sante');
+      var submitButton        = questionnaireSante.querySelector('button[type=submit]');
+      var messageSucces       = document.querySelector('#message-success-questionnaire-sante');
+      var modalErreur         = new BulmaModal("#md-erreur-questionnaire-sante");
+      var detailsErreur       = modalErreur.elem.querySelector('#error-details');
+      var messageIntroduction = document.querySelector('#introduction-questionnaire-sante');
+      var fields              = questionnaireSante.querySelectorAll('input, select');
+      var that                = this;
+
       questionnaireSante.addEventListener("submit", function(event) {
         var canSubmit = true;
+        event.preventDefault();
+        
         fields.forEach(function(field) {
           if (!field.validity.valid) {
             canSubmit = false;
@@ -408,8 +421,33 @@ var App = {
             that._showInputFieldValid(field);
           }
         });
-        if (!canSubmit) {
-          event.preventDefault();  
+        
+        if (canSubmit) {
+          submitButton.classList.add('is-loading');
+          
+          var xhr = new XMLHttpRequest();
+          var formData = new FormData(questionnaireSante);
+          
+          xhr.open('POST', questionnaireSante.action);
+          xhr.send(formData);
+          xhr.onload = function() {
+            if (xhr.status != 200) { // analyse l'état HTTP de la réponse
+              submitButton.classList.remove('is-loading');
+              detailsErreur.innerText = `${xhr.status}: ${xhr.statusText}`;
+              modalErreur.show();
+            } else { // show the result
+              submitButton.classList.remove('is-loading');
+              window.scroll(0, 0);
+              questionnaireSante.classList.add('is-hidden');
+              messageIntroduction.classList.add('is-hidden');
+              messageSucces.classList.remove('is-hidden');
+            }
+          };
+          xhr.onerror = function() {
+            submitButton.classList.remove('is-loading');
+            modalErreur.show();
+          };
+          
         }
       });
 

@@ -9,9 +9,10 @@ sitemap: false
 		<div class="content">
 			<h1>Questionnaire de santé</h1>
 			<p class="subtitle">Questionnaire préalable à la pratique de la respiration holotropique</p>
-			<p>La thérapie par la <a href="{{ site.baseurl }}/respiration-holotropique.html" target="_blank">respiration holotropique de Stanislav Grof®</a> peut impliquer des expériences intenses accompagnées d'une forte libération émotionnelle et physique. Cette pratique n'est pas recommandée pour les femmes enceintes, ni pour les personnes souffrant de problèmes cardiovasculaires, de certains troubles psychiatriques diagnostiqués, d'une chirurgie ou d'une fracture récente, d'une maladie infectieuse aiguë, d'épilepsie, d’antécédents d’AVC, d’asthme sévère, de glaucome ou d'une <a href="https://fr.wikipedia.org/wiki/Crise_spirituelle" target="_blank">urgence spirituelle</a> active.</p>
-			<p>Les réponses aux questions suivantes sont destinées à m'aider à préparer notre entretien préalable et resteront strictement confidentielles.</p>
-			<p class="is-warning">@TODO :<br />- Pré-remplir via attributs : 192.168.64.3:4000/respiration-holotropique/questionnaire-sante.html?coordonnees_participant[prenom]=Florent&coordonnees_participant[nom]=Jaouali&coordonnees_participant[adresse]=2%20Avenue%20de%20Verdun&coordonnees_participant[code_postal]=31290&coordonnees_participant[ville]=Villefranche%20de%20Lauragais&coordonnees_participant[telephone]=0637332655&coordonnees_participant[email]=florent.jaouali@gmail.com<br />- Affichage confirmation + email.</p>
+			<div id="introduction-questionnaire-sante">
+				<p>La thérapie par la <a href="{{ site.baseurl }}/respiration-holotropique.html" target="_blank">respiration holotropique de Stanislav Grof®</a> peut impliquer des expériences intenses accompagnées d'une forte libération émotionnelle et physique. Cette pratique n'est pas recommandée pour les femmes enceintes, ni pour les personnes souffrant de problèmes cardiovasculaires, de certains troubles psychiatriques diagnostiqués, d'une chirurgie ou d'une fracture récente, d'une maladie infectieuse aiguë, d'épilepsie, d’antécédents d’AVC, d’asthme sévère, de glaucome ou d'une <a href="https://fr.wikipedia.org/wiki/Crise_spirituelle" target="_blank">urgence spirituelle</a> active.</p>
+				<p>Les réponses aux questions suivantes sont destinées à m'aider à préparer notre entretien préalable et resteront strictement confidentielles.</p>
+			</div>
 			<form id="form-questionnaire-sante" action="https://hook.eu1.make.com/32oigrxupo7xlin44bzqayy6cpdqvj83" method="POST" novalidate>
 				<div class="columns light-bg field is-horizontal">
 					<div class="column is-3">
@@ -328,13 +329,13 @@ sitemap: false
 								<div class="control">
 									<textarea class="textarea is-purple-bordered" name="informations-complementaires"></textarea>
 								</div>
-								
+
 							</div>
-							
+
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="columns light-bg field is-horizontal">
 					<div class="column is-3">
 						<label class="label">Votre déclaration</label>
@@ -351,10 +352,10 @@ sitemap: false
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="columns boutons field is-horizontal">
 					<div class="column is-3">
-						
+
 					</div>
 					<div class="column is-9">
 						<div class="field-body">
@@ -367,8 +368,36 @@ sitemap: false
 						<p class="help">Vous recevrez une copie de vos réponses par e-mail.</p>
 					</div>
 				</div>
-				
+
 			</form>
+
+			<div id="message-success-questionnaire-sante" class="confirmation columns is-centered is-hidden">
+				<div class="column is-12-mobile is-7-tablet is-6-desktop is-5-widescreen is-5-fullhd ">
+					<div class="purple-border">
+						<div class="block has-text-centered">
+							<div class="illustration"><i class="icon icon-confirmation"></i></div>
+							<h1>Votre questionnaire a bien été envoyé !</h1>
+							<p>Vous allez recevoir un e-mail avec une copie de votre questionnaire.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="md-erreur-questionnaire-sante" class="modal">
+				<div class="modal-background"></div>
+				<div class="modal-content">
+					<div class="illustration"><i class="icon fas fa-exclamation-triangle"></i></div>
+					<div class="title">Erreur technique</div>
+					<p class="content">Le site a rencontré une erreur technique et le questionnaire n'a pas été envoyé (<span id="error-details" class="small"></span>).</p>
+					<p class="content">Vous pouvez essayer d'envoyer le questionnaire une nouvelle fois.</p>
+					<p class="content">Si le problème persiste, vous pourrez <a href="/documents/questionnaire-sante-respiration-holotropique.pdf" target="_blank">télécharger et remplir le questionnaire</a> puis me l'envoyer par e-mail à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a></p>
+				</div>
+
+				<button class="modal-close is-large" aria-label="close" data-bulma-modal="close"></button>
+			</div>
+
+
 		</div>
+
 	</div>
 </section>

@@ -1532,6 +1532,7 @@ section.florent h3.subtitle.is-3.job {
 
 }
 
+
 section.questionnaire-sante {
   
   input::-webkit-contacts-auto-fill-button {
@@ -1610,36 +1611,35 @@ section.newsletter {
 }
 
 //********************************************/
-//***************** Confirmation achat *****************/
+//***************** Confirmations *****************/
 //********************************************/
-.confirmation-achat {
-
-  margin-top: var(--bulma-block-spacing);
-
+.confirmation {
   .content {
-    h1 {
-      font-family: v.$family-serif;
-      font-weight: normal;
-      font-size: var(--bulma-size-3);
-    }
+    margin-top: var(--bulma-block-spacing);
+  }
 
-    .columns.light-bg {
-      padding: 0.75rem;
-      margin: 0;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
+  .purple-border h1 {
+    font-family: v.$family-serif;
+    font-weight: normal;
+    font-size: var(--bulma-size-3);
+  }
 
-      .column {
-        font-size: var(--bulma-size-7);
-      }
-    }
+  .columns.light-bg {
+    padding: 0.75rem;
+    margin: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 
-    .columns.is-gapless:not(:last-child),
-    .columns.is-gapless:last-child {
-      margin: 0;
-      padding-top: 0.3rem;
-      padding-bottom: 0.3rem;
+    .column {
+      font-size: var(--bulma-size-7);
     }
+  }
+
+  .columns.is-gapless:not(:last-child),
+  .columns.is-gapless:last-child {
+    margin: 0;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
   }
 
   .purple-border {
@@ -1663,7 +1663,6 @@ section.newsletter {
     }
   }
 }
-
 
 //********************************************/
 //***************** Paiement *****************/
@@ -1852,6 +1851,38 @@ section.newsletter {
 
 }
 
+#md-erreur-questionnaire-sante {
+  .modal-background {
+    background-color: rgba(255, 255, 255, .8)
+  }
+  .modal-content {
+    width:32rem;
+    background-color: var(--bulma-danger);
+    color: #ffffff;
+    border-radius: var(--bulma-radius-large);
+    padding: calc(2* var(--bulma-block-spacing));
+    
+    p.content {
+      margin-bottom: var(--bulma-content-block-margin-bottom);
+    }
+    p.content:last-of-type {
+      margin-bottom: calc(2* var(--bulma-content-block-margin-bottom));
+    }
+    
+    .illustration {
+      text-align: center;
+    
+      i.icon {
+        font-size: 3rem;
+      }
+    }
+    
+    .title {
+      color:#FFFFFF;
+      text-align: center;
+    }
+  }
+}
 
 //********************************************/
 //************** Calendly *****************/

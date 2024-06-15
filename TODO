@@ -2,30 +2,28 @@ Ménage ?
 Cookies + Google Ads => a vérifier avec clic sur modale
 
 Contenus :
-- Email avec lien pour questionnaire santé respiration holotropique + vêtemens pour rappel J-2
-- Make.com pour séances de respiration ?
 - Tous : relire les META
-- Vérifier sur mobile (nav, menu, contenus, popins)
 - Respiration holotropique
-	- Individuel : photo matelas
-	- Collectif : photos salles
-- Méditation : finaliser
-- Evènement + page détail 
+	- Page "Individuel" : photo matelas, liens en pied de page
+	- Page "Collectif" : photos salles, liens en pied de page
+	- Fenêtre d'erreur : lien vers questionnaire en PDF
+	- Email confirmation : lien pour questionnaire santé respiration holotropique avec pré-remplissage + RDV préalable si qqn inconnu + rappel tarifs et déroulement :
+	/respiration-holotropique/questionnaire-sante.html?coordonnees_participant[prenom]=Florent&coordonnees_participant[nom]=Jaouali&coordonnees_participant[adresse]=2%20Avenue%20de%20Verdun&coordonnees_participant[code_postal]=31290&coordonnees_participant[ville]=Villefranche%20de%20Lauragais&coordonnees_participant[telephone]=0637332655&coordonnees_participant[email]=florent.jaouali@gmail.com
+	- Email rappel J-2 : "vêtements confortable"
+	- Make.com pour séances de respiration ?
+- Méditation : 
+	- Page description : finaliser
+- Evénements + page détail 
 	- Stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
 	- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
-- SEO Redirect pour hypnose ?
 
 UI :
-- Modal "Prendre un rendez-vous"
-	- Ajouter RH solo (date + questionnaire santé si pas encore rempli)
-- Evènements, détails, inscription, etc.
+- Vérifier sur mobile (nav, menu, contenus, popins)
+- Evénements, détails, inscription, etc.
 - Tout vérifier sur mobile (et horizontal)+ divers navigateurs
 
-
 Commentaires :
-- Vérifier l'URL retour et/ou Javascript
-- Affichage joli et testé sur divers navigateurs
-- Bug avec les input en blur
+- Supprimer
 
 Autres sections :
 - Accueil / mise en avant d'un article de blog / Vidéo
