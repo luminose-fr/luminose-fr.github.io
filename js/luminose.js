@@ -195,8 +195,7 @@ var App = {
       that.hypnotherapyTabs.items.forEach(function(item) {
         item.addEventListener("click", function(event) {
           event.preventDefault();
-          // that._selectNavigationItem(item.getAttribute("href"));
-          history.pushState({}, '', item.getAttribute("href"));
+          history.pushState({}, '', item.getAttribute("data-target"));
         });
       });
 
@@ -227,7 +226,7 @@ var App = {
         });
       }
 
-      // Track URL change (<previous | next> from browser)
+      // Track URL change : clics on # & <previous & next from browser
       window.addEventListener('locationchange', function(event) {
         that._selectNavigationItem(window.location.hash)
       });
@@ -365,7 +364,6 @@ var App = {
     if (utmParamQueryString) {
       // get all the links on the page
       document.querySelectorAll("a").forEach(function(item) {
-        //console.log(item);
         const checkUrl = new URL(item.href);
         // if the links hrefs are not navigating to the same domain, then skip processing them
         if (checkUrl.host === location.host) {
@@ -433,7 +431,7 @@ var App = {
           xhr.onload = function() {
             if (xhr.status != 200) { // analyse l'état HTTP de la réponse
               submitButton.classList.remove('is-loading');
-              detailsErreur.innerText = `${xhr.status}: ${xhr.statusText}`;
+              detailsErreur.innerText = `Erreur ${xhr.status} : ${xhr.statusText}`;
               modalErreur.show();
             } else { // show the result
               submitButton.classList.remove('is-loading');
@@ -468,13 +466,15 @@ var App = {
         field.addEventListener("input", (event) => {
           if (that._hasInputFieldError(field)) {
             if (field.validity.valid) {
-              if (field.type == 'radio' && field.name != null && field.name != '') {'input[name="satisfied]'
+              if (field.type == 'radio' && field.name != null && field.name != '') {
                 var allRadioButtonsFromGroup = questionnaireSante.querySelectorAll('input[type="radio"][name="' + field.name + '"]');
                 allRadioButtonsFromGroup.forEach(function(radio) {
-                  that._hideInputFieldInfos(radio);
+                  that._showInputFieldValid(radio);
                 });
               }
-              that._showInputFieldValid(field);
+              if (field.type == 'checkbox' && field.name != null && field.name != '') {
+                that._showInputFieldValid(field);
+              }
             }
           }
           if (that._hasInputFieldValid(field)) {
@@ -535,23 +535,23 @@ var App = {
     }
   },
   
-  _selectNavigationItem: function(hash) {
+  _selectNavigationItem: function(target) {
     var that = this;
     var item, selectedTab;
-    if (hash !== '') {
-      item = that.hypnotherapyTabs.querySelector('a[href="' + hash + '"]');
+    if (target !== '') {
+      item = that.hypnotherapyTabs.querySelector('a[data-target="' + target + '"]');
       // Mobile events
       that.hypnotherapyTabs.contentContainer.classList.remove('is-hidden-mobile');
       that.hypnotherapyTabs.tabsContainer.classList.add('is-hidden-mobile');
     } else {
       item = that.hypnotherapyTabs.querySelector('a');
-      hash = item.getAttribute("href");
+      target = item.getAttribute("data-target");
       that.hypnotherapyTabs.contentContainer.classList.add('is-hidden-mobile');
       that.hypnotherapyTabs.tabsContainer.classList.remove('is-hidden-mobile');
     }
   
     if (item !== null) {
-      selectedTab = that.hypnotherapyTabs.querySelector(hash);
+      selectedTab = that.hypnotherapyTabs.querySelector(target);
   
       that.hypnotherapyTabs.items.forEach(function(i) {
         i.classList.remove('is-active');

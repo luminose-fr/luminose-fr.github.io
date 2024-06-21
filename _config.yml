@@ -27,7 +27,6 @@ sass:
 
 exclude: [
           "run.sh",
-          "pack.sh",
           "Gemfile",
           "Gemfile.lock"
          ]

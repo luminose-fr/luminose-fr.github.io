@@ -237,6 +237,25 @@
       }
     }
   }
+  
+  
+  section.questionnaire-sante .columns.light-bg.field.is-horizontal .column.is-9 .grille-sante {
+      
+      tbody {
+        display: grid; 
+      }
+      tr {
+        display: contents;
+      }
+      td {
+        display: block;
+        border-bottom:0;
+      }
+      tr td + td {
+        order: 0;
+        border-bottom: 2px v.$purple-light solid; 
+      }
+  }
 }
 
 @include mixins.fullhd {

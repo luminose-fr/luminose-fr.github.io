@@ -1,33 +1,31 @@
-Ménage ?
-Cookies + Google Ads => a vérifier avec clic sur modale
+Necessaire pour mise en ligne :
 
-Contenus :
-- Tous : relire les META
-- Respiration holotropique
-	- Page "Individuel" : photo matelas, liens en pied de page
-	- Page "Collectif" : photos salles, liens en pied de page
-	- Fenêtre d'erreur : lien vers questionnaire en PDF
-	- Email confirmation : lien pour questionnaire santé respiration holotropique avec pré-remplissage + RDV préalable si qqn inconnu + rappel tarifs et déroulement :
-	/respiration-holotropique/questionnaire-sante.html?coordonnees_participant[prenom]=Florent&coordonnees_participant[nom]=Jaouali&coordonnees_participant[adresse]=2%20Avenue%20de%20Verdun&coordonnees_participant[code_postal]=31290&coordonnees_participant[ville]=Villefranche%20de%20Lauragais&coordonnees_participant[telephone]=0637332655&coordonnees_participant[email]=florent.jaouali@gmail.com
-	- Email rappel J-2 : "vêtements confortable"
-	- Make.com pour séances de respiration ?
-- Méditation : 
-	- Page description : finaliser
-- Evénements + page détail 
-	- Stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
-	- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
+	Cookies + Google Ads => a vérifier avec clic sur modale
+	
+	UI :
+		- Vérifier sur mobile (nav, menu, contenus, popins) (et horizontal) + divers navigateurs
 
-UI :
-- Vérifier sur mobile (nav, menu, contenus, popins)
-- Evénements, détails, inscription, etc.
-- Tout vérifier sur mobile (et horizontal)+ divers navigateurs
+	
+	
+Pour plus tard :
 
-Commentaires :
-- Supprimer
-
-Autres sections :
-- Accueil / mise en avant d'un article de blog / Vidéo
-- Hypnothérapie / Illustration bateau
-
-Performance :
-- Vérifier speed (taille images, compression, etc.)
+	Contenus :
+		- Accueil
+			- Présenter la Respiration holotropique
+			- Mise en avant d'un article de blog / Vidéo
+		- Respiration holotropique
+			- Vidéo présentation
+			- Page "Individuel" : photo matelas in-situ
+			- Page "Collectif" : photo exemple de salle
+		- Evénements + page détail 
+			- Réactiver les boutons "Evènements"
+			- Stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
+			- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
+		- Qui suis-je ?
+			- Formation Respiration Holotropique
+	
+	UI :
+		- Evénements, détails, inscription, etc.
+	
+	Performance :
+		- Vérifier speed (taille images, compression, etc.)
