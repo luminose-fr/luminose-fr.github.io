@@ -364,20 +364,22 @@ var App = {
     if (utmParamQueryString) {
       // get all the links on the page
       document.querySelectorAll("a").forEach(function(item) {
-        const checkUrl = new URL(item.href);
-        // if the links hrefs are not navigating to the same domain, then skip processing them
-        if (checkUrl.host === location.host) {
-          let doNotProcess = false;
-          const linkSearchParams = new URLSearchParams(checkUrl.search);
-          linkSearchParams.forEach(function(value, key) {
-            if (key.startsWith("utm_")) doNotProcess = true;
-          });
-          if (doNotProcess) return;
-          checkUrl.search = new URLSearchParams({
-            ...Object.fromEntries(utmParamQueryString),
-            ...Object.fromEntries(linkSearchParams),
-          });
-          item.href = checkUrl.href;
+        if (item.href && item.href != "") {
+          const checkUrl = new URL(item.href);
+          // if the links hrefs are not navigating to the same domain, then skip processing them
+          if (checkUrl.host === location.host) {
+            let doNotProcess = false;
+            const linkSearchParams = new URLSearchParams(checkUrl.search);
+            linkSearchParams.forEach(function(value, key) {
+              if (key.startsWith("utm_")) doNotProcess = true;
+            });
+            if (doNotProcess) return;
+            checkUrl.search = new URLSearchParams({
+              ...Object.fromEntries(utmParamQueryString),
+              ...Object.fromEntries(linkSearchParams),
+            });
+            item.href = checkUrl.href;
+          }
         }
       });
     }
