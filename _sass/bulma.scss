@@ -1,5 +1,5 @@
 @use "ui-variables" as v;
-@use "bulma-1.0.0/sass" with (
+@use "bulma-1.0.1/sass" with (
 	$modal-background-background-color: rgba(31, 31, 31, .4), // identique à Calendly
 	$modal-card-head-background-color: v.$purple-heavy,
 	$modal-card-head-padding: 1rem,
