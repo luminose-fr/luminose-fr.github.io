@@ -1,0 +1,34 @@
+---
+layout: colonne
+title: XXX
+section: evenements
+description: XXX
+---
+<section class="section article">
+  <div class="container">
+    <div class="content">
+      <h1>Evènements en groupe</h1>
+      <h3 class="sub-section-title">Planning des évènements en groupe</h3>
+      {% for post in site.tags.basique %}
+      <div class="columns blog-row-container">
+        <div class="column is-4">
+          <div class="illustration"><a href="{{ post.url }}"><span class="banner-image-container"><img class="banner"
+                  src="/images/blog/{{ post.image_name }}.jpg"
+                  srcset="/images/blog/{{ post.image_name }}.jpg, /images/blog/{{ post.image_name }}@2x.jpg 2x"
+                  alt="{{ post.title }}"></span></a></div>
+        </div>
+        <div class="column is-8">
+          <div class="light-grey-bg has-text-left">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.summary | strip_html | truncatewords: 33 }}</p>
+            <a class="button is-white is-purple-bordered is-hidden-tablet-only is-hidden-desktop-only"
+              href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
+            <a class="button is-white is-purple-bordered is-hidden-mobile is-hidden-widescreen-only is-hidden-fullhd"
+              href="{{ post.url }}">Lire l'article</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

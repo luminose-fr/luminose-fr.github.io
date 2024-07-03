@@ -20,14 +20,13 @@ markdown: kramdown
 permalink: /blog/:categories/:title:output_ext
 
 # staticman comments configuration
-staticman_url: https://staticman-app.fly.dev/v2/entry/luminose-fr/luminose-fr.github.io/master/comments
+# staticman_url: https://staticman-app.fly.dev/v2/entry/luminose-fr/luminose-fr.github.io/master/comments
 
 sass:
   style: compressed # possible values: nested expanded compact compressed
 
 exclude: [
           "run.sh",
-          "pack.sh",
           "Gemfile",
           "Gemfile.lock"
          ]

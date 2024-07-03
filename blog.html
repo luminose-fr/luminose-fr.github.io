@@ -8,40 +8,40 @@ description: Découvrez comment l'hypnose peut aider à surmonter les troubles m
   <div class="container">
     <div class="content">
       <h1>Blog</h1>
-        <div class="columns is-multiline">
+      <div class="columns is-multiline">
         {% for post in site.tags.exclusif %}
-            <div class="column is-half blog-card-container">
-              <div class="illustration"><a href="{{ post.url }}"><span class="banner-image-container"><img class="banner" src="/images/blog/{{ post.image_name }}.jpg" srcset="/images/blog/{{ post.image_name }}.jpg, /images/blog/{{ post.image_name }}@2x.jpg 2x" alt="{{ post.title }}" 
-				  {% if post.image_position %}
-				  style="object-position: {{ post.image_position }}"
-				  {% endif %}
-				  ></span></a></div>
-              <div class="light-grey-bg has-text-left">
-                <h2>{{ post.title }}</h2>
-                {{ post.summary }}
-                <a class="button is-white is-purple-bordered is-hidden-tablet-only is-hidden-desktop-only" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
-                <a class="button is-white is-purple-bordered is-hidden-mobile is-hidden-widescreen-only is-hidden-fullhd" href="{{ post.url }}">Lire l'article</a>
-              </div>
-            </div>
-        {% endfor %}        
-        </div>
-        
-        <h3 class="sub-section-title">L'hypnose vous aide pour ...</h3>
-        {% for post in site.tags.basique %}
-          <div class="columns blog-row-container">
-            <div class="column is-4">
-              <div class="illustration"><a href="{{ post.url }}"><span class="banner-image-container"><img class="banner" src="/images/blog/{{ post.image_name }}.jpg" srcset="/images/blog/{{ post.image_name }}.jpg, /images/blog/{{ post.image_name }}@2x.jpg 2x" alt="{{ post.title }}"></span></a></div>
-            </div>
-            <div class="column is-8">
-              <div class="light-grey-bg has-text-left">
-                <h2>{{ post.title }}</h2>
-                <p>{{ post.summary | strip_html | truncatewords: 33 }}</p>
-                <a class="button is-white is-purple-bordered is-hidden-tablet-only is-hidden-desktop-only" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
-                <a class="button is-white is-purple-bordered is-hidden-mobile is-hidden-widescreen-only is-hidden-fullhd" href="{{ post.url }}">Lire l'article</a>
-              </div>
+          <div class="column is-half blog-card-container">
+            <div class="illustration"><a href="{{ post.url }}"><span class="banner-image-container"><img class="banner" src="/images/blog/{{ post.image_name }}.jpg" srcset="/images/blog/{{ post.image_name }}.jpg, /images/blog/{{ post.image_name }}@2x.jpg 2x" alt="{{ post.title }}"
+              {% if post.image_position %}
+                style="object-position: {{ post.image_position }}"
+              {% endif %}
+            ></span></a></div>
+            <div class="light-grey-bg has-text-left">
+              <h2>{{ post.title }}</h2>
+              {{ post.summary }}
+              <a class="button is-white is-purple-bordered is-hidden-tablet-only is-hidden-desktop-only" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
+              <a class="button is-white is-purple-bordered is-hidden-mobile is-hidden-widescreen-only is-hidden-fullhd" href="{{ post.url }}">Lire l'article</a>
             </div>
           </div>
-        {% endfor %}        
+        {% endfor %}
+      </div>
+      
+      <h3 class="sub-section-title">L'hypnose vous aide pour ...</h3>
+      {% for post in site.tags.basique %}
+        <div class="columns blog-row-container">
+          <div class="column is-4">
+            <div class="illustration"><a href="{{ post.url }}"><span class="banner-image-container"><img class="banner" src="/images/blog/{{ post.image_name }}.jpg" srcset="/images/blog/{{ post.image_name }}.jpg, /images/blog/{{ post.image_name }}@2x.jpg 2x" alt="{{ post.title }}"></span></a></div>
+          </div>
+          <div class="column is-8">
+            <div class="light-grey-bg has-text-left">
+              <h2>{{ post.title }}</h2>
+              <p>{{ post.summary | strip_html | truncatewords: 33 }}</p>
+              <a class="button is-white is-purple-bordered is-hidden-tablet-only is-hidden-desktop-only" href="{{ post.url }}">Découvrir {{ post.title | downcase }}</a>
+              <a class="button is-white is-purple-bordered is-hidden-mobile is-hidden-widescreen-only is-hidden-fullhd" href="{{ post.url }}">Lire l'article</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
   </div>
 </section>

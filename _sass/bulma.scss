@@ -1,70 +1,34 @@
-// Set your brand colors
-$purple: #6163A5;
-$purple-heavy: #60407F;
-$purple-light: #F9F5FF;
-$purple-light-border: #E8DEF6;
-$purple-heavy-border: #6163A5;
-$grey-light: #F2F2F2;
+@use "ui-variables" as v;
+@use "bulma-1.0.1/sass" with (
+	$modal-background-background-color: rgba(31, 31, 31, .4), // identique à Calendly
+	$modal-card-head-background-color: v.$purple-heavy,
+	$modal-card-head-padding: 1rem,
+	$modal-card-body-padding: 1rem,
+	$modal-card-title-color: #ffffff,
+	$modal-card-title-size: 1rem,
+	$modal-content-width: 24rem,
+	$modal-card-spacing: 1rem,
+	
+	$family-secondary: v.$family-serif,
+	$text: v.$purple,
+	$text-strong: v.$purple-heavy,
+	$strong-color: v.$purple-heavy,
+	$body-family: v.$family-sans-serif,
+	$title-family: v.$family-serif,
+	$title-color: v.$purple,
+	$body-size: 16px,
+	$primary: v.$purple,
+	$link: v.$purple-heavy,
+	$title-weight: 300,
+	$subtitle-weight: 300,
 
-$modal-background-background-color: rgba(31, 31, 31, .4); // identique à Calendly
-$modal-card-head-background-color: $purple-heavy;
-$modal-card-head-border-bottom: 0;
-$modal-card-title-color: #ffffff;
-$modal-card-title-size: 1rem;
+	$radius-large: 8px,
+	$box-shadow: 0 0.7em 2em 0 rgba(v.$purple-heavy, 0.16),
 
-$family-sans-serif: 'Futura LT W05 Book', sans-serif;
-$family-serif: 'Abril Display W05 Italic', serif;
+	$footer-background-color: #FFFFFF,
+	$footer-color: v.$purple,
+	$footer-padding: 1.5rem,
 
-$family-secondary: $family-serif ;
-$text	: $purple;
-$text-strong: $purple-heavy;
-$title-family: $family-secondary;
-$title-color: $purple;
-$body-size: 16px;
-$primary: $purple;
-$link: $purple-heavy;
-$title-weight: 300;
-$subtitle-weight: 300;
-
-$radius-large : 8px;
-$box-shadow: 0 0.7em 2em 0 rgba($purple-heavy, 0.16);
-$modal-content-width: 440px;
-
-$tag-radius : 8px;
-$tag-background-color: $purple-light;
-
-$footer-background-color: #FFFFFF;
-$footer-color: $purple;
-$footer-padding: 1.5rem;
-
-$table-head-background-color: $purple-heavy;
-
-$gear_icon_size: 1em;
-
-//@import "../_modules/bulma-0.9.4/bulma.sass";
-
-// Import only what you need from Bulma
-@import "bulma-0.9.4/sass/utilities/_all.sass";
-@import "bulma-0.9.4/sass/base/_all.sass";
-@import "bulma-0.9.4/sass/helpers/_all.sass";
-@import "bulma-0.9.4/sass/elements/button.sass";
-@import "bulma-0.9.4/sass/elements/container.sass";
-@import "bulma-0.9.4/sass/elements/content.sass";
-@import "bulma-0.9.4/sass/elements/icon.sass";
-@import "bulma-0.9.4/sass/elements/image.sass";
-@import "bulma-0.9.4/sass/elements/notification.sass";
-@import "bulma-0.9.4/sass/elements/title.sass";
-@import "bulma-0.9.4/sass/elements/table.sass";
-@import "bulma-0.9.4/sass/elements/box.sass";
-@import "bulma-0.9.4/sass/elements/tag.sass";
-@import "bulma-0.9.4/sass/components/modal.sass";
-@import "bulma-0.9.4/sass/components/navbar.sass";
-@import "bulma-0.9.4/sass/components/tabs.sass";
-@import "bulma-0.9.4/sass/components/media.sass";
-@import "bulma-0.9.4/sass/form/shared.sass";
-@import "bulma-0.9.4/sass/form/input-textarea.sass";
-@import "bulma-0.9.4/sass/form/tools.sass";
-@import "bulma-0.9.4/sass/grid/columns.sass";
-@import "bulma-0.9.4/sass/grid/tiles.sass";
-@import "bulma-0.9.4/sass/layout/footer.sass";
-@import "bulma-0.9.4/sass/layout/section.sass";
+	$table-head-background-color: v.$purple-heavy,
+	$table-color: v.$purple,
+);

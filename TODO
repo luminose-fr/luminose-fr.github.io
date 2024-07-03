@@ -1,25 +1,30 @@
-Commentaires :
-- Incorporer les avis Google
-- Vérifier l'URL retour et/ou Javascript
-- Affichage joli et testé sur divers navigateurs
-- Bug avec les input en blur
+Necessaire pour mise en ligne :
+	Cookies + Google Ads => a vérifier avec clic sur modale
+	
+Pour plus tard :
 
+	Mailchimp 
+		=> SendInBlue ?
+		Ménage dans les enregistrements DNS pour Mailchimp + Brevo
 
-Contenus :
-- Relire / ajuster les textes
-
-Autres sections :
-- Formation
-- Accueil / mise en avant d'un article de blog / Vidéo
-- Hypnothérapie / Illustration bateau
-
-Performance :
-- Vérifier speed (taille images, compression, etc.)
-
-Liens sociaux dans Jekyll SEO ?
-	https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
-
-
-
-Tester les UTM :
-https://www.luminose.fr/seance-hypnose.html?utm_source=google&utm_campaign=19486534955&utm_medium=ad&utm_content=677506269096&utm_term=hypnose%20emdr
+	Contenus :
+		- Accueil
+			- Présenter la Respiration holotropique
+			- Mise en avant d'un article de blog / Vidéo
+		- Respiration holotropique
+			- Vidéo présentation
+			- Page "Individuel" : photo matelas in-situ
+			- Page "Collectif" : photo exemple de salle
+		- Evénements + page détail 
+			- Réactiver les boutons "Evènements"
+			- Stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
+			- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
+		- Qui suis-je ?
+			- Formation Respiration Holotropique
+	
+	UI :
+		- Evénements, détails, inscription, etc.
+		- Focus-Within plus propre ?
+	
+	Performance :
+		- Vérifier speed (taille images, compression, etc.)

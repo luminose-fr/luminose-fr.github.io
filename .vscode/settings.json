@@ -1,0 +1,7 @@
+{
+    "window.autoDetectColorScheme": true,
+    "workbench.colorTheme": "Default Light Modern",
+    "workbench.preferredHighContrastLightColorTheme": "Default High Contrast Light",
+    "workbench.preferredLightColorTheme": "Default Light Modern",
+    "workbench.iconTheme": "ayu"
+}

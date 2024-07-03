@@ -1,30 +1,68 @@
 <header class="section header">
-  <div class="container has-text-centered">
-    <nav id="main-navbar" class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a href="{{ site.baseurl }}/" class="master-logo"><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></a>
-        <div id="mobile-navigation" class="nav-buttons is-hidden-tablet has-text-centered">
-        <a id="bt-navigation" role="button" class="button is-white is-purple-bordered" aria-label="menu" aria-expanded="false" data-target="main-navigation">Menu</a>
-        {% bouton_rendez_vous navbar-item %}
-        </div>
-      </div>
+	<div class="container">
+		<nav id="secondary-navbar" class="navbar" role="navigation" aria-label="secondary navigation">
+			<div class="navbar-brand is-hidden-mobile">
+				<a href="{{ site.baseurl }}/" class="master-logo"><img class="logo" src="/images/luminose-logo-hz.png" srcset="/images/luminose-logo-hz.png, /images/luminose-logo-hz@2x.png 2x" alt="Luminose"></a>
+			</div>
 
-      <div id="main-navigation" class="navbar-menu">
-        <a href="{{ site.baseurl }}/" class="is-hidden-tablet"><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></a>
-        <div class="navbar-start">
-          <a href="{{ site.baseurl }}/" class="navbar-item {% if page.section == "accueil" %}is-active{% endif %}">Accueil</a>
-          <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">Hypnothérapie</a>
-          <a href="{{ site.baseurl }}/seance-hypnose.html" class="navbar-item {% if page.section == "seances" %}is-active{% endif %}">Séances</a>
-          <a href="{{ site.baseurl }}/florent-jaouali.html" class="navbar-item {% if page.section == "qui" %}is-active{% endif %}">Qui suis-je ?</a>
-          <a href="{{ site.baseurl }}/blog.html" class="navbar-item {% if page.section == "blog" %}is-active{% endif %}">Blog</a>
-          <a href="{{ site.baseurl }}/outils.html" class="navbar-item {% if page.section == "outils" %}is-active{% endif %}">Outils</a>
-          {% bouton_rendez_vous navbar-item is-hidden-mobile %}
-          {% comment %}
-          <a href="{{ site.baseurl }}/formation-auto-hypnose.html" class="navbar-item {% if page.section == "formation" %}is-active{% endif %}">Formation</a>
-          <a href="{{ site.baseurl }}/ateliers.html" class="navbar-item {% if page.section == "ateliers" %}is-active{% endif %}">Ateliers</a>
-          {% endcomment %}
-        </div>
-      </div>
-    </nav>
+			<div class="navbar-end is-hidden-mobile">
+				<a href="{{ site.baseurl }}/florent-jaouali.html" class="navbar-item {% if page.section == "qui" %}is-active{% endif %}">Qui suis-je ?</a>
+				<a href="{{ site.baseurl }}/blog.html" class="navbar-item {% if page.section == "blog" %}is-active{% endif %}">Blog</a>
+				<a href="{{ site.baseurl }}/outils.html" class="navbar-item {% if page.section == "outils" %}is-active{% endif %}">Outils</a>
+				{% bouton_evenements navbar-item is-hidden-desktop %}
+			</div>
+		</nav>
+		<nav id="main-navbar" class="navbar" role="navigation" aria-label="main navigation">
+		  <div class="container">
+  			
+  		     <div id="main-navigation" class="navbar-menu">
+			    <a href="{{ site.baseurl }}/" class="is-hidden-tablet mobile-logo"><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></a>
+	  		    <div class="navbar-start is-hidden-mobile">
+		          <a href="{{ site.baseurl }}/" class="navbar-item {% if page.section == "accueil" %}is-active{% endif %}">Accueil</a>
+		          <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">Hypnothérapie</a>
+		          <a href="{{ site.baseurl }}/respiration-holotropique.html" class="navbar-item {% if page.section == "holotropique" %}is-active{% endif %}">Respiration holotropique</a>
+				  <a href="{{ site.baseurl }}/meditation.html" class="navbar-item {% if page.section == "meditation" %}is-active{% endif %}">Méditation</a>
+				  {% bouton_evenements navbar-item is-hidden-tablet %}
+	  		    </div>
+				<div class="navbar-start is-hidden-tablet is-hidden-mobile">
+					<a href="{{ site.baseurl }}/florent-jaouali.html" class="navbar-item {% if page.section == "qui" %}is-active{% endif %}">Qui suis-je ?</a>
+					<a href="{{ site.baseurl }}/blog.html" class="navbar-item {% if page.section == "blog" %}is-active{% endif %}">Blog</a>
+					<a href="{{ site.baseurl }}/outils.html" class="navbar-item {% if page.section == "outils" %}is-active{% endif %}">Outils</a>
+				</div>
+				<div class="navbar-end is-hidden-mobile">
+					{% bouton_evenements navbar-item is-hidden-touch %}
+					{% bouton_rendez_vous navbar-item  %}
+				</div>
+			  </div>
+    			<div id="mobile-navbar-brand" class="navbar-brand mobile-navbar-brand is-hidden-tablet has-text-centered">
+    		        <div id="mobile-navigation" class="nav-buttons">
+    		        	<a id="bt-navigation" href="#" role="button" class="button is-white is-purple-bordered" aria-label="menu" aria-expanded="false" data-target="main-navigation">Menu</a>
+    		        	{% bouton_rendez_vous navbar-item %}
+    		        </div>
+    			</div>
+		   </div>
+		</nav>
+		{% if page.section == "hypnotherapie" %}
+		<nav id="relative-navbar" class="navbar" role="navigation" aria-label="relative navigation">
+			 <div class="container">
+				 <div id="relative-navigation" class="navbar-menu">
+					 <div class="navbar-start">
+						 <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.sous-section == "presentation" %}is-active{% endif %}">Présentation</a><a href="{{ site.baseurl }}/seance-hypnose.html" class="navbar-item {% if page.sous-section == "seances" %}is-active{% endif %}">Déroulement des séances</a>
+					 </div>
+				 </div>
+			 </div>
+		</nav>
+		{% endif %}
+		{% if page.section == "holotropique" %}
+		<nav id="relative-navbar" class="navbar" role="navigation" aria-label="relative navigation">
+			 <div class="container">
+				 <div id="relative-navigation" class="navbar-menu">
+					 <div class="navbar-start">
+						 <a href="{{ site.baseurl }}/respiration-holotropique.html" class="navbar-item {% if page.sous-section == "presentation" %}is-active{% endif %}">Présentation</a><a href="{{ site.baseurl }}/respiration-holotropique/seance-individuelle.html" class="navbar-item {% if page.sous-section == "individuel" %}is-active{% endif %}">Séances individuelles</a><a href="{{ site.baseurl }}/respiration-holotropique/seance-groupe.html" class="navbar-item {% if page.sous-section == "groupe" %}is-active{% endif %}">Séances en groupe</a>
+					 </div>
+				 </div>
+			 </div>
+		</nav>
+		{% endif %}
   </div>
 </header>
