@@ -133,6 +133,15 @@ var App = {
         event.preventDefault();
         that._setCookie('cookiesConsent', 'denied', 365);
         that.cookiesConsentValue = that._getCookie('cookiesConsent');
+        gtag('consent', 'update', {
+          'ad_storage': 'denied',
+          'ad_user_data': 'denied',
+          'ad_personalization': 'denied',
+          'analytics_storage': 'denied',
+          'personalization_storage': 'denied',
+          'functionality_storage': 'denied',
+          'security_storage': 'denied'
+        });
         modal.close();
       });
 
