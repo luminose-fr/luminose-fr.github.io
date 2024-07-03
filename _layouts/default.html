@@ -11,13 +11,15 @@
 
     {{ content }}
 
+    {% if page.layout_remove_option != 'florent' %}
     {% include bandeau-florent.html %}
+    {% endif %}
 
     {% include bandeau-newsletter.html %}
 
     {% include footer.html %}
 	
-	{% include modal-rendez-vous.html %}
+	  {% include modal-rendez-vous.html %}
     
     {% include modal-cookies.html %}
 

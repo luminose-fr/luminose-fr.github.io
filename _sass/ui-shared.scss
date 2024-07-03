@@ -1794,7 +1794,7 @@ section.newsletter {
       border-bottom-right-radius: var(--bulma-radius-large);
     }
 
-    span.is-styled-tag {
+    div.block > span.is-styled-tag {
       margin: 0;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
@@ -1821,10 +1821,11 @@ section.newsletter {
   a.button.is-purple-bordered,
   div.fake-button {
     white-space: normal;
-    height: auto;
+    height: auto;  
     display: block;
     transition: background-color .3s ease;
-    padding: 1.5rem;
+    padding: .75rem;
+    text-align: left;
 
     .title {
       font-family: 'Futura LT W05 Book', sans-serif;
@@ -1832,12 +1833,31 @@ section.newsletter {
       font-size: var(--bulma-size-6);
       color: v.$purple-heavy;
       margin-top: 0;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.75rem; 
     }
 
-    .description {
-      font-size: var(--bulma-size-7);
-      color: v.$purple;
+    .details {
+      display: flex;
+      align-items: flex-start;
+
+      .description {
+        width:57%;
+        font-size: var(--bulma-size-7);
+        color: v.$purple;
+      }
+      
+      .tarif-duree {
+        width:43%;
+        padding-left: .5rem;
+
+        font-size: var(--bulma-size-7);
+        color: v.$purple;
+
+        span.is-styled-tag {
+          display: inline-block;
+          margin: 0 .5rem 0 0;
+        }
+      }
     }
 
     span {
