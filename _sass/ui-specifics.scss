@@ -214,6 +214,22 @@
     --bulma-grid-column-count: 1;
   }
 
+  section.respiration-holotropique {  
+    .mini-menu {
+      a {
+        flex-direction: column;
+  
+        strong {
+          width:100%;
+        }
+  
+        span {
+          width: 100%;
+        }
+      }
+    }
+  }
+
   .article .content h2:before {
     top: 1rem;
     left: 0;
