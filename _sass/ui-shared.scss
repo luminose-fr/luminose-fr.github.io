@@ -313,6 +313,25 @@ span[data-tooltip].has-tooltip-primary {
   padding-right: 0;
 }
 
+table.is-purple-bordered.is-bordered {
+
+  th,
+  thead td,
+  thead th {
+    color: #ffffff;
+    background: v.$purple-heavy;
+  }
+
+  td,
+  th,
+  tr:last-child td,
+  tr:last-child th {
+    border-color: v.$purple-heavy-border;
+    border-width: 2px;
+  }
+  
+}
+
 .blog .content {
   figure {
     margin-left: 0;
@@ -423,21 +442,6 @@ span[data-tooltip].has-tooltip-primary {
         }
 
       }
-    }
-  }
-
-  table.is-purple-bordered {
-
-    thead td,
-    th {
-      color: #ffffff;
-      background: v.$purple-heavy;
-    }
-
-    td,
-    th {
-      border-color: v.$purple-heavy-border;
-      border-width: 2px;
     }
   }
 
