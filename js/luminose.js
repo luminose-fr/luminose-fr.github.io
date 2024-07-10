@@ -581,7 +581,8 @@ var App = {
       utmSource: this.getParamFromCurrentPage("utm_source"),
       utmMedium: this.getParamFromCurrentPage("utm_medium"),
       utmContent: this.getParamFromCurrentPage("utm_content"),
-      utmTerm: this.getParamFromCurrentPage("utm_term")
+      utmTerm: this.getParamFromCurrentPage("utm_term"),
+      salesforce_uuid: this.getParamFromCurrentPage("gclid")
     }
     return utm_params;
   },
