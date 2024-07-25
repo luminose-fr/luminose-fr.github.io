@@ -14,14 +14,16 @@ Pour plus tard :
 		- Evénements + page détail 
 			- Réactiver les boutons "Evènements"
 			- Stage simple (méditation, dev perso, formation, initiation): page inscription / paiement
+			- Mobile & Ordi
+			- Light & Dark
+			- Synchro Notion -> Github
 			- RH groupe : questionnaire santé + paiement + créneau entretien (si questionnaire ok)
 		- Qui suis-je ?
 			- Formation Respiration Holotropique
-	
-	UI :
-		- Evénements, détails, inscription, etc.
-		- Focus-Within plus propre ?
 		- Confirmation d'inscription newsletter sur mon site
+
+	UI :
+		- Focus-Within plus propre ?
 	
 	Performance :
 		- Vérifier speed (taille images, compression, etc.)
