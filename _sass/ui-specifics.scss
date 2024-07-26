@@ -253,6 +253,53 @@
       }
     }
   }
+
+  #md-prise-rdv {
+    a.button.is-purple-bordered,
+    div.fake-button {
+      white-space: normal;
+      height: auto;  
+      display: block;
+      transition: background-color .3s ease;
+      padding: .75rem;
+      text-align: left;
+  
+      .title {
+        margin-top: 0;
+        margin-bottom: 0.75rem; 
+      }
+  
+      .details {
+        display: block;
+
+  
+        .description {
+          display: block;
+          width: 100%;
+          font-size: var(--bulma-size-7);
+          color: v.$purple;
+        }
+        
+        .tarif-duree {
+          display: block;
+          width: 100%;
+          padding-left: 0;
+          padding-top: .5rem;
+          text-align: left;
+  
+          span.is-styled-tag {
+            display: inline-block;
+            margin: 0 .5rem 0 0;
+          }
+        }
+      }
+  
+      span {
+        display: block;
+      }
+    }
+  
+  }
   
   
   section.questionnaire-sante .columns.light-bg.field.is-horizontal .column.is-9 .grille-sante {
@@ -335,6 +382,20 @@
     margin-right: 0.43rem;
   }
 
+  section.evenements {
+    .liste-evenements {
+      a.evenement {
+        .date {
+          width:25%;
+        }
+  
+        .description {
+          width:75%;
+        }
+      }
+    }
+  }
+
 }
 
 @include mixins.tablet-only {
@@ -375,6 +436,36 @@
 
   .article .content h2:before {
     top: 1.5rem;
+  }
+
+  section.evenements {
+    .liste-evenements {
+      a.evenement {
+        .date {
+          width:34%;
+
+          .jour {
+            width:40%;
+            font-size:2.5rem;
+            line-height: 2.5rem;
+          }
+          .mois-annee {
+            width:60%;
+          }
+        }
+  
+        .description {
+          width:66%;
+        }
+
+        .description > .is-styled-tag {
+          margin-top: 0;
+        }
+        .description > .is-styled-tag ~ .is-styled-tag{
+          margin-top: 0.5rem;
+        }
+      }
+    }
   }
 }
 
@@ -635,6 +726,71 @@
 
     .light-grey-bg {
       padding-top: 10em;
+    }
+  }
+
+  section.evenements {
+    .liste-evenements {
+      a:before {
+        content: '\0042';
+        position: absolute;
+        color: #FFFFFF;
+        right: 0.5rem;
+        font-size: var(--bulma-size-7);
+        top:0.8rem;
+        bottom: auto;
+        font-family: 'luminose';
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      a.evenement {
+        display: block;
+        .date {
+          padding: 0.5rem 0.75rem;
+          display: block;
+          width:100%;
+          border-bottom-left-radius: 0;
+          border-top-left-radius: var(--bulma-radius-large);
+          border-top-right-radius: var(--bulma-radius-large);
+
+          .jour {
+            display: inline;
+            text-align: left;
+            font-size:inherit;
+            line-height: inherit;
+            padding-right:.25rem;
+          }
+          .mois-annee {
+            padding-left: 0;
+            display: inline;
+
+            .annee {
+              display: inline;
+            }
+          }
+        }
+  
+        .description {
+          display: block;
+          width:100%;
+          border-top: 0;
+          border-left: 2px v.$purple-light-border solid;
+          border-top-right-radius: 0;
+          border-bottom-left-radius: var(--bulma-radius-large);
+          border-bottom-right-radius: var(--bulma-radius-large);
+        }
+
+        .description > .is-styled-tag {
+          margin-top: 0;
+        }
+        .description > .is-styled-tag ~ .is-styled-tag{
+          margin-top: 0.5rem;
+        }
+      }
     }
   }
 

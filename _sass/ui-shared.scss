@@ -7,7 +7,8 @@ body * {
 
 strong {
   font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
-  letter-spacing: 0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 body .section.article {
@@ -56,7 +57,6 @@ body .section.article:first-of-type {
   font-size: var(--bulma-size-3);
   font-family: "Abril Display W05 Italic", serif;
   font-weight: 300;
-  line-height: 1.125;
   position: relative;
 }
 
@@ -1317,6 +1317,108 @@ section.article div.highlight {
   }
 }
 
+body .section.article.evenements:first-of-type {
+  padding-bottom:0;
+}
+section.evenements {
+  .infos-pratiques {
+    .is-styled-tag {
+      margin-left: 0;
+    }
+  }
+  
+
+  .liste-evenements {
+    a:before {
+      content: '\0042';
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 0.5rem;
+      font-size: var(--bulma-size-7);
+      top:0;
+      bottom:0;
+      font-family: 'luminose';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a:not(.button):not(.tag),
+    a:hover:not(.button):not(.tag) {
+      text-decoration: none;
+    }
+
+    a.evenement {
+      position: relative;
+      display: flex;
+      margin-bottom: 0.75rem;
+      
+      .date {
+        display: flex;
+        align-items: center;
+        width:22%;
+        color: #ffffff;
+        padding: 0.5rem;
+        border-top-left-radius: var(--bulma-radius-large);
+        border-bottom-left-radius: var(--bulma-radius-large);
+
+        .jour {
+          width:40%;
+          font-size:3rem;
+          line-height: 3rem;
+          text-align: right;
+        }
+        .mois-annee {
+          width:60%;
+          padding-left: 0.5rem;
+
+          .annee {
+            display: block;
+          }
+        }
+      }
+
+      .description {
+        width:78%;
+        padding: 0.5rem 0.75rem;
+        border: 2px v.$purple-light-border solid;
+        border-left: 0;
+        border-top-right-radius: var(--bulma-radius-large);
+        border-bottom-right-radius: var(--bulma-radius-large);
+        
+        .nom {
+          display: block;
+          padding-bottom: .5rem;
+          font-family: "Abril Display W05 Italic", serif;
+          font-weight: 300;
+        }
+      }
+      .description > .is-styled-tag {
+        font-size: var(--bulma-small-font-size);
+        margin-left: 0;
+        transition: background-color .3s ease;
+      }
+
+    }
+  }
+  a.evenement-meditation .date {
+    background-image: linear-gradient(135deg, #50D05F, #BDB722);
+  }
+  a.evenement-hypnose .date {
+    background-image: linear-gradient(135deg, #D0AA50, #BD2222);
+  }
+  a.evenement-respiration-holotropique .date {
+    background-image: linear-gradient(135deg, #6CC0F4, #E57FE0);
+  }
+  a.evenement:hover .description > .is-styled-tag {
+    background-color: #FFFFFF;
+    transition: background-color .3s ease;
+  }
+}
+
 section.respiration-holotropique {
 
   .grid .highlight {
@@ -1340,13 +1442,16 @@ section.respiration-holotropique {
 
   .mini-menu {
     margin-bottom: var(--bulma-content-block-margin-bottom);
-
+    
     a:before {
       content: '\0042';
       position: absolute;
+      display: flex;
+      align-items: center;
       right: 0.5rem;
+      top:0;
+      bottom:0;
       font-size: var(--bulma-size-7);
-      padding-top: 0.4rem;
       font-family: 'luminose';
       font-style: normal;
       font-weight: normal;
@@ -1372,6 +1477,7 @@ section.respiration-holotropique {
     }
 
     a {
+      position: relative;
       border: 2px v.$purple-light-border solid;
       border-bottom: 0;
       padding: 0.75rem var(--bulma-block-spacing);
@@ -1564,7 +1670,6 @@ section.questionnaire-sante {
       font-size: var(--bulma-size-4);
       font-family: "Abril Display W05 Italic", serif;
       font-weight: 300;
-      line-height: 1.125;
     }
     
     .column.is-9 {
@@ -1853,6 +1958,7 @@ section.newsletter {
       .tarif-duree {
         width:43%;
         padding-left: .5rem;
+        text-align: right;
 
         font-size: var(--bulma-size-7);
         color: v.$purple;
