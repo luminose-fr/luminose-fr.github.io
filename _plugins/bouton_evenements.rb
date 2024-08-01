@@ -28,7 +28,7 @@ class BoutonEvenementsTag < Liquid::Tag
 		output += '</a>'
 		
 		# Render it on the page by returning it
-		# output = '' # Bouton désactivé pour l'instant
+		output = '' # Bouton désactivé pour l'instant
 		return output;
 	end
 	
