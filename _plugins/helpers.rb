@@ -2,7 +2,7 @@ module Jekyll
     module Helpers
         CATEGORIES_EVENEMENTS = {
                 "meditation" => "Méditation", 
-                "auto-hypnose" => "Auto-hypnose", 
+                "hypnose" => "Hypnose", 
                 "respiration-holotropique" => "Respiration holotropique"}
     
         def nomCategorieEvenement(categorie)
