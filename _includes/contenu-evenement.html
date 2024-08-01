@@ -1,0 +1,83 @@
+{%- assign seuil_places_libres = page.nombre_places_total | divided_by: 3 | times: 2 -%}
+{%- assign seuil_places_libres_warning = page.nombre_places_total | divided_by: 3 -%}
+{%- assign estDateFuture = page.date | estDateFuture -%}
+
+<section class="section article evenements">
+    <div class="container">
+        <div class="content">
+            <h1>{{ page.title }}</h1>
+            
+
+            <h2>Programme</h2>
+
+            {{ page.html_programme }}
+
+            <h2>Informations pratiques</h2>
+
+            <div class="purple-border infos-pratiques">
+                <div class="columns is-multiline">
+                    <div class="column is-4 is-3-widescreen">
+                        <p>Type d'évènement :</p>
+                    </div>
+                    <div class="column is-8 is-9-widescreen">
+                        <p><span class="category category-{{ page.category }}">{{ page.category | nomCategorieEvenement }}</span></p>
+                    </div>
+                    <div class="column is-4 is-3-widescreen">
+                        <p>Date et heure :</p>
+                    </div>
+                    <div class="column is-8 is-9-widescreen">
+                        <p><span class="valeur is-styled-tag">{{ page.date | jourEvenement }}</span> <span class="valeur is-styled-tag">de {{ page.date | heure }} à {{ page.date_fin | heure }}</span></p>
+                    </div>
+                    <div class="column is-4 is-3-widescreen">
+                        <p>Tarifs :</p>
+                    </div>
+                    <div class="column is-8 is-9-widescreen">
+                        {{ page.html_prix }}
+                    </div>
+                    <div class="column is-4 is-3-widescreen">
+                        <p>Lieu :</p>
+                    </div>
+                    <div class="column is-8 is-9-widescreen">
+                        <div class="light-bg">
+                            {{ page.html_lieu_instructions }}
+                            {{ page.html_lieu_adresse }}
+                        </div>
+                    </div>
+                    {% if estDateFuture and page.nombre_places_total > 0 %}
+                    <div class="column is-4 is-3-widescreen">
+                        <p>Participants :</p>
+                    </div>
+                    <div class="column is-8 is-9-widescreen">
+                        <p><span class="valeur is-styled-tag">{{ page.nombre_places_total }} personnes maximum</span>
+                            {% if page.nombre_places_libres == 0 %}
+                            {% elsif page.nombre_places_libres == 1 %}
+                                <span class="tag is-medium is-warning is-light">Il reste 1 place</span>
+                            {% elsif page.nombre_places_libres <= seuil_places_libres_warning %}
+                                <span class="tag is-medium is-warning is-light">Il ne reste plus que {{ page.nombre_places_libres }} places</span>
+                            {% elsif page.nombre_places_libres <= seuil_places_libres %}
+                                <span>(il reste {{ page.nombre_places_libres }} places)</span>
+                            {% else %}
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% endif %}
+                    <div class="column is-4 is-3-widescreen is-hidden-mobile">
+                    </div>
+                    <div class="column is-8 is-9-widescreen">
+                        {% if estDateFuture %}
+                            {% if page.nombre_places_libres == 0 %}
+                                <span class="tag is-medium is-warning is-light">L'inscription est impossible car l'évènement est complet</span>
+                            {% else %}
+                                <a href="{{ page.url_inscription }}" target="_blank" class="button is-primary">S'inscrire</a>
+                            {% endif %}
+                        {% else %}
+                            <span class="tag is-medium is-warning is-light">L'inscription est impossible car l'évènement est terminé</span>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

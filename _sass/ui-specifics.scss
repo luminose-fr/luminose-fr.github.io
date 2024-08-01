@@ -4,7 +4,8 @@
 @include mixins.mobile {
 
   .right-column {
-    padding-right: var(--bulma-block-spacing);
+    padding-right: .75rem;
+    margin-top:0;
   }
 
   body.has-relative-navbar-fixed-top {
@@ -203,6 +204,14 @@
       text-align: left;
     }
   }
+  .no-padding-right {
+    padding-right: .75rem;
+  }
+  .column section.florent,
+  .column section.oracle,
+  .column section.oracle img {
+    border-radius: 0;
+  }
 
   section.article div.highlight .tabs-wrapper {
     .grid {
@@ -235,6 +244,9 @@
     left: 0;
     width: 7rem;
     height: 0.75rem;
+  }
+  .blog .content .summary-container.columns {
+    margin-right:0;
   }
   
   #md-cookies {
@@ -394,6 +406,9 @@
         }
       }
     }
+    .is-styled-tag ~ .is-styled-tag {
+      margin-top: .5rem;
+    }
   }
 
 }
@@ -465,6 +480,9 @@
           margin-top: 0.5rem;
         }
       }
+    }
+    .is-styled-tag ~ .is-styled-tag {
+      margin-top: .5rem;
     }
   }
 }
@@ -790,6 +808,29 @@
         .description > .is-styled-tag ~ .is-styled-tag{
           margin-top: 0.5rem;
         }
+      }
+    }
+    .is-styled-tag ~ .is-styled-tag {
+      margin-top: .5rem;
+    }
+    .infos-pratiques.purple-border {
+      padding:0;
+
+      .columns {
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+        margin-top:0;
+
+        .column.is-4.is-3-widescreen {
+         padding-bottom:0;
+         font-weight: bold;
+        }
+        .column.is-8.is-9-widescreen {
+          // border-bottom: 2px v.$purple-light-border solid;
+        }
+      }
+      .columns:last-child {
+        margin-bottom:0;
       }
     }
   }

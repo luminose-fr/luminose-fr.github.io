@@ -769,6 +769,11 @@ a.button.bt-evenements {
 #secondary-navbar a.button.bt-evenements {
   margin-right: 0.25rem;
 }
+a.button.bt-evenements.is-active {
+  // border: 2px v.$purple solid;
+  // background: v.$purple-light;
+  // box-shadow: 0 0.7em 2em 0 v.$green-light;
+}
 
 a.button.is-primary:hover {
   background: v.$purple-heavy;
@@ -1404,7 +1409,16 @@ section.evenements {
 
     }
   }
-  a.evenement-meditation .date {
+  .category {
+    display: inline-block;
+    border-radius: var(--bulma-radius-large);
+    padding: 0.2rem 0.5rem;
+    margin: 0 0.5em 0 0;
+    color:#ffffff;
+  }
+
+  a.evenement-meditation .date,
+  .category.category-meditation  {
     background-image: linear-gradient(135deg, #50D05F, #BDB722);
   }
   a.evenement-hypnose .date {
@@ -1416,6 +1430,10 @@ section.evenements {
   a.evenement:hover .description > .is-styled-tag {
     background-color: #FFFFFF;
     transition: background-color .3s ease;
+  }
+
+  .is-styled-tag {
+    margin-top: 0;
   }
 }
 
