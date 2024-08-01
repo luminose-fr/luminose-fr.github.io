@@ -16,11 +16,15 @@ locale: fr_FR
 
 # Build settings
 markdown: kramdown
+timezone: Europe/Paris
+future: true
 
 permalink: /blog/:categories/:title:output_ext
 
-# staticman comments configuration
-# staticman_url: https://staticman-app.fly.dev/v2/entry/luminose-fr/luminose-fr.github.io/master/comments
+# collections:
+#   evenements:
+#     output: true
+#     permalink: /:collection/:categories/:path:output_ext
 
 sass:
   style: compressed # possible values: nested expanded compact compressed

@@ -1,0 +1,35 @@
+---
+layout: colonne
+title: Agenda des évènements - Méditation, Auto-hypnose, Respiration Holotropique
+section: evenements
+description: "Découvrez notre calendrier d'évènements de bien-être : séances de méditation, ateliers d'auto-hypnose et sessions de respiration holotropique. Dates, lieux et détails pour chaque expérience transformative en groupe."
+---
+{% if site.evenements %}
+  {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+{% endif %}
+<section class="section article evenements">
+  <div class="container">
+    <div class="content">
+      <h1>Planning des évènements</h1>
+      <h3 class="sub-section-title">Évènements en groupe</h3>
+      {% if evenements_futurs.size > 0 %}
+        <div class="liste-evenements">
+          {% for evenement in evenements_futurs %}
+          <a class="evenement evenement-{{ evenement.category}}" href="{{ evenement.url }}">
+            <span class="date">
+              {{ evenement.date | dateEvenement }}
+            </span>
+            <span class="description">
+              <span class="nom">{{ evenement.category | nomCategorieEvenement }} - {{ evenement.title }}</span>
+              <span class="is-styled-tag">de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }}</span>
+              <span class="is-styled-tag">à {{ evenement.ville }}</span>
+            </span>
+          </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="notification is-warning is-light">Aucun évènement n'est planifié pour l'instant.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
