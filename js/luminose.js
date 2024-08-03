@@ -580,9 +580,9 @@ var App = {
       utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
       utmSource: this.getParamFromCurrentPage("utm_source"),
       utmMedium: this.getParamFromCurrentPage("utm_medium"),
-      utmContent: this.getParamFromCurrentPage("utm_content"),
-      utmTerm: this.getParamFromCurrentPage("utm_term"),
-      salesforce_uuid: this.getParamFromCurrentPage("gclid")
+      utmContent: this.getParamFromCurrentPage("gclid"), // Replacement of: this.getParamFromCurrentPage("utm_content"),
+      utmTerm: this.getParamFromCurrentPage("utm_term")
+      // Not Working: salesforce_uuid: this.getParamFromCurrentPage("gclid")
     }
     return utm_params;
   },
