@@ -310,7 +310,6 @@ span[data-tooltip].has-tooltip-primary {
 
 .right-column {
   margin-top: var(--bulma-block-spacing);
-  padding-right: 0;
 }
 
 table.is-purple-bordered.is-bordered {
@@ -574,11 +573,19 @@ table.is-purple-bordered.is-bordered {
   }
 
   .summary-container.columns {
-    margin-left: 0;
-    margin-right: -0.75rem;
+    padding-right: 0.75rem;
 
-    .column {
-      padding: 0;
+    .column.is-5 {
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-right: 0;
+    }
+    .column.is-7.purple-border {
+      padding: var(--bulma-block-spacing);
+      
+      border-left: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
 
     span.banner-image-container {
@@ -596,12 +603,7 @@ table.is-purple-bordered.is-bordered {
       }
     }
 
-    .purple-border {
-      padding: var(--bulma-block-spacing);
-      border-left: 0;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
+    
   }
 }
 
@@ -1144,7 +1146,8 @@ section.hypnotherapie {
   }
 
   .columns {
-    margin: 2.25rem -1.50rem 2.25rem -0.75rem;
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
   }
 
   a.bt-highlight {

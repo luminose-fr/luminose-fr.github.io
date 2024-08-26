@@ -17,7 +17,7 @@ description: Explorez la méditation pour réduire le stress et améliorer la co
 			  <p><strong>Elle offre un moyen de se connecter avec notre expérience intérieure</strong>, de cultiver la présence attentive et de développer une compréhension profonde de nous-mêmes et du monde qui nous entoure.</p>
 			  <p>Ma méditation peut être utilisée comme un outil puissant pour favoriser la guérison émotionnelle et physique. Elle aide à réduire le stress, à améliorer la concentration et à promouvoir un sentiment de paix intérieure.</p>
 		  </div>
-		  <div class="column is-4 no-padding-right">
+		  <div class="column is-4">
 			  <img class="fill" src="/images/contenus/atelier-meditation.jpg" srcset="/images/contenus/atelier-meditation.jpg, /images/contenus/atelier-meditation@2x.jpg 2x" alt="Atelier de méditation">
 			</div>
 		</div>
@@ -55,51 +55,47 @@ description: Explorez la méditation pour réduire le stress et améliorer la co
 	  </ol>
 	  
       <h2>Informations pratiques</h2>
-	  <p>Les ateliers pour la saison 2024-2025 auront lieu à la <strong>MJC de Villefranche de Lauragais, le dimanche matin de 9h30 à 11h30</strong>.</p>
-	  <p>Vous pouvez vous inscrire à l'année (150-155€ pour les 9 ateliers) ou participer à un atelier spécifique.</p>
-	  <p class="notification is-warning is-light">Les inscriptions se font directement auprès de la MJC : <a href="https://www.mjc-villefranchedelauragais.com/inscriptions" target="_blank">www.mjc-villefranchedelauragais.com/inscriptions</a></p>
-
-	  <p>Voici les dates et thèmes des ateliers :</p>
-	  <table class="table is-bordered is-fullwidth is-purple-bordered">
-		<tr>
-			<th nowrap>6 octobre 2024</th>
-			<td><strong>Ancrage et Présence</strong> : apprendre à se centrer et à s'ancrer dans le moment présent.</td>
-		</tr>
-		<tr>
-			<th nowrap>17 novembre 2024</th>
-			<td><strong>Éveil des Sens</strong> : explorer la pleine conscience à travers les cinq sens.</td>
-		</tr>
-		<tr>
-			<th nowrap>15 décembre 2024</th>
-			<td><strong>Méditation en Mouvement</strong> : découvrir la méditation dynamique pour harmoniser le corps et l'esprit.</td>
-		</tr>
-		<tr>
-			<th nowrap>19 janvier 2025</th>
-			<td><strong>Connexions et Énergie de Groupe</strong> : explorer l'énergie collective et la connexion avec les autres.</td>
-		</tr>
-		<tr>
-			<th nowrap>9 février 2025</th>
-			<td><strong>Méditation Sonore</strong> : utiliser le son pour atteindre un état méditatif profond.</td>
-		</tr>
-		<tr>
-			<th nowrap>9 mars 2025</th>
-			<td><strong>Gestion du Stress et des Émotions</strong> : apprendre des techniques pour gérer le stress et les émotions.</td>
-		</tr>
-		<tr>
-			<th nowrap>6 avril 2025</th>
-			<td><strong>Gratitude et Compassion</strong> : cultiver la gratitude et la compassion envers soi-même et les autres.</td>
-		</tr>
-		<tr>
-			<th nowrap>18 mai 2025</th>
-			<td><strong>Visualisation Créative</strong> : utiliser la visualisation pour atteindre des objectifs et améliorer le bien-être.</td>
-		</tr>
-		<tr>
-			<th nowrap>15 juin 2025</th>
-			<td><strong>Silence et Introspection</strong> : explorer le pouvoir du silence et de l'introspection.</td>
-		</tr>
-	  </table>
+	  <h3>Lieu</h3>
+	  <p>Les ateliers de méditation se déroulent à la MJC de Villefranche de Lauragais.</p>
+	  <h3>Tarifs et inscription</h3>
+	  <div class="purple-border">
+		<p>L'inscription peut se faire :</p>
+		<ul>
+			<li><strong>à l'année :</strong> 150€ pour les 9 séances + 5€ pour les non villefranchois. Prévoir également l'adhésion à la MJC : 16 € adulte, 13 € mineur.</li>
+			<li><strong>à la séance :</strong> 25€ pour les adhérants à la MJC ; 30€ non-adhérants.</li>
+		</ul>
 		
-	  
-      
+		<p class="notification is-warning is-light">Les inscriptions se font directement auprès de la MJC : <a href="https://www.mjc-villefranchedelauragais.com/inscriptions" target="_blank">www.mjc-villefranchedelauragais.com/inscriptions</a></p>      
+		</div>
+	<h3>Planning 2024-2025</h3>
+	  {% if site.evenements %}
+		{% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" | where_exp: "evenements", "evenements.category == 'meditation'" %}
+	{% endif %}
+	<section class="section article evenements">
+	<div class="container">
+		<div class="content">
+		{% if evenements_futurs.size > 0 %}
+			<div class="liste-evenements">
+			{% for evenement in evenements_futurs %}
+			<a class="evenement evenement-{{ evenement.category}}" href="{{ evenement.url }}">
+				<span class="date">
+				{{ evenement.date | dateEvenement }}
+				</span>
+				<span class="description">
+				<span class="nom">{{ evenement.category | nomCategorieEvenement }} - {{ evenement.title }}</span>
+				<span class="is-styled-tag">de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }}</span>
+				<span class="is-styled-tag">à {{ evenement.ville }}</span>
+				</span>
+			</a>
+			{% endfor %}
+			</div>
+		{% else %}
+			<p class="notification is-warning is-light">Aucun évènement n'est planifié pour l'instant.</p>
+		{% endif %}
+		</div>
+	</div>
+	</section>
   </div>
 </section>
+
+
