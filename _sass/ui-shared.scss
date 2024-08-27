@@ -1363,6 +1363,7 @@ section.evenements {
       position: relative;
       display: flex;
       margin-bottom: 0.75rem;
+      border-radius: var(--bulma-radius-large);
       
       .date {
         display: flex;

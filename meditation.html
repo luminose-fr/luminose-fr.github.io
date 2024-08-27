@@ -56,17 +56,28 @@ description: Explorez la méditation pour réduire le stress et améliorer la co
 	  
       <h2>Informations pratiques</h2>
 	  <h3>Lieu</h3>
-	  <p>Les ateliers de méditation se déroulent à la MJC de Villefranche de Lauragais.</p>
+	  <p>Les ateliers de méditation se déroulent à la MJC de Villefranche de Lauragais, dans la salle de danse (1er étage).</p>
 	  <h3>Tarifs et inscription</h3>
-	  <div class="purple-border">
-		<p>L'inscription peut se faire :</p>
-		<ul>
-			<li><strong>à l'année :</strong> 150€ pour les 9 séances + 5€ pour les non villefranchois. Prévoir également l'adhésion à la MJC : 16 € adulte, 13 € mineur.</li>
-			<li><strong>à la séance :</strong> 25€ pour les adhérants à la MJC ; 30€ non-adhérants.</li>
-		</ul>
-		
-		<p class="notification is-warning is-light">Les inscriptions se font directement auprès de la MJC : <a href="https://www.mjc-villefranchedelauragais.com/inscriptions" target="_blank">www.mjc-villefranchedelauragais.com/inscriptions</a></p>      
-		</div>
+	  <div class="columns">
+        <div class="column">
+			<div class="purple-border">
+				<p><strong>Inscription à l'année</strong></p>
+				<p><span class="is-styled-tag">150€</span> pour les 9 séances</p>
+				<p>+ 5€ pour les non villefranchois.</p>
+				<p>Prévoir également l'adhésion à la MJC : 16€ adulte, 13€ mineur.</p>
+				<p>Les inscriptions se font directement auprès de la MJC : <a href="https://www.mjc-villefranchedelauragais.com/inscriptions" target="_blank">www.mjc-villefranchedelauragais.com/inscriptions</a></p>
+			</div>
+        </div>
+        <div class="column">
+			<div class="purple-border">
+				<p><strong>Inscription à la séance</strong></p>
+				<p><span class="is-styled-tag">25€</span> pour les adhérants à la MJC.</p>
+				<p><span class="is-styled-tag">30€</span> pour les non-adhérants.</p>
+				<p>Pour vous inscrire choisissez la date qui vous intéresse ci-dessous.</p>
+			</div>
+        </div>
+      </div>
+
 	<h3>Planning 2024-2025</h3>
 	  {% if site.evenements %}
 		{% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" | where_exp: "evenements", "evenements.category == 'meditation'" %}

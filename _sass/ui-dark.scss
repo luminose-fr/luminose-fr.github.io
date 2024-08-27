@@ -406,6 +406,20 @@ section.questionnaire-sante {
 	}
 }
 
+section.evenements .liste-evenements {
+
+	a.evenement {
+  		.description {
+		  border: 2px v.$purple-logo  solid;
+		  border-left: 0;
+		}
+	}
+	a.evenement:hover .description > .is-styled-tag {
+		background-color: v.$purple-logo;
+		transition: background-color .3s ease;
+	  }
+}
+
 .blog .content .blog-card-container .light-grey-bg {
 	color: v.$dark-purple;
 }
