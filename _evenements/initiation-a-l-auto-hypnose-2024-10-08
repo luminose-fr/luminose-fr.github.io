@@ -1,0 +1,22 @@
+---
+layout: colonne
+title: Initiation à l'auto-hypnose
+section: evenements
+category: hypnose
+description: "Découvrez l'auto-hypnose et apprenez à entrer en état d'hypnose pour stimuler votre créativité. Apprenez à utiliser les capacités de votre inconscient pour surmonter vos défis quotidiens."
+date: 2024-10-08T19:00:00.000+02:00
+date_fin: 2024-10-08T21:00:00.000+02:00
+nombre_places_total: 10
+nombre_places_libres: 10
+ville: Nailloux
+url_inscription: https://calendly.com/luminose/initiation-auto-hypnose
+html_lieu_adresse: |
+    <p>TALA formation,<br />25 bis Rue de la République,<br />31560 Nailloux</p>
+html_lieu_instructions: |
+    <p>Merci d’arriver 5-10 min en avance</p>
+html_programme: |
+    <p>Venez découvrir l'auto-hypnose !</p><p>Vous apprendrez à entrer en état d'hypnose et à utiliser cet état pour développer votre créativité.</p><p>Vous pourrez mettre en pratique dans votre quotidien afin trouver de nouvelles solutions à vos défis en utilisant les capacités de votre inconscient.</p>
+html_prix: |
+    <p>Tarif unique : <span class="valeur is-styled-tag">40€ / personne</span></p>
+---
+{% include contenu-evenement.html %}
