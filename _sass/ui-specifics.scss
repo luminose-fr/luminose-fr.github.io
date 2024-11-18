@@ -410,7 +410,22 @@
       margin-top: .5rem;
     }
   }
-
+  section.evenements.push-confirmation {
+    .liste-evenements {
+      a.evenement {
+        .date {
+          width:40%;
+        }
+  
+        .description {
+          width:60%;
+        }
+      }
+    }
+    .is-styled-tag ~ .is-styled-tag {
+      margin-top: .5rem;
+    }
+  }
 }
 
 @include mixins.tablet-only {
@@ -483,6 +498,11 @@
     }
     .is-styled-tag ~ .is-styled-tag {
       margin-top: .5rem;
+    }
+  }
+  .confirmation {
+    .purple-border.with-push-confirmation {
+      min-height:0;
     }
   }
 }
@@ -747,7 +767,8 @@
     }
   }
 
-  section.evenements {
+  section.evenements,
+  section.evenements.push-confirmation {
     .liste-evenements {
       a:before {
         content: '\0042';
@@ -832,6 +853,11 @@
       .columns:last-child {
         margin-bottom:0;
       }
+    }
+  }
+  .confirmation {
+    .purple-border.with-push-confirmation {
+      min-height:0;
     }
   }
 

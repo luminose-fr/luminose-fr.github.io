@@ -1442,6 +1442,25 @@ section.evenements {
     margin-top: 0;
   }
 }
+section.evenements.push-confirmation {
+  .liste-evenements {
+
+    a.evenement {
+      
+      .date {
+        width:36%;
+      }
+
+      .description {
+        width:64%;
+      }
+
+    }
+    .is-styled-tag ~ .is-styled-tag {
+      margin-top: .5rem;
+    }
+  }
+}
 
 section.respiration-holotropique {
 
@@ -1777,23 +1796,33 @@ section.newsletter {
 
   .purple-border {
     padding: 0;
+    
+  }
+  .purple-border.with-push-confirmation {
+    min-height:23rem;
   }
 
   .block {
     padding: var(--bulma-block-spacing);
   }
 
-  .illustration {
-    text-align: center;
-    padding-top: 3em;
+  .illustration + h1 {
+    margin-top: 1rem;
+  }
 
-    i.icon {
-      font-size: 6rem;
-    }
+  h1.icon-text {
+    line-height: 3rem;
+    flex-wrap: nowrap;
+  }
 
-    i.icon.icon-confirmation {
-      color: #39B66B;
-    }
+  i.icon {
+    height:3rem;
+    width:3rem;
+    font-size: 3rem;
+  }
+
+  i.icon.icon-confirmation {
+    color: #39B66B;
   }
 }
 

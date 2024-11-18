@@ -1,22 +1,39 @@
 ---
 layout: default
 title: Confirmation de prise de rendez-vous - Séance de respiration holotropique
+layout_remove_option: florent
 sitemap: false
 ---
-
+{% if site.evenements %}
+  {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+{% endif %}
+{% if evenements_futurs.size >= 1 %}
+  {% assign contient_evenements_futurs = true %}
+  {% assign purple_border_extra_css_class = "with-push-confirmation" %}
+{% else %} 
+  {% assign columns_extra_css_class = "is-centered" %}
+{% endif %}  
 <section class="section article confirmation">
   <div class="container">
 	<div class="content">
-	  <div class="columns is-centered">
-		<div class="column is-12-mobile is-7-tablet is-6-desktop is-5-widescreen is-5-fullhd ">
-		  <div class="purple-border">
-			  <div class="block has-text-centered">
-				  <div class="illustration"><i class="icon icon-confirmation"></i></div>
-				  <h1>Votre rendez-vous est bien confirmé !</h1>
-				  <p>Vous allez recevoir un email de confirmation contenant l'adresse, la date et l'heure du rendez-vous. Vous pourrez également modifier le rendez-vous si besoin.</p>
-			  </div>
+		<div class="columns is-multiline {{ columns_extra_css_class }}">
+			<div class="column is-12-mobile is-12-tablet is-7-desktop is-7-widescreen is-7-fullhd ">
+				<div class="purple-border {{ purple_border_extra_css_class }}">
+					<div class="block">
+						<h1 class="icon-text"><i class="icon icon-confirmation"></i> Votre rendez-vous est bien confirmé !</h1>
+						<p>Vous allez recevoir un email de confirmation contenant l'adresse, la date et l'heure du rendez-vous. Vous pourrez également modifier le rendez-vous si besoin.</p>
+						<div class="light-bg">
+							<h3>Important</h3>
+							<p>S'il s'agit de <strong>votre première respiration holotropique avec moi</strong>, vous devez remplir un questionnaire de santé suite à quoi nous ferons un entretien d'environ 20 min (téléphone ou visio).</p>
+							<p><a class="button is-primary is-questionnaire-sante" href="https://www.luminose.fr/respiration-holotropique/questionnaire-sante.html">Remplir le questionnaire de santé</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if contient_evenements_futurs %}
+				{% include push-confirmation.html %}
+			{% endif %}
 		</div>
-	  </div>
 	</div>
   </div>
 </section>

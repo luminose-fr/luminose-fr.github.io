@@ -76,6 +76,7 @@ var App = {
     this.setupNavigation();
     this.setupButtonPriseRdv();
     this.setupSocialLinks();
+    this.setupButtonConfirmationQuestionnaireSante();
     this.setupUTMParamsPropagation();
     this.setupFormPrefill();
     this.setupFormValidation();
@@ -330,6 +331,38 @@ var App = {
           window.history.replaceState({}, document.title, clean_uri);
         }
       }
+    }
+  },
+
+  setupButtonConfirmationQuestionnaireSante: function() {
+    if (document.querySelector('.is-questionnaire-sante') !== null) {
+      var that = this;
+
+      var prenom = decodeURIComponent(that.getParamFromCurrentPage('invitee_first_name').replaceAll('+', ' '));
+      var nom = decodeURIComponent(that.getParamFromCurrentPage('invitee_last_name').replaceAll('+', ' '));
+      var email = decodeURIComponent(that.getParamFromCurrentPage('invitee_email').replaceAll('+', ' '));
+      var telephone = decodeURIComponent(that.getParamFromCurrentPage('text_reminder_number').replaceAll('+', ' '));
+      var params = new URLSearchParams();
+
+      if (prenom !== null && prenom !== '') {
+        params.append('coordonnees_participant[prenom]', prenom);
+      }
+      if (nom !== null && nom !== '') {
+        params.append('coordonnees_participant[nom]', nom);
+      }
+      if (email !== null && email !== '') {
+        params.append('coordonnees_participant[email]', email);
+      }
+      if (telephone !== null && telephone !== '') {
+        params.append('coordonnees_participant[telephone]', telephone);
+      }
+      
+      var buttons = document.querySelectorAll('.is-questionnaire-sante');
+      buttons.forEach(function(button) {
+        const url = new URL(button.href);
+        url.search = params;
+        button.href = url.href;
+      });
     }
   },
 
