@@ -419,6 +419,11 @@ section.evenements .liste-evenements {
 		transition: background-color .3s ease;
 	  }
 }
+.push-confirmation section.evenements .liste-evenements {
+	a.evenement {
+		background-color: v.$dark-purple-heaviest;
+	}
+}
 
 .blog .content .blog-card-container .light-grey-bg {
 	color: v.$dark-purple;

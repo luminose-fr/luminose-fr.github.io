@@ -1442,22 +1442,43 @@ section.evenements {
     margin-top: 0;
   }
 }
-section.evenements.push-confirmation {
-  .liste-evenements {
+.push-confirmation {
+    text-align: left;
 
-    a.evenement {
-      
-      .date {
-        width:36%;
+    section.evenements {
+    .liste-evenements {
+
+      a.evenement {
+        background-color: #ffffff;
+        
+        .date {
+          width:26%;
+          display: block;
+
+          .jour {
+            display: block;
+            font-size:3rem;
+            line-height: 3rem;
+            text-align: left;
+          }
+          .mois-annee {
+            display: block;
+            padding-left: 0;
+  
+            .annee {
+              display: block;
+            }
+          }
+        }
+
+        .description {
+          width:74%;
+        }
+
       }
-
-      .description {
-        width:64%;
+      .is-styled-tag ~ .is-styled-tag {
+        margin-top: .5rem;
       }
-
-    }
-    .is-styled-tag ~ .is-styled-tag {
-      margin-top: .5rem;
     }
   }
 }

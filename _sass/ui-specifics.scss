@@ -500,6 +500,31 @@
       margin-top: .5rem;
     }
   }
+  .push-confirmation {
+    section.evenements {
+      .liste-evenements {
+        a.evenement {
+          .date {
+            width:34%;
+            display: flex;
+  
+            .jour {
+              width:40%;
+              font-size:2.5rem;
+              line-height: 2.5rem;
+              text-align: right;
+            }
+            .mois-annee {
+              width:60%;
+              padding-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+
   .confirmation {
     .purple-border.with-push-confirmation {
       min-height:0;
@@ -768,7 +793,7 @@
   }
 
   section.evenements,
-  section.evenements.push-confirmation {
+  .push-confirmation section.evenements {
     .liste-evenements {
       a:before {
         content: '\0042';
