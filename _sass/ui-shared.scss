@@ -52,7 +52,8 @@ body .section.article:first-of-type {
 }
 
 .title.is-2,
-.article .content h2 {
+.article .content h2,
+.section.respiration-holotropique h2 {
   color: v.$purple;
   font-size: var(--bulma-size-3);
   font-family: "Abril Display W05 Italic", serif;
@@ -73,8 +74,10 @@ body .section.article:first-of-type {
   transform: rotate(-3deg);
 }
 
+
 .title.is-3,
-.article .content h3 {
+.article .content h3,
+.section.respiration-holotropique h3 {
   font-family: 'Futura LT W05 Book', sans-serif;
   font-weight: 300;
   font-size: var(--bulma-size-6);
@@ -1329,12 +1332,12 @@ body .section.article.evenements:first-of-type {
   padding-bottom:0;
 }
 section.evenements {
+
   .infos-pratiques {
     .is-styled-tag {
       margin-left: 0;
     }
   }
-  
 
   .liste-evenements {
     a:before {
@@ -1412,6 +1415,9 @@ section.evenements {
       }
 
     }
+    a.evenement:last-of-type {
+      margin-bottom: 0;
+    }
   }
   .category {
     display: inline-block;
@@ -1479,6 +1485,41 @@ section.evenements {
       .is-styled-tag ~ .is-styled-tag {
         margin-top: .5rem;
       }
+    }
+  }
+}
+.section.blog .temoignages {
+  padding-top: 0;
+}
+.section.respiration-holotropique {
+  padding-bottom:0;
+
+  .purple-border {
+    padding-right:30%;
+    position:relative;
+
+    span.banner-image-container {
+      position:absolute;
+      right:-2px; // -2 pour la bordure
+      top: -2px;
+      bottom: -2px;
+      display: block;
+      width: 30%;
+
+      img.banner {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-top-right-radius: var(--bulma-radius-large);
+        border-bottom-right-radius: var(--bulma-radius-large);
+      }
+    }
+  }
+  .column.is-12 .purple-border {
+    padding-right:40%;
+
+    span.banner-image-container {
+      width: 40%;
     }
   }
 }
@@ -1789,6 +1830,12 @@ section.newsletter {
 .confirmation {
   .content {
     margin-top: var(--bulma-block-spacing);
+  }
+
+  .evenements {
+    .content {
+      margin-top:0;
+    }
   }
 
   .purple-border h1 {

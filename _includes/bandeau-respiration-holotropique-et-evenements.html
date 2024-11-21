@@ -1,0 +1,25 @@
+{% if site.evenements %}
+  {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+{% endif %}
+{% if evenements_futurs.size >= 1 %}
+  {% assign contient_evenements_futurs = true %}
+  {% assign main_column_css_classes = "is-12-mobile is-12-tablet is-7-desktop is-7-widescreen is-7-fullhd" %}
+{% else %} 
+  {% assign main_column_css_classes = "is-12" %}
+{% endif %}
+
+<div class="columns is-multiline content">
+	<div class="column {{ main_column_css_classes }}">
+		<div class="purple-border">
+			<h2 class="title is-2">La respiration holotropique</h2>
+			<p class="subtitle">Une expérience transformatrice pour s’épanouir</p>
+			<p>Libérez vos émotions, explorez votre monde intérieur et transformez-vous grâce à la respiration holotropique.</p>
+			<p>Cette technique puissante vous invite à un voyage de guérison, de découverte de soi et de croissance personnelle, sous la guidance bienveillante d'un praticien expérimenté.</p>
+			<div><a class="button is-primary is-medium" href="{{ site.baseurl }}/respiration-holotropique.html">Découvrir la respiration holotropique</a></div>
+			<span class="banner-image-container"><img class="banner" src="/images/contenus/respiration-holotropique-metamorphose.jpg" srcset="/images/contenus/respiration-holotropique-metamorphose.jpg, /images/contenus/respiration-holotropique-metamorphose@2x.jpg 2x" alt="La respiration holotropique, une voie de métamorphose"></span>
+		</div>
+	</div>
+	{% if contient_evenements_futurs %}
+		{% include push-confirmation.html %}
+	{% endif %}
+  </div>

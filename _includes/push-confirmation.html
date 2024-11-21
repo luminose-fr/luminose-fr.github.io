@@ -1,3 +1,17 @@
+{% assign evenements_meditation_ou_hypnose = evenements_futurs | where_exp: "evenement", "evenement.category == 'meditation' or evenement.category == 'hypnose'" %}
+{% assign evenements_respiration_holotropique = evenements_futurs | where: "category", "respiration-holotropique" %}
+{% if evenements_respiration_holotropique.size >= 1 %}
+    {% if evenements_meditation_ou_hypnose.size >= 1 %}
+        {% assign evenements_affiches = "" | split: ',' %}
+        {% assign evenements_affiches = evenements_affiches | push: evenements_meditation_ou_hypnose.first | push: evenements_respiration_holotropique.first %}
+        {% assign evenements_affiches = evenements_affiches | sort: date %}
+    {% else %}
+        {% assign evenements_affiches = evenements_respiration_holotropique %}
+    {% endif %}
+{% else %}
+    {% assign evenements_affiches = evenements_meditation_ou_hypnose %}
+{% endif %}
+
 <div class="column is-12-mobile is-12-tablet is-5-desktop is-5-widescreen is-5-fullhd">
     <div class="light-grey-bg push-confirmation">
         <h2>Évènements à venir</h2>
@@ -6,9 +20,8 @@
         <section class="evenements">
         <div class="container">
             <div class="content">
-            {% if evenements_futurs.size > 0 %}
                 <div class="liste-evenements">
-                {% for evenement in evenements_futurs limit:2 %}
+                {% for evenement in evenements_affiches limit:2 %}
                 <a class="evenement evenement-{{ evenement.category}}" href="{{ evenement.url }}">
                     <span class="date">
                     {{ evenement.date | dateEvenement }}
@@ -21,9 +34,6 @@
                 </a>
                 {% endfor %}
                 </div>
-            {% else %}
-                <p class="notification is-warning is-light">Aucun évènement n'est planifié pour l'instant.</p>
-            {% endif %}
             </div>
         </div>
         </section>

@@ -410,8 +410,8 @@ section.evenements .liste-evenements {
 
 	a.evenement {
   		.description {
-		  border: 2px v.$purple-logo  solid;
-		  border-left: 0;
+		  border-color: v.$purple-logo;
+		//   border-left: 0;
 		}
 	}
 	a.evenement:hover .description > .is-styled-tag {

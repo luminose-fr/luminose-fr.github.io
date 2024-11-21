@@ -426,6 +426,16 @@
       margin-top: .5rem;
     }
   }
+  .section.respiration-holotropique {
+    .purple-border {
+      padding-right:8rem;
+      position:relative;
+  
+      span.banner-image-container {
+        width: 8rem;
+      }
+    }
+  }
 }
 
 @include mixins.tablet-only {
@@ -883,6 +893,32 @@
   .confirmation {
     .purple-border.with-push-confirmation {
       min-height:0;
+    }
+  }
+
+  .section.respiration-holotropique {
+    .purple-border,
+    .column.is-12 .purple-border {
+      padding-right:var(--bulma-block-spacing);
+      padding-top: 9rem;
+      position:relative;
+  
+      span.banner-image-container {
+        position:absolute;
+        top:0;
+        left:0;
+        height: 8rem;
+        width: 100%;
+  
+        img.banner {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-top-right-radius: var(--bulma-radius-large);
+          border-bottom-right-radius: 0;
+          border-top-left-radius: var(--bulma-radius-large);
+        }
+      }
     }
   }
 
