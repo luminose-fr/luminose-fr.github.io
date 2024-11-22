@@ -645,6 +645,17 @@
   .blog .content h3 {
     font-size: var(--bulma-size-5);
   }
+  .blog .content .summary-container.columns {
+    padding-right: 0;
+
+    .column.is-5 {
+      padding: 0;
+      margin-left: var(--bulma-column-gap);
+    }
+    .column.is-7 {
+      margin-left: var(--bulma-column-gap);
+    }
+  }
 
   section.accroche {
     padding-top: 0.5rem;
@@ -754,9 +765,10 @@
       margin: 0;
     }
   }
-
+  
   .blog .content .summary-container.columns {
-    .purple-border {
+    .purple-border,
+    .column.is-7.purple-border {
       border: 2px v.$purple-light-border solid;
       border-top: 0;
       border-top-right-radius: 0;
