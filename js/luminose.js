@@ -253,9 +253,10 @@ var App = {
         tabsContainer.tabs = tabsContainer.querySelectorAll('.tab-content');
         tabsContainer.items.forEach(function(item) {
           item.addEventListener("click", function(event) {
-            var hash = item.getAttribute("href");
+            var url = new URL(item.getAttribute("href"));
+            var hash = url.hash;
             event.preventDefault();
-            selectedItem = tabsContainer.querySelector('a[href="' + hash + '"]');
+            selectedItem = tabsContainer.querySelector('a[href="' + url.href + '"]');
             selectedTab = tabsContainer.querySelector(hash);
             tabsContainer.items.forEach(function(i) {
               i.classList.remove('is-active');
