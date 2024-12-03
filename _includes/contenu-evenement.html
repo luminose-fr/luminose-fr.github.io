@@ -6,6 +6,19 @@
     <div class="container">
         <div class="content">
             <h1>{{ page.title }}</h1>
+            {% if page.category == "meditation" %}
+            <p class="subtitle">Explorez votre monde intérieur !</p>
+            {% elsif page.category == "respiration-holotropique" %}
+            <p class="subtitle">Plongez au cœur de votre transformation avec la respiration holotropique</p>  
+                {% if estDateFuture %}
+                    {% if page.nombre_places_libres > 0 %}
+                    <div class="purple-border inscription-rapide">
+                        <span class="valeur is-styled-tag">{{ page.date | jourEvenement }}</span> <span class="valeur is-styled-tag">de {{ page.date | heure }} à {{ page.date_fin | heure }}</span>
+                        <a href="{{ page.url_inscription }}" target="_blank" class="button is-primary">S'inscrire</a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
 
             {{ page.html_programme }}
 

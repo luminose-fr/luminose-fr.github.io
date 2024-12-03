@@ -1333,8 +1333,26 @@ body .section.article.evenements:first-of-type {
   padding-bottom:0;
 }
 section.evenements {
+  .inscription-rapide {
+    display: flex;
+    padding:.75rem;
+    margin-bottom: var(--bulma-block-spacing);
+
+    .valeur.is-styled-tag {
+      display: inline-flex;
+      margin-left:0;
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
+    }
+
+    .button.is-primary {
+      display: inline-flex;
+      margin-left: auto;
+    }
+  }
 
   .infos-pratiques {
+    margin-bottom: var(--bulma-block-spacing);
     .is-styled-tag {
       margin-left: 0;
     }
