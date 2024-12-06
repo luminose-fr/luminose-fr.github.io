@@ -1,6 +1,6 @@
 ---
 layout: colonne
-title: Ateliers de respiration holotropique en groupe
+title: Ateliers de respiration holotropique en groupe vers Toulouse
 section: holotropique
 sous-section: groupe
 description: Rejoignez les ateliers de respiration holotropique en groupe avec Florent Jaouali, alliant dynamique collective, techniques d'intégration et partages d'expériences enrichissantes.
@@ -35,7 +35,7 @@ redirect_from:
         <li>Recommandations et clôture de la journée.</li>
       </ul>
       
-      <p><img src="/images/contenus/respiration-holotropique-atelier-groupe.jpg" srcset="/images/contenus/respiration-holotropique-atelier-groupe.jpg, /images/contenus/respiration-holotropique-atelier-groupe@2x.jpg 2x" alt="Atelier de respiration holotropique en groupe, Florent Jaouali - Luminose"></p>
+      <p><img class="fill" src="/images/contenus/respiration-holotropique-atelier-groupe.jpg" srcset="/images/contenus/respiration-holotropique-atelier-groupe.jpg, /images/contenus/respiration-holotropique-atelier-groupe@2x.jpg 2x" alt="Atelier de respiration holotropique en groupe, Florent Jaouali - Luminose"></p>
         
       <h2>Que peut-on attendre d’un atelier de respiration holotropique en groupe ?</h2>
       <p>En plus de ce que l'on peut attendre d'une <a href="{{ site.baseurl }}/respiration-holotropique/seance-individuelle.html#attentes">séance de respiration holotropique individuelle</a>, en groupe la diversité des expériences des uns et des autres offre une expérience enrichissante.</p>
@@ -43,13 +43,38 @@ redirect_from:
         <p><strong>Le travail de respiration holotropique en groupe nécessite d'alterner entre les rôles de Respirant et d’Accompagnant.</strong> Ces deux aspects de l’expérience sont cruciaux pour comprendre, intégrer et transcender les éléments qui surgissent durant la séance.</p>
       </div>
       <p>D'autre part, j'observe assez souvent des résonances dans les histoires, vécus et difficultés rencontrées par les participants. Les partages dans le groupe aident alors parfois à changer de perspective ou de compréhension.</p>
-      
-      <h2>Informations pratiques</h2>
-      <div class="notification is-warning is-light">
-        <p>Je suis en train de préparer mon programme pour les ateliers de respiration holotropique en groupe pour 2024-2025. Il s'agira essentiellement de petits groupes (4 à 6 personnes).</p>
-        <p><strong>Les informations pratiques, incluant le calendrier, les lieux, les coûts et les procédures d'inscription, seront communiquées à l'approche de l'automne 2024.</strong></p>
-        <p>Je vous invite à vous inscrire à la newsletter (en bas de cette page) pour rester informé.</p>
+
+      <h2>Inscription aux prochains ateliers</h2>
+      {% if site.evenements %}
+        {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" | where_exp: "evenements", "evenements.category == 'respiration-holotropique'" %}
+      {% endif %}
+      <section class="section article evenements">
+      <div class="container">
+        <div class="content">
+        {% if evenements_futurs.size > 0 %}
+          <div class="liste-evenements">
+          {% for evenement in evenements_futurs %}
+          <a class="evenement evenement-{{ evenement.category}}" href="{{ evenement.url }}">
+            <span class="date">
+            {{ evenement.date | dateEvenement }}
+            </span>
+            <span class="description">
+            <span class="nom">{{ evenement.category | nomCategorieEvenement }} - {{ evenement.title }}</span>
+            <span class="is-styled-tag">de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }}</span>
+            <span class="is-styled-tag">à {{ evenement.ville }}</span>
+            </span>
+          </a>
+          {% endfor %}
+          </div>
+        {% else %}
+          <div class="notification is-warning is-light">
+            <p>Aucun évènement n'est planifié pour l'instant.</p>
+            <p>Inscrivez-vous à la newsletter (plus bas dans la page) pour être informé des nouvelles dates.</p>
+          </div>
+        {% endif %}
+        </div>
       </div>
+      </section>
 
       <hr />
       <div class="plus light-grey-bg">

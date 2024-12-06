@@ -474,11 +474,34 @@ var App = {
           xhr.open('POST', questionnaireSante.action);
           xhr.send(formData);
           xhr.onload = function() {
+            var contentType = xhr.getResponseHeader("Content-Type").split(";");
+            var isJson = false;
+            if (contentType.includes("application/json")) {
+              isJson = true;
+            }
             if (xhr.status != 200) { // analyse l'état HTTP de la réponse
               submitButton.classList.remove('is-loading');
-              detailsErreur.innerText = `Erreur ${xhr.status} : ${xhr.statusText}`;
+              if (xhr.status == 400) { // Formulaire incomplet, validation au niveau du modèle de données attendu dans Make.com
+                detailsErreur.innerText = `Erreur ${xhr.status} : Le formulaire est incomplet ou les données ne sont pas valides.`;
+              } else {
+                if (xhr.status == 422) { // Fallback route dans Make.com
+                  detailsErreur.innerText = `Erreur ${xhr.status} : ${JSON.parse(xhr.response).erreur}`;
+                } else {
+                  if (isJson) {
+                    detailsErreur.innerText = `Erreur ${xhr.status} : ${JSON.parse(xhr.response).erreur} ${xhr.statusText}`;
+                  } else {
+                    detailsErreur.innerText = `Erreur ${xhr.status} : ${xhr.statusText}`;
+                  }
+                }
+              }
               modalErreur.show();
             } else { // show the result
+              if (isJson) {
+                var redirect_url = JSON.parse(xhr.response).redirect_url;
+                if (redirect_url != '') {
+                  window.location.href = redirect_url;
+                }
+              } 
               submitButton.classList.remove('is-loading');
               window.scroll(0, 0);
               questionnaireSante.classList.add('is-hidden');

@@ -16,6 +16,13 @@
 		color: v.$dark-purple;
 	}
 
+	hr.light-bg {
+		color: v.$dark-purple-heaviest;
+		background-color: v.$dark-purple-heavy;
+		border-bottom: 3rem v.$dark-purple-heavy solid;
+		background-image: url('/images/hr.png');
+	  }
+
 	.article .content h2:before {
 		background: v.$dark-orange-light;
 		z-index: -1;

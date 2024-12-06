@@ -11,11 +11,15 @@
 
     {{ content }}
 
-    {% if page.layout_remove_option != 'florent' %}
+    {% if page.layout_remove_florent != true %}
     {% include bandeau-florent.html %}
     {% endif %}
 
+    {% if page.layout_remove_newsletter != true %}
     {% include bandeau-newsletter.html %}
+    {% else %}
+    <hr class="light-bg" />
+    {% endif %}
 
     {% include footer.html %}
 	

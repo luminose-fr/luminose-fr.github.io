@@ -1,0 +1,48 @@
+<div class="columns light-bg field is-horizontal">
+    <div class="column is-3">
+        <label class="label">Coordonnées d'une personne de confiance</label>
+        <p class="help">Personne à contacter en cas de nécessité</p>
+    </div>
+    <div class="column is-9">
+        <div class="field-body">
+            <div class="field is-narrow">
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select class="is-purple-bordered" name="coordonnees_secours[genre]" required>
+                            <option value=""></option>
+                            <option value="Mme">Mme</option>
+                            <option value="M.">M.</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-expanded">
+                <p class="control has-icons-right">
+                    <input class="input is-purple-bordered" type="text" placeholder="Prénom" name="coordonnees_secours[prenom]" required>
+                    <span class="icon is-small is-right"><i class="fas"></i></span>
+                </p>
+            </div>
+            <div class="field is-expanded">
+                <p class="control has-icons-right">
+                    <input class="input is-purple-bordered" type="text" placeholder="Nom" name="coordonnees_secours[nom]" required>
+                    <span class="icon is-small is-right"><i class="fas"></i></span>
+                </p>
+            </div>
+        </div>
+        <div class="field-body">
+            <div class="field is-narrow">
+                <p class="control has-icons-right">
+                    <input class="input is-purple-bordered" type="text" placeholder="Téléphone" name="coordonnees_secours[telephone]" required>
+                    <span class="icon is-small is-right"><i class="fas"></i></span>
+                </p>
+            </div>
+            <div class="field is-expanded">
+                <p class="control has-icons-right">
+                    <input class="input is-purple-bordered" type="email" placeholder="E-mail" name="coordonnees_secours[email]" required>
+                    <span class="icon is-small is-right"><i class="fas"></i></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

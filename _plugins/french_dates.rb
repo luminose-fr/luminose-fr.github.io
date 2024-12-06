@@ -34,6 +34,14 @@ module FrenchDates
         '<span class="jour">' + day + '</span><span class="mois-annee">' + capitalize(MONTHS[month]) + ' <span class="annee">' + year + '</span></span>'
     end
 
+    def dateEvenementTexte(date)
+        date = time(date)
+        day         = date.strftime("%e") # leading zero is replaced by a space
+        month       = date.strftime("%m")
+        year        = date.strftime("%Y")
+        day + ' ' + capitalize(MONTHS[month]) + ' ' + year
+    end
+
     def jourEvenement(date)
         date = time(date)
         day_number  = date.strftime("%u")
