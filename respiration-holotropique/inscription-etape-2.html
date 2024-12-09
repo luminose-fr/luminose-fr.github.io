@@ -7,88 +7,89 @@ layout_remove_newsletter: true
 sitemap: false
 ---
 
-<section class="section article questionnaire-sante">
+<section class="section article questionnaire-sante blog">
     <div class="container">
         <div class="content">
             <h1>Inscription à la journée de Respiration Holotropique</h1>
-            <p class="subtitle">Paiement</p>
             <div class="columns light-bg field is-horizontal">
                 <div class="column is-3">
-                    <label class="label">Paiement et rétractation</label>
+                    <label class="label">Tarif</label>
                 </div>
                 <div class="column is-9">
-                    <p>Modalités d'annulation</p>
-            <ul>
-                <li>Annulation entre 15 jours et une semaine avant : remboursement de 60€.</li>
-                <li>Annulation moins d'une semaine avant : aucun remboursement.</li>
-                <li>Report possible sur une autre date si remplacement trouvé.</li>
-            </ul>  
-            </p>
-            <script src="https://js.stripe.com/v3/"></script>
-            <style>
-                #card-element {
-                    border: 1px solid #ccc;
-                    padding: 10px;
-                    border-radius: 5px;
-                }
-                #card-errors {
-                    color: red;
-                    margin-top: 10px;
-                }
-            </style>
-            <form id="payment-form">
-                <div id="card-element"></div>
-                <div id="card-errors" role="alert"></div>
-                <button type="submit" id="submit-button" class="button is-primary is-medium">Payer 160€</button>
-            </form>
-            <script>
-                // Initialiser Stripe avec votre clé publique
-                const stripe = Stripe("pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo"); // Remplacez par votre clé publique
-                const elements = stripe.elements();
-
-                // Créer un élément de carte
-                const card = elements.create("card", { style: { base: { fontSize: "16px" } } });
-                card.mount("#card-element");
-
-                // Gérer les erreurs en temps réel
-                card.on("change", (event) => {
-                    const errorElement = document.getElementById("card-errors");
-                    errorElement.textContent = event.error ? event.error.message : "";
-                });
-
-                // Gestion de la soumission du formulaire
-                const form = document.getElementById("payment-form");
-                form.addEventListener("submit", async (event) => {
-                    event.preventDefault();
-
-                    // Créer un PaymentIntent côté client (via votre Webhook Make.com)
-                    const response = await fetch("https://hook.eu1.make.com/fwj3qqn7fcpnyo7m2anjw21esql2292k", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ amount: 16000 }) // 160€ = 16000 centimes
-                    });
-
-                    const { clientSecret } = await response.json();
-
-                    // Confirmer le paiement avec le clientSecret reçu de Make.com
-                    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-                        payment_method: { card }
-                    });
-
-                    if (error) {
-                        // Afficher l'erreur de paiement
-                        const errorElement = document.getElementById("card-errors");
-                        errorElement.textContent = error.message;
-                    } else if (paymentIntent.status === "succeeded") {
-                        alert("Paiement réussi !");
-                        // Rediriger vers une page de succès ou afficher un message de confirmation
-                        window.location.href = "/merci.html";
-                    }
-                });
-            </script>
-                </div>
+                    <p><strong>Modalités de paiement</strong></p>
+                    <ul>
+                        <li>Prix de la journée d'atelier : <span class="is-styled-tag is-white">160€ TTC</span></li>
+                        <li>La totalite du paiement s'effecute à l'avance. L'inscription ne sera validée qu'à réception du paiement.</li>
+                        <li>Le paiement s'effectue de préférence par CB (sur cette page). Vous pouvez également payer par virement.</li>
+                        <li><em>Note : le tarif inclut des collations et boissons mais n'inclut pas le déjeuner de midi.</em></li>
+                    </ul>
+                    
+                    <p><strong>Modalités d'annulation</strong></p>
+                    <ul>
+                        <li>Annulation au moins 15 jours avant : remboursement intégral de 160€.</li>
+                        <li>Annulation entre 15 jours et une semaine avant : remboursement de 60€.</li>
+                        <li>Annulation moins d'une semaine avant : aucun remboursement.</li>
+                        <li>Report possible sur une autre date si je trouve une personne pour vous remplacer.</li>
+                    </ul>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control white-bg"  tabindex="0">
+                                <input class="is-checkradio" id="conditions-annulation" type="checkbox" name="conditions-annulation" required>
+                                <label for="conditions-annulation">J'ai lu et j'accepte les modalités de paiement et d'annulation.</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
             </div>
-            
+              
+            <div class="columns light-bg field is-horizontal">
+                <div class="column is-3">
+                    <label class="label">Paiement</label>
+                </div>
+                <div id="options-paiement" class="column is-9 fiche-methodologique is-disabled">
+                    <div class="tabs-wrapper">
+                        <div class="tabs is-toggle is-toggle-rounded">
+                          <ul>
+                                <li><a href="#carte-bancaire" class="is-active">Carte bancaire</a></li>
+                                <li><a href="#virement">Virement</a></li>
+                          </ul>
+                        </div>
+          
+                        <div class="content-wrap">
+                          <div id="carte-bancaire" class="tab-content is-active">
+                            <form id="form-stripe-elements">
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control"  tabindex="0">
+                                            <div id="payment-element"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control"  tabindex="1">
+                                            <button type="submit" class="button is-primary is-medium">Payer 160€ et finaliser l'inscription</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="help">Si vous souhaitez recevoir une facture, il vous suffit de me la demander par email ou SMS.</p>
+                                <div id="error-message">
+                                <!-- Display error message to your customers here -->
+                                </div>
+                            </form>
+                        
+                            <div id="messages" role="alert" style="display: none;"></div> 
+                          </div>
+                          <div id="virement" class="tab-content">
+                                <p>IBAN : </p>
+                                <p>Mettez votre nom, prénom et date de la journée dans le champ "objet" du virement.</p>
+                          </div>
+                        </div>
+                    </div>
+
+                    
+                </div>  
+            </div>         
         </div>
     </div>
 </section>

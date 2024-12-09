@@ -80,6 +80,7 @@ var App = {
     this.setupUTMParamsPropagation();
     this.setupFormPrefill();
     this.setupFormValidation();
+    // this.setupPaiementAtelier();
     this.respiration.run();
   },
 
@@ -253,6 +254,7 @@ var App = {
         tabsContainer.tabs = tabsContainer.querySelectorAll('.tab-content');
         tabsContainer.items.forEach(function(item) {
           item.addEventListener("click", function(event) {
+            console.log('click');
             var url = new URL(item.getAttribute("href"));
             var hash = url.hash;
             event.preventDefault();
@@ -554,6 +556,130 @@ var App = {
       });
      
     }
+  },
+
+  setupPaiementAtelier: function() {
+    if (document.querySelector('#conditions-annulation') !== null) {
+      var checkboxConditionsAnnulation  = document.querySelector('#conditions-annulation');
+      var optionsPaiements = document.querySelector('#options-paiement');
+      optionsPaiements.stripeLoaded = false;
+      optionsPaiements.stripeForm   = optionsPaiements.querySelector('#form-stripe-elements');
+      optionsPaiements.submitButton = optionsPaiements.querySelector('button[type=submit]');
+      optionsPaiements.enable = async function() {
+        console.log("optionsPaiements.enable");
+        if (!optionsPaiements.stripeLoaded) {
+          await that._loadStripeScript();
+          console.log('Stripe script loaded!');
+          that._loadStripeElements(optionsPaiements);
+          optionsPaiements.stripeLoaded = true;
+        }
+        optionsPaiements.classList.remove("is-disabled");
+        optionsPaiements.stripeForm.enable;
+      };
+      optionsPaiements.disable = function() {
+        console.log("optionsPaiements.disable");
+        optionsPaiements.classList.add("is-disabled");
+        optionsPaiements.stripeForm.disable;
+      };
+      var that = this;
+      checkboxConditionsAnnulation.addEventListener("input", (event) => {
+        if (checkboxConditionsAnnulation.checked) {          
+          optionsPaiements.enable();
+        } else {
+          optionsPaiements.disable();
+        }
+      });
+    }
+  },
+  _loadStripeScript: function() {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = "https://js.stripe.com/v3/";
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load Stripe script'));
+      document.head.appendChild(script);
+    });
+  },
+
+  _loadStripeElements: async function(optionsPaiements) {
+    console.log("loading stripe elements");
+    const cle_publique = "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo"; // TEST
+    const make_webhook_get_payment_intent = "https://hook.eu1.make.com/fwj3qqn7fcpnyo7m2anjw21esql2292k"; // TEST
+    const stripe = Stripe(cle_publique);
+
+    // On page load, we create a PaymentIntent on the server so that we have its clientSecret to
+    // initialize the instance of Elements below. The PaymentIntent settings configure which payment
+    // method types to display in the PaymentElement.
+    const { error: backendError, clientSecret } = await fetch(make_webhook_get_payment_intent).then(r => r.json());
+    if (backendError) {
+      console.log(backendError.message);
+    }
+    console.log(`Client secret returned.`);
+
+    const billingDetails = {
+          email: "florent.jaouali@gmail.com",
+          name: "John Doe",
+          phone: "0637332655",
+          address: {
+            city: "Villefranche de Lauragais",
+            postal_code: "31290",
+            country: "FR"
+          }
+    };
+    const loader = 'auto'
+    const elements = stripe.elements({ clientSecret, loader });
+    const paymentElement = elements.create('payment', { 
+      layout: 'accordion',
+      fields: {
+        billingDetails: {
+          name: 'never',
+          email: 'never',
+          phone: 'never'
+        }
+      },
+      defaultValues: {
+        billingDetails: {
+          address: billingDetails.address
+        }
+      }
+
+    });
+    paymentElement.mount('#payment-element');
+
+    // When the form is submitted...
+    const form = optionsPaiements.stripeForm;
+    let submitted = false;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Disable double submission of the form
+      if(submitted) { return; }
+      submitted = true;
+      form.querySelector('button').disabled = true;
+
+      // Confirm the payment given the clientSecret
+      // from the payment intent that was just created on
+      // the server.
+      const {error: stripeError} = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/return.html`,
+          payment_method_data: {
+            billing_details: billingDetails
+          }
+        }
+      });
+
+      if (stripeError) {
+        console.log(stripeError.message);
+
+        // reenable the form.
+        submitted = false;
+        form.querySelector('button').disabled = false;
+        return;
+      }
+    });
   },
   
   _hasInputFieldError: function(field) {

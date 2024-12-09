@@ -153,6 +153,10 @@ textarea.is-purple-bordered.is-success {
 .is-styled-tag {
 	background-color: v.$dark-purple-heavy;
 }
+.is-styled-tag.is-white {
+	background-color: v.$dark-purple-heaviest;
+	color: v.$dark-purple;
+  }
 
 .tag.is-light {
 	background-color: v.$dark-purple-heavy;
