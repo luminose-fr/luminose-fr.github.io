@@ -88,17 +88,17 @@ var App = {
       }
     };
 
-    // if (this._config.environment == "production") {
-    //   this._config.keys.stripe_public = "pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg";
-    //   this._config.urls.rh.make_webhook_get_payment_intent = "https://hook.eu1.make.com/269wcbq6nktemc3pvuuevkp7rbje1iny";
-    // }
+    if (this._config.environment == "production") {
+      this._config.keys.stripe_public = "pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg";
+      this._config.urls.rh.make_webhook_get_payment_intent = "https://hook.eu1.make.com/269wcbq6nktemc3pvuuevkp7rbje1iny";
+    }
 
     // Appel automatique de la méthode `run` après l'initialisation
     this._run();
   },
 
   _run: function() {
-    console.log(`App running in ${this._config.environment} mode`);
+    // console.log(`App running in ${this._config.environment} mode`);
     this.setupViewport();
     this.setupCookiesModal();
     this.setupNavigation();
@@ -730,7 +730,7 @@ var App = {
       optionsPaiements.fieldset.disabled = true;
   
       try {
-        console.log("Envoi des billingDetails:", billingDetails);
+        // console.log("Envoi des billingDetails:", billingDetails);
   
         const { error } = await stripe.confirmPayment({
           elements,
