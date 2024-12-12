@@ -67,6 +67,9 @@ var App = {
     this._config = {
       ...config,
       environment: config.environment || 'development',
+      montants: {
+        journee_rh: 16000,
+      },
       keys: {
         rh: {
           stripe_public: "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo", // TEST
@@ -88,10 +91,10 @@ var App = {
       }
     };
 
-    if (this._config.environment == "production") {
-      this._config.keys.stripe_public = "pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg";
-      this._config.urls.rh.make_webhook_get_payment_intent = "https://hook.eu1.make.com/269wcbq6nktemc3pvuuevkp7rbje1iny";
-    }
+    // if (this._config.environment == "production") {
+    //   this._config.keys.stripe_public = "pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg";
+    //   this._config.urls.rh.make_webhook_get_payment_intent = "https://hook.eu1.make.com/269wcbq6nktemc3pvuuevkp7rbje1iny";
+    // }
 
     // Appel automatique de la méthode `run` après l'initialisation
     this._run();
@@ -693,12 +696,13 @@ var App = {
   },
   
   _createPaymentIntent: async function (url, metadata) {
+    const montant_journee_rh = this._config.montants.journee_rh;
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: 16000,
+          amount: montant_journee_rh,
           currency: "eur",
           metadata,
         }),
