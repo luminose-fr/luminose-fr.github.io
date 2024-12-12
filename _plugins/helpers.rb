@@ -8,7 +8,6 @@ module Jekyll
         def nomCategorieEvenement(categorie)
             CATEGORIES_EVENEMENTS[categorie]
         end
-
     end
 end
     
