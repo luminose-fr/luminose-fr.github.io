@@ -46,48 +46,66 @@ sitemap: false
                 <div class="column is-3">
                     <label class="label">Paiement</label>
                 </div>
-                <div id="options-paiement" class="column is-9 fiche-methodologique is-disabled">
-                    <div class="tabs-wrapper">
-                        <div class="tabs is-toggle is-toggle-rounded">
-                          <ul>
-                                <li><a href="#carte-bancaire" class="is-active">Carte bancaire</a></li>
-                                <li><a href="#virement">Virement</a></li>
-                          </ul>
-                        </div>
-          
-                        <div class="content-wrap">
-                          <div id="carte-bancaire" class="tab-content is-active">
-                            <form id="form-stripe-elements">
-                                <div class="field-body">
-                                    <div class="field">
-                                        <div class="control"  tabindex="0">
-                                            <div id="payment-element"></div>
+                <div class="column is-9">
+                    <div id="options-paiement" class="fiche-methodologique is-disabled">
+                        <div class="tabs-wrapper">
+                            <div class="tabs is-toggle is-toggle-rounded">
+                            <ul>
+                                    <li><a href="#carte-bancaire" class="is-active">Carte bancaire</a></li>
+                                    <li><a href="#virement">Virement</a></li>
+                            </ul>
+                            </div>
+            
+                            <div class="content-wrap">
+                                <div id="carte-bancaire" class="tab-content is-active">
+                                    <form id="form-stripe-elements">
+                                        <fieldset disabled>
+                                            <div class="field-body">
+                                                <div class="field">
+                                                    <div class="control"  tabindex="0">
+                                                        <div id="payment-element"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="field-body">
+                                                <div class="field">
+                                                    <div class="control"  tabindex="1">
+                                                        <div id="address-element"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="field-body">
+                                                <div class="field">
+                                                    <div class="control"  tabindex="2">
+                                                        <button type="submit" class="button is-primary is-medium">Payer 160€ et finaliser l'inscription</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <p class="help">Si vous souhaitez recevoir une facture, il vous suffit de me la demander par email ou SMS.</p>
+                                        <div id="error-message">
+                                        <!-- Display error message to your customers here -->
                                         </div>
-                                    </div>
+                                    </form>
+                                
+                                    <div id="messages" role="alert" style="display: none;"></div> 
                                 </div>
-                                <div class="field-body">
-                                    <div class="field">
-                                        <div class="control"  tabindex="1">
-                                            <button type="submit" class="button is-primary is-medium">Payer 160€ et finaliser l'inscription</button>
-                                        </div>
-                                    </div>
+                                <div id="virement" class="tab-content">
+                                    <p>Voici le RIB pour effectuer votre virement.</p>
+                                    <p>Merci de préciser votre <strong>nom, prénom et la date de la journée</strong> dans le champ "objet" du virement.</p>
+                                    <blockquote>
+                                        <p>IBAN : FR76 1695 8000 0197 1534 2917 716</p>
+                                        <p>BIC/SWIFT : QNTOFRP1XXX</p>
+                                    </blockquote>
+                                    <p><small>Si nécessaire :</small></p>
+                                    <ul>
+                                        <li><small>Adresse du titulaire : We Love Users, 2 Av de Verdun, Moulin de Barrelles, 31290, Villefranche-de-Lauragais</small></li>
+                                        <li><small>Domiciliation : Qonto (Olinda SAS), 18 rue de Navarin, 75009 Paris, France</small></li>
+                                    </ul>
                                 </div>
-                                <p class="help">Si vous souhaitez recevoir une facture, il vous suffit de me la demander par email ou SMS.</p>
-                                <div id="error-message">
-                                <!-- Display error message to your customers here -->
-                                </div>
-                            </form>
-                        
-                            <div id="messages" role="alert" style="display: none;"></div> 
-                          </div>
-                          <div id="virement" class="tab-content">
-                                <p>IBAN : </p>
-                                <p>Mettez votre nom, prénom et date de la journée dans le champ "objet" du virement.</p>
-                          </div>
+                            </div>
                         </div>
-                    </div>
-
-                    
+                    </div> 
                 </div>  
             </div>         
         </div>

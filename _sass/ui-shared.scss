@@ -737,9 +737,25 @@ hr.light-bg {
 }
 #options-paiement {
   opacity: 1;
+
+  .content-wrap {
+    display: block;
+    padding-top: var(--bulma-block-spacing);
+  }
+
+  #carte-bancaire #donnees-inscription {
+    margin-bottom: var(--bulma-block-spacing);
+  }
 }
 #options-paiement.is-disabled {
   opacity: 0.5;
+
+  .content-wrap {
+    display: none;
+  }
+  .tabs:not(:last-child) {
+    margin-bottom: 0;
+  }
 }
 
 footer.footer {

@@ -1,76 +1,104 @@
 (() => {
-  let oldPushState = history.pushState;
-  history.pushState = function pushState() {
-    let ret = oldPushState.apply(this, arguments);
-    window.dispatchEvent(new Event('pushstate'));
-    window.dispatchEvent(new Event('locationchange'));
-    return ret;
+  // Gestion des événements d'historique et de changement d'URL
+  const setupHistoryEventListeners = () => {
+    const addHistoryEvent = (method) => {
+      const original = history[method];
+      history[method] = function () {
+        const result = original.apply(this, arguments);
+        window.dispatchEvent(new Event(method.toLowerCase()));
+        window.dispatchEvent(new Event('locationchange'));
+        return result;
+      };
+    };
+
+    ['pushState', 'replaceState'].forEach(addHistoryEvent);
+
+    window.addEventListener('popstate', () => {
+      window.dispatchEvent(new Event('locationchange'));
+    });
   };
 
-  let oldReplaceState = history.replaceState;
-  history.replaceState = function replaceState() {
-    let ret = oldReplaceState.apply(this, arguments);
-    window.dispatchEvent(new Event('replacestate'));
-    window.dispatchEvent(new Event('locationchange'));
-    return ret;
-  };
-
-  window.addEventListener('popstate', () => {
-    window.dispatchEvent(new Event('locationchange'));
-  });
+  setupHistoryEventListeners();
 })();
 
 class BulmaModal {
   constructor(selector) {
-    this.elem = document.querySelector(selector)
-    this.close_data()
+    this.elem = document.querySelector(selector);
+    if (!this.elem) throw new Error(`Modal element not found for selector: ${selector}`);
+    this.initCloseEvents();
+  }
+
+  toggle() {
+    this.elem.classList.toggle('is-active');
+    this.dispatchEvent('modal:toggle');
   }
 
   show() {
-    this.elem.classList.toggle('is-active')
-    this.on_show()
+    this.elem.classList.add('is-active');
+    this.dispatchEvent('modal:show');
   }
 
   close() {
-    this.elem.classList.toggle('is-active')
-    this.on_close()
+    this.elem.classList.remove('is-active');
+    this.dispatchEvent('modal:close');
   }
 
-  close_data() {
-    var modalClose = this.elem.querySelectorAll("[data-bulma-modal='close'], .modal-background:not(.is-disabled)")
-    var that = this
-    modalClose.forEach(function(e) {
-      e.addEventListener("click", function() {
-        that.elem.classList.toggle('is-active')
-        var event = new Event('modal:close')
-        that.elem.dispatchEvent(event);
-      })
-    })
+  initCloseEvents() {
+    const closeTriggers = this.elem.querySelectorAll("[data-bulma-modal='close'], .modal-background:not(.is-disabled)");
+    closeTriggers.forEach(trigger => trigger.addEventListener('click', () => this.close()));
   }
 
-  on_show() {
-    var event = new Event('modal:show')
-    this.elem.dispatchEvent(event);
+  dispatchEvent(eventName) {
+    this.elem.dispatchEvent(new Event(eventName));
   }
 
-  on_close() {
-    var event = new Event('modal:close')
-    this.elem.dispatchEvent(event);
-  }
-
-  addEventListener(event, callback) {
-    this.elem.addEventListener(event, callback)
+  on(event, callback) {
+    this.elem.addEventListener(event, callback);
   }
 }
 
 // Main App
 var App = {
 
-  _config: {
+  _config: {},
 
+  init(config) {
+    // Stocker les configurations passées
+    this._config = {
+      ...config,
+      environment: config.environment || 'development',
+      keys: {
+        rh: {
+          stripe_public: "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo", // TEST
+        }
+      },
+      urls: {
+        calendly: {
+          adulte: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          enfant: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          respiration: 'https://calendly.com/luminose/seance-respiration-holotropique?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+        },
+        rh: {
+          formulaire_paiment: window.location.origin + "/respiration-holotropique/inscription-etape-2.html",
+          confirmation_paiment: window.location.origin + "/respiration-holotropique/inscription-etape-3.html",
+          make_webhook_get_payment_intent: "https://hook.eu1.make.com/fwj3qqn7fcpnyo7m2anjw21esql2292k", // TEST
+          stripe_script: "https://js.stripe.com/v3/",
+        },
+        futura_font: window.location.origin + "/fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff",
+      }
+    };
+
+    // if (this._config.environment == "production") {
+    //   this._config.keys.stripe_public = "pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg";
+    //   this._config.urls.rh.make_webhook_get_payment_intent = "https://hook.eu1.make.com/269wcbq6nktemc3pvuuevkp7rbje1iny";
+    // }
+
+    // Appel automatique de la méthode `run` après l'initialisation
+    this._run();
   },
 
-  run: function() {
+  _run: function() {
+    console.log(`App running in ${this._config.environment} mode`);
     this.setupViewport();
     this.setupCookiesModal();
     this.setupNavigation();
@@ -80,7 +108,7 @@ var App = {
     this.setupUTMParamsPropagation();
     this.setupFormPrefill();
     this.setupFormValidation();
-    // this.setupPaiementAtelier();
+    this.setupPaiementAtelier();
     this.respiration.run();
   },
 
@@ -254,7 +282,6 @@ var App = {
         tabsContainer.tabs = tabsContainer.querySelectorAll('.tab-content');
         tabsContainer.items.forEach(function(item) {
           item.addEventListener("click", function(event) {
-            console.log('click');
             var url = new URL(item.getAttribute("href"));
             var hash = url.hash;
             event.preventDefault();
@@ -274,65 +301,36 @@ var App = {
     }
   },
 
-  setupButtonPriseRdv: function() {
-    if (document.querySelector('#md-prise-rdv') !== null) {
-      var modal = new BulmaModal("#md-prise-rdv");
-      var that = this;
-      var btSeanceAdulte = document.querySelector('#bt-seance-adulte');
-      var btSeanceEnfant = document.querySelector('#bt-seance-enfant');
-      var btSeanceRespiration = document.querySelector('#bt-seance-respiration');
+  setupButtonPriseRdv() {
+    const modal = new BulmaModal('#md-prise-rdv');
+    const buttons = document.querySelectorAll('.bt-prise-rdv');
+    const utmParams = this._getUtmParams();
 
-      var buttons = document.querySelectorAll('.bt-prise-rdv');
-      buttons.forEach(function(button) {
-        button.addEventListener("click", function(event) {
-          event.preventDefault();
-          modal.show();
-        });
-      });
-
-      if (btSeanceAdulte !== null) {
-        btSeanceAdulte.addEventListener("click", function(event) {
-          event.preventDefault();
-          modal.close();
-          Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-            utm: that._getUtmParams()
-          });
-        });
-      }
-      
-      if (btSeanceEnfant !== null) {
-        btSeanceEnfant.addEventListener("click", function(event) {
-          event.preventDefault();
-          modal.close();
-          Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-            utm: that._getUtmParams()
-          });
-        });
-      }
-
-      if (btSeanceRespiration !== null) {
-        btSeanceRespiration.addEventListener("click", function(event) {
-          event.preventDefault();
-          modal.close();
-          Calendly.initPopupWidget({
-            url: 'https://calendly.com/luminose/seance-respiration-holotropique?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-            utm: that._getUtmParams()
-          });
-        });
-      }
-
-      
-
-      if (window.location.hash === '#prise-rdv') {
-        event.preventDefault;
+    buttons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
         modal.show();
-        var uri = window.location.toString();
-        if (uri.indexOf("#") > 0) {
-          var clean_uri = uri.substring(0, uri.indexOf("#"));
-          window.history.replaceState({}, document.title, clean_uri);
-        }
+      });
+    });
+
+    Object.entries(this._config.urls.calendly).forEach(([key, url]) => {
+      const button = document.querySelector(`#bt-seance-${key}`);
+      if (button) {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          modal.close();
+          Calendly.initPopupWidget({ url, utm: utmParams });
+        });
+      }
+    });
+
+    if (window.location.hash === '#prise-rdv') {
+      // event.preventDefault;
+      modal.show();
+      var uri = window.location.toString();
+      if (uri.indexOf("#") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("#"));
+        window.history.replaceState({}, document.title, clean_uri);
       }
     }
   },
@@ -435,7 +433,7 @@ var App = {
       var questionnaireSante = document.querySelector('#form-questionnaire-sante');
       params = new URLSearchParams(document.location.search);
       params.forEach((value, key) => {
-        var field = questionnaireSante.querySelector('input[name="' + key + '"]')
+        var field = questionnaireSante.querySelector('[name="' + key + '"]')
         if(field != null) {
           field.value = value
         }
@@ -453,11 +451,16 @@ var App = {
       var messageIntroduction = document.querySelector('#introduction-questionnaire-sante');
       var fields              = questionnaireSante.querySelectorAll('input, select');
       var that                = this;
+      var urlEtapeDeux        = this._config.urls.rh.formulaire_paiment;
+      var estAvecDeuxEtapes   = false;
+      if (questionnaireSante.classList.contains('inscription-etape-1')) {
+        var estAvecDeuxEtapes = true;
+      }
 
       questionnaireSante.addEventListener("submit", function(event) {
         var canSubmit = true;
         event.preventDefault();
-        
+
         fields.forEach(function(field) {
           if (!field.validity.valid) {
             canSubmit = false;
@@ -468,54 +471,49 @@ var App = {
         });
         
         if (canSubmit) {
+          const formData = new FormData(questionnaireSante);
+
           submitButton.classList.add('is-loading');
-          
-          var xhr = new XMLHttpRequest();
-          var formData = new FormData(questionnaireSante);
-          
-          xhr.open('POST', questionnaireSante.action);
-          xhr.send(formData);
-          xhr.onload = function() {
-            var contentType = xhr.getResponseHeader("Content-Type").split(";");
-            var isJson = false;
-            if (contentType.includes("application/json")) {
-              isJson = true;
-            }
-            if (xhr.status != 200) { // analyse l'état HTTP de la réponse
+
+          fetch(questionnaireSante.action, {
+            method: 'POST',
+            body: formData,
+          })
+            .then(async (response) => {
               submitButton.classList.remove('is-loading');
-              if (xhr.status == 400) { // Formulaire incomplet, validation au niveau du modèle de données attendu dans Make.com
-                detailsErreur.innerText = `Erreur ${xhr.status} : Le formulaire est incomplet ou les données ne sont pas valides.`;
-              } else {
-                if (xhr.status == 422) { // Fallback route dans Make.com
-                  detailsErreur.innerText = `Erreur ${xhr.status} : ${JSON.parse(xhr.response).erreur}`;
-                } else {
-                  if (isJson) {
-                    detailsErreur.innerText = `Erreur ${xhr.status} : ${JSON.parse(xhr.response).erreur} ${xhr.statusText}`;
-                  } else {
-                    detailsErreur.innerText = `Erreur ${xhr.status} : ${xhr.statusText}`;
-                  }
-                }
+
+              if (!response.ok) {
+                const errorText = response.status === 400 
+                  ? `Erreur ${response.status} : Le formulaire est incomplet ou les données ne sont pas valides.` 
+                  : `Erreur ${response.status} : ${response.statusText}`;
+                  
+                detailsErreur.innerText = errorText;
+                modalErreur.show();
+                return;
               }
-              modalErreur.show();
-            } else { // show the result
-              if (isJson) {
-                var redirect_url = JSON.parse(xhr.response).redirect_url;
-                if (redirect_url != '') {
-                  window.location.href = redirect_url;
-                }
-              } 
+
+              // Si la réponse est OK
+              if (estAvecDeuxEtapes) {
+                const urlWithParams = new URL(urlEtapeDeux);
+                urlWithParams.searchParams.append("prenom", formData.get("coordonnees_participant[prenom]"));
+                urlWithParams.searchParams.append("nom", formData.get("coordonnees_participant[nom]"));
+                urlWithParams.searchParams.append("code_postal", formData.get("coordonnees_participant[code_postal]"));
+                urlWithParams.searchParams.append("email", formData.get("coordonnees_participant[email]"));
+                urlWithParams.searchParams.append("telephone", formData.get("coordonnees_participant[telephone]"));
+                urlWithParams.searchParams.append("ville", formData.get("coordonnees_participant[ville]"));
+                urlWithParams.searchParams.append("notion_page_id", formData.get("notion_page_id"));
+                window.location.href = urlWithParams.href;
+              } else {
+                window.scroll(0, 0);
+                questionnaireSante.classList.add('is-hidden');
+                messageIntroduction.classList.add('is-hidden');
+                messageSucces.classList.remove('is-hidden');
+              }
+            })
+            .catch(() => {
               submitButton.classList.remove('is-loading');
-              window.scroll(0, 0);
-              questionnaireSante.classList.add('is-hidden');
-              messageIntroduction.classList.add('is-hidden');
-              messageSucces.classList.remove('is-hidden');
-            }
-          };
-          xhr.onerror = function() {
-            submitButton.classList.remove('is-loading');
-            modalErreur.show();
-          };
-          
+              modalErreur.show();
+            });
         }
       });
 
@@ -565,21 +563,20 @@ var App = {
       optionsPaiements.stripeLoaded = false;
       optionsPaiements.stripeForm   = optionsPaiements.querySelector('#form-stripe-elements');
       optionsPaiements.submitButton = optionsPaiements.querySelector('button[type=submit]');
+      optionsPaiements.fieldset     = optionsPaiements.querySelector('fieldset');
+      
       optionsPaiements.enable = async function() {
-        console.log("optionsPaiements.enable");
         if (!optionsPaiements.stripeLoaded) {
           await that._loadStripeScript();
-          console.log('Stripe script loaded!');
           that._loadStripeElements(optionsPaiements);
           optionsPaiements.stripeLoaded = true;
         }
         optionsPaiements.classList.remove("is-disabled");
-        optionsPaiements.stripeForm.enable;
+        optionsPaiements.fieldset.disabled = false;
       };
       optionsPaiements.disable = function() {
-        console.log("optionsPaiements.disable");
         optionsPaiements.classList.add("is-disabled");
-        optionsPaiements.stripeForm.disable;
+        optionsPaiements.fieldset.disabled = true;
       };
       var that = this;
       checkboxConditionsAnnulation.addEventListener("input", (event) => {
@@ -594,7 +591,7 @@ var App = {
   _loadStripeScript: function() {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = "https://js.stripe.com/v3/";
+      script.src = this._config.urls.rh.stripe_script;
       script.async = true;
       script.onload = () => resolve();
       script.onerror = () => reject(new Error('Failed to load Stripe script'));
@@ -602,82 +599,152 @@ var App = {
     });
   },
 
-  _loadStripeElements: async function(optionsPaiements) {
-    console.log("loading stripe elements");
-    const cle_publique = "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo"; // TEST
-    const make_webhook_get_payment_intent = "https://hook.eu1.make.com/fwj3qqn7fcpnyo7m2anjw21esql2292k"; // TEST
-    const stripe = Stripe(cle_publique);
-
-    // On page load, we create a PaymentIntent on the server so that we have its clientSecret to
-    // initialize the instance of Elements below. The PaymentIntent settings configure which payment
-    // method types to display in the PaymentElement.
-    const { error: backendError, clientSecret } = await fetch(make_webhook_get_payment_intent).then(r => r.json());
-    if (backendError) {
-      console.log(backendError.message);
-    }
-    console.log(`Client secret returned.`);
-
-    const billingDetails = {
-          email: "florent.jaouali@gmail.com",
-          name: "John Doe",
-          phone: "0637332655",
-          address: {
-            city: "Villefranche de Lauragais",
-            postal_code: "31290",
-            country: "FR"
-          }
-    };
-    const loader = 'auto'
-    const elements = stripe.elements({ clientSecret, loader });
-    const paymentElement = elements.create('payment', { 
-      layout: 'accordion',
-      fields: {
-        billingDetails: {
-          name: 'never',
-          email: 'never',
-          phone: 'never'
-        }
-      },
-      defaultValues: {
-        billingDetails: {
-          address: billingDetails.address
-        }
+  _loadStripeElements: async function (optionsPaiements) {
+    const { keys, urls } = this._config;
+    const divDonneesInscription = document.querySelector('#donnees-inscription');
+    const stripe = Stripe(keys.rh.stripe_public);
+    const queryStringParams = new URLSearchParams(window.location.search);
+    const metadata = { notion_page_id: decodeURIComponent(queryStringParams.get("notion_page_id")) };
+    const futuraFontUrl = urls.futura_font;
+    const appearance = {
+      theme: 'stripe',
+      variables: { 
+        colorPrimary: '#6163A5',
+        fontFamily: '"Futura LT W05 Book", sans-serif',
+        fontWeightLight: '300',
+        borderRadius: '8px',
       }
-
+    };
+    
+    const billingDetails = this._getBillingDetails(queryStringParams);
+    const donneesCompletes = this._areBillingDetailsComplete(billingDetails); 
+    const clientSecret = await this._createPaymentIntent(urls.rh.make_webhook_get_payment_intent, metadata);
+  
+    if (!clientSecret) return;
+  
+    const elements = stripe.elements({ 
+      clientSecret, 
+      loader: 'auto', 
+      appearance, 
+      fonts: [
+                {
+                  family: "Futura LT W05 Book",
+                  src: `url(${futuraFontUrl})`,
+                  weight: "500",
+                },
+      ]
     });
+    const paymentElement = elements.create('payment', {
+      layout: 'accordion',
+      fields: { billingDetails: this._getBillingDetailsFields(donneesCompletes) },
+      defaultValues: { billingDetails: donneesCompletes ? billingDetails : {} },
+    });
+  
     paymentElement.mount('#payment-element');
-
-    // When the form is submitted...
+  
+    if (!donneesCompletes) {
+      const addressElement = elements.create('address', { mode: 'billing' });
+      addressElement.mount('#address-element');
+    }
+  
+    this._setupFormSubmission(elements, stripe, optionsPaiements, billingDetails, urls.rh.confirmation_paiment);
+  },
+  
+  _getBillingDetails: function (queryStringParams) {
+    const extractValue = (key) => {
+      const value = decodeURIComponent(queryStringParams.get(key) || "").trim();
+      return value || null; // Retourne null si la valeur est vide
+    };
+  
+    const email = extractValue("email");
+    const prenom = extractValue("prenom");
+    const nom = extractValue("nom");
+    const phone = extractValue("telephone");
+    const city = extractValue("ville");
+    const postal_code = extractValue("code_postal");
+  
+    const billingDetails = {};
+    if (email) billingDetails.email = email;
+    if (prenom || nom) billingDetails.name = `${prenom || ""} ${nom || ""}`.trim();
+    if (phone) billingDetails.phone = phone;
+  
+    billingDetails.address = {};
+    if (city) billingDetails.address.city = city;
+    if (postal_code) billingDetails.address.postal_code = postal_code;
+    billingDetails.address.country = "FR"; // Toujours défini
+  
+    return billingDetails;
+  },
+  
+  _areBillingDetailsComplete: function (billingDetails) {
+    return (
+      billingDetails.email &&
+      billingDetails.name &&
+      billingDetails.phone &&
+      billingDetails.address?.city &&
+      billingDetails.address?.postal_code
+    );
+  },
+  
+  _getBillingDetailsFields: function (donneesCompletes) {
+    return donneesCompletes
+      ? { email: 'never', name: 'never', phone: 'never' }
+      : {};
+  },
+  
+  _createPaymentIntent: async function (url, metadata) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: 16000,
+          currency: "eur",
+          metadata,
+        }),
+      });
+  
+      const { clientSecret, error } = await response.json();
+      if (error) {
+        console.error("Erreur lors de la création du PaymentIntent:", error.message);
+        return null;
+      }
+  
+      // console.log("Client secret reçu.");
+      return clientSecret;
+    } catch (err) {
+      console.error("Erreur lors de la requête au backend:", err);
+      return null;
+    }
+  },
+  
+  _setupFormSubmission: function (elements, stripe, optionsPaiements, billingDetails, returnUrl) {
     const form = optionsPaiements.stripeForm;
     let submitted = false;
+  
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      // Disable double submission of the form
-      if(submitted) { return; }
+      if (submitted) return;
+  
       submitted = true;
-      form.querySelector('button').disabled = true;
-
-      // Confirm the payment given the clientSecret
-      // from the payment intent that was just created on
-      // the server.
-      const {error: stripeError} = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/return.html`,
-          payment_method_data: {
-            billing_details: billingDetails
-          }
-        }
-      });
-
-      if (stripeError) {
-        console.log(stripeError.message);
-
-        // reenable the form.
+      optionsPaiements.fieldset.disabled = true;
+  
+      try {
+        console.log("Envoi des billingDetails:", billingDetails);
+  
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: returnUrl,
+            payment_method_data: { billing_details: billingDetails },
+          },
+        });
+  
+        if (error) throw new Error(error.message);
+      } catch (err) {
+        console.error("Erreur lors de la confirmation de paiement:", err.message);
         submitted = false;
-        form.querySelector('button').disabled = false;
-        return;
+        optionsPaiements.fieldset.disabled = false;
       }
     });
   },

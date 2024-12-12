@@ -1,10 +1,12 @@
 Pour accompagner Flyer et pub Facebook et autres :
 - Inscription : 
-	- Conserver date choisie et coordonneés de la personne inscrite dans l'étape 2
 	- Tout vérifier en fonctionnement ok sur ordi et mobile
 	- Vérifier les différentes erreurs (pas de JS, pas de Make.com, pas de réponse Stripe, erreurs JS, erreur CB, etc.)
 		- Et proposer alternatives
+	- Contenu de l'email
+	- Ajouter lien pour liste d'attente
 - Vidéo présentation RH
+[2024-12-10 16:59:17] ERROR `/apple-touch-icon-precomposed.png' not found.
 
 Pour plus tard :
 

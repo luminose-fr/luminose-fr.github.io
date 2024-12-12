@@ -14,7 +14,7 @@
                     {% if page.nombre_places_libres > 0 %}
                     <div class="purple-border inscription-rapide">
                         <span class="valeur is-styled-tag">{{ page.date | jourEvenement }}</span> <span class="valeur is-styled-tag">de {{ page.date | heure }} à {{ page.date_fin | heure }}</span>
-                        <a href="{{ page.url_inscription }}" target="_blank" class="button is-primary">S'inscrire</a>
+                        {{ page.boutons_evenements.inscription }}
                     </div>
                     {% endif %}
                 {% endif %}
@@ -78,7 +78,7 @@
                             {% if page.nombre_places_libres == 0 %}
                                 <span class="tag is-medium is-warning is-light">L'inscription est impossible car l'évènement est complet</span>
                             {% else %}
-                                <a href="{{ page.url_inscription }}" target="_blank" class="button is-primary">S'inscrire</a>
+                                {{ page.boutons_evenements.inscription }}
                             {% endif %}
                         {% else %}
                             <span class="tag is-medium is-warning is-light">L'inscription est impossible car l'évènement est terminé</span>

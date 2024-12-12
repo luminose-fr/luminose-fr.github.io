@@ -3,8 +3,16 @@
 <script src="{{ "/js/luminose.js" | prepend: site.baseurl }}"></script>
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 
+{% if jekyll.environment == "production" %}
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", () => {
-    App.run();
+    App.init({ environment: 'production' });
   });
 </script>
+{% else %}
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", () => {
+    App.init({ environment: 'development' });
+  });
+</script>
+{% endif %}

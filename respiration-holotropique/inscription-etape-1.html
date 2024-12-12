@@ -20,8 +20,7 @@ sitemap: false
                 <p>La thérapie par la <a href="{{ site.baseurl }}/respiration-holotropique.html" target="_blank">respiration holotropique Grof® Legacy Training</a> peut impliquer des expériences intenses accompagnées d'une forte libération émotionnelle et physique. Cette pratique n'est pas recommandée pour les femmes enceintes, ni pour les personnes souffrant de problèmes cardiovasculaires, de certains troubles psychiatriques diagnostiqués, d'une chirurgie ou d'une fracture récente, d'une maladie infectieuse aiguë, d'épilepsie, d’antécédents d’AVC, d’asthme sévère, de glaucome ou d'une <a href="https://fr.wikipedia.org/wiki/Crise_spirituelle" target="_blank">urgence/crise spirituelle</a> active.</p>
                 <p>Les réponses aux questions suivantes sont destinées à m'aider à préparer notre entretien préalable et resteront strictement confidentielles.</p>
             </div>
-            <form id="form-questionnaire-sante" action="https://hook.eu1.make.com/sre5jmabxxhfragenripulx84dqsyfb2" method="POST" novalidate>
-                <input type="hidden" value="{{ site.baseurl }}/respiration-holotropique/inscription-etape-2.html" name="redirect_url" />
+            <form id="form-questionnaire-sante" class="inscription-etape-1" action="https://hook.eu1.make.com/sre5jmabxxhfragenripulx84dqsyfb2" method="POST" novalidate>
                 <div class="columns light-bg field is-horizontal">
                     <div class="column is-3">
                         <label class="label">Date choisie</label>
@@ -31,7 +30,7 @@ sitemap: false
                             <div class="field is-narrow">
                                 <div class="control">
                                     <div class="select is-fullwidth">
-                                        <select class="is-purple-bordered" name="notion_evenement_page_id" required>
+                                        <select class="is-purple-bordered" name="notion_page_id" required>
                                             {% for evenement in evenements_futurs %}
                                             <option value="{{ evenement.notion_page_id }}">{{ evenement.date | dateEvenementTexte }} (de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }})</option>
                                             {% endfor %}
