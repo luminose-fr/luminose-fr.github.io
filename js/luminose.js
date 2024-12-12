@@ -68,7 +68,7 @@ var App = {
       ...config,
       environment: config.environment || 'development',
       montants: {
-        journee_rh: 100,
+        journee_rh: 16000,
       },
       keys: {
         rh: {
