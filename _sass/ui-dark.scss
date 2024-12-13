@@ -436,8 +436,21 @@ section.evenements .liste-evenements {
 	}
 }
 
-.blog .content .blog-card-container .light-grey-bg {
-	color: v.$dark-purple;
+.blog .content {
+	.blog-card-container .light-grey-bg {
+		color: v.$dark-purple;
+	}
+	.fiche-methodologique {
+		.content-wrap {
+			strong {
+				color: inherit;
+			}
+		}
+		blockquote {
+			background-color: hsl(0, 0%, 96%);
+			border-inline-start-color: hsl(0, 0%, 86%);
+		}
+	}
 }
 
 .article .citation.fat {

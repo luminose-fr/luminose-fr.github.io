@@ -12,20 +12,20 @@
     {{ content }}
 
     {% if page.layout_remove_florent != true %}
-    {% include bandeau-florent.html %}
+    {% include bandeaux/bandeau-florent.html %}
     {% endif %}
 
     {% if page.layout_remove_newsletter != true %}
-    {% include bandeau-newsletter.html %}
+    {% include bandeaux/bandeau-newsletter.html %}
     {% else %}
     <hr class="light-bg" />
     {% endif %}
 
     {% include footer.html %}
 	
-	  {% include modal-rendez-vous.html %}
+	  {% include modales/modal-rendez-vous.html %}
     
-    {% include modal-cookies.html %}
+    {% include modales/modal-cookies.html %}
 
     {% include scripts.html %}
 

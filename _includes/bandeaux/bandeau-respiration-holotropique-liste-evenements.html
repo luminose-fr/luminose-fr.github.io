@@ -1,0 +1,31 @@
+<h2>Inscription aux prochains ateliers</h2>
+{% if site.evenements %}
+{% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" | where_exp: "evenements", "evenements.category == 'respiration-holotropique'" %}
+{% endif %}
+<section class="section article evenements">
+    <div class="container">
+        <div class="content">
+        {% if evenements_futurs.size > 0 %}
+            <div class="liste-evenements">
+            {% for evenement in evenements_futurs %}
+            <a class="evenement evenement-{{ evenement.category}}" href="{{ evenement.url }}">
+            <span class="date">
+            {{ evenement.date | dateEvenement }}
+            </span>
+            <span class="description">
+            <span class="nom">{{ evenement.category | nomCategorieEvenement }} - {{ evenement.title }}</span>
+            <span class="is-styled-tag">de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }}</span>
+            <span class="is-styled-tag">à {{ evenement.ville }}</span>
+            </span>
+            </a>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="notification is-warning is-light">
+            <p>Aucun évènement n'est planifié pour l'instant.</p>
+            <p>Inscrivez-vous à la newsletter (plus bas dans la page) pour être informé des nouvelles dates.</p>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+</section>
