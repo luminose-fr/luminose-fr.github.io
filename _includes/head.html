@@ -1,9 +1,18 @@
+{%- assign title = "" -%}
+{% if page.title %}
+{%- assign title = page.title -%}
+  {% if page.date_fin != nil %}
+    {%- assign humandate = page.date | jourEvenement -%}
+    {%- assign title = page.title | append: ' (' | append: humandate | append: ')' -%}
+  {% endif %}
+{% endif %}
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   {% if page.sitemap == false %}<meta name="robots" content="noindex">{% endif %}
-  <title>{% if page.title %}{{ page.title }}{% endif %}</title>
+  <title>{{ title }}</title>
   <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
   <link rel="stylesheet" href="/css/luminose.css">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
