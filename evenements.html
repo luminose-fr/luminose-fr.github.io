@@ -6,6 +6,7 @@ description: "Découvrez notre calendrier d'évènements de bien-être : séance
 ---
 {% if site.evenements %}
   {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+  {% assign evenements_passes = site.evenements | where_exp: "evenements", "evenements.date_fin <= site.time" | sort: "date" | reverse %}
 {% endif %}
 <section class="section article evenements">
   <div class="container">
@@ -30,6 +31,12 @@ description: "Découvrez notre calendrier d'évènements de bien-être : séance
       {% else %}
         <p class="notification is-warning is-light">Aucun évènement n'est planifié pour l'instant.</p>
       {% endif %}
+      <h3>Listes des évènements passés</h3>
+        <ul>
+          {% for evenement in evenements_passes %}
+          <li><a href="{{ evenement.url }}">{{ evenement.title }} ({{ evenement.date | dateEvenementTexte }})</a></li>
+          {% endfor %}
+        </ul>
     </div>
   </div>
 </section>
