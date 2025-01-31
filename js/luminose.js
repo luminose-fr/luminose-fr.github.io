@@ -85,6 +85,7 @@ var App = {
           formulaire_paiment: window.location.origin + "/respiration-holotropique/inscription-etape-2.html",
           confirmation_paiment: window.location.origin + "/respiration-holotropique/inscription-etape-3.html",
           make_webhook_get_payment_intent: "https://hook.eu1.make.com/fwj3qqn7fcpnyo7m2anjw21esql2292k", // TEST
+          make_webhook_send_coupon_update_payment_intent: "https://hook.eu1.make.com/7twhzl9jnganhgcy5e5xarvquak10y8r", // TEST
           stripe_script: "https://js.stripe.com/v3/",
         },
         futura_font: window.location.origin + "/fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff",
@@ -94,6 +95,7 @@ var App = {
     if (this._config.environment == "production") {
       this._config.keys.rh.stripe_public = "pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg";
       this._config.urls.rh.make_webhook_get_payment_intent = "https://hook.eu1.make.com/269wcbq6nktemc3pvuuevkp7rbje1iny";
+      this._config.urls.rh.make_webhook_send_coupon_update_payment_intent = "https://hook.eu1.make.com/5bz49mf812gykm8p9khxffr9tho7c5ev";
     }
 
     // Appel automatique de la méthode `run` après l'initialisation
@@ -566,7 +568,12 @@ var App = {
       optionsPaiements.stripeLoaded = false;
       optionsPaiements.stripeForm   = optionsPaiements.querySelector('#form-stripe-elements');
       optionsPaiements.submitButton = optionsPaiements.querySelector('button[type=submit]');
+      optionsPaiements.couponButton = optionsPaiements.querySelector('button#apply-coupon');
+      optionsPaiements.couponInput  = optionsPaiements.querySelector('input#coupon');
+      optionsPaiements.couponError  = optionsPaiements.querySelector('div#coupon-error');
+      optionsPaiements.couponSuccess= optionsPaiements.querySelector('div#coupon-success');
       optionsPaiements.fieldset     = optionsPaiements.querySelector('fieldset');
+      optionsPaiements.amountDue    = optionsPaiements.querySelector('#amount-due');      
       
       optionsPaiements.enable = async function() {
         if (!optionsPaiements.stripeLoaded) {
@@ -587,6 +594,12 @@ var App = {
           optionsPaiements.enable();
         } else {
           optionsPaiements.disable();
+        }
+      });
+
+      optionsPaiements.couponInput.addEventListener("keydown", function (event) {
+        if (event.keyCode === 13) {
+          optionsPaiements.couponButton.click();
         }
       });
     }
@@ -651,6 +664,7 @@ var App = {
     }
   
     this._setupFormSubmission(elements, stripe, optionsPaiements, billingDetails, urls.rh.confirmation_paiment);
+    this._setupStripeCouponButton(clientSecret, stripe, optionsPaiements);
   },
   
   _getBillingDetails: function (queryStringParams) {
@@ -710,14 +724,14 @@ var App = {
   
       const { clientSecret, error } = await response.json();
       if (error) {
-        console.error("Erreur lors de la création du PaymentIntent:", error.message);
+        // console.error("Erreur lors de la création du PaymentIntent:", error.message);
         return null;
       }
   
       // console.log("Client secret reçu.");
       return clientSecret;
     } catch (err) {
-      console.error("Erreur lors de la requête au backend:", err);
+      // console.error("Erreur lors de la requête au backend:", err);
       return null;
     }
   },
@@ -729,6 +743,8 @@ var App = {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (submitted) return;
+      if (document.activeElement.id == "coupon") return;
+
   
       submitted = true;
       optionsPaiements.fieldset.disabled = true;
@@ -746,9 +762,61 @@ var App = {
   
         if (error) throw new Error(error.message);
       } catch (err) {
-        console.error("Erreur lors de la confirmation de paiement:", err.message);
+        // console.error("Erreur lors de la confirmation de paiement:", err.message);
         submitted = false;
         optionsPaiements.fieldset.disabled = false;
+      }
+    });
+  },
+
+  _setupStripeCouponButton: async function (clientSecret, stripe, optionsPaiements) {
+    optionsPaiements.couponButton.addEventListener("click", async () => {
+      const couponCode = optionsPaiements.couponInput.value;
+      if (couponCode != '') {
+        optionsPaiements.fieldset.disabled = true;
+        optionsPaiements.couponError.innerHTML = "";
+        optionsPaiements.couponError.classList.add('is-hidden');
+        const montant_journee_rh = this._config.montants.journee_rh;
+        const paymentIntentId = clientSecret.split('_secret')[0];
+
+        try {
+          const response = await fetch(this._config.urls.rh.make_webhook_send_coupon_update_payment_intent, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              paymentIntentId: paymentIntentId, // ID du PaymentIntent
+              couponCode: couponCode,
+              originalAmount: montant_journee_rh, // Montant initial en centimes
+            }),
+          });
+      
+          const { data, error } = await response.json();
+          if (error) {
+            // PB dans la réponse de Make OU code promo invalide
+            // console.error("Erreur lors de la recherche du code promo:", error.message);
+            optionsPaiements.couponError.innerHTML = error.message;
+            optionsPaiements.couponError.classList.remove('is-hidden');
+            optionsPaiements.fieldset.disabled = false;
+            return null;
+          } else {
+            optionsPaiements.couponSuccess.innerHTML = 'Code coupon appliqué : <span class="tag is-white">' + data.couponCode + '</span> <span class="tag is-white">-' + (data.amountOff / 100) + '€</span>';
+            optionsPaiements.couponSuccess.classList.remove('is-hidden');
+            optionsPaiements.amountDue.innerHTML = '<s>' +  (data.originalAmount / 100) + '€</s> ' + (data.updatedAmount / 100) + '€';
+            // console.log(data);
+            optionsPaiements.fieldset.disabled = false;
+            return true;
+          }        
+        } catch (err) {
+          // PB de connexion avec Make
+          // console.error("Erreur lors de la requête au backend:", err);
+          message = 'Il semble qu\'il y ait un problème technique. Si vous pensez que votre code est valide, merci de me contacter par e-mail : <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>';
+          optionsPaiements.couponError.innerHTML = message;
+          optionsPaiements.couponError.classList.remove('is-hidden');
+          optionsPaiements.fieldset.disabled = false;
+          return null;
+        }
       }
     });
   },

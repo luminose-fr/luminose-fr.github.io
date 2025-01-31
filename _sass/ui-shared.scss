@@ -738,6 +738,11 @@ hr.light-bg {
 #options-paiement {
   opacity: 1;
 
+  #amount-due::before,
+  #amount-due::after {
+    content: "\00a0 ";
+  }
+
   .content-wrap {
     display: block;
     padding-top: var(--bulma-block-spacing);
@@ -745,6 +750,38 @@ hr.light-bg {
 
   #carte-bancaire #donnees-inscription {
     margin-bottom: var(--bulma-block-spacing);
+  }
+
+  .field-body.coupon-container {
+    // Valeurs fixes pour coller au style de Stripe Elements
+    border: 1px rgb(230, 230, 230) solid;
+    border-radius: var(--bulma-radius-large);
+    padding: 16px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    
+    input,button {
+      font-size: 16px;
+    }
+
+    .titre,
+    .field {
+      flex: 0 0 auto;
+    }
+    .titre {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom:1.2rem;
+
+      .icon {
+        width:auto;
+        margin-right: 1.4rem;
+      }
+    }
+    .notification {
+      margin-top:1.2rem;
+    }
   }
 }
 #options-paiement.is-disabled {

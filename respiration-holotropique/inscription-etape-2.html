@@ -60,24 +60,44 @@ sitemap: false
                                 <div id="carte-bancaire" class="tab-content is-active">
                                     <form id="form-stripe-elements">
                                         <fieldset disabled>
+                                            <div class="field-body coupon-container">
+                                                <div class="titre">
+                                                    <span class="icon-text">
+                                                        <span class="icon">
+                                                            <i class="fas fa-ticket"></i>
+                                                        </span>
+                                                        <span>Code promo</span>
+                                                  </span>
+                                                </div>
+                                                <div class="field has-addons">
+                                                    <div class="control">
+                                                      <input class="input" type="text" id="coupon" name="coupon" placeholder="Entrez votre code promo">
+                                                    </div>
+                                                    <div class="control" >
+                                                      <button type="button" id="apply-coupon" class="button is-primary" tabindex="0">Appliquer</button>
+                                                    </div>
+                                                </div>
+                                                <div id="coupon-error" class="notification is-warning is-light is-hidden"></div>
+                                                <div id="coupon-success" class="notification is-success is-light is-hidden"></div>
+                                            </div>
                                             <div class="field-body">
                                                 <div class="field">
-                                                    <div class="control"  tabindex="0">
+                                                    <div class="control">
                                                         <div id="payment-element"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="field-body">
                                                 <div class="field">
-                                                    <div class="control"  tabindex="1">
+                                                    <div class="control">
                                                         <div id="address-element"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="field-body">
                                                 <div class="field">
-                                                    <div class="control"  tabindex="2">
-                                                        <button type="submit" class="button is-primary is-medium">Payer 160€ et finaliser l'inscription</button>
+                                                    <div class="control">
+                                                        <button type="submit" class="button is-primary is-medium" tabindex="1">Payer<span id="amount-due">160€</span>et finaliser l'inscription</button>
                                                     </div>
                                                 </div>
                                             </div>
