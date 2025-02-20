@@ -77,8 +77,10 @@ var App = {
       },
       urls: {
         calendly: {
-          adulte: 'https://calendly.com/luminose/seance-hypnose?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-          enfant: 'https://calendly.com/luminose/seance-hypnose-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          premiereadulte: 'https://calendly.com/luminose/premiere-seance-adulte?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          premiereenfant: 'https://calendly.com/luminose/premiere-seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          adulte: 'https://calendly.com/luminose/seance-adulte?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          enfant: 'https://calendly.com/luminose/seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
           respiration: 'https://calendly.com/luminose/seance-respiration-holotropique?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
         },
         rh: {
