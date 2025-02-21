@@ -87,7 +87,10 @@
                     
                 </div>
             </div>
-
         </div>
     </div>
 </section>
+
+{% if estDateFuture == false %}
+{% include bandeaux/bandeau-respiration-holotropique-liste-evenements.html %}
+{% endif %}

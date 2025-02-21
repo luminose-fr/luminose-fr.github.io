@@ -109,6 +109,7 @@ var App = {
     this.setupViewport();
     this.setupCookiesModal();
     this.setupNavigation();
+    this.setupCarouselTemoignages();
     this.setupButtonPriseRdv();
     this.setupSocialLinks();
     this.setupButtonConfirmationQuestionnaireSante();
@@ -306,6 +307,48 @@ var App = {
         });
       });
     }
+  },
+
+  setupCarouselTemoignages: function() {
+    const carouselContainer = document.querySelector(".temoignages.carousel-container");
+    if (carouselContainer === null) return;
+    const carousel = carouselContainer.querySelector(".carousel");
+    const temoignages = carousel.querySelectorAll(".temoignage");
+    const btnLeft = carouselContainer.querySelector(".button.left");
+    const btnRight = carouselContainer.querySelector(".button.right");
+    
+    const temoignagesAffiches = 3; // Nombre de témoignages visibles en même temps
+    const totalTemoignages = temoignages.length;
+    const maxIndex = Math.ceil(totalTemoignages / temoignagesAffiches) - 1; // Dernier index possible
+    const that = this;
+    let index = 0;
+
+    
+
+    btnRight.addEventListener("click", function () {
+      if (index < maxIndex) {
+        index++;
+        that._updateCarousel(carousel, btnLeft, btnRight, index, maxIndex);
+      }
+    });
+
+    btnLeft.addEventListener("click", function () {
+      if (index > 0) {
+        index--;
+        that._updateCarousel(carousel, btnLeft, btnRight, index, maxIndex);
+      }
+    });
+
+    that._updateCarousel(carousel, btnLeft, btnRight, index, maxIndex);
+  },
+
+  _updateCarousel:function(carousel, btnLeft, btnRight, index, maxIndex) {
+    const offset = -(index * 100) + "%";
+    carousel.style.transform = `translateX(${offset})`;
+
+    // Gérer l'état des boutons
+    btnLeft.disabled = index === 0;
+    btnRight.disabled = index === maxIndex;
   },
 
   setupButtonPriseRdv() {
