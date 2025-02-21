@@ -436,6 +436,11 @@
       }
     }
   }
+  section.hypnotherapie {
+    div.highlight {
+      height: 18rem;
+    }
+  }
 }
 
 @include mixins.tablet-only {
@@ -539,6 +544,49 @@
     .purple-border.with-push-confirmation {
       min-height:0;
     }
+  }
+
+  section.hypnotherapie {
+    .column.action-prise-rdv {
+      padding-bottom: 0;
+    }
+    
+    div.highlight {
+      height: 20rem;
+
+      i.big-icon {
+        align-items: center;
+        height: 2.4rem;
+        font-size: 2.4rem;
+        margin-bottom: 0.75rem;
+      }
+      i.big-icon.icon-sablier {
+        font-size: 2.2rem;
+      }
+
+      h4 {
+        font-size: var(--bulma-size-6);
+      }
+    }
+  }
+  .temoignages.carousel-container {
+
+    button.carousel-button.right {
+      right: 30%;
+    }
+    button.carousel-button.left {
+      left: 30%;
+    }
+  }
+}
+
+@include mixins.until(933px) {
+  .master-logo .logo {
+    width: 80px; /* Taille carrée personnalisable */
+    height: 80px;
+    object-fit: cover; /* Recadre l'image sans la déformer */
+    // clip-path: inset(0); /* Facultatif : ajuste le cadrage */
+    object-position: left center;
   }
 }
 
@@ -670,48 +718,61 @@
 
   section.hypnotherapie.highlight {
     .has-text-centered {
-      text-align: left;
+      // text-align: left;
 
       .columns {
         margin: 0;
         margin-bottom: calc(1.5rem - .75rem);
-        text-align: left;
+        // text-align: left;
 
         .column {
-          text-align: left;
+          // text-align: left;
           padding: 0.25rem 0;
+        }
+        .column.action-prise-rdv {
+          padding: 0.75rem 0 0 0;
         }
       }
     }
 
-    a.bt-highlight {
+    div.highlight {
+    // a.bt-highlight {
       display: flex;
       flex-direction: row;
+      align-items: center;
       text-align: left;
-      padding: 0.25rem;
-      height: 5rem;
+      padding: 0rem;
+      height: 10rem;
       line-height: 1.5rem;
 
       i.big-icon {
         font-size: 2.5rem;
-        width: 20%;
-        padding-left: 0.5rem;
-        height: 7rem;
+        padding-left: 0;
+        // height: 7rem;
         margin-bottom: 0;
-        display: inline-flex;
-      }
 
-      span {
-        padding-left: var(--bulma-size-7);
-        width: 80%;
+        flex: 0 0 23%; /* Prend 20% de la largeur */
+        height: 100%; /* Prend toute la hauteur du parent */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Centrer l'icône */
+      }
+      .text-content {
+        flex: 0 0 77%; /* Prend 80% de la largeur */
+        display: flex;
+        flex-direction: column; /* Organise h4 et p en colonne */
+      }
+      h4 {
+        width: 100%;
         font-size: var(--bulma-size-6);
-        display: inline-flex;
-        align-items: start;
       }
 
-      strong {
-        font-size: var(--bulma-size-4);
+      p {
+        width: 100%;
+        font-size: var(--bulma-size-6);
       }
+
+      
     }
   }
 
@@ -756,6 +817,23 @@
         left: var(--bulma-size-7);
         right: var(--bulma-size-7);
       }
+    }
+  }
+
+  .temoignages.carousel-container {
+    button.carousel-button {
+      display: none;
+    }
+    .columns.carousel {
+      transform: none !important;
+    }
+    .temoignage {
+      display:none;
+    }
+    .temoignage.n-1,
+    .temoignage.n-2,
+    .temoignage.n-3 {
+      display:block;
     }
   }
 

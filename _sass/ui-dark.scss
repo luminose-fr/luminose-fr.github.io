@@ -12,15 +12,13 @@
 	.title.is-3,
 	.article .content h1,
 	.article .content h2,
-	.article .content h3 {
+	.article .content h3,
+	small {
 		color: v.$dark-purple;
 	}
 
-	hr.light-bg {
-		color: v.$dark-purple-heaviest;
-		background-color: v.$dark-purple-heavy;
-		border-bottom: 3rem v.$dark-purple-heavy solid;
-		background-image: url('/images/hr.png');
+	hr.light-bg:before {
+		color: v.$purple;
 	  }
 
 	.article .content h2:before {
@@ -308,16 +306,23 @@ section.highlight,
 section.article div.highlight {
 	background-image: linear-gradient(135deg, v.$dark-purple-heaviest, v.$dark-purple-heavy);
 	color: #ffffff;
+
+	.white-bg {
+		strong {
+		  color: #ffffff;
+		}
+	  }
 }
 
 section.hypnotherapie {
-	a.bt-highlight {
+	// a.bt-highlight {
+	div.highlight {
 		background-color: rgba(97, 36, 127, 0.25);
 	}
 
-	a.bt-highlight:hover {
-		background-color: rgba(97, 36, 127, 0.45);
-	}
+	// a.bt-highlight:hover {
+	// 	background-color: rgba(97, 36, 127, 0.45);
+	// }
 }
 
 section.oracle {

@@ -6,6 +6,7 @@
 			</div>
 
 			<div class="navbar-end is-hidden-mobile">
+				<a href="{{ site.baseurl }}/tarifs-seances-adresse.html" class="navbar-item {% if page.section == "tarifs" %}is-active{% endif %}">Tarifs & Infos pratiques</a>
 				<a href="{{ site.baseurl }}/florent-jaouali.html" class="navbar-item {% if page.section == "qui" %}is-active{% endif %}">Qui suis-je ?</a>
 				<a href="{{ site.baseurl }}/blog.html" class="navbar-item {% if page.section == "blog" %}is-active{% endif %}">Blog</a>
 				<a href="{{ site.baseurl }}/outils.html" class="navbar-item {% if page.section == "outils" %}is-active{% endif %}">Outils</a>
@@ -19,12 +20,13 @@
 			    <a href="{{ site.baseurl }}/" class="is-hidden-tablet mobile-logo"><img class="logo" src="/images/luminose-logo.png" srcset="/images/luminose-logo.png, /images/luminose-logo@2x.png 2x" alt="Luminose"></a>
 	  		    <div class="navbar-start is-hidden-mobile">
 		          <a href="{{ site.baseurl }}/" class="navbar-item {% if page.section == "accueil" %}is-active{% endif %}">Accueil</a>
-		          <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">Hypnothérapie</a>
+		          <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">Hypnose</a>
 		          <a href="{{ site.baseurl }}/respiration-holotropique.html" class="navbar-item {% if page.section == "holotropique" %}is-active{% endif %}">Respiration holotropique</a>
 				  <a href="{{ site.baseurl }}/meditation.html" class="navbar-item {% if page.section == "meditation" %}is-active{% endif %}">Méditation</a>
 				  {% bouton_evenements navbar-item is-hidden-tablet %}
 	  		    </div>
 				<div class="navbar-start is-hidden-tablet is-hidden-mobile">
+					<a href="{{ site.baseurl }}/tarifs-seances-adresse.html" class="navbar-item {% if page.section == "tarifs" %}is-active{% endif %}">Tarifs & Infos pratiques</a>
 					<a href="{{ site.baseurl }}/florent-jaouali.html" class="navbar-item {% if page.section == "qui" %}is-active{% endif %}">Qui suis-je ?</a>
 					<a href="{{ site.baseurl }}/blog.html" class="navbar-item {% if page.section == "blog" %}is-active{% endif %}">Blog</a>
 					<a href="{{ site.baseurl }}/outils.html" class="navbar-item {% if page.section == "outils" %}is-active{% endif %}">Outils</a>
@@ -42,17 +44,6 @@
     			</div>
 		   </div>
 		</nav>
-		{% if page.section == "hypnotherapie" %}
-		<nav id="relative-navbar" class="navbar" role="navigation" aria-label="relative navigation">
-			 <div class="container">
-				 <div id="relative-navigation" class="navbar-menu">
-					 <div class="navbar-start">
-						 <a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.sous-section == "presentation" %}is-active{% endif %}">Présentation</a><a href="{{ site.baseurl }}/seance-hypnose.html" class="navbar-item {% if page.sous-section == "seances" %}is-active{% endif %}">Déroulement des séances</a>
-					 </div>
-				 </div>
-			 </div>
-		</nav>
-		{% endif %}
 		{% if page.section == "holotropique" %}
 		<nav id="relative-navbar" class="navbar" role="navigation" aria-label="relative navigation">
 			 <div class="container">

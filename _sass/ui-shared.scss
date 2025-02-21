@@ -8,7 +8,7 @@ body * {
 strong {
   font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
 }
 
 body .section.article {
@@ -613,8 +613,58 @@ table.is-purple-bordered.is-bordered {
 
 // END - .blog .content
 
+.temoignages.carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  .carousel-wrapper {
+    width: 100%;
+    overflow: hidden;
+
+    .carousel {
+      transition: transform 0.5s ease-in-out;
+      will-change: transform; /* Optimisation pour éviter les glitchs */
+    }
+  }
+
+  button.carousel-button {
+    position: absolute;
+    // border:2px red solid;
+    display: inline-block;
+    top:6rem;
+    height:3rem;
+    width:3rem;
+    border-radius: 10rem;
+    padding:0;
+  }
+  button.carousel-button.right {
+    right: 31.5%;
+  }
+  button.carousel-button.left {
+    left: 31.5%;
+  }
+  button.carousel-button:before {
+      content: '\0042';
+      display: inline-block;     
+      font-size: var(--bulma-size-7);
+      font-family: 'luminose';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+  }
+  button.carousel-button.left:before {
+    transform: scale(-1, 1);
+  }
+}
 .blog .temoignages {
   padding-top: var(--bulma-block-spacing);
+  position: relative;
 
   h3 {
     margin-bottom: var(--bulma-block-spacing);
@@ -627,7 +677,6 @@ table.is-purple-bordered.is-bordered {
 
       small {
         color: v.$purple;
-        font-size: var(--bulma-size-7);
       }
     }
 
@@ -716,20 +765,36 @@ hr {
   margin: 0;
   display: block;
   border: 0px;
-  height: calc(62px + 4rem);
-  border-top: 2rem transparent solid;
-  border-bottom: 2rem transparent solid;
-  background-color: transparent;
-  background-image: url('/images/hr.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  height: calc(62px + 5rem);
+  background: transparent;
+  border-top: 1.6rem transparent solid;
+  border-bottom: 1.6rem transparent solid;
+ 
 }
-
-hr.light-bg {
-  background-color: v.$purple-light;
-  border-bottom: 3rem v.$purple-light solid;
-  background-image: url('/images/hr-heavy.png');
+hr:before{
+  display: block;
+  text-align: center;
+  font-size: 4rem;
+  line-height: 4rem;
+  font-family: 'luminose';
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: v.$purple;
+  content:'\0046';
+}
+hr.light-bg:before {
+  color: v.$purple-heavy;
+}
+hr.is-white {
+  height: calc(62px + 2rem);
+}
+hr.is-white:before {
+  content:'\006c'; //Etoile
+  color: #FFFFFF;
+  font-size: 2rem;
+  line-height: 2rem;
 }
 
 .content .tabs-wrapper .tabs.is-toggle.is-toggle-rounded ul {
@@ -924,6 +989,10 @@ textarea.is-purple-bordered.is-success {
 body.has-navbar-fixed-top {
   .section.header {
     padding-bottom: 1rem;
+  }
+  #main-navbar .navbar-end a.button.bt-evenements.is-active {
+    background: v.$purple-light;
+    border: 2px v.$purple-light solid;
   }
 }
 
@@ -1194,6 +1263,9 @@ section.accroche {
   .title {
     padding: 1rem 8rem;
   }
+  h2.title {
+    padding:0;
+  }
 }
 
 section.highlight,
@@ -1210,6 +1282,10 @@ section.article div.highlight strong {
 }
 
 section.hypnotherapie {
+  h2.title.is-2 {
+    font-size: var(--bulma-size-4);
+    text-align: left;
+  }
   .is-2 {
     color: #FFFFFF;
   }
@@ -1218,41 +1294,77 @@ section.hypnotherapie {
     margin-top: 2.25rem;
     margin-bottom: 2.25rem;
   }
+  .columns.is-multiline.is-vcentered {
+    margin-bottom: 0;
+  }
+  .column.action-prise-rdv {
+    padding: 0 0 12rem;
+  }
 
-  a.bt-highlight {
+  div.highlight {
+  // a.bt-highlight
     background-color: rgba(0, 0, 0, 0.12);
     color: #FFFFFF;
     border-radius: var(--bulma-radius-large);
     padding: 1rem;
-    height: 14rem;
+    height: 17rem;
     display: flex;
-    justify-content: center;
+    // justify-content: center;
     align-items: center;
     flex-direction: column;
     flex-wrap: nowrap;
     transition: background-color 0.3s ease;
 
     i.big-icon {
-      font-size: 4rem;
-      margin-bottom: 2rem;
-    }
-
-    span {
-      font-size: var(--bulma-size-5);
-      display: flex;
-      justify-content: center;
       align-items: center;
-      flex-direction: column;
-      flex-wrap: nowrap;
+      height: 3rem;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    i.big-icon.icon-sablier {
+      font-size: 2.8rem;
     }
 
-    strong {
-      font-size: var(--bulma-size-3);
+    p {
+      // font-size: var(--bulma-size-5);
+      display: block;
+    }
+
+    h4 {
+      font-size: var(--bulma-size-5);
+      font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 1rem;
     }
   }
 
-  a.bt-highlight:hover {
-    background-color: rgba(0, 0, 0, 0.30);
+  // a.bt-highlight:hover {
+  //   background-color: rgba(0, 0, 0, 0.30);
+  // }
+
+  .white-bg {
+    padding: var(--bulma-block-spacing);
+    margin-bottom: var(--bulma-block-spacing);
+  
+    h2 {
+      color: v.$purple;
+    }
+    strong {
+      color: v.$purple;
+    }
+  }
+  .infos-seances {
+    text-align: left;
+    display: flex;
+    gap: var(--bulma-column-gap);
+
+    .premiere-seance {
+      flex: 0 0 43%; /* Ne change pas de taille, occupe 44% */
+    }
+    .seances-suivantes {
+      flex: 1; /* Prend le reste de l'espace disponible */
+    }
   }
 }
 
@@ -1805,6 +1917,7 @@ section.florent h3.subtitle.is-3.job {
   display: inline-block;
   width: 11rem;
   vertical-align: middle;
+  
 }
 
 .tarifs-seances {
@@ -1812,7 +1925,10 @@ section.florent h3.subtitle.is-3.job {
     margin-bottom: var(--bulma-content-block-margin-bottom);
 
     .nom {
+      padding: .2rem 0;
+      display: inline-block;
       font-weight: 600;
+      margin-bottom: var(--bulma-content-block-margin-bottom);
     }
 
     .is-styled-tag {
@@ -2230,17 +2346,6 @@ section.newsletter {
 
 
 //************** Petits écrans et téléphones mobiles *****************/
-@media (-webkit-min-device-pixel-ratio: 2),
-(min-resolution: 192dpi) {
-  hr {
-    background-image: url('/images/hr@2x.png');
-  }
-
-  hr.light-bg {
-    background-image: url('/images/hr-heavy@2x.png');
-  }
-}
-
 @media only screen and (max-width: 768px) {
   .main .column.picture {
     text-align: center;
