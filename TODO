@@ -1,6 +1,5 @@
 Pour accompagner Flyer et pub Facebook et autres :
 - Inscription : 
-	- Tout vérifier en fonctionnement ok sur ordi et mobile
 	- Vérifier les différentes erreurs (pas de JS, pas de Make.com, pas de réponse Stripe, erreurs JS, erreur CB, etc.)
 		- Et proposer alternatives
 	- Ajouter lien pour liste d'attente
