@@ -8,6 +8,14 @@ module Jekyll
         def nomCategorieEvenement(categorie)
             CATEGORIES_EVENEMENTS[categorie]
         end
+
+        def lieuEvenement(lieu)
+            if lieu != 'En ligne'
+                "à #{lieu}"
+            else
+                "En ligne"
+            end
+        end
     end
 end
     

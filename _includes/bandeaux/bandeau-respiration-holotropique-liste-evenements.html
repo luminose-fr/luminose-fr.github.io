@@ -15,7 +15,7 @@
             <span class="description">
             <span class="nom">{{ evenement.category | nomCategorieEvenement }} - {{ evenement.title }}</span>
             <span class="is-styled-tag">de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }}</span>
-            <span class="is-styled-tag">à {{ evenement.ville }}</span>
+            <span class="is-styled-tag">{{ evenement.ville | lieuEvenement }}</span>
             </span>
             </a>
             {% endfor %}

@@ -44,6 +44,7 @@
                     <div class="column is-8 is-9-widescreen">
                         {{ page.html_prix }}
                     </div>
+                    {% if page.html_lieu_instructions != '' and page.html_lieu_adresse != '' %}
                     <div class="column is-4 is-3-widescreen">
                         <p>Lieu :</p>
                     </div>
@@ -53,6 +54,7 @@
                             {{ page.html_lieu_adresse }}
                         </div>
                     </div>
+                    {% endif %}
                     {% if estDateFuture and page.nombre_places_total > 0 %}
                     <div class="column is-4 is-3-widescreen">
                         <p>Participants :</p>
