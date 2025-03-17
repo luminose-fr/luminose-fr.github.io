@@ -44,7 +44,7 @@
                     <div class="column is-8 is-9-widescreen">
                         {{ page.html_prix }}
                     </div>
-                    {% if page.html_lieu_instructions != '' and page.html_lieu_adresse != '' %}
+                    {% if page.html_lieu_instructions != '' or page.html_lieu_adresse != '' %}
                     <div class="column is-4 is-3-widescreen">
                         <p>Lieu :</p>
                     </div>
