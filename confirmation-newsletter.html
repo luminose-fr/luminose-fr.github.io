@@ -1,0 +1,36 @@
+---
+layout: default
+title: Confirmation d'inscription à la newsletter
+layout_remove_florent: true
+layout_remove_newsletter: true
+sitemap: false
+---
+{% if site.evenements %}
+  {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+{% endif %}
+{% if evenements_futurs.size >= 1 %}
+  {% assign contient_evenements_futurs = true %}
+  {% assign purple_border_extra_css_class = "with-push-confirmation" %}
+{% else %} 
+  {% assign columns_extra_css_class = "is-centered" %}
+{% endif %}  
+<section class="section article confirmation">
+  <div class="container">
+	<div class="content">
+		<div class="columns is-multiline {{ columns_extra_css_class }}">
+			<div class="column is-12-mobile is-12-tablet is-7-desktop is-7-widescreen is-7-fullhd ">
+				<div class="purple-border {{ purple_border_extra_css_class }}">
+					<div class="block">
+						<h1 class="icon-text"><i class="icon icon-confirmation"></i> Votre êtes inscrit !</h1>
+						<p>Votre inscription à la newsletter a bien été prise en compte.</p>
+                        <p>Merci :)</p>
+					</div>
+				</div>
+			</div>
+			{% if contient_evenements_futurs %}
+				{% include push-confirmation.html %}
+			{% endif %}
+		</div>
+	</div>
+  </div>
+</section>
