@@ -24,6 +24,9 @@ description: "Découvrez notre calendrier d'évènements de bien-être : séance
               <span class="nom">{{ evenement.category | nomCategorieEvenement }} - {{ evenement.title }}</span>
               <span class="is-styled-tag">de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }}</span>
               <span class="is-styled-tag">{{ evenement.ville | lieuEvenement }}</span>
+              {% if evenement.nombre_places_libres <= 0 %}
+              <span class="is-styled-tag tag is-warning is-light">Complet</span>
+              {% endif %}
             </span>
           </a>
           {% endfor %}

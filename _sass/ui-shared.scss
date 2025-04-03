@@ -1637,7 +1637,7 @@ section.evenements {
   .category.category-respiration-holotropique {
     background-image: linear-gradient(135deg, #6CC0F4, #E57FE0);
   }
-  a.evenement:hover .description > .is-styled-tag {
+  a.evenement:hover .description > .is-styled-tag:not(.is-warning) {
     background-color: #FFFFFF;
     transition: background-color .3s ease;
   }

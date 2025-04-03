@@ -625,6 +625,11 @@
     padding-bottom: 1.5rem;
   }
 
+  .tag {
+    white-space: wrap;
+    height:auto;
+  }
+
   body .section.article,
   body .section.article:first-of-type {
     padding-left: 1.5rem;

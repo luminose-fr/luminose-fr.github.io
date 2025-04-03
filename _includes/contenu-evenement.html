@@ -16,6 +16,10 @@
                         <span class="valeur is-styled-tag">{{ page.date | jourEvenement }}</span> <span class="valeur is-styled-tag">de {{ page.date | heure }} à {{ page.date_fin | heure }}</span>
                         {{ page.boutons_evenements.inscription }}
                     </div>
+                    {% else %}
+                    <div class="purple-border inscription-rapide">
+                        <span class="tag is-medium is-warning is-light">L'inscription est impossible car l'évènement est complet</span>
+                    </div>
                     {% endif %}
                 {% endif %}
             {% endif %}

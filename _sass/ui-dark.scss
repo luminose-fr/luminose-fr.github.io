@@ -67,6 +67,12 @@ button.button.is-purple-bordered:hover {
 	color: #FFFFFF;
 }
 
+a.button.bt-evenements.is-active,
+body.has-navbar-fixed-top	#main-navbar .navbar-end a.button.bt-evenements.is-active {
+	background: v.$purple-logo;
+	border: 2px v.$purple-logo solid;
+}
+
 input.is-purple-bordered:hover,
 select.is-purple-bordered:hover,
 textarea.is-purple-bordered:hover,
@@ -445,7 +451,7 @@ section.evenements .liste-evenements {
 		//   border-left: 0;
 		}
 	}
-	a.evenement:hover .description > .is-styled-tag {
+	a.evenement:hover .description > .is-styled-tag:not(.is-warning) {
 		background-color: v.$purple-logo;
 		transition: background-color .3s ease;
 	  }
