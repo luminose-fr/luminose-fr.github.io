@@ -104,6 +104,10 @@ body .section.article:first-of-type {
   font-weight: 300;
 }
 
+lite-youtube { 
+  max-width: unset; 
+}
+
 .video-responsive {
   overflow: hidden;
   padding-bottom: 56.25%;
@@ -117,6 +121,7 @@ body .section.article:first-of-type {
     width: 100%;
     position: absolute;
   }
+  
 }
 
 .border-top-white {
