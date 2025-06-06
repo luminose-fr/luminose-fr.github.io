@@ -5,76 +5,130 @@
       <p class="modal-card-title">Prendre un rendez-vous</p>
     </header>
     <section class="modal-card-body">
+      <div class="carousel">
+        <div class="carousel-track">
+          <div class="carousel-panel" id="panel-home">
+            <div class="block">
+              <span class="is-styled-tag">Nouveau client</span>
 
-      <div class="block">
-        <span class="is-styled-tag">Nouveau client</span>
-        <a id="bt-seance-premiereadulte" class="button is-purple-bordered" href="">
-          <span class="title">1<sup>ère</sup> séance adulte ou adolescent</span>
-          <span class="details">
-            <span class="description">
-              <span>Pour les adultes et adolescents de plus de 14 ans.</span>
-            </span>
-            <span class="tarif-duree">
-              <span class="valeur is-styled-tag">1h30</span>
-              <span class="valeur is-styled-tag">80€</span>
-            </span>
-          </span>
-        </a>
+              <a id="bt-choix-lieu-premiereadulte" class="button is-purple-bordered" href="">
+                <span class="title">1<sup>ère</sup> séance adulte ou adolescent</span>
+                <span class="details">
+                  <span class="description">
+                    <span>Pour les adultes et adolescents de plus de 14 ans.</span>
+                  </span>
+                  <span class="tarif-duree">
+                    <span class="valeur is-styled-tag">1h30</span>
+                    <span class="valeur is-styled-tag">80€</span>
+                  </span>
+                </span>
+              </a>
 
-        <a id="bt-seance-premiereenfant" class="button is-purple-bordered" href="">
-          <span class="title">1<sup>ère</sup> séance enfant</span>
-          <span class="details">
-            <span class="description">Pour les enfants de 10 à 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
-            <span class="tarif-duree">
-              <span class="valeur is-styled-tag">1h</span>
-              <span class="valeur is-styled-tag">60€</span>
-            </span>
-          </span>
-        </a>
+              <a id="bt-seance-premiereenfant" class="button is-purple-bordered" href="">
+                <span class="title">1<sup>ère</sup> séance enfant</span>
+                <span class="details">
+                  <span class="description">Pour les enfants de 10 à 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
+                  <span class="tarif-duree">
+                    <span class="valeur is-styled-tag">1h</span>
+                    <span class="valeur is-styled-tag">60€</span>
+                  </span>
+                </span>
+              </a>
+            </div>
+
+            <div class="block">
+              <span class="is-styled-tag">Déjà client</span>
+              <a id="bt-choix-lieu-adulte" class="button is-purple-bordered" href="">
+                <span class="title">Séance adulte ou adolescent</span>
+                <span class="details">
+                  <span class="description">Pour les adultes et adolescents de plus de 14 ans.</span>
+                  <span class="tarif-duree">
+                    <span class="valeur is-styled-tag">1h30</span>
+                    <span class="valeur is-styled-tag">80€</span>
+                  </span>
+                </span>
+              </a>
+
+              <a id="bt-seance-enfant" class="button is-purple-bordered" href="">
+                <span class="title">Séance enfant</span>
+                <span class="details">
+                  <span class="description">Pour les enfants de 10 à 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
+                  <span class="tarif-duree">
+                    <span class="valeur is-styled-tag">1h</span>
+                    <span class="valeur is-styled-tag">60€</span>
+                  </span>
+                </span>
+              </a>
+            </div>
+
+            <div class="block">
+              <span class="is-styled-tag">Respiration holotropique</span>
+              <a id="bt-seance-respiration" class="button is-purple-bordered" href="">
+                <span class="title">Séance de respiration holotropique</span>
+                <span class="details">
+                  <span class="description">
+                    <span>Pour les adultes et adolescents de plus de 16 ans.</span>
+                    <span>Inclut une séance d'intégration de 30 min 1 à 2 semaines après la respiration.</span>
+                  </span>
+                  <span class="tarif-duree">
+                    <span class="valeur is-styled-tag">1h45</span>+ <span class="valeur is-styled-tag">30min</span>
+                    <span class="valeur is-styled-tag">140€</span>
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <div class="carousel-panel" id="panel-premiere-seance-adulte">
+            <button class="button is-purple-bordered modal-bt-retour">Retour</button>
+            <div class="block">
+              <a id="bt-seance-premiereadulte" class="button is-purple-bordered" href="">
+                <span class="title">En présence</span>
+                <span class="details">
+                  <span class="description description-longue">
+                    <span>2 Avenue de Verdun</span>
+                    <span>31290 Villefranche-de-Lauragais</span>
+                  </span>
+                </span>
+              </a>
+
+              <a id="bt-seance-premiereadultevisio" class="button is-purple-bordered" href="">
+                <span class="title">À distance</span>
+                <span class="details">
+                  <span class="description description-longue">
+                    <span>En visio-conférence avec <i class="fas fa-video"></i> Google Meet.</span>
+                    <span>Note : le paiement de la séance se fait à la réservation.</span>
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <div class="carousel-panel" id="panel-seance-adulte">
+            <button class="button is-purple-bordered modal-bt-retour">Retour</button>
+            <div class="block">
+              <a id="bt-seance-adulte" class="button is-purple-bordered" href="">
+                <span class="title">En présence</span>
+                <span class="details">
+                  <span class="description description-longue">
+                    <span>2 Avenue de Verdun, 31290 Villefranche-de-Lauragais</span>
+                  </span>
+                </span>
+              </a>
+
+              <a id="bt-seance-adultevisio" class="button is-purple-bordered" href="">
+                <span class="title">À distance</span>
+                <span class="details">
+                  <span class="description description-longue">
+                    <span>En visio-conférence avec <i class="fas fa-video"></i> Google Meet.</span>
+                    <span>Note : le paiement de la séance se fait à la réservation.</span>
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="block">
-        <span class="is-styled-tag">Déjà client</span>
-        <a id="bt-seance-adulte" class="button is-purple-bordered" href="">
-          <span class="title">Séance adulte ou adolescent</span>
-          <span class="details">
-            <span class="description">Pour les adultes et adolescents de plus de 14 ans.</span>
-            <span class="tarif-duree">
-              <span class="valeur is-styled-tag">1h30</span>
-              <span class="valeur is-styled-tag">80€</span>
-            </span>
-          </span>
-        </a>
-
-        <a id="bt-seance-enfant" class="button is-purple-bordered" href="">
-          <span class="title">Séance enfant</span>
-          <span class="details">
-            <span class="description">Pour les enfants de 10 à 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
-            <span class="tarif-duree">
-              <span class="valeur is-styled-tag">1h</span>
-              <span class="valeur is-styled-tag">60€</span>
-            </span>
-          </span>
-        </a>
-      </div>
-
-      <div class="block">
-        <span class="is-styled-tag">Respiration holotropique</span>
-        <a id="bt-seance-respiration" class="button is-purple-bordered" href="">
-          <span class="title">Séance de respiration holotropique</span>
-          <span class="details">
-            <span class="description">
-              <span>Pour les adultes et adolescents de plus de 16 ans.</span>
-              <span>Inclut une séance d'intégration de 30 min 1 à 2 semaines après la respiration.</span>
-            </span>
-            <span class="tarif-duree">
-              <span class="valeur is-styled-tag">1h45</span>+ <span class="valeur is-styled-tag">30min</span>
-              <span class="valeur is-styled-tag">140€</span>
-            </span>
-          </span>
-        </a>
-      </div>
-
     </section>
   </div>
 

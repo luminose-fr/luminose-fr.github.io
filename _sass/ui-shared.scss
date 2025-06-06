@@ -2225,10 +2225,48 @@ section.newsletter {
     .block {
       text-align: center;
     }
+    .modal-bt-retour {
+      padding-left:1.6rem;
+      margin-bottom: var(--bulma-block-spacing);
+    }
+
+    .modal-bt-retour:before {
+      content: '\0042';
+      rotate: 180deg;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      left: 0.5rem;
+      top:0;
+      bottom:0;
+      font-size: var(--bulma-size-7);
+      font-family: 'luminose';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
     .modal-card-body {
       border-bottom-left-radius: var(--bulma-radius-large);
       border-bottom-right-radius: var(--bulma-radius-large);
+    }
+
+    .carousel {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.4s ease-in-out;
+      width: 100%; /* 3 panneaux */
+    }
+
+    .carousel-panel {
+      flex: 0 0 100%;
+      box-sizing: border-box;
     }
 
     div.block > span.is-styled-tag {
@@ -2237,6 +2275,7 @@ section.newsletter {
       border-bottom-right-radius: 0;
       font-size: var(--bulma-size-small);
     }
+
   }
 
   a.button.is-purple-bordered {
@@ -2281,6 +2320,9 @@ section.newsletter {
         width:57%;
         font-size: var(--bulma-size-7);
         color: v.$purple;
+      }
+      .description-longue {
+        width:100%;
       }
       
       .tarif-duree {

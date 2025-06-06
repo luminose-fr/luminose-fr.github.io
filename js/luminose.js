@@ -87,10 +87,12 @@ var App = {
       urls: {
         calendly: {
           premiereadulte: 'https://calendly.com/luminose/premiere-seance-adulte?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          premiereadultevisio: 'https://calendly.com/luminose/premiere-seance-adulte-distance?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
           premiereenfant: 'https://calendly.com/luminose/premiere-seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-          adulte: 'https://calendly.com/luminose/seance-adulte?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-          enfant: 'https://calendly.com/luminose/seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-          respiration: 'https://calendly.com/luminose/seance-respiration-holotropique?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          adulte:         'https://calendly.com/luminose/seance-adulte?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          adultevisio:    'https://calendly.com/luminose/seance-adulte-distance?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          enfant:         'https://calendly.com/luminose/seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          respiration:    'https://calendly.com/luminose/seance-respiration-holotropique?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
         },
         rh: {
           formulaire_paiment: window.location.origin + "/respiration-holotropique/inscription-etape-2.html",
@@ -365,6 +367,15 @@ var App = {
     if (modalElement) {
       const modal = new BulmaModal('#md-prise-rdv');
       const buttons = document.querySelectorAll('.bt-prise-rdv');
+      const buttonsRetour = modalElement.querySelectorAll(".modal-bt-retour");
+      const btSliderNextAdultePremiere = modalElement.querySelector("#bt-choix-lieu-premiereadulte");
+      const btSliderNextAdulte = modalElement.querySelector("#bt-choix-lieu-adulte");
+      const track = modalElement.querySelector(".carousel-track");
+      const panels = {
+        home: modalElement.querySelector("#panel-home"),
+        adultepremiere: modalElement.querySelector("#panel-premiere-seance-adulte"),
+        adulte: modalElement.querySelector("#panel-seance-adulte")
+      };
       const utmParams = this._getUtmParams();
 
       buttons.forEach(button => {
@@ -373,6 +384,43 @@ var App = {
           modal.show();
         });
       });
+
+      let currentIndex = 0;
+      const updateTrackOrder = (target) => {
+        // Réorganise les panneaux pour qu’ils soient dans l’ordre [home, cible, autre]
+        track.innerHTML = ""; // Vide le conteneur
+        track.appendChild(panels.home);
+        if (target === "adultepremiere") {
+          track.appendChild(panels.adultepremiere);
+          track.appendChild(panels.adulte);
+          currentIndex = 1;
+        } else if (target === "adulte") {
+          track.appendChild(panels.adulte);
+          track.appendChild(panels.adultepremiere);
+          currentIndex = 1;
+        }
+        requestAnimationFrame(() => {
+          track.style.transform = `translateX(-${100 * currentIndex}%)`;
+        });
+      };
+
+      const goBack = () => {
+        track.style.transform = `translateX(0%)`;
+        currentIndex = 0;
+      };
+
+      btSliderNextAdultePremiere.addEventListener("click", (e) => {
+        e.preventDefault();
+        updateTrackOrder("adultepremiere");
+      });
+      btSliderNextAdulte.addEventListener("click", (e) => {
+        e.preventDefault();
+        updateTrackOrder("adulte");
+      });
+      buttonsRetour.forEach(btn => {
+        btn.addEventListener("click", () => goBack());
+      });
+      modal.on('modal:close', () => goBack());
 
       Object.entries(this._config.urls.calendly).forEach(([key, url]) => {
         const button = document.querySelector(`#bt-seance-${key}`);
