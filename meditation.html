@@ -4,6 +4,7 @@ title: Ateliers de méditation à Villefranche de Lauragais
 section: meditation
 sous-section: presentation
 description: Explorez la méditation pour réduire le stress et améliorer la concentration. Participez à nos ateliers adaptés à tous les âges et niveaux.
+slug: meditation
 ---
 
 <section class="section article">
@@ -44,7 +45,7 @@ description: Explorez la méditation pour réduire le stress et améliorer la co
 	  <p>Même si certaines pratiques sont dynamiques, elles restent adaptables aux capacités des uns et des autres.</p>
 	  
 	  <h2>Comment se déroule un atelier de méditation en groupe ?</h2>
-	  <p>Les ateliers se déroulent en groupe (2 à 10 personnes) sur une durée pouvant aller de 1h à 2h.</p>
+	  <p>Les ateliers réguliers que je propose se déroulent en groupe (8 personnes max.) sur une durée de 2h.</p>
 	  <p>Chaque atelier est différent et les pratiques sont variées.</p>
 	  <p>Le déroulement général est le suivant :</p>
 	  <ol>
@@ -78,7 +79,7 @@ description: Explorez la méditation pour réduire le stress et améliorer la co
         </div>
       </div>
 
-	<h3>Planning 2024-2025</h3>
+	<h3>Planning 2025-2026</h3>
 	  {% if site.evenements %}
 		{% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" | where_exp: "evenements", "evenements.category == 'meditation'" %}
 	{% endif %}
@@ -109,6 +110,10 @@ description: Explorez la méditation pour réduire le stress et améliorer la co
 		</div>
 	</div>
 	</section>
+
+	<div class="blog">
+      {% include bandeaux/bandeau-temoignages.html %}  
+    </div>
   </div>
 </section>
 
