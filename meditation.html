@@ -80,6 +80,10 @@ slug: meditation
       </div>
 
 	<h3>Planning 2025-2026</h3>
+	<div class="light-bg">
+		<p><strong>Thème : Au fil des archétypes</strong></p>
+		<p>Neuf visages intérieurs, entre lumière et ombre. Autant de forces symboliques qui nous traversent, à écouter, sentir, transformer, méditer.</p>
+	</div>
 	  {% if site.evenements %}
 		{% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" | where_exp: "evenements", "evenements.category == 'meditation'" %}
 	{% endif %}
