@@ -29,6 +29,16 @@ body .section.article:first-of-type {
   background-color: v.$warning-tag-background;
   color: v.$warning-tag-color;
 }
+.tag.tagbanner {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  box-shadow: 0px 0px 6px rgba(255, 255, 255, .7);
+  background-color: #ff9800;
+  color:#fff4e2;
+}
 
 .article .content h1 {
   font-size: var(--bulma-size-1);
@@ -1827,7 +1837,8 @@ section.oracle {
   }
 }
 
-.column section.oracle {
+.column section.oracle,
+.column section.seuil {
   color: v.$purple-heavy;
 
   border-radius: var(--bulma-radius-large);
@@ -1847,6 +1858,18 @@ section.oracle {
   .container {
     padding: 1rem;
   }
+}
+
+.column section.seuil {
+  background: linear-gradient(180deg, #E5C7CD, #E8C6BD, #F8D2B6, #FCDFB9, #FFDDAA);
+  color: v.$purple-seuil;
+  position: relative;
+  
+  .title,
+  .subtitle {
+    color: v.$purple-seuil;
+  }
+  
 }
 
 

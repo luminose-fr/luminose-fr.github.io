@@ -1,5 +1,5 @@
 @use "ui-variables" as v;
-@use "bulma-1.0.2/sass/utilities/mixins";
+@use "bulma-1.0.4/sass/utilities/mixins";
 
 @mixin dark-theme {
 	.footer {
@@ -185,7 +185,11 @@ textarea.is-purple-bordered.is-success {
 	background-color: v.$dark-warning-tag-background;
 	color: v.$dark-warning-tag-color;
 }
-
+.tag.tagbanner {
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, .7);
+  background-color: #b11a41;
+  color:#ff92ae;
+}
 .navbar {
 	background-color: transparent;
 }
@@ -349,6 +353,16 @@ section.oracle {
 	.subtitle {
 		color: v.$purple-light;
 	}
+}
+.column section.seuil {
+  background: linear-gradient(180deg, #38154B, #6F2233);
+  color: v.$purple-seuil-alt;
+  
+  .title,
+  .subtitle {
+    color: v.$purple-seuil-alt;
+  }
+  
 }
 
 section.florent {
