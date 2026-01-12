@@ -12,12 +12,12 @@ class PageDrop < Liquid::Drop
         end
       end
       if estLienExterne 
-        output = '<a href="' + @page.data['url_inscription'] + '" target="_blank" class="button is-primary">S\'inscrire</a>'
+        output = '<a href="' + @page.data['url_inscription'] + '" target="_blank" class="button is-primary" data-track="bt_inscription_externe">S\'inscrire</a>'
       else
         if @page.data['url_inscription'] == nil or @page.data['url_inscription'] == ''
-          output = '<a href="/respiration-holotropique/inscription-etape-1.html?notion_page_id=' + @page.data['notion_page_id'] + '" class="button is-primary">S\'inscrire</a>'
+          output = '<a href="/respiration-holotropique/inscription-etape-1.html?notion_page_id=' + @page.data['notion_page_id'] + '" class="button is-primary" data-track="bt_inscription_breathwork">S\'inscrire</a>'
         else
-          output = '<a href="' + @page.data['url_inscription'] + '" class="button is-primary">S\'inscrire</a>'
+          output = '<a href="' + @page.data['url_inscription'] + '" class="button is-primary" data-track="bt_inscription_interne">S\'inscrire</a>'
         end
       end
       output

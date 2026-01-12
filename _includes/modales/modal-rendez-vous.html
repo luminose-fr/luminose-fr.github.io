@@ -9,36 +9,41 @@
         <div class="carousel-track">
           <div class="carousel-panel" id="panel-home">
             <div class="block">
-              <span class="is-styled-tag">Nouveau client</span>
-
-              <a id="bt-choix-lieu-premiereadulte" class="button is-purple-bordered" href="">
-                <span class="title">1<sup>ère</sup> séance adulte ou adolescent</span>
-                <span class="details">
-                  <span class="description">
-                    <span>Pour les adultes et adolescents de plus de 14 ans.</span>
-                  </span>
-                  <span class="tarif-duree">
-                    <span class="valeur is-styled-tag">1h30</span>
-                    <span class="valeur is-styled-tag">80€</span>
-                  </span>
-                </span>
+              <a id="bt-choix-nouveau-client" data-track="bt_prise_rdv_nouveau_client" class="button is-purple-bordered" href="">
+                <span class="title">Nouveau client</span>
               </a>
 
-              <a id="bt-seance-premiereenfant" class="button is-purple-bordered" href="">
-                <span class="title">1<sup>ère</sup> séance enfant</span>
-                <span class="details">
-                  <span class="description">Pour les enfants de 10 à 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
-                  <span class="tarif-duree">
-                    <span class="valeur is-styled-tag">1h</span>
-                    <span class="valeur is-styled-tag">60€</span>
-                  </span>
-                </span>
+              <a id="bt-choix-deja-client" data-track="bt_prise_rdv_deja_client" class="button is-purple-bordered" href="">
+                <span class="title">Déjà client</span>
               </a>
+
+              <div class="paiement-a-reservation">Note : depuis janvier 2026, le paiement des séances doit se faire au moins 3 jours avant votre séance.</div>
             </div>
 
+            
+          </div>
+
+          <div class="carousel-panel" id="panel-nouveau-client">
+            <button class="button is-purple-bordered modal-bt-retour">Retour</button>
             <div class="block">
-              <span class="is-styled-tag">Déjà client</span>
-              <a id="bt-choix-lieu-adulte" class="button is-purple-bordered" href="">
+              <span class="is-styled-tag">Nouveau client</span>
+              <div class="introduction purple-border">
+                <div class="content">
+                  <p>Parce que la réussite d'un accompagnement repose avant tout sur la qualité de notre relation, je ne propose pas de séances ponctuelles.</p>
+                  <p>Je vous invite à un premier échange offert de 20 minutes (par téléphone ou visio). Ce temps nous permet de faire connaissance, de clarifier vos besoins et de vérifier si mon approche est la plus adaptée pour vous accompagner sur la durée.</p>
+                  <p>C’est le premier pas pour définir, ensemble, le cadre de votre futur parcours.</p>
+                </div>
+                <a id="bt-seance-rencontre" class="button is-primary" href="" data-track="bt_prise_rdv_initier_parcours">Initier un parcours</a>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="carousel-panel" id="panel-deja-client">
+            <button class="button is-purple-bordered modal-bt-retour">Retour</button>
+            <div class="block">
+              <span class="is-styled-tag">Séance de suivi</span>
+              <a id="bt-choix-lieu-adulte" class="button is-purple-bordered" href="" data-track="bt_prise_rdv_seance_adulte">
                 <span class="title">Séance adulte ou adolescent</span>
                 <span class="details">
                   <span class="description">Pour les adultes et adolescents de plus de 14 ans.</span>
@@ -49,7 +54,7 @@
                 </span>
               </a>
 
-              <a id="bt-seance-enfant" class="button is-purple-bordered" href="">
+              <a id="bt-seance-enfant" class="button is-purple-bordered" href="" data-track="bt_prise_rdv_seance_enfant">
                 <span class="title">Séance enfant</span>
                 <span class="details">
                   <span class="description">Pour les enfants de 10 à 14 ans.<br />Note : les séances se déroulent sans le(s) parent(s).</span>
@@ -62,8 +67,8 @@
             </div>
 
             <div class="block">
-              <span class="is-styled-tag">Respiration holotropique</span>
-              <a id="bt-seance-respiration" class="button is-purple-bordered" href="">
+              <span class="is-styled-tag">Breathwork holotropique</span>
+              <a id="bt-seance-respiration" class="button is-purple-bordered" href="" data-track="bt_prise_rdv_seance_breathwork">
                 <span class="title">Séance de respiration holotropique</span>
                 <span class="details">
                   <span class="description">
@@ -79,35 +84,10 @@
             </div>
           </div>
 
-          <div class="carousel-panel" id="panel-premiere-seance-adulte">
-            <button class="button is-purple-bordered modal-bt-retour">Retour</button>
-            <div class="block">
-              <a id="bt-seance-premiereadulte" class="button is-purple-bordered" href="">
-                <span class="title">En présence</span>
-                <span class="details">
-                  <span class="description description-longue">
-                    <span>2 Avenue de Verdun</span>
-                    <span>31290 Villefranche-de-Lauragais</span>
-                  </span>
-                </span>
-              </a>
-
-              <a id="bt-seance-premiereadultevisio" class="button is-purple-bordered" href="">
-                <span class="title">À distance</span>
-                <span class="details">
-                  <span class="description description-longue">
-                    <span>En visio-conférence avec <i class="fas fa-video"></i> Google Meet.</span>
-                    <span>Note : le paiement de la séance se fait à la réservation.</span>
-                  </span>
-                </span>
-              </a>
-            </div>
-          </div>
-
           <div class="carousel-panel" id="panel-seance-adulte">
             <button class="button is-purple-bordered modal-bt-retour">Retour</button>
             <div class="block">
-              <a id="bt-seance-adulte" class="button is-purple-bordered" href="">
+              <a id="bt-seance-adulte" class="button is-purple-bordered" href="" data-track="bt_prise_rdv_seance_adulte_presence">
                 <span class="title">En présence</span>
                 <span class="details">
                   <span class="description description-longue">
@@ -116,12 +96,11 @@
                 </span>
               </a>
 
-              <a id="bt-seance-adultevisio" class="button is-purple-bordered" href="">
+              <a id="bt-seance-adultevisio" class="button is-purple-bordered" href="" data-track="bt_prise_rdv_seance_adulte_distance">
                 <span class="title">À distance</span>
                 <span class="details">
                   <span class="description description-longue">
                     <span>En visio-conférence avec <i class="fas fa-video"></i> Google Meet.</span>
-                    <span>Note : le paiement de la séance se fait à la réservation.</span>
                   </span>
                 </span>
               </a>

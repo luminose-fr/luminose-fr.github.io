@@ -1,0 +1,40 @@
+---
+layout: default
+title: Confirmation de prise de rendez-vous - Séance de rencontre
+layout_remove_florent: true
+sitemap: false
+---
+{% if site.evenements %}
+  {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+{% endif %}
+{% if evenements_futurs.size >= 1 %}
+  {% assign contient_evenements_futurs = true %}
+  {% assign purple_border_extra_css_class = "with-push-confirmation" %}
+{% else %} 
+  {% assign columns_extra_css_class = "is-centered" %}
+{% endif %}  
+<section class="section article confirmation">
+  <div class="container">
+	<div class="content">
+		<div class="columns is-multiline {{ columns_extra_css_class }}">
+			<div class="column is-12-mobile is-12-tablet is-7-desktop is-7-widescreen is-7-fullhd ">
+				<div class="purple-border {{ purple_border_extra_css_class }}">
+					<div class="block">
+						<h1 class="icon-text"><i class="icon icon-confirmation"></i> Merci d'avoir initié cette démarche.</h1>
+						<p>Vous allez recevoir un e-mail de confirmation avec tous les détails de notre rencontre.</p>
+						<p>Le jour de notre échange :</p>
+						<ul>
+						<li><strong>Par téléphone</strong> : Je vous appellerai directement au numéro que vous avez indiqué.</li>
+						<li><strong>En visio</strong> : Le lien de connexion se trouve dans votre e-mail de confirmation.</li>
+						</ul>
+						<p>Au plaisir de faire votre connaissance et de découvrir votre projet de cheminement.</p>
+					</div>
+				</div>
+			</div>
+			{% if contient_evenements_futurs %}
+				{% include push-confirmation.html %}
+			{% endif %}
+		</div>
+	</div>
+  </div>
+</section>

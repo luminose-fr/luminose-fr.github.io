@@ -86,9 +86,7 @@ var App = {
       },
       urls: {
         calendly: {
-          premiereadulte: 'https://calendly.com/luminose/premiere-seance-adulte?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-          premiereadultevisio: 'https://calendly.com/luminose/premiere-seance-adulte-distance?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
-          premiereenfant: 'https://calendly.com/luminose/premiere-seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          rencontre:      'https://calendly.com/luminose/rencontre?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
           adulte:         'https://calendly.com/luminose/seance-adulte?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
           adultevisio:    'https://calendly.com/luminose/seance-adulte-distance?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
           enfant:         'https://calendly.com/luminose/seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
@@ -368,15 +366,20 @@ var App = {
       const modal = new BulmaModal('#md-prise-rdv');
       const buttons = document.querySelectorAll('.bt-prise-rdv');
       const buttonsRetour = modalElement.querySelectorAll(".modal-bt-retour");
-      const btSliderNextAdultePremiere = modalElement.querySelector("#bt-choix-lieu-premiereadulte");
+      const btSliderNextNouveau = modalElement.querySelector("#bt-choix-nouveau-client");
+      const btSliderNextDejaClient = modalElement.querySelector("#bt-choix-deja-client");
       const btSliderNextAdulte = modalElement.querySelector("#bt-choix-lieu-adulte");
       const track = modalElement.querySelector(".carousel-track");
       const panels = {
         home: modalElement.querySelector("#panel-home"),
-        adultepremiere: modalElement.querySelector("#panel-premiere-seance-adulte"),
-        adulte: modalElement.querySelector("#panel-seance-adulte")
+        nouveauClient: modalElement.querySelector("#panel-nouveau-client"),
+        dejaClient: modalElement.querySelector("#panel-deja-client"),
+        adulteChoixLieu: modalElement.querySelector("#panel-seance-adulte")
       };
       const utmParams = this._getUtmParams();
+
+      // Pile de navigation pour gérer l'historique
+      let navigationStack = ['home'];
 
       buttons.forEach(button => {
         button.addEventListener('click', (e) => {
@@ -385,43 +388,65 @@ var App = {
         });
       });
 
-      let currentIndex = 0;
-      const updateTrackOrder = (target) => {
-        // Réorganise les panneaux pour qu’ils soient dans l’ordre [home, cible, autre]
-        track.innerHTML = ""; // Vide le conteneur
-        track.appendChild(panels.home);
-        if (target === "adultepremiere") {
-          track.appendChild(panels.adultepremiere);
-          track.appendChild(panels.adulte);
-          currentIndex = 1;
-        } else if (target === "adulte") {
-          track.appendChild(panels.adulte);
-          track.appendChild(panels.adultepremiere);
-          currentIndex = 1;
-        }
+      const navigateTo = (targetPanel) => {
+        // Ajoute le panneau cible à la pile
+        navigationStack.push(targetPanel);
+        
+        // Réorganise les panneaux dans l'ordre de navigation
+        track.innerHTML = "";
+        navigationStack.forEach(panelKey => {
+          track.appendChild(panels[panelKey]);
+        });
+
+        // Anime vers le dernier panneau
         requestAnimationFrame(() => {
-          track.style.transform = `translateX(-${100 * currentIndex}%)`;
+          track.style.transform = `translateX(-${100 * (navigationStack.length - 1)}%)`;
         });
       };
 
       const goBack = () => {
-        track.style.transform = `translateX(0%)`;
-        currentIndex = 0;
+        if (navigationStack.length > 1) {
+          // Retire le panneau actuel de la pile
+          navigationStack.pop();
+          
+          // Anime vers le panneau précédent
+          track.style.transform = `translateX(-${100 * (navigationStack.length - 1)}%)`;
+        }
       };
 
-      btSliderNextAdultePremiere.addEventListener("click", (e) => {
+      const resetNavigation = () => {
+        navigationStack = ['home'];
+        track.innerHTML = "";
+        track.appendChild(panels.home);
+        track.style.transform = 'translateX(0%)';
+      };
+
+      // Navigation depuis home
+      btSliderNextNouveau.addEventListener("click", (e) => {
         e.preventDefault();
-        updateTrackOrder("adultepremiere");
+        navigateTo("nouveauClient");
       });
+
+      btSliderNextDejaClient.addEventListener("click", (e) => {
+        e.preventDefault();
+        navigateTo("dejaClient");
+      });
+
+      // Navigation depuis dejaClient vers adulte (3e niveau)
       btSliderNextAdulte.addEventListener("click", (e) => {
         e.preventDefault();
-        updateTrackOrder("adulte");
+        navigateTo("adulteChoixLieu");
       });
+
+      // Boutons retour
       buttonsRetour.forEach(btn => {
         btn.addEventListener("click", () => goBack());
       });
-      modal.on('modal:close', () => goBack());
 
+      // Reset à la fermeture de la modale
+      modal.on('modal:close', () => resetNavigation());
+
+      // Gestion des liens Calendly
       Object.entries(this._config.urls.calendly).forEach(([key, url]) => {
         const button = document.querySelector(`#bt-seance-${key}`);
         if (button) {
@@ -433,12 +458,12 @@ var App = {
         }
       });
 
+      // Ouverture automatique depuis l'URL
       if (window.location.hash === '#prise-rdv') {
-        // event.preventDefault;
         modal.show();
-        var uri = window.location.toString();
+        const uri = window.location.toString();
         if (uri.indexOf("#") > 0) {
-          var clean_uri = uri.substring(0, uri.indexOf("#"));
+          const clean_uri = uri.substring(0, uri.indexOf("#"));
           window.history.replaceState({}, document.title, clean_uri);
         }
       }

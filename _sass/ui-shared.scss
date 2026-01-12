@@ -2276,6 +2276,17 @@ section.newsletter {
       border-bottom-right-radius: var(--bulma-radius-large);
     }
 
+    .paiement-a-reservation {
+      text-align: left;
+      margin-top: var(--bulma-block-spacing);
+      // font-size: var(--bulma-size-7);
+    }
+
+    .introduction.purple-border {
+      text-align: left;
+      padding: 0.75rem;
+    }
+
     .carousel {
       overflow: hidden;
       position: relative;
@@ -2285,6 +2296,7 @@ section.newsletter {
       display: flex;
       transition: transform 0.4s ease-in-out;
       width: 100%; /* 3 panneaux */
+      min-height: 580px;
     }
 
     .carousel-panel {
@@ -2299,6 +2311,14 @@ section.newsletter {
       font-size: var(--bulma-size-small);
     }
 
+  }
+  a#bt-choix-nouveau-client,
+  a#bt-choix-deja-client {
+
+    .title {
+      margin-bottom: 0;
+      line-height: 4rem;
+    }
   }
 
   a.button.is-purple-bordered {

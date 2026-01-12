@@ -283,6 +283,29 @@ textarea.is-purple-bordered.is-success {
 }
 
 #md-prise-rdv .modal-card {
+	color: v.$purple;
+
+	strong {
+		color: v.$purple-heavy;
+	}
+	.purple-border {
+		border-color: v.$purple-light-border;
+	}
+
+	a.button.is-primary {
+		color: #ffffff;
+		background: v.$purple;
+	}
+	a.button.is-primary:hover {
+		background: v.$purple-heavy;
+	}
+	.modal-bt-retour {
+    	color: v.$purple-heavy;
+		border: 2px v.$purple-light-border solid;
+		box-shadow: none;
+		background-color: transparent;
+    }
+
 	.modal-card-body {
 		background-color: #FFFFFF;
 	}
@@ -291,6 +314,10 @@ textarea.is-purple-bordered.is-success {
 		background-color: v.$purple-light;
 		color: v.$purple;
 	}
+
+	.carousel-track {
+    //   min-height: 500px; /* ou la hauteur souhaitée */
+    }
 
 	a.button.is-purple-bordered,
 	div.fake-button {
