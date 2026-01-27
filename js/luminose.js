@@ -1035,7 +1035,6 @@ var App = {
           testTag.textContent = "Test";
           descEl.appendChild(testTag);
         }
-        container.appendChild(clone);
         if (linkEl) {
           const url = pi && String(pi).trim() ? stancerBase + encodeURIComponent(String(pi).trim()) : null;
           if (url) {
@@ -1046,6 +1045,7 @@ var App = {
             linkEl.addEventListener("click", (e) => e.preventDefault());
           }
         }
+        container.appendChild(clone);
       });
       showOne("ps-list");
     };
