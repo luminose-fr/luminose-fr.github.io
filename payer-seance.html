@@ -1,0 +1,168 @@
+---
+layout: essentiel
+title: Paiement de séance
+sitemap: false
+---
+
+<section id="pg-payer-seance" class="section article payer-seance">
+  <div class="container">
+    <div class="content">
+      <h1>Paiement de séance</h1>
+      <div id="payer-seance-root" class="payer-seance-root">
+
+        <div id="ps-loader" class="ps-view">
+          <div class="block has-text-centered mb-5">
+            <p class="mb-4"><span class="icon is-medium"><i class="fas fa-spinner fa-spin"></i></span></p>
+            <p class="mb-5">Récupération des informations en cours…</p>
+          </div>
+          <div class="skeleton-lines">
+            <div class="skeleton-block"></div>
+            <div class="skeleton-block"></div>
+            <div class="skeleton-block"></div>
+          </div>
+        </div>
+
+        <div id="ps-no-email" class="ps-view is-hidden">
+          <div class="notification is-warning is-light">
+            <p>Adresse e-mail manquante. Utilisez le lien envoyé par e-mail pour accéder à cette page.</p>
+            <p>En cas de problème, contactez-moi à <a href="mailto:florent@luminose.fr?subject=Paiement séance">florent@luminose.fr</a>.</p>
+          </div>
+        </div>
+
+        <div id="ps-error" class="ps-view is-hidden">
+          <div class="notification is-danger is-light">
+            <p id="ps-error-msg"></p>
+            <p id="ps-error-retry-wrap"><button type="button" id="ps-error-retry" class="button is-primary">Réessayer</button></p>
+          </div>
+        </div>
+
+        <div id="ps-list" class="ps-view is-hidden">
+          <div class="columns">
+            <div class="column is-8">
+              <p id="ps-list-intro" class="mb-5">Cliquez sur une séance pour accéder au paiement par carte bancaire.</p>
+              <div id="ps-list-items" class="liste-evenements"></div>
+            </div>
+          </div>
+        </div>
+
+        <template id="ps-item-tpl">
+          <a href="#" class="evenement ps-seance-link" target="_blank" rel="noopener">
+            <span class="description">
+              <span class="nom ps-seance-nom"></span>
+              <span class="ps-seance-email"></span>
+              <span class="is-styled-tag ps-seance-date"></span>
+              <span class="is-styled-tag ps-seance-amount"></span>
+            </span>
+          </a>
+        </template>
+
+        <div id="ps-multi" class="ps-view is-hidden">
+          <div class="notification is-warning is-light">
+            <p>Il y a un problème dans les informations dont je dispose (plusieurs clients ou plusieurs séances). J'en ai été informé, je vais vérifier et reviendrai vers vous.</p>
+            <p>Vous pouvez aussi me contacter à <a href="mailto:florent@luminose.fr?subject=Paiement séance - cas multiple">florent@luminose.fr</a>.</p>
+          </div>
+        </div>
+
+        <div id="ps-validation-error" class="ps-view is-hidden">
+          <div class="notification is-warning is-light">
+            <p>Il y a un problème dans les informations dont je dispose (données incomplètes). J'en ai été informé, je vais vérifier et reviendrai vers vous.</p>
+            <p>Vous pouvez aussi me contacter à <a href="mailto:florent@luminose.fr?subject=Paiement séance - données incomplètes">florent@luminose.fr</a>.</p>
+          </div>
+        </div>
+
+        <div id="ps-none" class="ps-view is-hidden">
+          <div class="notification is-info is-light">
+            <p>Il n'y a pas de séance à payer pour cette adresse e-mail.</p>
+          </div>
+        </div>
+
+        <div id="ps-no-client" class="ps-view is-hidden">
+          <div class="notification is-warning is-light">
+            <p>Aucun client trouvé pour cette adresse e-mail.</p>
+            <p>En cas de doute, contactez-moi à <a href="mailto:florent@luminose.fr?subject=Paiement séance - client non trouvé">florent@luminose.fr</a>.</p>
+          </div>
+        </div>
+
+        <div id="ps-form" class="ps-view is-hidden">
+          <p>L'adresse dont je dispose est incomplète. Veuillez la compléter pour pouvoir payer cette séance.</p>
+          <form id="form-adresse-payer-seance" class="payer-seance-form" action="" method="post">
+            <input type="hidden" name="client_id" id="ps-form-client-id" value="">
+            <div class="columns light-bg field is-horizontal">
+              <div class="column is-3"><label class="label">Coordonnées</label></div>
+              <div class="column is-9">
+                <div class="field-body">
+                  <div class="field is-expanded"><p class="control"><input class="input is-purple-bordered" type="text" placeholder="Nom" id="ps-form-nom" readonly disabled></p></div>
+                  <div class="field is-expanded"><p class="control"><input class="input is-purple-bordered" type="email" placeholder="E-mail" id="ps-form-email" readonly disabled></p></div>
+                </div>
+                <p class="help">Ces champs ne sont pas modifiables.</p>
+              </div>
+            </div>
+            <div class="columns light-bg field is-horizontal">
+              <div class="column is-3"><label class="label">Adresse</label></div>
+              <div class="column is-9">
+                <div class="field-body">
+                  <div class="field is-expanded">
+                    <p class="control has-icons-right">
+                      <input class="input is-purple-bordered" type="text" placeholder="Adresse" name="adresse" id="ps-form-adresse" required>
+                      <span class="icon is-small is-right"><i class="fas"></i></span>
+                    </p>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="field is-narrow">
+                    <p class="control has-icons-right">
+                      <input class="input is-purple-bordered" type="text" placeholder="Code postal" name="code_postal" id="ps-form-code-postal" required>
+                      <span class="icon is-small is-right"><i class="fas"></i></span>
+                    </p>
+                  </div>
+                  <div class="field is-expanded">
+                    <p class="control has-icons-right">
+                      <input class="input is-purple-bordered" type="text" placeholder="Ville" name="ville" id="ps-form-ville" required>
+                      <span class="icon is-small is-right"><i class="fas"></i></span>
+                    </p>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="field is-narrow">
+                    <div class="select is-fullwidth">
+                      <select class="is-purple-bordered" name="pays" id="ps-form-pays" required>
+                        <option value="">Pays</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="ps-form-error" class="notification is-danger is-light is-hidden mb-4"></div>
+            <div class="columns field is-horizontal">
+              <div class="column is-3"></div>
+              <div class="column is-9">
+                <button type="submit" class="button is-primary is-medium">Enregistrer l'adresse et continuer</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.ps-view { display: block; }
+.ps-view.is-hidden { display: none !important; }
+</style>
+
+<div id="md-erreur-payer-seance" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Erreur technique <i class="icon fas fa-exclamation-triangle"></i></p>
+    </header>
+    <section class="modal-card-body">
+      <p class="content">Une erreur s'est produite lors de la récupération des informations (<span id="payer-seance-error-details" class="small"></span>).</p>
+      <p class="content">Vous pouvez <button type="button" id="bt-reessayer-payer-seance" class="button is-primary">réessayer</button> ou me contacter à <a href="mailto:florent@luminose.fr?subject=Paiement séance - erreur technique">florent@luminose.fr</a>.</p>
+    </section>
+  </div>
+  <button class="modal-close is-large" aria-label="close" data-bulma-modal="close"></button>
+</div>

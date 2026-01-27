@@ -99,6 +99,11 @@ var App = {
           make_webhook_send_coupon_update_payment_intent: "https://hook.eu1.make.com/7twhzl9jnganhgcy5e5xarvquak10y8r", // TEST
           stripe_script: "https://js.stripe.com/v3/",
         },
+        payer_seance: {
+          make_webhook_seances_a_payer: "https://hook.eu1.make.com/mtqu7fz8xx5v2pg27iee659qli6tdi46", // TEST
+          make_webhook_adresse_client: "https://hook.eu1.make.com/14c3wd70k7d1zmqd2wrnx9ue8kolbsvv",
+          stancer_base: "https://payment.stancer.com/test_", // TEST
+        },
         futura_font: window.location.origin + "/fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff",
       }
     };
@@ -107,6 +112,8 @@ var App = {
       this._config.keys.rh.stripe_public = "pk_live_P2BYIjcwyPoYiBqB9yHQYwAn00hWHz2vkg";
       this._config.urls.rh.make_webhook_get_payment_intent = "https://hook.eu1.make.com/269wcbq6nktemc3pvuuevkp7rbje1iny";
       this._config.urls.rh.make_webhook_send_coupon_update_payment_intent = "https://hook.eu1.make.com/5bz49mf812gykm8p9khxffr9tho7c5ev";
+      this._config.urls.payer_seance.stancer_base = "https://payment.stancer.com/"; // LIVE
+      this._config.urls.payer_seance.make_webhook_seances_a_payer = "https://hook.eu1.make.com/nc3ub8v7a4vgeh9casbtfcbq5deka4x4"; // LIVE
     }
 
     // Appel automatique de la méthode `run` après l'initialisation
@@ -126,6 +133,7 @@ var App = {
     this.setupFormPrefill();
     this.setupFormValidation();
     this.setupPaiementAtelier();
+    this.setupPayerSeance();
     this.respiration.run();
   },
 
@@ -950,7 +958,310 @@ var App = {
       }
     });
   },
-  
+
+  setupPayerSeance: function() {
+    const root = document.getElementById("payer-seance-root");
+    const page = document.getElementById("pg-payer-seance");
+    if (!root || !page) return;
+
+    const cfg = this._config.urls.payer_seance;
+    const webhook1 = cfg.make_webhook_seances_a_payer;
+    const webhook2 = cfg.make_webhook_adresse_client;
+    const stancerBase = cfg.stancer_base;
+    const isTest = this._config.environment !== "production";
+
+    const PS_VIEWS = ["ps-loader", "ps-no-email", "ps-error", "ps-list", "ps-multi", "ps-validation-error", "ps-none", "ps-no-client", "ps-form"];
+
+    const formatDate = (iso) => {
+      try {
+        const d = new Date(iso);
+        const mo = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+        return d.getDate() + " " + mo[d.getMonth()] + " " + d.getFullYear();
+      } catch (e) { return iso || ""; }
+    };
+
+    const hideAll = () => {
+      PS_VIEWS.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("is-hidden");
+      });
+    };
+
+    const showOne = (id) => {
+      hideAll();
+      const el = document.getElementById(id);
+      if (el) el.classList.remove("is-hidden");
+    };
+
+    const showLoader = () => showOne("ps-loader");
+    const showNoEmail = () => showOne("ps-no-email");
+    const showMulti = () => showOne("ps-multi");
+    const showValidationError = () => showOne("ps-validation-error");
+    const showNone = () => showOne("ps-none");
+    const showNoClientFound = () => showOne("ps-no-client");
+
+    const fillError = (msg, showRetry) => {
+      const msgEl = document.getElementById("ps-error-msg");
+      const retryWrap = document.getElementById("ps-error-retry-wrap");
+      if (msgEl) msgEl.textContent = msg || "";
+      if (retryWrap) retryWrap.classList.toggle("is-hidden", !showRetry);
+      showOne("ps-error");
+    };
+
+    const fillList = (data) => {
+      const container = document.getElementById("ps-list-items");
+      const tpl = document.getElementById("ps-item-tpl");
+      if (!container || !tpl) return;
+      container.innerHTML = "";
+      const seances = data.seances || [];
+      seances.forEach((item) => {
+        const pi = item.seance && item.seance.stancer_payment_intent_id;
+        const amount = item.seance && item.seance.stancer_payment_intent_amount != null ? item.seance.stancer_payment_intent_amount + " €" : "—";
+        const dateStr = item.seance && item.seance.date_start ? "Séance du " + formatDate(item.seance.date_start) : "";
+        const clone = tpl.content.cloneNode(true);
+        const linkEl = clone.querySelector(".ps-seance-link");
+        const nomEl = clone.querySelector(".ps-seance-nom");
+        const emailEl = clone.querySelector(".ps-seance-email");
+        const dateEl = clone.querySelector(".ps-seance-date");
+        const amountEl = clone.querySelector(".ps-seance-amount");
+        const descEl = clone.querySelector(".description");
+        if (nomEl) nomEl.textContent = item.nom || "";
+        if (emailEl) emailEl.textContent = item.email || "";
+        if (dateEl) dateEl.textContent = dateStr;
+        if (amountEl) amountEl.textContent = "Montant à régler : " + amount;
+        if (isTest && descEl) {
+          const testTag = document.createElement("span");
+          testTag.className = "is-styled-tag ps-test-tag";
+          testTag.textContent = "Test";
+          descEl.appendChild(testTag);
+        }
+        container.appendChild(clone);
+        if (linkEl) {
+          const url = pi && String(pi).trim() ? stancerBase + encodeURIComponent(String(pi).trim()) : null;
+          if (url) {
+            linkEl.setAttribute("href", url);
+          } else {
+            linkEl.removeAttribute("href");
+            linkEl.setAttribute("aria-disabled", "true");
+            linkEl.addEventListener("click", (e) => e.preventDefault());
+          }
+        }
+      });
+      showOne("ps-list");
+    };
+
+    const fillForm = (data) => {
+      const raw = data.client;
+      const c = Array.isArray(raw) ? raw[0] : (raw || {});
+      const opts = data.country_options || [];
+      const clientId = document.getElementById("ps-form-client-id");
+      const genre = document.getElementById("ps-form-genre");
+      const nom = document.getElementById("ps-form-nom");
+      const email = document.getElementById("ps-form-email");
+      const adresse = document.getElementById("ps-form-adresse");
+      const codePostal = document.getElementById("ps-form-code-postal");
+      const ville = document.getElementById("ps-form-ville");
+      const paysSel = document.getElementById("ps-form-pays");
+      const errEl = document.getElementById("ps-form-error");
+      if (clientId) clientId.value = c.id || "";
+      if (genre) genre.value = c.genre || "";
+      if (nom) nom.value = c.nom || "";
+      if (email) email.value = c.email || "";
+      if (adresse) adresse.value = c.adresse || "";
+      if (codePostal) codePostal.value = c.code_postal || "";
+      if (ville) ville.value = c.ville || "";
+      if (paysSel) {
+        paysSel.innerHTML = '<option value="">Pays</option>';
+        opts.forEach((o) => {
+          const opt = document.createElement("option");
+          opt.value = o.name || "";
+          opt.textContent = o.name || "";
+          if (o.name === c.pays) opt.selected = true;
+          paysSel.appendChild(opt);
+        });
+      }
+      if (errEl) {
+        errEl.classList.add("is-hidden");
+        errEl.textContent = "";
+      }
+      
+      // Ajouter is-danger sur les champs required vides
+      const requiredFields = [adresse, codePostal, ville, paysSel];
+      requiredFields.forEach((field) => {
+        if (field && (!field.value || field.value.trim() === "")) {
+          this._showInputFieldError(field);
+        }
+      });
+      
+      showOne("ps-form");
+    };
+
+    let modalErreurPayerSeance = null;
+    try {
+      modalErreurPayerSeance = new BulmaModal("#md-erreur-payer-seance");
+    } catch (e) { /**/ }
+
+    const showModalError = (details) => {
+      const detailsEl = document.getElementById("payer-seance-error-details");
+      if (detailsEl) detailsEl.textContent = details || "erreur inconnue";
+      if (modalErreurPayerSeance) modalErreurPayerSeance.show();
+    };
+
+    const doRetry = () => {
+      if (modalErreurPayerSeance) modalErreurPayerSeance.close();
+      showLoader();
+      fetchWebhook1();
+    };
+
+    const retryEl = document.getElementById("ps-error-retry");
+    if (retryEl) retryEl.addEventListener("click", doRetry);
+
+    const btModalRetry = document.getElementById("bt-reessayer-payer-seance");
+    if (btModalRetry && modalErreurPayerSeance) {
+      btModalRetry.addEventListener("click", doRetry);
+    }
+
+    const form = document.getElementById("form-adresse-payer-seance");
+    const formErrEl = document.getElementById("ps-form-error");
+    
+    // Setup validation une seule fois comme dans inscription-etape-1
+    if (form && !form.dataset.validated) {
+      form.dataset.validated = "true";
+      const fields = form.querySelectorAll('input[required], select[required]');
+      const that = this;
+      
+      fields.forEach(function(field) {
+        field.addEventListener("blur", (event) => {
+          if (field.value != '') {
+            if (field.validity.valid) {
+              that._showInputFieldValid(field);
+            } else {
+              that._showInputFieldError(field);
+            }
+          } else {
+            if (!that._hasInputFieldError(field)) {
+              that._hideInputFieldInfos(field); 
+            }
+          }
+        });
+        field.addEventListener("input", (event) => {
+          if (that._hasInputFieldError(field)) {
+            if (field.validity.valid) {
+              that._showInputFieldValid(field);
+            }
+          }
+          if (that._hasInputFieldValid(field)) {
+            if (!field.validity.valid) {
+              that._showInputFieldError(field);
+            }
+          }
+        });
+      });
+    }
+    
+    if (form && formErrEl) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        formErrEl.classList.add("is-hidden");
+        formErrEl.textContent = "";
+        const btn = form.querySelector('button[type="submit"]');
+        if (!btn) return;
+        btn.classList.add("is-loading");
+        btn.disabled = true;
+        const fd = new FormData(form);
+        fetch(webhook2, { method: "POST", body: fd })
+          .then((res) => {
+            const ct = (res.headers.get("Content-Type") || "").toLowerCase();
+            if (ct.indexOf("application/json") !== -1) return res.json();
+            return res.text().then(() => { throw new Error("Réponse non-JSON"); });
+          })
+          .then((json) => {
+            btn.classList.remove("is-loading");
+            btn.disabled = false;
+            if (json && json.response_type === "success") {
+              showLoader();
+              fetchWebhook1();
+            } else {
+              formErrEl.textContent = "Une erreur s'est produite. Veuillez réessayer ou me contacter à florent@luminose.fr.";
+              formErrEl.classList.remove("is-hidden");
+            }
+          })
+          .catch(() => {
+            btn.classList.remove("is-loading");
+            btn.disabled = false;
+            formErrEl.textContent = "Erreur de connexion. Veuillez réessayer ou me contacter à florent@luminose.fr.";
+            formErrEl.classList.remove("is-hidden");
+          });
+      });
+    }
+
+    const fetchWebhook1 = () => {
+      const email = (this.getParamFromCurrentPage("email") || "").trim();
+      if (!email) {
+        showNoEmail();
+        return;
+      }
+      const url = webhook1 + (webhook1.indexOf("?") >= 0 ? "&" : "?") + "email=" + encodeURIComponent(email);
+      fetch(url, { method: "GET" })
+        .then((res) => res.text().then((text) => ({ status: res.status, ok: res.ok, text })))
+        .then(({ status, ok, text }) => {
+          let json = null;
+          try {
+            json = JSON.parse(text);
+          } catch (e) {
+            if (!ok) throw new Error("HTTP " + status);
+            throw new Error("JSON invalide renvoyé par le webhook. Dans Make.com, assurez-vous que « client » et « country_options » sont des tableaux (arrays), pas des objets multiples séparés par des virgules.");
+          }
+          if (status === 422 && json && json.response_type === "error") {
+            showValidationError();
+            return { handled: true };
+          }
+          if (!ok) throw new Error("HTTP " + status);
+          return { handled: false, json };
+        })
+        .then((result) => {
+          if (!result || result.handled) return;
+          const json = result.json;
+          if (!json || typeof json.response_type !== "string") {
+            fillError("Réponse invalide du serveur.", true);
+            return;
+          }
+          switch (json.response_type) {
+            case "success":
+              fillList(json);
+              break;
+            case "missing_address":
+              fillForm(json);
+              break;
+            case "multiple_clients_multiple_seances_to_pay":
+              showMulti();
+              break;
+            case "no_seance_to_pay":
+              showNone();
+              break;
+            case "no_client_found":
+              showNoClientFound();
+              break;
+            default:
+              fillError("Réponse inattendue du serveur.", true);
+          }
+        })
+        .catch((err) => {
+          const msg = err && err.message ? err.message : "Erreur réseau ou serveur.";
+          fillError(msg, true);
+          showModalError(msg);
+        });
+    };
+
+    const email = (this.getParamFromCurrentPage("email") || "").trim();
+    if (!email) {
+      showNoEmail();
+      return;
+    }
+    showLoader();
+    fetchWebhook1();
+  },
+
   _hasInputFieldError: function(field) {
       return field.classList.contains("is-danger");
   },

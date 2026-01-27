@@ -200,6 +200,10 @@ textarea.is-purple-bordered.is-success {
 	}
 }
 
+.main-navbar-alt {
+	background: v.$dark-purple-heavy;
+	border: 2px v.$dark-purple-heavy solid;
+  }
 #main-navbar {
 	background-color: v.$dark-purple-heavy;
 
@@ -484,7 +488,8 @@ section.questionnaire-sante {
 	}
 }
 
-section.evenements .liste-evenements {
+section.evenements .liste-evenements,
+section.payer-seance .liste-evenements {
 
 	a.evenement {
   		.description {

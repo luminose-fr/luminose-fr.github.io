@@ -31,6 +31,13 @@
     display: none;
 
   }
+  body.essentiel {
+    #secondary-navbar {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+  }
 
   #relative-navbar {
     display: block;
@@ -331,6 +338,20 @@
         border-bottom: 2px v.$purple-light solid; 
       }
   }
+
+  section.payer-seance {
+    .liste-evenements {
+      .is-styled-tag ~ .is-styled-tag {
+        margin-top: .5rem;
+      }
+      .description > .is-styled-tag {
+        margin-top: 0;
+      }
+      .description > .is-styled-tag ~ .is-styled-tag{
+        margin-top: 0.5rem;
+      }
+    }
+  }
 }
 
 @include mixins.fullhd {
@@ -410,6 +431,7 @@
       margin-top: .5rem;
     }
   }
+  
   section.evenements.push-confirmation {
     .liste-evenements {
       a.evenement {

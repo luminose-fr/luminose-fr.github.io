@@ -1,5 +1,6 @@
 User-agent: *
 Sitemap: /sitemap.xml
+Disallow: /payer-seance.html
 Disallow: /_modules/
 Disallow: /_drafts/
 Disallow: /_sass/

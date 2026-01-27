@@ -1002,6 +1002,12 @@ textarea.is-purple-bordered.is-success {
 .section.header {
   padding: 0;
 }
+.main-navbar-alt {
+  background: v.$purple-light;
+  border: 2px v.$purple-light solid;
+  border-radius: var(--bulma-radius-large);
+  padding: 0.25rem;
+}
 
 body.has-navbar-fixed-top {
   .section.header {
@@ -1526,7 +1532,10 @@ section.article div.highlight {
 body .section.article.evenements:first-of-type {
   padding-bottom:0;
 }
-section.evenements {
+
+
+section.evenements,
+section.payer-seance  {
   .inscription-rapide {
     display: flex;
     padding:.75rem;
@@ -1659,6 +1668,17 @@ section.evenements {
 
   .is-styled-tag {
     margin-top: 0;
+  }
+}
+section.payer-seance .liste-evenements a.evenement .description {
+  width: 100%;
+  border-left: 2px v.$purple-light-border solid;
+  border-top-left-radius: var(--bulma-radius-large);
+  border-bottom-left-radius: var(--bulma-radius-large);
+  padding: 0.5rem 0.75rem;
+
+  .ps-seance-email {
+    display: block;
   }
 }
 .push-confirmation {
@@ -1978,7 +1998,8 @@ section.florent h3.subtitle.is-3.job {
 }
 
 
-section.questionnaire-sante {
+section.questionnaire-sante,
+form.payer-seance-form {
   
   input::-webkit-contacts-auto-fill-button {
     visibility: hidden;
@@ -2243,7 +2264,8 @@ section.newsletter {
     }
   }
 }
-#md-prise-rdv {
+#md-prise-rdv,
+#md-erreur-payer-seance {
   .modal-card {
     .block {
       text-align: center;
