@@ -1013,39 +1013,42 @@ var App = {
       const tpl = document.getElementById("ps-item-tpl");
       if (!container || !tpl) return;
       container.innerHTML = "";
-      const seances = data.seances || [];
-      seances.forEach((item) => {
-        const pi = item.seance && item.seance.stancer_payment_intent_id;
-        const amount = item.seance && item.seance.stancer_payment_intent_amount != null ? item.seance.stancer_payment_intent_amount + " €" : "—";
-        const dateStr = item.seance && item.seance.date_start ? "Séance du " + formatDate(item.seance.date_start) : "";
-        const clone = tpl.content.cloneNode(true);
-        const linkEl = clone.querySelector(".ps-seance-link");
-        const nomEl = clone.querySelector(".ps-seance-nom");
-        const emailEl = clone.querySelector(".ps-seance-email");
-        const dateEl = clone.querySelector(".ps-seance-date");
-        const amountEl = clone.querySelector(".ps-seance-amount");
-        const descEl = clone.querySelector(".description");
-        if (nomEl) nomEl.textContent = item.nom || "";
-        if (emailEl) emailEl.textContent = item.email || "";
-        if (dateEl) dateEl.textContent = dateStr;
-        if (amountEl) amountEl.textContent = "Montant à régler : " + amount;
-        if (isTest && descEl) {
-          const testTag = document.createElement("span");
-          testTag.className = "is-styled-tag ps-test-tag";
-          testTag.textContent = "Test";
-          descEl.appendChild(testTag);
-        }
-        if (linkEl) {
-          const url = pi && String(pi).trim() ? stancerBase + encodeURIComponent(String(pi).trim()) : null;
-          if (url) {
-            linkEl.setAttribute("href", url);
-          } else {
-            linkEl.removeAttribute("href");
-            linkEl.setAttribute("aria-disabled", "true");
-            linkEl.addEventListener("click", (e) => e.preventDefault());
+      const items = data.seances || [];
+      items.forEach((item) => {
+        const sessions = Array.isArray(item.seances) ? item.seances : [];
+        sessions.forEach((seance) => {
+          const pi = seance.stancer_payment_intent_id;
+          const amount = seance.stancer_payment_intent_amount != null ? seance.stancer_payment_intent_amount + " €" : "—";
+          const dateStr = seance.date_start ? "Séance du " + formatDate(seance.date_start) : "";
+          const clone = tpl.content.cloneNode(true);
+          const linkEl = clone.querySelector(".ps-seance-link");
+          const nomEl = clone.querySelector(".ps-seance-nom");
+          const emailEl = clone.querySelector(".ps-seance-email");
+          const dateEl = clone.querySelector(".ps-seance-date");
+          const amountEl = clone.querySelector(".ps-seance-amount");
+          const descEl = clone.querySelector(".description");
+          if (nomEl) nomEl.textContent = item.nom || "";
+          if (emailEl) emailEl.textContent = item.email || "";
+          if (dateEl) dateEl.textContent = dateStr;
+          if (amountEl) amountEl.textContent = "Montant à régler : " + amount;
+          if (isTest && descEl) {
+            const testTag = document.createElement("span");
+            testTag.className = "is-styled-tag ps-test-tag";
+            testTag.textContent = "Test";
+            descEl.appendChild(testTag);
           }
-        }
-        container.appendChild(clone);
+          if (linkEl) {
+            const url = pi && String(pi).trim() ? stancerBase + encodeURIComponent(String(pi).trim()) : null;
+            if (url) {
+              linkEl.setAttribute("href", url);
+            } else {
+              linkEl.removeAttribute("href");
+              linkEl.setAttribute("aria-disabled", "true");
+              linkEl.addEventListener("click", (e) => e.preventDefault());
+            }
+          }
+          container.appendChild(clone);
+        });
       });
       showOne("ps-list");
     };
