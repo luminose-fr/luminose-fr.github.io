@@ -18,7 +18,7 @@ summary: "<p>L'intelligence artificielle s'invite désormais dans nos confidence
       
       <div class="columns summary-container">
         <div class="column is-5">
-          <span class="banner-image-container"><img class="banner" src="/images/blog/{{ page.image_name }}.jpg" srcset="/images/blog/{{ page.image_name }}.jpg, /images/blog/{{ page.image_name }}@2x.jpg 2x" alt="{{ page.title }}"></span>
+          <span class="banner-image-container">{% img_optimized "blog/{{ page.image_name }}.jpg" alt="{{ page.title }}" class="banner" %}</span>
         </div>
         <div class="column is-7 purple-border">
             <h3>En résumé</h3>
@@ -51,7 +51,7 @@ summary: "<p>L'intelligence artificielle s'invite désormais dans nos confidence
                 </ul>
             </div>
 
-      <p><img class="banner" src="/images/blog/instrument-resonance.jpg" srcset="/images/blog/instrument-resonance.jpg, /images/blog/instrument-resonance@2x.jpg 2x" alt="Thérapeute, instrument de résonance"></p>
+      <p>{% img_optimized "blog/instrument-resonance.jpg" alt="Thérapeute, instrument de résonance" class="banner" %}</p>
       
 
       <h2>La Carte n'est pas le Territoire</h2>
@@ -61,7 +61,7 @@ summary: "<p>L'intelligence artificielle s'invite désormais dans nos confidence
         <li><strong>Le thérapeute est un compagnon de voyage :</strong> Il ne se contente pas de tenir la carte. Il descend avec vous dans le territoire sauvage de votre intériorité. Il accepte d'être touché par votre histoire, de marcher à vos côtés dans la brume du "Seuil".</li>
       </ul>
 
-      <p><img class="banner" src="/images/blog/carte-territoire.jpg" srcset="/images/blog/carte-territoire.jpg, /images/blog/carte-territoire@2x.jpg 2x" alt="La carte n'est pas le territoire"></p>
+      <p>{% img_optimized "blog/carte-territoire.jpg" alt="La carte n'est pas le territoire" class="banner" %}</p>
       
 
       <h2>En conclusion : Au-delà de l'information</h2>

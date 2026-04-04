@@ -22,7 +22,7 @@ summary: <p>Voici mes vœux pour cette nouvelle année 2024 !</p><p>Ce texte a �
 
 	  <div class="columns summary-container">
 		<div class="column is-5">
-		  <span class="banner-image-container"><img class="banner" src="/images/blog/{{ page.image_name }}.jpg" srcset="/images/blog/{{ page.image_name }}.jpg, /images/blog/{{ page.image_name }}@2x.jpg 2x" alt="{{ post.title }}"></span>
+		  <span class="banner-image-container">{% img_optimized "blog/{{ page.image_name }}.jpg" alt="{{ post.title }}" class="banner" %}</span>
 		</div>
 		<div class="column is-7 purple-border">
 			<h3>En résumé</h3>
@@ -51,7 +51,7 @@ summary: <p>Voici mes vœux pour cette nouvelle année 2024 !</p><p>Ce texte a �
 	  
       <div class="columns is-vcentered">
           <div class="column is-4">
-            <img class="fill" src="/images/blog/albert-einstein.jpg" srcset="/images/blog/albert-einstein.jpg, /images/blog/albert-einstein@2x.jpg 2x" alt="Albert Einstein">
+            {% img_optimized "blog/albert-einstein.jpg" alt="Albert Einstein" class="fill" %}
           </div>
         <div class="column is-8">
           <h3>«&nbsp;Une personne intelligente résout un problème. Une personne sage l'évite.&nbsp;»</h3>
@@ -62,7 +62,7 @@ summary: <p>Voici mes vœux pour cette nouvelle année 2024 !</p><p>Ce texte a �
 	  
 	  
 	  
-	  <img src="/images/blog/nouveaux-choix.jpg" srcset="/images/blog/nouveaux-choix.jpg, /images/blog/nouveaux-choix@2x.jpg 2x" alt="Nouveaux choix">
+	  {% img_optimized "blog/nouveaux-choix.jpg" alt="Nouveaux choix" %}
 	  <h2>Nouvelle année, nouveaux choix ?</h2>
 	  <p>Souvent, l'arrivée d'une nouvelle année est l'occasion de s'engager dans de nouveaux choix, de nouvelles activités, de nouveaux défis, etc. Et je trouve ça très bien !</p>
 

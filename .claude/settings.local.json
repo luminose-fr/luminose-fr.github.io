@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod +x /Users/flornet/Sites/luminose.optimized.fr/scripts/generate-image-variants.sh)",
+      "Bash(bundle install:*)",
+      "Bash(ruby --version)",
+      "Read(//Users/flornet/.rbenv/shims/**)",
+      "Read(//Users/flornet/.rvm/**)",
+      "Bash(gem install:*)",
+      "Bash(./scripts/generate-image-variants.sh)",
+      "Bash(brew list:*)",
+      "Bash(bundle exec:*)",
+      "Bash(gem env:*)",
+      "Bash(dpkg -l)",
+      "Bash(bundle --version)",
+      "Bash(brew --version)",
+      "Bash(python3 -c \":*)",
+      "Bash(git status:*)",
+      "Bash(git checkout:*)",
+      "Bash(find images/ -name \"*-*w.*\" -delete)",
+      "Bash(find images/ -name \"*.webp\" -delete)"
+    ]
+  }
+}
