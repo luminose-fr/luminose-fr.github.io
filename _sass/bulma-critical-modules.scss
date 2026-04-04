@@ -1,0 +1,31 @@
+// Bulma 1.0.4 - Modules critiques pour l'above-the-fold
+// Contient uniquement ce qui est necessaire au premier ecran
+
+@forward "bulma-1.0.4/sass/utilities";
+@forward "bulma-1.0.4/sass/themes";
+@forward "bulma-1.0.4/sass/base";
+
+// Elements critiques (visibles au premier ecran)
+@forward "bulma-1.0.4/sass/elements/block";
+@forward "bulma-1.0.4/sass/elements/button";
+@forward "bulma-1.0.4/sass/elements/content";
+@forward "bulma-1.0.4/sass/elements/icon";
+@forward "bulma-1.0.4/sass/elements/image";
+@forward "bulma-1.0.4/sass/elements/tag";
+@forward "bulma-1.0.4/sass/elements/title";
+
+// Composants critiques
+@forward "bulma-1.0.4/sass/components/navbar";
+
+// Grid (colonnes visibles au premier ecran)
+@forward "bulma-1.0.4/sass/grid";
+
+// Layout
+@forward "bulma-1.0.4/sass/layout/container";
+@forward "bulma-1.0.4/sass/layout/section";
+
+// Helpers critiques (responsive visibility, typographie, espacement)
+@forward "bulma-1.0.4/sass/helpers/flexbox";
+@forward "bulma-1.0.4/sass/helpers/spacing";
+@forward "bulma-1.0.4/sass/helpers/typography";
+@forward "bulma-1.0.4/sass/helpers/visibility";
