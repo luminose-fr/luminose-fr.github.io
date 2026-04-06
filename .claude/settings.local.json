@@ -31,7 +31,9 @@
       "Bash(grep -r \"background-image\\\\|background:\" /Users/flornet/Sites/luminose.optimized.fr/_sass/*.scss)",
       "Bash(grep -E \"section.accroche|\\\\.accroche|is-2|title.is-2\" /Users/flornet/Sites/luminose.optimized.fr/_sass/*.scss)",
       "Bash(ls -lh /Users/flornet/Sites/luminose.optimized.fr/images/luminose-logo*)",
-      "Bash(identify /Users/flornet/Sites/luminose.optimized.fr/images/florent-198w.png)"
+      "Bash(identify /Users/flornet/Sites/luminose.optimized.fr/images/florent-198w.png)",
+      "Bash(grep -oh '<img [^>]*>' _evenements/*.html)",
+      "Bash(python3:*)"
     ]
   }
 }
