@@ -12,13 +12,12 @@
 // Le reste des styles est dans main.css, charge en asynchrone.
 // ============================================
 
-// 1. Fonts (les @font-face doivent etre declares tot pour que
-//    le navigateur commence a telecharger les polices)
-@use "ui-fonts.scss";
+// 1. Fonts (@font-face uniquement, sans les classes .icon-*)
+@use "ui-fonts-faces";
 
 // 2. Bulma - modules critiques uniquement
-//    (navbar, container, section, columns, button, title, tag, content,
-//     visibility/spacing/typography helpers)
+//    (navbar, container, section, columns, button, title, icon,
+//     visibility helpers)
 @use "ui-variables" as v;
 @use "bulma-critical-modules" with (
   $family-secondary: v.$family-serif,
