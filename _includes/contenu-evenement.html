@@ -24,7 +24,7 @@
                 {% endif %}
             {% endif %}
 
-            {{ page.html_programme }}
+            {{ page.html_programme | liquify }}
 
             <h2>Informations pratiques</h2>
 
@@ -54,8 +54,8 @@
                     </div>
                     <div class="column is-8 is-9-widescreen">
                         <div class="light-bg">
-                            {{ page.html_lieu_instructions }}
-                            {{ page.html_lieu_adresse }}
+                            {{ page.html_lieu_instructions | liquify }}
+                            {{ page.html_lieu_adresse | liquify }}
                         </div>
                     </div>
                     {% endif %}
