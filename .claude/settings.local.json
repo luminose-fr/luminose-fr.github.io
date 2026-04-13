@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod +x /Users/flornet/Sites/luminose.optimized.fr/scripts/generate-image-variants.sh)",
+      "Bash(bundle install:*)",
+      "Bash(ruby --version)",
+      "Read(//Users/flornet/.rbenv/shims/**)",
+      "Read(//Users/flornet/.rvm/**)",
+      "Bash(gem install:*)",
+      "Bash(./scripts/generate-image-variants.sh)",
+      "Bash(brew list:*)",
+      "Bash(bundle exec:*)",
+      "Bash(gem env:*)",
+      "Bash(dpkg -l)",
+      "Bash(bundle --version)",
+      "Bash(brew --version)",
+      "Bash(python3 -c \":*)",
+      "Bash(git status:*)",
+      "Bash(git checkout:*)",
+      "Bash(find images/ -name \"*-*w.*\" -delete)",
+      "Bash(find images/ -name \"*.webp\" -delete)",
+      "Bash(gzip -c /Users/flornet/Sites/luminose.optimized.fr/_site/css/luminose.css)",
+      "Bash(grep -n \"^[^/]*{$\\\\|^@\\\\|^\\\\.\" /Users/flornet/Sites/luminose.optimized.fr/_sass/ui-shared.scss)",
+      "Bash(ls css/*.scss)",
+      "WebSearch",
+      "WebFetch(domain:www.googleapis.com)",
+      "Bash(curl -s \"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https://www.luminose.fr/&strategy=mobile&category=performance\")",
+      "Bash(brew install:*)",
+      "Bash(find /Users/flornet/Sites/luminose.optimized.fr/_sass -type f -name *.scss)",
+      "Bash(identify /Users/flornet/Sites/luminose.optimized.fr/images/florent@2x.png)",
+      "Bash(grep -r \"background-image\\\\|background:\" /Users/flornet/Sites/luminose.optimized.fr/_sass/*.scss)",
+      "Bash(grep -E \"section.accroche|\\\\.accroche|is-2|title.is-2\" /Users/flornet/Sites/luminose.optimized.fr/_sass/*.scss)",
+      "Bash(ls -lh /Users/flornet/Sites/luminose.optimized.fr/images/luminose-logo*)",
+      "Bash(identify /Users/flornet/Sites/luminose.optimized.fr/images/florent-198w.png)",
+      "Bash(grep -oh '<img [^>]*>' _evenements/*.html)",
+      "Bash(python3:*)"
+    ]
+  }
+}

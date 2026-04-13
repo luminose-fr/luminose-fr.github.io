@@ -2,3 +2,10 @@ _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
+
+# Variantes d'images générées par le plugin image_variants_generator.rb
+# (régénérées automatiquement à chaque jekyll build)
+images/**/*-*w.jpg
+images/**/*-*w.png
+images/**/*-*w.webp
+images/**/*.webp

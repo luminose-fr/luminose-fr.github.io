@@ -13,8 +13,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   {% if page.sitemap == false %}<meta name="robots" content="noindex">{% endif %}
   <title>{{ title }}</title>
-  <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
-  <link rel="stylesheet" href="/css/luminose.css">
+  {% if page.preload_image %}
+  <link rel="preload" as="image" type="image/webp" href="{{ page.preload_image }}">
+  {% endif %}
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/5313918/7a337894-f253-4a5d-a63e-0d8275cedec5.woff2" crossorigin>
+  <link rel="stylesheet" href="/css/critical.css">
+  <link rel="stylesheet" href="/css/main.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://fast.fonts.net/lt/1.css?apiType=css&c=7d5eecea-6a78-405f-9101-8527f4dd7b18&fontids=5313918" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://fast.fonts.net/lt/1.css?apiType=css&c=7d5eecea-6a78-405f-9101-8527f4dd7b18&fontids=5313918">
+    <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+  </noscript>
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">

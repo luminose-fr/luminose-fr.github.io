@@ -25,7 +25,7 @@ summary: |
 
       <div class="columns summary-container">
         <div class="column is-5">
-          <span class="banner-image-container"><img class="banner" src="/images/blog/{{ page.image_name }}.jpg" srcset="/images/blog/{{ page.image_name }}.jpg, /images/blog/{{ page.image_name }}@2x.jpg 2x" alt="{{ post.title }}"></span>
+          <span class="banner-image-container">{% img_optimized "blog/{{ page.image_name }}.jpg" alt="{{ post.title }}" class="banner" %}</span>
         </div>
         <div class="column is-7 purple-border">
             <h3>En résumé</h3>
@@ -44,7 +44,7 @@ summary: |
 
       <div class="columns">
         <div class="column is-6">
-          <img src="/images/blog/triangle-amour-sternberg-simple.png" srcset="/images/blog/triangle-amour-sternberg-simple.png, /images/blog/triangle-amour-sternberg-simple@2x.png 2x" alt="Triangle de l'amour selon Robert Sternberg">
+          {% img_optimized "blog/triangle-amour-sternberg-simple.png" alt="Triangle de l'amour selon Robert Sternberg" %}
         </div>
         <div class="column is-6">
           <ol>
@@ -69,7 +69,7 @@ summary: |
         <li><strong>Amour accompli (intimité + passion + engagement) :</strong> Le paradis des jardiniers ! Tous les éléments sont là pour un jardin épanoui.</li>
       </ol>
 
-      <p><img class="fill" src="/images/blog/triangle-amour-sternberg-detaille.png" srcset="/images/blog/triangle-amour-sternberg-detaille.png, /images/blog/triangle-amour-sternberg-detaille@2x.png 2x" alt="Triangle de l'amour selon Robert Sternberg - version détaillée"></p>
+      <p>{% img_optimized "blog/triangle-amour-sternberg-detaille.png" alt="Triangle de l'amour selon Robert Sternberg - version détaillée" class="fill" %}</p>
 
       <h2>Comment ça pousse tout ça ?</h2>
 
@@ -111,7 +111,7 @@ summary: |
       <h2>Et vous, quel jardinier de l'amour êtes-vous ?</h2>
 
       <p>Prenez un moment pour observer votre jardin relationnel. Sur une échelle de 1 à 10, évaluez la qualité de votre terreau, l'éclat de vos fleurs et la solidité de votre clôture. C'est comme faire un bilan de santé pour votre couple !</p>
-      <p class="purple-border"><img src="/images/blog/evaluer-dimensions-amour.png" srcset="/images/blog/evaluer-dimensions-amour.png, /images/blog/evaluer-dimensions-amour@2x.png 2x" alt="Evaluer les dimensions de l'amour"></p>
+      <p class="purple-border">{% img_optimized "blog/evaluer-dimensions-amour.png" alt="Evaluer les dimensions de l'amour" %}</p>
       <p>Ensuite, demandez-vous : que voulez-vous cultiver davantage ? Plus de fleurs colorées ? Un terreau plus riche ? Ou peut-être une clôture plus solide ?</p>
       <p>N'oubliez pas : chaque couple a son propre style de jardin. L'important, c'est de jardiner ensemble !</p>
 

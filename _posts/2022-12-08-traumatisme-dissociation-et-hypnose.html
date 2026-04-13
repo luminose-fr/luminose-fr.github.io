@@ -29,7 +29,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 
 	  <div class="columns summary-container">
 		<div class="column is-5">
-		  <span class="banner-image-container"><img class="banner" src="/images/blog/{{ page.image_name }}.jpg" srcset="/images/blog/{{ page.image_name }}.jpg, /images/blog/{{ page.image_name }}@2x.jpg 2x" alt="{{ post.title }}"></span>
+		  <span class="banner-image-container">{% img_optimized "blog/{{ page.image_name }}.jpg" alt="{{ post.title }}" class="banner" %}</span>
 		</div>
 		<div class="column is-7 purple-border">
 			<h3>Sommaire</h3>
@@ -116,7 +116,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 			<li>Les psychotraumatismes de type II liés aux violences répétées sont les plus fréquents.</li>
 		</ul>
 		<figure>
-			<img class="banner" data-action="zoom" src="/images/blog/traumatisme-statistiques.jpg" srcset="/images/blog/traumatisme-statistiques.jpg, /images/blog/traumatisme-statistiques@2x.jpg 2x" alt="Traumatisme statistiques">
+			{% img_optimized "blog/traumatisme-statistiques.jpg" alt="Traumatisme statistiques" class="banner" data-action="zoom" %}
 			<figcaption>Figure 2 - Statistiques sur les traumatismes</figcaption>
 		</figure>
 		
@@ -158,7 +158,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 		</div>
 		<p>Ce mécanisme peut s’illustrer de la façon suivante :</p>
 		<figure>
-			<img class="banner" data-action="zoom" src="/images/blog/dissociation-mecanisme.jpg" srcset="/images/blog/dissociation-mecanisme.jpg, /images/blog/dissociation-mecanisme@2x.jpg 2x" alt="Mécanisme de dissociation">
+			{% img_optimized "blog/dissociation-mecanisme.jpg" alt="Mécanisme de dissociation" class="banner" data-action="zoom" %}
 			<figcaption>Figure 3 - Le mécanisme de dissociation</figcaption>
 		</figure>
 		
@@ -177,7 +177,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 		<p>Des troubles peuvent apparaître suite à cette expérience de dissociation traumatique. Nous pourrions l’illustrer de la façon suivante :</p>
 		
 		<figure>
-			<img class="banner" data-action="zoom" src="/images/blog/dissociation-traumatique.jpg" srcset="/images/blog/dissociation-traumatique.jpg, /images/blog/dissociation-traumatique@2x.jpg 2x" alt="Dissociation traumatique">
+			{% img_optimized "blog/dissociation-traumatique.jpg" alt="Dissociation traumatique" class="banner" data-action="zoom" %}
 			<figcaption>Figure 4 - Les troubles dissociatifs post-traumatiques</figcaption>
 		</figure>
 		
@@ -220,7 +220,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 		<p>Un autre modèle considère la « dissociation comme un continuum » qui s’étend de « normal » (non-pathologique) à « pathologique » (Bernstein & Putnam, 1986 ; Butler, 2006).</p>
 		<p>Voici un aperçu (imparfait mais synthétique) de ces modèles en regard des classifications dans le DSM et la CIM :</p>
 		<figure>
-			<img class="banner" data-action="zoom" src="/images/blog/modeles-theoriques-dissociation.jpg" srcset="/images/blog/modeles-theoriques-dissociation.jpg, /images/blog/modeles-theoriques-dissociation@2x.jpg 2x" alt="Modèle et classification des troubles dissociatifs">
+			{% img_optimized "blog/modeles-theoriques-dissociation.jpg" alt="Modèle et classification des troubles dissociatifs" class="banner" data-action="zoom" %}
 			<figcaption>Figure 5 - Les principaux modèles et classifications des troubles dissociatifs</figcaption>
 		</figure>
 		<p>L’apport spécifique du modèle de la dissociation structurelle est la notion de « parties » de la personnalité qu’ils nomment Partie Apparemment Normale de la personnalité (PAN ou PANP selon les ouvrages) et Partie Émotionnelle de la personnalité (PE ou PEP). La terminologie n’est pas idéale et les auteurs la revisitent dans leur ouvrage de 2018 : « Dans ce livre, nous allons donc nous référer aux <strong>PAN comme des parties qui fonctionnent dans la vie quotidienne</strong>, indépendamment de leur apparence de normalité ou de dysfonctionnement. [...] nous nous référerons aux <strong>PE comme parties fixées dans le traumatisme</strong>. » (Steele, Boon & Van Der Hart, 2018).</p>
@@ -298,7 +298,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 		<p>Une des <strong>difficultés</strong> pour le thérapeute est la <strong>nature « cachée » des symptômes dissociatifs</strong>. En effet « le patient n’en est pas conscient, en est honteux ou ne sait pas comment décrire ses expériences » (Steele, Boon & Van Der Hart, 2018).</p>
 		<p>Voici une liste construite sur la base d’ouvrages, de publications, d’outils de diagnostic et d’entretiens réalisés avec des personnes ayant vécu des troubles dissociatifs post-traumatiques et des thérapeutes. Cette liste n’est bien entendu pas exhaustive ; elle a pour principal but d’aider le thérapeute à identifier des signes d’une possible dissociation :</p>
 		<figure>
-			<img class="banner" data-action="zoom" src="/images/blog/dissociation-traumatique-symptomes.jpg" srcset="/images/blog/dissociation-traumatique-symptomes.jpg, /images/blog/dissociation-traumatique-symptomes@2x.jpg 2x" alt="Symptômes de dissociation traumatique">
+			{% img_optimized "blog/dissociation-traumatique-symptomes.jpg" alt="Symptômes de dissociation traumatique" class="banner" data-action="zoom" %}
 			<figcaption>Figure 7 - Principaux symptômes de troubles dissociatifs</figcaption>
 		</figure>
 		<p>Selon les modèles théoriques, certains des phénomènes peuvent sembler plus « normaux » (ou plus courants) que d’autres. Les outils de diagnostic fonctionnent généralement avec des scores et des seuils au-delà desquels les phénomènes sont considérés comme pathologiques ; il faut donc que plusieurs des symptômes soient présents pour que le phénomène soit considéré comme pathologique. Concernant l’impression d’avoir plusieurs « parties » de personnalité, une façon de déterminer ce qui est « normal » de ce qui est « pathologique » est que</p>
@@ -382,7 +382,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 		<p>Pour Steele, Boon et Van Der Hart (2018) : « Le traitement des patients souffrant d’un trouble dissociatif est échelonné afin d’aider à développer les capacités cognitives, émotionnelles, somatiques et relationnelles nécessaires au début du traitement. »</p>
 		<p>Le schéma suivant présente succinctement ces 3 phases qui serviront de balises pour le thérapeute :</p>
 		<figure>
-			<img class="banner" data-action="zoom" src="/images/blog/traumatisme-traitement-phases.jpg" srcset="/images/blog/traumatisme-traitement-phases.jpg, /images/blog/traumatisme-traitement-phases@2x.jpg 2x" alt="Le traitement par phases des traumatismes">
+			{% img_optimized "blog/traumatisme-traitement-phases.jpg" alt="Le traitement par phases des traumatismes" class="banner" data-action="zoom" %}
 			<figcaption>Figure 8 - Le traitement des traumatismes par phases</figcaption>
 		</figure>
 		<p>Cette approche par phases implique que <strong>l’accompagnement se fera sur plusieurs séances</strong> et que <strong>les premières séances ne devront pas s’orienter sur les souvenirs traumatiques</strong> (autrement dit, il semble peu approprié de faire une régression à la première séance).</p>
@@ -445,7 +445,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 		</ol>
 		<p>On pourrait résumer la démarche générale par la formule de Ken Wilber (2001) : <strong>« transcender et inclure »</strong>. L’intégration des parties peut se produire tout au long de l’accompagnement de façon spontanée. Cependant, c’est plutôt lors de la phase 3 que le travail sera explicitement orienté vers l’intégration, graduellement. La ligne de conduite à suivre pour permettre l’intégration peut se présenter ainsi :</p>
 		<figure>
-			<img class="banner" data-action="zoom" src="/images/blog/travail-avec-les-parties.jpg" srcset="/images/blog/travail-avec-les-parties.jpg, /images/blog/travail-avec-les-parties@2x.jpg 2x" alt="Travailler avec les parts dissociées de la personnalité">
+			{% img_optimized "blog/travail-avec-les-parties.jpg" alt="Travailler avec les parts dissociées de la personnalité" class="banner" data-action="zoom" %}
 			<figcaption>Figure 9 - Ligne de conduite pour travailler avec les parties dissociées de la personnalité</figcaption>
 		</figure>
 		
@@ -682,7 +682,7 @@ summary: <p>Comprenez la dissociation d'origine traumatique et les conséquences
 			  		<p>L’évaluation de la progression et d’une stabilité suffisante pour commencer le travail avec des souvenirs traumatiques peut se faire de façon plus ou moins formelle et structurée. Elle est dans tous les cas pertinente pour le thérapeute et pour le patient (qui prendra peut-être conscience de ses progrès).</p>
 			  		<p>Steele, Boon et Van Der Hart (2018) proposent en annexe un outil de « pronostic et échelle de cotation du progrès dans le traitement des troubles dissociatifs ». Dellucci (2016) propose la séquence de questions suivante qui peut être utilisée tout au long du processus thérapeutique pour évaluer et maintenir la stabilité :</p>
 			  		<figure>
-						<img class="banner" data-action="zoom" src="/images/blog/traumatisme-evaluer-stabilite.jpg" srcset="/images/blog/traumatisme-evaluer-stabilite.jpg, /images/blog/traumatisme-evaluer-stabilite@2x.jpg 2x" alt="Questionnement en arborescence pour évaluer et maintenir la stabilité et la sécurité.">
+						{% img_optimized "blog/traumatisme-evaluer-stabilite.jpg" alt="Questionnement en arborescence pour évaluer et maintenir la stabilité et la sécurité." class="banner" data-action="zoom" %}
    				     	<figcaption>Figure 11 - Questionnement en arborescence pour évaluer et maintenir la stabilité et la sécurité.</figcaption>
 					</figure>
 				</div>

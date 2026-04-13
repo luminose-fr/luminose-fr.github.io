@@ -1,0 +1,39 @@
+---
+---
+
+@charset "utf-8";
+
+// ============================================
+// CRITICAL CSS - Above the fold
+// ============================================
+// Ce fichier contient uniquement les styles necessaires au rendu
+// du premier ecran (above the fold) pour TOUTES les pages du site.
+// Il est charge de maniere synchrone (render-blocking).
+// Le reste des styles est dans main.css, charge en asynchrone.
+// ============================================
+
+// 1. Fonts (@font-face uniquement, sans les classes .icon-*)
+@use "ui-fonts-faces";
+
+// 2. Bulma - modules critiques uniquement
+//    (navbar, container, section, columns, button, title, icon,
+//     visibility helpers)
+@use "ui-variables" as v;
+@use "bulma-critical-modules" with (
+  $family-secondary: v.$family-serif,
+  $text: v.$purple,
+  $text-strong: v.$purple-heavy,
+  $strong-color: v.$purple-heavy,
+  $body-family: v.$family-sans-serif,
+  $title-family: v.$family-serif,
+  $title-color: v.$purple,
+  $body-size: 16px,
+  $primary: v.$purple,
+  $link: v.$purple-heavy,
+  $title-weight: 300,
+  $subtitle-weight: 300,
+  $radius-large: 8px,
+);
+
+// 3. Styles critiques custom (navigation, typographie de base)
+@use "ui-critical";

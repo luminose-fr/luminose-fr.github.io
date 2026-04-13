@@ -1,0 +1,51 @@
+// Bulma 1.0.4 - Import selectif (modules utilises uniquement)
+// Modules exclus : hero, progress, breadcrumb, dropdown, pagination, delete, file
+
+@forward "bulma-1.0.4/sass/utilities";
+@forward "bulma-1.0.4/sass/themes";
+@forward "bulma-1.0.4/sass/base";
+
+// Elements (sans delete, progress)
+@forward "bulma-1.0.4/sass/elements/block";
+@forward "bulma-1.0.4/sass/elements/box";
+@forward "bulma-1.0.4/sass/elements/button";
+@forward "bulma-1.0.4/sass/elements/content";
+@forward "bulma-1.0.4/sass/elements/icon";
+@forward "bulma-1.0.4/sass/elements/image";
+@forward "bulma-1.0.4/sass/elements/loader";
+@forward "bulma-1.0.4/sass/elements/notification";
+@forward "bulma-1.0.4/sass/elements/table";
+@forward "bulma-1.0.4/sass/elements/tag";
+@forward "bulma-1.0.4/sass/elements/title";
+
+// Form (sans file)
+@forward "bulma-1.0.4/sass/form/shared";
+@forward "bulma-1.0.4/sass/form/input-textarea";
+@forward "bulma-1.0.4/sass/form/checkbox-radio";
+@forward "bulma-1.0.4/sass/form/select";
+@forward "bulma-1.0.4/sass/form/tools";
+
+// Components (sans breadcrumb, dropdown, pagination)
+@forward "bulma-1.0.4/sass/components/card";
+@forward "bulma-1.0.4/sass/components/menu";
+@forward "bulma-1.0.4/sass/components/message";
+@forward "bulma-1.0.4/sass/components/modal";
+@forward "bulma-1.0.4/sass/components/navbar";
+@forward "bulma-1.0.4/sass/components/panel";
+@forward "bulma-1.0.4/sass/components/tabs";
+
+// Grid
+@forward "bulma-1.0.4/sass/grid";
+
+// Layout (sans hero)
+@forward "bulma-1.0.4/sass/layout/container";
+@forward "bulma-1.0.4/sass/layout/footer";
+@forward "bulma-1.0.4/sass/layout/level";
+@forward "bulma-1.0.4/sass/layout/media";
+@forward "bulma-1.0.4/sass/layout/section";
+
+// Skeleton
+@forward "bulma-1.0.4/sass/base/skeleton";
+
+// Helpers
+@forward "bulma-1.0.4/sass/helpers";

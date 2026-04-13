@@ -1,0 +1,356 @@
+// ============================================
+// Styles critiques pour l'above-the-fold
+// ============================================
+// Extrait des styles de ui-shared.scss et ui-specifics.scss
+// necessaires au premier rendu de chaque page :
+// - Typographie de base
+// - Navigation (header, navbars)
+// - Boutons (CTA dans la navbar)
+// ============================================
+
+@use "ui-variables" as v;
+
+// --- Typographie de base ---
+
+body,
+body * {
+  letter-spacing: 0.02em;
+}
+
+strong {
+  font-family: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.title.is-2,
+.article .content h2,
+.section.respiration-holotropique h2 {
+  color: v.$purple;
+  font-size: var(--bulma-size-3);
+  font-family: "Abril Display W05 Italic", serif;
+  font-weight: 300;
+  position: relative;
+}
+
+.title.is-3,
+.article .content h3,
+.section.respiration-holotropique h3 {
+  font-family: 'Futura LT W05 Book', sans-serif;
+  font-weight: 300;
+  font-size: var(--bulma-size-6);
+  color: v.$purple;
+  text-transform: uppercase;
+}
+
+// --- Boutons (visibles dans la navbar) ---
+
+#main-navbar .navbar-start>.navbar-item.button.is-primary {
+  color: #ffffff;
+}
+
+#secondary-navbar .navbar-end>.navbar-item {
+  color: v.$purple;
+}
+
+a.button.bt-evenements {
+  margin-right: 0.75rem;
+}
+
+#secondary-navbar a.button.bt-evenements {
+  margin-right: 0.25rem;
+}
+a.button.bt-evenements.is-active {
+  border: 2px #FFFFFF solid;
+}
+
+a.button.is-primary:hover {
+  background: v.$purple-heavy;
+}
+
+a.button.is-white {
+  background: #ffffff;
+  color: v.$purple-heavy;
+  transition: background-color 0.3s ease;
+}
+
+a.button.is-white:hover,
+button.button.is-white:hover {
+  background: v.$purple-light;
+  color: v.$purple-heavy;
+}
+
+a.button.is-purple-bordered,
+button.button.is-purple-bordered {
+  color: v.$purple-heavy;
+  border: 2px v.$purple-light-border solid;
+  box-shadow: none;
+}
+
+// --- Navigation ---
+
+.section.header {
+  padding: 0;
+}
+
+.main-navbar-alt {
+  background: v.$purple-light;
+  border: 2px v.$purple-light solid;
+  border-radius: var(--bulma-radius-large);
+  padding: 0.25rem;
+}
+
+body.has-navbar-fixed-top {
+  .section.header {
+    padding-bottom: 1rem;
+  }
+  #main-navbar .navbar-end a.button.bt-evenements.is-active {
+    background: v.$purple-light;
+    border: 2px v.$purple-light solid;
+  }
+}
+
+body.has-relative-navbar-fixed-top {
+  .section.header {
+    padding-bottom: 5.14rem;
+  }
+}
+
+#secondary-navbar {
+  padding-top: 1rem;
+  padding-bottom: 0.25rem;
+
+  .navbar-end {
+
+    .navbar-item {
+      border-radius: var(--bulma-radius-large);
+      margin: 1.25rem 0 1.25rem 0.25rem;
+    }
+
+    .navbar-item.is-active {
+      background-color: v.$purple-light;
+      color: v.$purple-heavy;
+    }
+  }
+}
+
+#main-navbar {
+  min-height: 0;
+  background-color: v.$purple-light;
+  border-radius: var(--bulma-radius-large);
+  padding: 0.75rem;
+
+  .container {
+    min-height: 0;
+
+    .navbar-brand.mobile-navbar-brand {
+      display: block;
+
+      .navbar-item.button {
+        display: inline-block;
+      }
+    }
+  }
+
+  .navbar-menu {
+
+    .navbar-start a.button {
+      margin: 0;
+    }
+
+    .navbar-start>.navbar-item,
+    .navbar-start .navbar-link {
+      display: inline-block;
+      border-radius: var(--bulma-radius-large);
+      color: v.$purple-heavy;
+      margin-right: 0.75rem;
+    }
+
+    .navbar-start>a.navbar-item:hover {
+      background-color: #FFFFFF;
+    }
+
+    .navbar-start>.navbar-item.is-active {
+      border-radius: var(--bulma-radius-large);
+      background-color: #FFFFFF;
+      color: v.$purple-heavy;
+    }
+
+    .navbar-end a.button.is-primary {
+      margin-bottom: 0;
+      color: #FFFFFF;
+    }
+  }
+}
+
+#main-navbar.is-fixed-top {
+  background-color: #ffffff;
+  box-shadow: 0 2px 23px 0 v.$purple-light;
+  transition: box-shadow 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  border-radius: 0;
+  padding-left: 1.33rem;
+  padding-right: 1.33rem;
+  z-index: 31;
+
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .navbar-brand .master-logo {
+    display: none;
+  }
+
+  .navbar-start>.navbar-item.is-active {
+    background-color: v.$purple-light;
+    color: v.$purple-heavy;
+  }
+
+  .navbar-start>a.navbar-item:hover {
+    background-color: #FAFAFA;
+  }
+}
+
+#relative-navbar {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background: #FFFFFF;
+  height: 4rem;
+
+  .navbar-start>.navbar-item,
+  .navbar-start .navbar-link {
+    display: inline-block;
+    color: v.$green-heavy;
+    margin-right: 0;
+    border-top: 2px v.$green-light solid;
+    border-bottom: 2px v.$green-light solid;
+  }
+
+  .navbar-start>a.navbar-item:hover {
+    background-color: v.$green-light;
+  }
+
+  .navbar-start>.navbar-item.is-active,
+  .navbar-start>.navbar-item.is-active:hover {
+    background-color: v.$green-light;
+    color: v.$green-heavy;
+  }
+
+  .navbar-start>.navbar-item:first-of-type {
+    border-top-left-radius: var(--bulma-radius-large);
+    border-bottom-left-radius: var(--bulma-radius-large);
+    border-left: 2px v.$green-light solid;
+  }
+
+  .navbar-start>.navbar-item:last-of-type {
+    border-top-right-radius: var(--bulma-radius-large);
+    border-bottom-right-radius: var(--bulma-radius-large);
+    border-right: 2px v.$green-light solid;
+  }
+}
+
+#relative-navbar.is-fixed-top {
+  background-color: #ffffff;
+  border-radius: 0;
+  padding-left: 1.33rem;
+  padding-right: 1.33rem;
+  box-shadow: 0 2px 23px 0 v.$grey-light;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+// --- Media queries navigation ---
+
+@media screen and (min-width: 769px) {
+  #secondary-navbar.navbar {
+    align-items: stretch;
+    display: flex;
+  }
+
+  #main-navbar .navbar-brand {
+    align-items: stretch;
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  #secondary-navbar .navbar-start,
+  #main-navbar .navbar-start {
+    justify-content: flex-start;
+    margin-right: auto;
+    align-items: stretch;
+    display: flex;
+  }
+
+  #secondary-navbar .navbar-end,
+  #main-navbar .navbar-end {
+    justify-content: flex-end;
+    margin-left: auto;
+    align-items: stretch;
+    display: flex;
+  }
+
+  #secondary-navbar .navbar-item,
+  #main-navbar .navbar-item {
+    align-items: center;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  #main-navbar.navbar {
+    flex-direction: column;
+  }
+
+  .navbar>.container .navbar-brand,
+  .container>.navbar .navbar-brand,
+  .navbar>.container .navbar-menu,
+  .container>.navbar .navbar-menu {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  #relative-navbar.navbar,
+  #relative-navbar.navbar>.container {
+    min-height: 0;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  #secondary-navbar {
+    margin: 0 1rem;
+  }
+
+  #main-navbar {
+    border-radius: 0;
+    padding-left: 1.33rem;
+    padding-right: 1.33rem;
+
+    .navbar-menu {
+      background-color: transparent;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      padding: 0;
+    }
+  }
+
+  #main-navbar.is-fixed-top {
+    .container {
+      padding-left: 0rem;
+      padding-right: 0rem;
+    }
+  }
+
+  #relative-navbar.navbar>.container {
+    min-height: 0;
+    padding: 0;
+
+    .navbar-menu {
+      padding: 0;
+    }
+  }
+
+  #relative-navbar {
+    min-height: 0;
+    padding-left: 1.33rem;
+    padding-right: 1.33rem;
+  }
+}
