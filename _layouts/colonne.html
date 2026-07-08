@@ -22,7 +22,9 @@
       </div>
     </div>
 
+    {% unless page.newsletter_in_content %}
     {% include bandeaux/bandeau-newsletter.html %}
+    {% endunless %}
 
     {% include footer.html %}
 	
