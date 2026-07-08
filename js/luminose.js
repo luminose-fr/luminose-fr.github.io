@@ -393,6 +393,10 @@ var App = {
         button.addEventListener('click', (e) => {
           e.preventDefault();
           modal.show();
+          // Les boutons « échange offert » ouvrent directement l'étape Nouveau client
+          if (button.dataset.panel === 'nouveau-client') {
+            navigateTo('nouveauClient');
+          }
         });
       });
 

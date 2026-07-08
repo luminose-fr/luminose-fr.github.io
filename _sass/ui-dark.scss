@@ -66,6 +66,10 @@ button.button.is-purple-bordered:hover {
 	background: v.$purple-logo;
 	color: #FFFFFF;
 }
+.buttons a.button.is-purple-bordered,
+#md-prise-rdv .buttons a.button.is-purple-bordered {
+  color: v.$purple-heavy;
+}
 
 a.button.bt-evenements.is-active,
 body.has-navbar-fixed-top	#main-navbar .navbar-end a.button.bt-evenements.is-active {
