@@ -958,6 +958,15 @@ textarea.is-purple-bordered:hover, {
   border: 2px v.$purple-light-border solid;
   box-shadow: none;
 }
+.buttons a.button.is-purple-bordered,
+#md-prise-rdv .buttons a.button.is-purple-bordered {
+  border-radius: var(--bulma-radius-large);
+  border-bottom: 2px v.$purple-light-border solid;
+  padding-bottom: calc(var(--bulma-button-padding-vertical) - var(--bulma-button-border-width));
+  padding-left: calc(var(--bulma-button-padding-horizontal) - var(--bulma-button-border-width));
+  padding-right: calc(var(--bulma-button-padding-horizontal) - var(--bulma-button-border-width));
+  padding-top: calc(var(--bulma-button-padding-vertical) - var(--bulma-button-border-width));
+}
 
 input.is-purple-bordered:hover,
 select.is-purple-bordered:hover,
@@ -2264,6 +2273,7 @@ section.newsletter {
     }
   }
 }
+
 #md-prise-rdv,
 #md-erreur-payer-seance {
   .modal-card {
