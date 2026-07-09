@@ -44,22 +44,12 @@
     			</div>
 		   </div>
 		</nav>
-		{% if page.section == "holotropique" %}
+		{% if page.section == "accompagnement" or page.section == "hypnotherapie" or page.section == "meditation" or page.section == "holotropique" %}
 		<nav id="relative-navbar" class="navbar" role="navigation" aria-label="relative navigation">
 			 <div class="container">
 				 <div id="relative-navigation" class="navbar-menu">
 					 <div class="navbar-start">
-						 <a href="{{ site.baseurl }}/respiration-holotropique.html" class="navbar-item {% if page.sous-section == "presentation" %}is-active{% endif %}">Présentation</a><a href="{{ site.baseurl }}/respiration-holotropique/seance-individuelle.html" class="navbar-item {% if page.sous-section == "individuel" %}is-active{% endif %}">Séances individuelles</a><a href="{{ site.baseurl }}/respiration-holotropique/seance-groupe.html" class="navbar-item {% if page.sous-section == "groupe" %}is-active{% endif %}">Séances en groupe</a>
-					 </div>
-				 </div>
-			 </div>
-		</nav>
-		{% elsif page.section == "accompagnement" or page.section == "hypnotherapie" or page.section == "meditation" %}
-		<nav id="relative-navbar" class="navbar" role="navigation" aria-label="relative navigation">
-			 <div class="container">
-				 <div id="relative-navigation" class="navbar-menu">
-					 <div class="navbar-start">
-						 <a href="{{ site.baseurl }}/commencer-un-accompagnement.html" class="navbar-item {% if page.section == "accompagnement" %}is-active{% endif %}">Le premier pas</a><a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">L'hypnose</a><a href="{{ site.baseurl }}/meditation.html" class="navbar-item {% if page.section == "meditation" %}is-active{% endif %}">La méditation</a><a href="{{ site.baseurl }}/respiration-holotropique.html" class="navbar-item">Le breathwork holotropique</a>
+						 <a href="{{ site.baseurl }}/commencer-un-accompagnement.html" class="navbar-item {% if page.section == "accompagnement" %}is-active{% endif %}">Le premier pas</a><a href="{{ site.baseurl }}/hypnotherapie.html" class="navbar-item {% if page.section == "hypnotherapie" %}is-active{% endif %}">L'hypnose</a><a href="{{ site.baseurl }}/meditation.html" class="navbar-item {% if page.section == "meditation" %}is-active{% endif %}">La méditation</a><a href="{{ site.baseurl }}/respiration-holotropique.html" class="navbar-item {% if page.section == "holotropique" %}is-active{% endif %}">Le breathwork holotropique</a>
 					 </div>
 				 </div>
 			 </div>
