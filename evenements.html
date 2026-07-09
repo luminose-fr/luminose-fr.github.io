@@ -1,8 +1,8 @@
 ---
 layout: colonne
-title: Agenda des évènements - Méditation, Auto-hypnose, Respiration Holotropique
+title: L'agenda des ateliers & stages - Luminose
 section: evenements
-description: "Découvrez notre calendrier d'évènements de bien-être : séances de méditation, ateliers d'auto-hypnose et sessions de respiration holotropique. Dates, lieux et détails pour chaque expérience transformative en groupe."
+description: "L'agenda des activités de groupe de Luminose : journées de breathwork holotropique (respiration holotropique) et stages à thème. Reprise au printemps 2027 — les inscrits à la newsletter seront prévenus en premier."
 ---
 {% if site.evenements %}
   {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
@@ -11,9 +11,14 @@ description: "Découvrez notre calendrier d'évènements de bien-être : séance
 <section class="section article evenements">
   <div class="container">
     <div class="content">
-      <h1>Planning des évènements</h1>
-      <h3 class="sub-section-title">Évènements en groupe</h3>
+      <h1>L'agenda</h1>
+
+      <div class="light-bg">
+        <p><strong>Les activités de groupe font une pause.</strong> Je rénove actuellement le lieu qui les accueillera : elles reprendront au printemps 2027, dans un espace pensé pour elles. Les inscrits à la newsletter (formulaire en bas de page) seront prévenus en premier, dès l'ouverture des inscriptions.</p>
+      </div>
+
       {% if evenements_futurs.size > 0 %}
+      <h3 class="sub-section-title">Évènements en groupe</h3>
         <div class="liste-evenements">
           {% for evenement in evenements_futurs %}
           <a class="evenement evenement-{{ evenement.category}}" href="{{ evenement.url }}">
@@ -31,8 +36,6 @@ description: "Découvrez notre calendrier d'évènements de bien-être : séance
           </a>
           {% endfor %}
         </div>
-      {% else %}
-        <p class="notification is-warning is-light">Aucun évènement n'est planifié pour l'instant.</p>
       {% endif %}
       <h3>Listes des évènements passés</h3>
         <ul>
