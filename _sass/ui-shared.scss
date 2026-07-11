@@ -144,6 +144,11 @@ img.fill {
   object-fit: cover;
 }
 
+svg.fill {
+  width: 100%;
+  height: auto;
+}
+
 .article .achat {
   margin-top: var(--bulma-block-spacing);
   margin-bottom: var(--bulma-block-spacing);
