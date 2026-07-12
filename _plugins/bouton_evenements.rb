@@ -24,7 +24,7 @@ class BoutonEvenementsTag < Liquid::Tag
 		output += 'href="' + href + '" '
 		
 		output += '>'
-		output += 'Planning des évènements'
+		output += "L'agenda"
 		output += '</a>'
 		
 		# Render it on the page by returning it

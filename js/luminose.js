@@ -1468,7 +1468,8 @@ var App = {
   
         button.classList.toggle('is-active');
         $target.classList.toggle('is-active');
-  
+        button.setAttribute('aria-expanded', isShowing ? 'true' : 'false');
+
       });
     }
   },

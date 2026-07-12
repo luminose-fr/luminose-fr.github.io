@@ -210,6 +210,12 @@
       display: block;
       text-align: left;
     }
+
+    // Sous-items des deux piliers dans le menu mobile (deux niveaux)
+    .navbar-menu.is-active .navbar-start>a.navbar-sub-item {
+      padding-left: 2.5rem;
+      font-size: 0.95em;
+    }
   }
   .no-padding-right {
     padding-right: .75rem;

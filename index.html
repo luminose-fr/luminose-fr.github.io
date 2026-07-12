@@ -73,7 +73,27 @@ preload_image: /images/florent-198w.webp
       <div class="column is-7-desktop is-12-tablet">
         <div class="white-bg">
           <h2 class="title is-2">Le déroulement des séances :</h2>
-          {% img_optimized "contenus/deroulement-seances.png" alt="Déroulement des séances" class="fill" width=553 height=74 %}
+          <svg class="fill" viewBox="0 0 724 97" width="553" height="74" role="img" aria-label="Déroulement des séances : un chemin qui avance de séance en séance" xmlns="http://www.w3.org/2000/svg">
+            <!-- Chemin pointillé (couleur héritée du texte : lisible dans les deux thèmes) -->
+            <path d="M 14 72 C 140 22, 240 20, 330 46 C 400 66, 430 84, 490 78 C 560 71, 630 42, 696 16"
+                  fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="0.1 11" />
+            <!-- Épingle de départ (creuse) : l'entretien préalable -->
+            <g stroke="currentColor" stroke-width="3" fill="none">
+              <line x1="14" y1="52" x2="14" y2="66" />
+              <circle cx="14" cy="45" r="6.5" />
+            </g>
+            <!-- Épingles pleines : les séances -->
+            <g fill="currentColor" stroke="currentColor" stroke-width="3">
+              <line x1="330" y1="26" x2="330" y2="40" />
+              <circle cx="330" cy="19" r="8" />
+              <line x1="440" y1="62" x2="440" y2="76" />
+              <circle cx="440" cy="55" r="8" />
+              <line x1="628" y1="24" x2="628" y2="38" />
+              <circle cx="628" cy="17" r="8" />
+            </g>
+            <!-- Flèche d'arrivée, orientée selon la tangente du chemin en son extrémité (696,16), pente atan2(-26,66) ≈ -21,5° -->
+            <path d="M 0 0 L -17 -7.5 L -17 7.5 Z" fill="currentColor" transform="translate(712 9.7) rotate(-21.5)" />
+          </svg>
           <div class="infos-seances content">
             <div class="premiere-seance">
               <p><strong>Première séance</strong></p>
@@ -103,7 +123,7 @@ preload_image: /images/florent-198w.webp
 </section>
 
 <section class="section respiration-holotropique">
-	<div class="container">{% include bandeaux/bandeau-respiration-holotropique-et-evenements.html %}</div>
+	<div class="container">{% include bandeaux/bandeau-marcher-ensemble.html %}</div>
 </section>
 
 <section class="section blog">
