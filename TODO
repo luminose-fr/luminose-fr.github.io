@@ -1,25 +1,3 @@
-Pour accompagner Flyer et pub Facebook et autres :
-- Inscription : 
-	- Vérifier les différentes erreurs (pas de JS, pas de Make.com, pas de réponse Stripe, erreurs JS, erreur CB, etc.)
-		- Et proposer alternatives
-	- Ajouter lien pour liste d'attente
-
-Pour plus tard :
-
-	Mailchimp 
-		Ménage dans les enregistrements DNS pour Mailchimp + Brevo
-
-	Contenus :
-		- Accueil
-			- Mise en avant d'un article de blog / Vidéo (CF Bandeau Blog)
-		- Respiration holotropique
-			- Vidéo présentation
-		- Evénements + page détail 
-			- Voir pour naviguer d'un évènement à l'autre (ou suggestions d'évènements du même type à dates ultérieures)
-		- Confirmation d'inscription newsletter sur mon site
-
-	UI :
-		- Focus-Within plus propre ?
-	
-	Performance :
-		- Vérifier speed (taille images, compression, etc.)
+Evènements :
+- banniere-journee-breathwork.jpg
+- banniere-meditation.jpg
