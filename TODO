@@ -1,3 +1,20 @@
 Evènements :
 - banniere-journee-breathwork.jpg
 - banniere-meditation.jpg
+
+
+Relevé lexical (tâche 7 — signalé, non modifié)
+
+Occurrences d'« atelier » hors blog qui ne collent plus au lexique cible (journée / stage / parcours / atelier réservé MJC) :
+
+respiration-holotropique/seance-groupe.html : title « Ateliers de respiration holotropique en groupe », « Comment se déroulent les ateliers ? », etc. — devraient devenir des « journées » (page hors périmètre phase 3).
+respiration-holotropique/inscription-etape-2.html (« Prix de la journée d'atelier ») et inscription-etape-3.html.
+_includes/bandeaux/bandeau-respiration-holotropique-liste-evenements.html : « Inscription aux prochains ateliers ».
+conditions-generales-de-vente.html : « Ateliers collectifs de méditation », « 8.3. Ateliers, séminaires et retraites » (garde-fou tarifs/conditions — à revoir avec toi).
+_evenements/* : pages d'événements passés (historique, à laisser).
+Usage conforme sur les pages touchées : « ateliers » n'y apparaît qu'en contexte historique MJC.
+En attente / phase 4
+
+Meta description de l'agenda réécrite en cohérence avec le nouveau title (léger dépassement du brief, facile à annuler).
+La newsletter de clôture MJC (déclinaison fournie dans page-meditation-v1.md) est à envoyer avant ou au moment du merge — action Brevo côté Florent.
+Points à valider listés dans page-meditation-v1.md : « pratique à emporter », faits MJC (2023-2026, dimanches matin), déplacement du témoignage, title.
