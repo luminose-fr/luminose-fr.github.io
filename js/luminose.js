@@ -104,6 +104,13 @@ var App = {
           make_webhook_adresse_client: "https://hook.eu1.make.com/14c3wd70k7d1zmqd2wrnx9ue8kolbsvv",
           stancer_base: "https://payment.stancer.com/test_", // TEST
         },
+        paiement_confirme: {
+          // Ces deux URL sont volontairement présentes dans les deux environnements :
+          // c'est le paramètre « env » de la return_url (posée par Make à la création du
+          // payment intent) qui décide, et non le build Jekyll. Voir setupPaiementConfirme.
+          make_webhook_paiement_confirme_test: "", // TEST - à renseigner
+          make_webhook_paiement_confirme_live: "", // LIVE - à renseigner
+        },
         futura_font: window.location.origin + "/fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff",
       }
     };
@@ -134,6 +141,7 @@ var App = {
     this.setupFormValidation();
     this.setupPaiementAtelier();
     this.setupPayerSeance();
+    this.setupPaiementConfirme();
     this.respiration.run();
   },
 
@@ -961,6 +969,108 @@ var App = {
         }
       }
     });
+  },
+
+  // Page /paiement-confirme.html : le client y est redirigé automatiquement par la page
+  // de paiement Stancer (return_url du payment intent, redirection au bout de 3 secondes).
+  // Le paramètre « pi » identifie le payment intent, le paramètre « env » indique quel
+  // scénario Make doit vérifier ce paiement : le scénario TEST détient la clé de test,
+  // le scénario LIVE la clé de production. Un pi qui ne correspond pas à la clé du
+  // scénario appelé reste introuvable côté Stancer : les deux environnements ne peuvent
+  // pas se contaminer, même si quelqu'un bricole l'URL.
+  setupPaiementConfirme: function() {
+    const root = document.getElementById("paiement-confirme-root");
+    const page = document.getElementById("pg-paiement-confirme");
+    if (!root || !page) return;
+
+    const cfg = this._config.urls.paiement_confirme;
+    const isTest = (this.getParamFromCurrentPage("env") || "").trim().toLowerCase() === "test";
+    const webhook = isTest ? cfg.make_webhook_paiement_confirme_test : cfg.make_webhook_paiement_confirme_live;
+
+    const PC_VIEWS = ["pc-loader", "pc-success", "pc-pending", "pc-no-pi", "pc-error"];
+
+    const showOne = (id) => {
+      PC_VIEWS.forEach((viewId) => {
+        const el = document.getElementById(viewId);
+        if (el) el.classList.toggle("is-hidden", viewId !== id);
+      });
+    };
+
+    const fillError = (msg) => {
+      const msgEl = document.getElementById("pc-error-msg");
+      if (msgEl) msgEl.textContent = msg || "Une erreur s'est produite.";
+      showOne("pc-error");
+    };
+
+    const fillSuccess = (json) => {
+      const detailsEl = document.getElementById("pc-success-details");
+      if (detailsEl) {
+        const montant = json && json.montant != null ? json.montant + " €" : null;
+        detailsEl.textContent = montant ? "Montant réglé : " + montant + "." : "";
+      }
+      showOne("pc-success");
+    };
+
+    // Repère visuel : en environnement de test, on ne doit jamais confondre une
+    // confirmation d'essai avec un vrai règlement.
+    if (isTest) {
+      const h1 = page.querySelector("h1");
+      if (h1) {
+        const testTag = document.createElement("span");
+        testTag.className = "is-styled-tag ps-test-tag";
+        testTag.textContent = "Test";
+        h1.appendChild(document.createTextNode(" "));
+        h1.appendChild(testTag);
+      }
+    }
+
+    const paymentIntentId = (this.getParamFromCurrentPage("pi") || "").trim();
+
+    const verifierPaiement = () => {
+      if (!webhook) {
+        fillError("La vérification du paiement n'est pas encore configurée.");
+        return;
+      }
+      showOne("pc-loader");
+      const url = webhook + (webhook.indexOf("?") >= 0 ? "&" : "?") + "pi=" + encodeURIComponent(paymentIntentId);
+      fetch(url, { method: "GET" })
+        .then((res) => res.text().then((text) => ({ status: res.status, ok: res.ok, text })))
+        .then(({ status, ok, text }) => {
+          let json = null;
+          try {
+            json = JSON.parse(text);
+          } catch (e) {
+            throw new Error(ok ? "Réponse invalide du serveur." : "HTTP " + status);
+          }
+          if (!ok && !(json && json.response_type)) throw new Error("HTTP " + status);
+          switch (json && json.response_type) {
+            case "success":
+              fillSuccess(json);
+              break;
+            case "not_paid":
+            case "not_found":
+              showOne("pc-pending");
+              break;
+            default:
+              fillError("Réponse inattendue du serveur.");
+          }
+        })
+        .catch((err) => {
+          fillError(err && err.message ? err.message : "Erreur réseau ou serveur.");
+        });
+    };
+
+    const retryIds = ["pc-pending-retry", "pc-error-retry"];
+    retryIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", verifierPaiement);
+    });
+
+    if (!paymentIntentId) {
+      showOne("pc-no-pi");
+      return;
+    }
+    verifierPaiement();
   },
 
   setupPayerSeance: function() {
