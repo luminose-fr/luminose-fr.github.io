@@ -108,7 +108,7 @@ var App = {
           // Ces deux URL sont volontairement présentes dans les deux environnements :
           // c'est le paramètre « env » de la return_url (posée par Make à la création du
           // payment intent) qui décide, et non le build Jekyll. Voir setupPaiementConfirme.
-          make_webhook_paiement_confirme_test: "", // TEST - à renseigner
+          make_webhook_paiement_confirme_test: "https://hook.eu1.make.com/jsl8tzgu9bh5fli6v92v09i5okwn19sb", // TEST
           make_webhook_paiement_confirme_live: "", // LIVE - à renseigner
         },
         futura_font: window.location.origin + "/fonts/5313918/55e6a203-1f50-4971-89d0-17ca0150f29d.woff",
