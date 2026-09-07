@@ -3,6 +3,9 @@ _site/
 .jekyll-cache/
 .jekyll-metadata
 
+# Fichiers système macOS
+.DS_Store
+
 # Variantes d'images générées par le plugin image_variants_generator.rb
 # (régénérées automatiquement à chaque jekyll build)
 images/**/*-*w.jpg
