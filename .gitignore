@@ -6,6 +6,9 @@ _site/
 # Fichiers système macOS
 .DS_Store
 
+# Réglages Claude Code propres à cette machine (contrairement à settings.json)
+.claude/settings.local.json
+
 # Variantes d'images générées par le plugin image_variants_generator.rb
 # (régénérées automatiquement à chaque jekyll build)
 images/**/*-*w.jpg
