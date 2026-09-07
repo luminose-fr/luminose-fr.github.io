@@ -1,0 +1,80 @@
+---
+layout: essentiel
+title: Paiement confirmé
+sitemap: false
+---
+
+<section id="pg-paiement-confirme" class="section article paiement-confirme">
+  <div class="container">
+    <div class="content">
+      <h1>Paiement de séance</h1>
+      <div id="paiement-confirme-root" class="paiement-confirme-root">
+
+        <div id="pc-loader" class="pc-view">
+          <div class="block has-text-centered mb-5">
+            <p class="mb-4"><span class="icon is-medium"><i class="fas fa-spinner fa-spin"></i></span></p>
+            <p class="mb-5">Vérification de votre paiement en cours…</p>
+          </div>
+          <div class="skeleton-lines">
+            <div class="skeleton-block"></div>
+            <div class="skeleton-block"></div>
+          </div>
+        </div>
+
+        <div id="pc-success" class="pc-view is-hidden">
+          <div class="columns">
+            <div class="column is-8">
+              <div class="notification is-success is-light">
+                <p><strong>Votre paiement a bien été reçu.</strong> <span id="pc-success-details"></span></p>
+              </div>
+              <p>Merci. Votre facture vous sera envoyée par e-mail. Vous n'avez rien d'autre à faire.</p>
+              <p>Une question sur ce règlement ? Écrivez-moi à <a href="mailto:florent@luminose.fr?subject=Paiement séance">florent@luminose.fr</a>.</p>
+              <p><a href="{{ site.baseurl }}/" class="button is-primary">Retour à l'accueil</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div id="pc-pending" class="pc-view is-hidden">
+          <div class="columns">
+            <div class="column is-8">
+              <div class="notification is-warning is-light">
+                <p>Je n'ai pas encore reçu la confirmation de ce paiement.</p>
+              </div>
+              <p>Cela peut prendre quelques instants. Vous pouvez <button type="button" id="pc-pending-retry" class="button is-primary is-small">vérifier à nouveau</button>.</p>
+              <p>Si votre compte a bien été débité, tout est en ordre de votre côté : je le vois arriver et je m'en occupe. En cas de doute, écrivez-moi à <a href="mailto:florent@luminose.fr?subject=Paiement séance - confirmation en attente">florent@luminose.fr</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="pc-no-pi" class="pc-view is-hidden">
+          <div class="columns">
+            <div class="column is-8">
+              <div class="notification is-warning is-light">
+                <p>Cette page ne peut pas être ouverte directement.</p>
+              </div>
+              <p>Utilisez le lien de paiement reçu par e-mail, ou écrivez-moi à <a href="mailto:florent@luminose.fr?subject=Paiement séance">florent@luminose.fr</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="pc-error" class="pc-view is-hidden">
+          <div class="columns">
+            <div class="column is-8">
+              <div class="notification is-danger is-light">
+                <p id="pc-error-msg"></p>
+              </div>
+              <p>Si votre compte a bien été débité, votre paiement n'est pas perdu : je le retrouve de mon côté.</p>
+              <p>Vous pouvez <button type="button" id="pc-error-retry" class="button is-primary is-small">réessayer</button> ou me contacter à <a href="mailto:florent@luminose.fr?subject=Paiement séance - erreur technique">florent@luminose.fr</a>.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.pc-view { display: block; }
+.pc-view.is-hidden { display: none !important; }
+</style>
