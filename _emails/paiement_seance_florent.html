@@ -1,0 +1,69 @@
+<!--
+  Notification interne : un paiement de séance vient d'être encaissé.
+  Remplacer chaque marqueur entre doubles crochets par la variable Make.
+  Les crochets doubles ne sont pas de la syntaxe Make : ils sont là pour
+  être repérés et remplacés, un par un.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5EDEF" style="background-color:#F5EDEF;margin:0;padding:0;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="width:100%;max-width:600px;background-color:#FFFFFF;border-radius:6px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+
+        <tr>
+          <td bgcolor="#38154B" style="background-color:#38154B;padding:16px 24px;border-radius:6px 6px 0 0;">
+            <span style="color:#FFFFFF;font-size:16px;font-weight:bold;letter-spacing:0.3px;">Paiement de séance reçu</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:28px 24px 8px 24px;">
+            <div style="font-size:32px;font-weight:bold;color:#38154B;line-height:1.2;">[[MONTANT]] €</div>
+            <div style="font-size:14px;color:#6B6B6B;padding-top:6px;">Encaissé le [[DATE_PAIEMENT]]</div>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 24px 0 24px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:15px;color:#2B2B2B;">
+              <tr>
+                <td width="120" style="padding:9px 0;color:#6B6B6B;border-top:1px solid #E5C7CD;">Client</td>
+                <td style="padding:9px 0;border-top:1px solid #E5C7CD;font-weight:bold;">[[NOM_CLIENT]]</td>
+              </tr>
+              <tr>
+                <td style="padding:9px 0;color:#6B6B6B;border-top:1px solid #E5C7CD;">E-mail</td>
+                <td style="padding:9px 0;border-top:1px solid #E5C7CD;"><a href="mailto:[[EMAIL_CLIENT]]" style="color:#38154B;">[[EMAIL_CLIENT]]</a></td>
+              </tr>
+              <tr>
+                <td style="padding:9px 0;color:#6B6B6B;border-top:1px solid #E5C7CD;">Séance</td>
+                <td style="padding:9px 0;border-top:1px solid #E5C7CD;">[[DATE_SEANCE]]</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 24px 4px 24px;">
+            <a href="[[URL_NOTION_SEANCE]]" style="display:inline-block;background-color:#38154B;color:#FFFFFF;font-size:15px;text-decoration:none;padding:12px 22px;border-radius:4px;">Ouvrir la séance dans Notion</a>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 24px 24px 24px;">
+            <div style="border-top:1px solid #E5C7CD;padding-top:14px;font-size:12px;color:#8A8A8A;line-height:1.7;">
+              Payment intent&nbsp;: [[ID_PAYMENT_INTENT]]<br>
+              Paiement Stancer&nbsp;: [[ID_PAIEMENT]]<br>
+              Order ID&nbsp;: [[ORDER_ID]]
+            </div>
+          </td>
+        </tr>
+
+      </table>
+
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;color:#8A8A8A;padding:14px 12px 0 12px;max-width:600px;">
+        Message automatique du scénario Make « Paiement confirmé ».
+      </div>
+
+    </td>
+  </tr>
+</table>
