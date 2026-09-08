@@ -1033,7 +1033,12 @@ var App = {
       }
       showOne("pc-loader");
       const url = webhook + (webhook.indexOf("?") >= 0 ? "&" : "?") + "pi=" + encodeURIComponent(paymentIntentId);
-      fetch(url, { method: "GET" })
+      // Make peut ne jamais répondre — scénario en erreur, ou module « Webhook response »
+      // placé trop loin dans le flux. Sans délai maximum, la requête ne rejette jamais et
+      // le client reste indéfiniment sur le loader.
+      const controller = new AbortController();
+      const delaiMax = window.setTimeout(() => controller.abort(), 20000);
+      fetch(url, { method: "GET", signal: controller.signal })
         .then((res) => res.text().then((text) => ({ status: res.status, ok: res.ok, text })))
         .then(({ status, ok, text }) => {
           let json = null;
@@ -1056,8 +1061,15 @@ var App = {
           }
         })
         .catch((err) => {
+          // Délai dépassé : le paiement a très probablement abouti côté Stancer, on ne
+          // montre donc pas une erreur mais l'écran d'attente, avec son bouton de reprise.
+          if (err && err.name === "AbortError") {
+            showOne("pc-pending");
+            return;
+          }
           fillError(err && err.message ? err.message : "Erreur réseau ou serveur.");
-        });
+        })
+        .then(() => window.clearTimeout(delaiMax));
     };
 
     const retryIds = ["pc-pending-retry", "pc-error-retry"];
