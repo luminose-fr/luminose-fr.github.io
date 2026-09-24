@@ -1,26 +1,28 @@
 # Charte de prompts images Luminose — ChatGPT Images 2.0
 
-Document de travail durable : ces règles valent pour les 6 images des nouvelles pages **et** pour toute image future (blog, réseaux). La cause des résultats hétérogènes : un prompt qui décrit le sujet sans verrouiller le médium laisse le modèle choisir — photo un jour, dessin le lendemain. Tout part donc du bloc de style.
+Document de travail durable : ces règles valent pour les 6 images des nouvelles pages **et** pour toute illustration future des pages du site. **Elles ne valent ni pour le blog ni pour les réseaux**, dont le style est libre (le blog, le plus souvent réaliste). La cause des résultats hétérogènes : un prompt qui décrit le sujet sans verrouiller le médium laisse le modèle choisir — photo un jour, dessin le lendemain. Tout part donc du bloc de style.
 
 ---
 
 ## 1. Le bloc de style Luminose (à copier TEL QUEL, jamais paraphrasé)
 
-> Illustration numérique éditoriale, douce et contemporaine. Formes simplifiées aux contours organiques, aplats subtilement texturés avec un léger grain de papier, ombres douces et diffuses. Absolument aucun photoréalisme. Palette strictement limitée : violet profond (#38154B), mauve intermédiaire, rose poudré (#E5C7CD), crème (#F5EDEF) — le crème domine les fonds, le violet structure, le rose réchauffe. Lumière calme et enveloppante, atmosphère contemplative et rassurante. Silhouettes humaines stylisées, sans traits de visage détaillés. Composition épurée, beaucoup d'espace négatif. Aucun texte, aucun logo, aucun cadre décoratif.
+*Palette corrigée le 24/09/2026.* La première version demandait `#38154B`, `#E5C7CD` et `#F5EDEF` ; les images générées ne les ont pas suivies. La palette ci-dessous est **mesurée sur les six illustrations des pages** : c'est la gamme réelle qui fait foi. `marcher-ensemble-cercle` (ciel étoilé, plus saturé) sort de la série — ne pas la prendre en référence.
+
+> Illustration numérique éditoriale, douce et contemporaine. Formes simplifiées aux contours organiques, aplats subtilement texturés avec un léger grain de papier, ombres douces et diffuses. Absolument aucun photoréalisme. Palette strictement limitée, tons chauds et voilés : ivoire (#FDEEE1), rose brumeux (#E9B9BB), mauve (#9A688E), prune (#634575), violet nuit (#3C3061) — l'ivoire domine les fonds, le prune et le violet nuit structurent, le rose réchauffe ; aucune couleur saturée. Lumière calme et enveloppante, atmosphère contemplative et rassurante. Silhouettes humaines stylisées, sans traits de visage détaillés. Composition épurée, beaucoup d'espace négatif. Aucun texte, aucun logo, aucun cadre décoratif.
 
 ## 2. La mécanique d'homogénéité (4 gestes)
 
 1. **L'étalon.** Génère d'abord l'image 1 (le sentier) avec son prompt complet ci-dessous. Itère par retouches conversationnelles (« garde tout, éclaircis le ciel ») jusqu'à ce qu'elle te plaise vraiment : elle devient l'étalon de la série.
 2. **La référence.** Pour chaque image suivante, **dans la même conversation**, joins l'image étalon et utilise le prompt court correspondant (« Dans exactement le même style, la même palette, le même grain et le même traitement des silhouettes que l'image jointe : … »). C'est le mécanisme le plus fiable d'Images 2.0 pour tenir un style.
 3. **La série.** Si tu utilises le mode Thinking, tu peux demander plusieurs images cohérentes d'un coup ; sinon, une par une dans la même conversation fonctionne très bien.
-4. **L'archive.** Garde l'étalon précieusement : toute image future (article de blog, post) se génère avec lui en référence. C'est lui, ta charte graphique vivante — plus que le texte.
+4. **L'archive.** Garde l'étalon précieusement : toute illustration future des pages du site se génère avec lui en référence (pas le blog ni les posts, dont le style est libre). C'est lui, ta charte graphique vivante — plus que le texte.
 
 ## 3. Corrections de dérive (phrases prêtes)
 
 - **Ça vire photo** → régénère en ajoutant en tête : « Ceci est une illustration au grain de papier visible, à aplats stylisés — aucun rendu photographique, aucune texture réaliste de peau, de tissu ou de feuillage. »
 - **Ça vire cartoon / enfantin** → ajoute : « Style éditorial adulte, élégant et minimal — pas de style cartoon, pas de personnages mignons, pas de contours noirs épais. »
 - **Du texte apparaît** → « Régénère à l'identique en supprimant tout texte et toute lettre. »
-- **La palette dérive** → « Ramène toutes les couleurs dans la palette : violet profond #38154B, mauve, rose poudré #E5C7CD, crème #F5EDEF. »
+- **La palette dérive** → « Ramène toutes les couleurs dans la palette : ivoire #FDEEE1, rose brumeux #E9B9BB, mauve #9A688E, prune #634575, violet nuit #3C3061 — tons voilés, rien de saturé. »
 - **Il retouche l'image de référence au lieu d'en créer une nouvelle** → ouvre le prompt par : « Nouvelle image indépendante — l'image jointe sert uniquement de référence de style, de palette et de grain : … »
 - **Le sujet devient un schéma** (courbes, flèches, labels « inspirer/expirer ») → les processus abstraits (respiration, cycles, étapes) doivent être incarnés dans une scène figurative — une silhouette qui respire, un paysage qui ondule — et le prompt doit interdire explicitement : « pas de schéma, pas de courbe, pas de flèche, aucun texte ni lettre. »
 - **Une scène de groupe devient ambiguë** (corps allongés + lumière tamisée = lecture équivoque) → espacer nettement les silhouettes, asseoir bien droit les accompagnants, éclaircir la lumière — ou montrer le lieu préparé, sans personne : souvent plus juste et toujours sans risque.
@@ -32,7 +34,7 @@ Document de travail durable : ces règles valent pour les 6 images des nouvelles
 
 ### Image 1 — L'ÉTALON : `premier-pas-sentier` (format 2:1, bannière)
 
-> Illustration numérique éditoriale, douce et contemporaine. Formes simplifiées aux contours organiques, aplats subtilement texturés avec un léger grain de papier, ombres douces et diffuses. Absolument aucun photoréalisme. Palette strictement limitée : violet profond (#38154B), mauve intermédiaire, rose poudré (#E5C7CD), crème (#F5EDEF) — le crème domine les fonds, le violet structure, le rose réchauffe. Lumière calme et enveloppante, atmosphère contemplative et rassurante. Silhouettes humaines stylisées, sans traits de visage détaillés. Composition épurée, beaucoup d'espace négatif. Aucun texte, aucun logo, aucun cadre décoratif.
+> Illustration numérique éditoriale, douce et contemporaine. Formes simplifiées aux contours organiques, aplats subtilement texturés avec un léger grain de papier, ombres douces et diffuses. Absolument aucun photoréalisme. Palette strictement limitée, tons chauds et voilés : ivoire (#FDEEE1), rose brumeux (#E9B9BB), mauve (#9A688E), prune (#634575), violet nuit (#3C3061) — l'ivoire domine les fonds, le prune et le violet nuit structurent, le rose réchauffe ; aucune couleur saturée. Lumière calme et enveloppante, atmosphère contemplative et rassurante. Silhouettes humaines stylisées, sans traits de visage détaillés. Composition épurée, beaucoup d'espace négatif. Aucun texte, aucun logo, aucun cadre décoratif.
 >
 > Sujet : un sentier qui part du bord inférieur de l'image et s'enfonce en courbe douce vers une lumière de matin, entre de hautes herbes et quelques arbres stylisés. Le seuil d'un chemin, l'invitation à un premier pas. Aucun personnage — ou une unique silhouette de dos, à peine esquissée, au départ du sentier.
 >
@@ -63,7 +65,7 @@ Document de travail durable : ces règles valent pour les 6 images des nouvelles
 
 Teste d'abord chaque image claire dans les deux thèmes du site : le fond crème passe généralement bien en sombre. Si un emplacement jure vraiment, génère une variante à partir de l'image validée jointe en référence :
 
-> La même image exactement, en variante nocturne : fond violet profond (#38154B), sujets en crème et rose poudré, même composition, même grain.
+> La même image exactement, en variante nocturne : fond violet nuit (#3C3061), sujets en ivoire et rose brumeux, même composition, même grain.
 
 ## 6. Transposer une photo existante en illustration charte
 
@@ -73,7 +75,7 @@ Pour réinterpréter une photo (stock, archive, inspiration) dans le style Lumin
 
 Règles : décrire la scène plutôt que demander de « copier la photo » (le résultat doit être une œuvre originale dans ton langage, pas un décalque) ; transposer explicitement les couleurs vers la palette ; simplifier les détails identifiants (accessoires, vêtements, visages). Pièges connus : ciels étoilés, feuillages et textures naturelles ramènent au photoréalisme — imposer « aplats illustrés, aucun rendu photographique » pour ces sujets.
 
-## 7. Gabarit pour toute image future
+## 7. Gabarit pour toute illustration future des pages
 
 > [Étalon joint] Nouvelle image indépendante — l'image jointe sert uniquement de référence de style, de palette et de grain : [sujet en 2-3 phrases : quoi, où, quelle ambiance — toujours une scène figurative, jamais un concept abstrait]. [Cadrage : distance, angle]. Aucun texte. Format [2:1 / 1:1 / 4:3 / 3:4].
 
