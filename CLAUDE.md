@@ -64,8 +64,21 @@ Florent est psychopraticien, pas professionnel de santé. Par rigueur et conform
 4. Ne pas modifier les tarifs, durées ou conditions d'annulation sans instruction explicite.
 5. Rester dans le périmètre du brief de la phase en cours. Signaler ce qui semble manquer plutôt que l'improviser.
 
-## Palette de marque (pour toute création visuelle)
+## Palettes
 
-- Violet profond : `#38154B`
-- Rose doux : `#E5C7CD`
-- Fond clair : `#F5EDEF`
+Deux palettes, deux usages : ne pas les mélanger.
+
+**Interface** (bandeaux, fonds, boutons, liens) — celle de `_sass/ui-variables.scss`, qui fait foi :
+
+- Violet principal : `#613F7F`
+- Violet-bleu : `#6163A5`
+- Violet alternatif : `#60407F`
+- Fond clair : `#F9F5FF`
+- Bordure claire : `#E8DEF6`
+
+**Illustrations des pages** (hors blog) — gamme chaude et voilée, de l'ivoire au violet nuit :
+`#FDEEE1` · `#FBE2D5` · `#E9B9BB` · `#C98FA5` · `#9A688E` · `#634575` · `#3C3061`.
+Elles se génèrent avec l'image de référence jointe : voir `_ai_helpers/prompts-images-luminose.md`.
+
+**Illustrations du blog** — pas de charte, par choix : le plus souvent une scène réaliste qui montre
+la métaphore de l'article. L'image de référence et la gamme ci-dessus ne s'y appliquent pas.

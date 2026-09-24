@@ -32,7 +32,9 @@ sass:
 exclude: [
           "run.sh",
           "Gemfile",
-          "Gemfile.lock"
+          "Gemfile.lock",
+          "CLAUDE.md",
+          "TODO"
          ]
 
 plugins:
