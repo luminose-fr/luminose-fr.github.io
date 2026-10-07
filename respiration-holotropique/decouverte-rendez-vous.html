@@ -1,0 +1,24 @@
+---
+layout: campagne
+title: "Rendez-vous - Découvrir la respiration holotropique - Luminose"
+section: decouverte-breathwork
+sitemap: false
+---
+
+<section class="campagne-section campagne-etape">
+  <div class="campagne-conteneur">
+    {% include campagne/etapes.html etape=2 %}
+
+    <div class="content">
+      <h1>Choisissez le moment de l'entretien</h1>
+      <p>20 minutes offertes, pour faire connaissance avant la séance.</p>
+    </div>
+
+    <div id="calendly-decouverte" class="campagne-calendrier" data-calendly="rencontre_breathwork" data-etape-suivante="/respiration-holotropique/decouverte-confirmation.html"></div>
+
+    <div id="decouverte-sans-questionnaire" class="campagne-encart is-hidden">
+      <p>Le questionnaire de santé vient d'abord : il est obligatoire avant l'entretien.</p>
+      <p><a class="button is-primary" href="{{ site.baseurl }}/respiration-holotropique/decouverte-questionnaire.html" data-garder-gclid>Remplir le questionnaire de santé</a></p>
+    </div>
+  </div>
+</section>

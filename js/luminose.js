@@ -143,6 +143,7 @@ var App = {
     this.setupPaiementAtelier();
     this.setupPayerSeance();
     this.setupPaiementConfirme();
+    this.setupParcoursDecouverte();
     this.respiration.run();
   },
 
@@ -659,14 +660,10 @@ var App = {
                 urlWithParams.searchParams.append("ville", formData.get("coordonnees_participant[ville]"));
                 urlWithParams.searchParams.append("notion_page_id", formData.get("notion_page_id"));
                 window.location.href = urlWithParams.href;
-              } else if (questionnaireSante.dataset.calendly) {
-                // Questionnaire avant la rencontre (respiration-holotropique/decouverte.html) :
-                // le calendrier s'affiche à la place du formulaire.
-                questionnaireSante.classList.add('is-hidden');
-                messageIntroduction.classList.add('is-hidden');
-                messageSucces.classList.remove('is-hidden');
-                window.scrollTo({ top: messageSucces.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
-                that._afficherCalendlyApresQuestionnaire(questionnaireSante.dataset.calendly, formData);
+              } else if (questionnaireSante.dataset.etapeSuivante) {
+                // Parcours de découverte (respiration-holotropique/decouverte-*.html) :
+                // le questionnaire envoyé, on passe à l'étape du rendez-vous.
+                that._passerAuRendezVous(questionnaireSante.dataset.etapeSuivante, formData);
               } else {
                 window.scroll(0, 0);
                 questionnaireSante.classList.add('is-hidden');
@@ -1488,42 +1485,96 @@ var App = {
     return utm_params;
   },
 
-  // Affiche le calendrier Calendly (clé de this._config.urls.calendly) une fois le
-  // questionnaire de santé envoyé, prérempli avec les coordonnées saisies. Le gclid
-  // part dans utm_content, comme pour les autres prises de rendez-vous.
-  _afficherCalendlyApresQuestionnaire: function(cleCalendly, formData) {
-    var url = this._config.urls.calendly[cleCalendly];
-    var conteneur = document.getElementById('calendly-apres-questionnaire');
-    if (!url || conteneur === null) return;
+  // --- Parcours de découverte du breathwork (respiration-holotropique/decouverte*.html) ---
+  // Landing → questionnaire de santé → rendez-vous (Calendly) → confirmation.
+  // Le gclid suit d'une page à l'autre dans l'URL : c'est lui que Calendly transmet
+  // à Make pour la conversion des visiteurs qui refusent les cookies. Prénom, nom et
+  // e-mail passent par sessionStorage, jamais par l'URL (ils finiraient dans les
+  // pages vues d'Analytics).
+  _CLE_DECOUVERTE: 'luminose_decouverte_coordonnees',
 
-    var prenom = (formData.get('coordonnees_participant[prenom]') || '').trim();
-    var nom = (formData.get('coordonnees_participant[nom]') || '').trim();
-    var email = (formData.get('coordonnees_participant[email]') || '').trim();
-    var utmParams = this._getUtmParams();
+  _urlAvecSuivi: function(chemin, extra) {
+    var url = new URL(chemin, window.location.origin);
+    new URLSearchParams(window.location.search).forEach(function(valeur, cle) {
+      if (cle === 'gclid' || cle.indexOf('utm_') === 0) url.searchParams.set(cle, valeur);
+    });
+    Object.entries(extra || {}).forEach(function([cle, valeur]) { url.searchParams.set(cle, valeur); });
+    return url.href;
+  },
 
+  _passerAuRendezVous: function(etapeSuivante, formData) {
+    try {
+      sessionStorage.setItem(this._CLE_DECOUVERTE, JSON.stringify({
+        prenom: (formData.get('coordonnees_participant[prenom]') || '').trim(),
+        nom: (formData.get('coordonnees_participant[nom]') || '').trim(),
+        email: (formData.get('coordonnees_participant[email]') || '').trim()
+      }));
+    } catch (e) { /* sans stockage, le calendrier n'est simplement pas prérempli */ }
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: 'questionnaire_sante_envoye', origine: cleCalendly });
+    window.dataLayer.push({ event: 'questionnaire_sante_envoye', parcours: 'decouverte_breathwork' });
+    window.location.href = this._urlAvecSuivi(etapeSuivante, { questionnaire: 'envoye' });
+  },
 
-    if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
-      Calendly.initInlineWidget({
-        url: url,
-        parentElement: conteneur,
-        prefill: { name: (prenom + ' ' + nom).trim(), firstName: prenom, lastName: nom, email: email },
-        utm: utmParams,
-        resize: true
-      });
-    } else {
-      // Repli si le script Calendly n'a pas chargé : un lien vers la page de réservation.
-      var lien = new URL(url);
-      if (prenom || nom) lien.searchParams.set('name', (prenom + ' ' + nom).trim());
-      if (email) lien.searchParams.set('email', email);
-      if (utmParams.utmContent) lien.searchParams.set('utm_content', utmParams.utmContent);
-      conteneur.style.height = 'auto';
-      conteneur.innerHTML = '<p class="has-text-centered"><a class="button is-primary is-medium" target="_blank" rel="noopener" data-track="bt_decouverte_breathwork_calendly_repli"></a></p>';
-      var bouton = conteneur.querySelector('a');
-      bouton.href = lien.href;
-      bouton.textContent = 'Choisir le moment de notre échange';
+  setupParcoursDecouverte: function() {
+    var that = this;
+
+    // Les liens du parcours gardent le gclid (les utm_ suivent déjà : setupUTMParamsPropagation).
+    document.querySelectorAll('a[data-garder-gclid]').forEach(function(lien) {
+      lien.href = that._urlAvecSuivi(lien.getAttribute('href'));
+    });
+
+    var conteneur = document.getElementById('calendly-decouverte');
+    if (conteneur === null) return;
+
+    // Le questionnaire de santé est obligatoire avant l'entretien.
+    if (new URLSearchParams(window.location.search).get('questionnaire') !== 'envoye') {
+      conteneur.classList.add('is-hidden');
+      document.getElementById('decouverte-sans-questionnaire').classList.remove('is-hidden');
+      return;
     }
+
+    var url = this._config.urls.calendly[conteneur.dataset.calendly];
+    var coordonnees = {};
+    try { coordonnees = JSON.parse(sessionStorage.getItem(this._CLE_DECOUVERTE) || '{}') || {}; } catch (e) { coordonnees = {}; }
+    var nomComplet = ((coordonnees.prenom || '') + ' ' + (coordonnees.nom || '')).trim();
+    var prefill = {};
+    if (nomComplet) {
+      prefill.name = nomComplet;
+      prefill.firstName = coordonnees.prenom || '';
+      prefill.lastName = coordonnees.nom || '';
+    }
+    if (coordonnees.email) prefill.email = coordonnees.email;
+    var utm = this._getUtmParams();
+
+    // widget.js de Calendly se charge en async : on l'attend jusqu'à 5 secondes.
+    var afficher = function(essais) {
+      if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
+        Calendly.initInlineWidget({ url: url, parentElement: conteneur, prefill: prefill, utm: utm, resize: true });
+      } else if (essais > 0) {
+        setTimeout(function() { afficher(essais - 1); }, 250);
+      } else {
+        // Repli : un lien vers la page de réservation Calendly.
+        var lien = new URL(url);
+        if (nomComplet) lien.searchParams.set('name', nomComplet);
+        if (coordonnees.email) lien.searchParams.set('email', coordonnees.email);
+        if (utm.utmContent) lien.searchParams.set('utm_content', utm.utmContent);
+        conteneur.style.height = 'auto';
+        conteneur.innerHTML = '<p><a class="button is-primary is-medium" data-track="bt_decouverte_breathwork_calendly_repli"></a></p>';
+        conteneur.querySelector('a').href = lien.href;
+        conteneur.querySelector('a').textContent = "Choisir le moment de l'entretien";
+      }
+    };
+    afficher(20);
+
+    // Rendez-vous pris : on le signale, puis on passe à la confirmation, si Calendly
+    // (réglé pour rediriger lui-même) ne l'a pas déjà fait.
+    window.addEventListener('message', function(e) {
+      if (e.origin !== 'https://calendly.com' || !e.data || e.data.event !== 'calendly.event_scheduled') return;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'rendez_vous_decouverte_breathwork' });
+      try { sessionStorage.removeItem(that._CLE_DECOUVERTE); } catch (err) { /* rien à nettoyer */ }
+      setTimeout(function() { window.location.href = that._urlAvecSuivi(conteneur.dataset.etapeSuivante); }, 1500);
+    });
   },
 
   _setCookie: function(cname, cvalue, exdays) {

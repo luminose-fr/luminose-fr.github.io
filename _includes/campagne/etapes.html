@@ -1,0 +1,10 @@
+{% comment %}
+  Les trois étapes de la réservation de l'entretien de découverte.
+  Paramètre : etape (1, 2 ou 3) — l'étape en cours.
+{% endcomment %}
+{% assign etape = include.etape | plus: 0 %}
+<ol class="campagne-etapes" aria-label="Étapes de la réservation">
+  <li class="{% if etape > 1 %}est-faite{% elsif etape == 1 %}est-en-cours{% endif %}"{% if etape == 1 %} aria-current="step"{% endif %}><span class="campagne-etapes-numero">1</span> <span class="campagne-etapes-libelle">Questionnaire de santé</span></li>
+  <li class="{% if etape > 2 %}est-faite{% elsif etape == 2 %}est-en-cours{% endif %}"{% if etape == 2 %} aria-current="step"{% endif %}><span class="campagne-etapes-numero">2</span> <span class="campagne-etapes-libelle">Rendez-vous</span></li>
+  <li class="{% if etape == 3 %}est-en-cours{% endif %}"{% if etape == 3 %} aria-current="step"{% endif %}><span class="campagne-etapes-numero">3</span> <span class="campagne-etapes-libelle">Confirmation</span></li>
+</ol>

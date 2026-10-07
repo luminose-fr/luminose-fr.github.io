@@ -1,0 +1,41 @@
+---
+layout: campagne
+title: "Questionnaire de santé - Découvrir la respiration holotropique - Luminose"
+section: decouverte-breathwork
+sitemap: false
+---
+
+<section class="campagne-section campagne-etape questionnaire-sante">
+  <div class="campagne-conteneur">
+    {% include campagne/etapes.html etape=1 %}
+
+    <div class="content">
+      <h1>Le questionnaire de santé</h1>
+      <div id="introduction-questionnaire-sante">
+        <p>La thérapie par la <a href="{{ site.baseurl }}/respiration-holotropique.html" target="_blank">respiration holotropique Grof® Legacy Training</a> peut impliquer des expériences intenses accompagnées d'une forte libération émotionnelle et physique. Cette pratique n'est pas recommandée pour les femmes enceintes, ni pour les personnes souffrant de problèmes cardiovasculaires, de certains troubles psychiatriques diagnostiqués, d'une chirurgie ou d'une fracture récente, d'une maladie infectieuse aiguë, d'épilepsie, d’antécédents d’AVC, d’asthme sévère, de glaucome ou d'une <a href="https://fr.wikipedia.org/wiki/Crise_spirituelle" target="_blank">urgence/crise spirituelle</a> active.</p>
+        <p>Les réponses aux questions suivantes sont destinées à m'aider à préparer notre entretien préalable et resteront strictement confidentielles. Une fois le questionnaire envoyé, vous choisirez le moment de l'entretien.</p>
+      </div>
+
+      <form id="form-questionnaire-sante" data-etape-suivante="/respiration-holotropique/decouverte-rendez-vous.html" action="https://hook.eu1.make.com/32oigrxupo7xlin44bzqayy6cpdqvj83" method="POST" novalidate>
+        {% include formulaires/respiration-holotropique/coordonnees.html %}
+        {% include formulaires/respiration-holotropique/coordonnees-personne-confiance.html %}
+        {% include formulaires/respiration-holotropique/sante.html %}
+        {% include formulaires/respiration-holotropique/informations-complementaires.html %}
+        {% include formulaires/respiration-holotropique/declaration.html %}
+        {% include formulaires/respiration-holotropique/submit.html %}
+      </form>
+
+      <div id="md-erreur-questionnaire-sante" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="illustration"><i class="icon fas fa-exclamation-triangle"></i></div>
+          <div class="title">Erreur technique</div>
+          <p class="content">Le site a rencontré une erreur technique et le questionnaire n'a pas été envoyé (<span id="error-details" class="small"></span>).</p>
+          <p class="content">Vous pouvez essayer d'envoyer le questionnaire une nouvelle fois.</p>
+          <p class="content">Si le problème persiste, vous pourrez <a href="/documents/Questionnaire-sante-respiration-holotropique.pdf" target="_blank">télécharger et remplir le questionnaire</a> puis me l'envoyer par e-mail à <a href="mailto:florent@luminose.fr?subject=Questionnaire de santé - Respiration Holotropique">florent@luminose.fr</a></p>
+        </div>
+        <button class="modal-close is-large" aria-label="close" data-bulma-modal="close"></button>
+      </div>
+    </div>
+  </div>
+</section>
