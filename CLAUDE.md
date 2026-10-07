@@ -16,6 +16,7 @@ Un chantier de refonte progressive est en cours. Chaque étape fait l'objet d'un
 - L'identité de Florent est **« psychopraticien transpersonnel »**. Ne jamais le désigner comme « hypnothérapeute » dans les contenus rédigés (H1, corps de texte, signatures). L'hypnose est un outil et un mot-clé de recherche, pas une identité.
 - Le mot « hypnose » reste légitime et souhaitable dans les `title`, `meta description` et URL des pages concernées (référencement).
 - Le modèle est le **parcours** : premier échange offert de 20 minutes (« entretien préalable »), puis accompagnement dans la durée. Aucun contenu ne doit présenter les séances comme un produit à l'unité.
+- **Une exception, décidée par Florent le 06/10/2026** : une séance de découverte du breathwork holotropique, sans suite, est possible — toujours après le questionnaire de santé et l'échange de 20 minutes. Elle a sa page, `respiration-holotropique/decouverte.html`, où le questionnaire précède le calendrier de la rencontre (Calendly `rencontre-breathwork`).
 
 ## Règles terminologiques
 
