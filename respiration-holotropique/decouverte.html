@@ -1,0 +1,107 @@
+---
+layout: campagne
+title: "Découvrir la respiration holotropique en séance individuelle - Villefranche-de-Lauragais - Luminose"
+section: decouverte-breathwork
+description: "Une séance de breathwork holotropique (respiration holotropique) pour découvrir la pratique, à Villefranche-de-Lauragais, près de Toulouse. Entretien de 20 minutes offert au préalable."
+sitemap: false
+---
+
+<!-- HERO : l'illustration en pleine largeur -->
+<section class="campagne-hero">
+  <div class="campagne-hero-image">
+    {% img_optimized "contenus/breathwork-experience-interieure.jpg" alt="Une personne allongée dans l'herbe, son souffle s'élève en un ruban de lumière" loading="eager" %}
+  </div>
+  <div class="campagne-conteneur campagne-hero-contenu">
+  <div class="campagne-hero-texte">
+    <h1>Découvrir le breathwork holotropique</h1>
+    <p class="campagne-hero-chapo">Une séance individuelle pour essayer, sans engagement de suite, à Villefranche-de-Lauragais.</p>
+    <p class="campagne-faits">
+      <span class="is-styled-tag">1h45 de séance</span>
+      <span class="is-styled-tag">30 min d'intégration</span>
+      <span class="is-styled-tag">140&nbsp;€</span>
+    </p>
+    <p class="campagne-actions">
+      <a class="button is-primary is-medium" href="{{ site.baseurl }}/respiration-holotropique/decouverte-questionnaire.html" data-garder-gclid data-track="bt_decouverte_breathwork_reserver_haut">Réserver l'entretien offert de 20 min</a>
+      <a class="campagne-lien-secondaire" href="{{ site.baseurl }}/respiration-holotropique.html" data-track="bt_decouverte_breathwork_en_savoir_plus_haut">En savoir plus sur le breathwork</a>
+    </p>
+  </div>
+  </div>
+</section>
+
+<!-- LE CHEMIN -->
+<section class="campagne-section">
+  <div class="campagne-conteneur">
+    <h2>Comment ça se passe</h2>
+    <ol class="campagne-chemin">
+      <li>
+        <span class="campagne-chemin-numero">1</span>
+        <strong>Le questionnaire de santé</strong>
+        <span>5 minutes, obligatoire.</span>
+      </li>
+      <li>
+        <span class="campagne-chemin-numero">2</span>
+        <strong>L'entretien offert</strong>
+        <span>20 minutes pour faire connaissance.</span>
+      </li>
+      <li>
+        <span class="campagne-chemin-numero">3</span>
+        <strong>La séance</strong>
+        <span>1h45 à Villefranche-de-Lauragais.</span>
+      </li>
+      <li>
+        <span class="campagne-chemin-numero">4</span>
+        <strong>L'intégration</strong>
+        <span>30 minutes à distance, une à deux semaines après.</span>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- CE QUE L'ON VIT -->
+<section class="campagne-section campagne-section-claire">
+  <div class="campagne-conteneur campagne-vecu">
+    <div class="campagne-vecu-image">
+      {% img_optimized "contenus/respiration-holotropique-instruments.jpg" alt="Tambour, bâton de pluie et shaker : les instruments qui accompagnent les séances" %}
+    </div>
+    <div class="campagne-vecu-texte">
+      <h2>Ce que vous vivez</h2>
+      <dl>
+        <dt>Le souffle</dt>
+        <dd>Une respiration plus ample et plus rapide que d'habitude.</dd>
+        <dt>La musique</dt>
+        <dd>1h15 de percussions, d'émotion, puis de douceur.</dd>
+        <dt>Le cadre</dt>
+        <dd>Je reste à vos côtés du début à la fin.</dd>
+      </dl>
+      <p>Pas d'objectif à atteindre : c'est votre corps et votre inconscient qui guident le voyage.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TÉMOIGNAGE (repris tel quel de _data/temoignages.yml) -->
+{% assign temoignages = site.data.temoignages | where_exp: "t", "t.tags contains 'respiration-holotropique-individuelle'" %}
+{% for temoignage in temoignages limit: 1 %}
+<section class="campagne-section">
+  <figure class="campagne-conteneur campagne-temoignage">
+    <blockquote>« {{ temoignage.texte | strip_html }} »</blockquote>
+    <figcaption>{{ temoignage.auteur | strip_html }}, {{ temoignage.date | strip_html }}</figcaption>
+  </figure>
+</section>
+{% endfor %}
+
+<!-- DERNIER APPEL -->
+<section class="campagne-final">
+  <div class="campagne-conteneur">
+    <div class="campagne-final-florent">
+      {% img_optimized "florent.png" alt="Florent Jaouali" width=96 height=96 %}
+      <p><strong>Florent Jaouali</strong><br />Psychopraticien transpersonnel</p>
+    </div>
+    <h2>Une séance pour découvrir</h2>
+    <p>Si vous souhaitez continuer ensuite, nous en parlerons. Sinon, c'est très bien aussi.</p>
+    <p class="campagne-actions">
+      <a class="button is-white is-medium" href="{{ site.baseurl }}/respiration-holotropique/decouverte-questionnaire.html" data-garder-gclid data-track="bt_decouverte_breathwork_reserver_bas">Réserver l'entretien offert de 20 min</a>
+      <a class="campagne-lien-secondaire" href="{{ site.baseurl }}/respiration-holotropique.html" data-track="bt_decouverte_breathwork_en_savoir_plus_bas">En savoir plus sur le breathwork</a>
+    </p>
+    <p class="campagne-note">Pour les adultes et les adolescents de plus de 16 ans. Certaines situations de santé ne sont pas compatibles avec la pratique : le questionnaire le vérifie avant l'entretien.</p>
+  </div>
+</section>
