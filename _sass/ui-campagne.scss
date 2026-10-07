@@ -1,0 +1,540 @@
+// ============================================
+// Pages de campagne (layout « campagne ») : landing sans navigation et parcours
+// de réservation en trois étapes. Voir respiration-holotropique/decouverte*.html.
+// Palette d'interface uniquement (ui-variables), comme le veut CLAUDE.md.
+// ============================================
+@use "ui-variables" as v;
+@use "bulma-1.0.4/sass/utilities/mixins";
+
+body.campagne {
+  background-color: #FFFFFF;
+}
+
+// --- En-tête et pied : le strict nécessaire ---
+.campagne-entete {
+  padding: 1.25rem 0;
+
+  .campagne-logo img {
+    display: block;
+    width: 180px;
+    height: auto;
+  }
+}
+
+.campagne-pied {
+  padding: 2rem 1.5rem 2.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: v.$purple;
+
+  p + p { margin-top: 0.5rem; }
+  a { color: v.$purple; margin: 0 0.6rem; }
+}
+
+.campagne-conteneur {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.campagne-section {
+  padding: 4.5rem 0;
+}
+
+.campagne-section-claire {
+  background-color: v.$purple-light;
+}
+
+.campagne h1,
+.campagne h2 {
+  font-family: v.$family-serif;
+  font-weight: 300;
+  color: v.$purple-heavy;
+  line-height: 1.15;
+}
+
+.campagne h2 {
+  font-size: 2.25rem;
+  margin-bottom: 2.25rem;
+}
+
+.campagne-lien-secondaire {
+  color: v.$purple-heavy;
+  text-decoration: underline;
+  text-decoration-color: v.$green-light;
+  text-decoration-thickness: 0.3em;
+  text-underline-offset: -0.1em;
+  text-decoration-skip-ink: none;
+
+  &:hover { color: v.$purple-logo; }
+}
+
+.campagne-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+}
+
+// --- Hero : l'illustration jusqu'au bord droit, le texte posé à gauche ---
+// L'image commence au tiers de la largeur : le ruban du souffle et la personne
+// restent visibles à droite du texte, et son bord gauche se fond dans le fond clair.
+.campagne-hero {
+  position: relative;
+  min-height: min(80vh, 46rem);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: v.$purple-light;
+
+  .campagne-hero-image {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 35%;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 55%;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, v.$purple-light 0%, rgba(249, 245, 255, 0) 28%);
+    }
+  }
+
+  .campagne-hero-contenu {
+    position: relative;
+    width: 100%;
+  }
+
+  .campagne-hero-texte {
+    max-width: 30rem;
+    padding: 3.5rem 0;
+  }
+
+  h1 {
+    font-size: 3.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .campagne-hero-chapo {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: v.$purple-heavy;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.campagne-faits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+
+  .is-styled-tag {
+    margin: 0;
+    background-color: #FFFFFF;
+    border: 1px solid v.$purple-light-border;
+    color: v.$purple-heavy;
+    padding: 0.3rem 0.75rem;
+  }
+}
+
+// --- Le chemin : une vraie suite, donc numérotée et reliée ---
+.campagne-chemin {
+  list-style: none;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  position: relative;
+
+  // Le fil qui relie les étapes, à hauteur des numéros.
+  &::before {
+    content: "";
+    position: absolute;
+    top: 1.375rem;
+    left: 1.375rem;
+    right: 12%;
+    height: 2px;
+    background-color: v.$purple-light-border;
+  }
+
+  li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: v.$purple;
+  }
+
+  strong {
+    color: v.$purple-heavy;
+    font-size: 1.15rem;
+    margin-top: 0.75rem;
+  }
+}
+
+.campagne-chemin-numero {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 2px solid v.$purple;
+  color: v.$purple-heavy;
+  font-size: 1.15rem;
+}
+
+// --- Ce que l'on vit : image et trois lignes ---
+.campagne-vecu {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+
+  .campagne-vecu-image img {
+    display: block;
+    width: 100%;
+    border-radius: var(--bulma-radius-large);
+  }
+
+  h2 { margin-bottom: 1.5rem; }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.9rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  dt {
+    font-family: v.$family-serif;
+    font-size: 1.3rem;
+    color: v.$purple-heavy;
+    line-height: 1.3;
+  }
+
+  dd {
+    color: v.$purple;
+    line-height: 1.6;
+    margin: 0;
+    padding-top: 0.2rem;
+  }
+
+  p { color: v.$purple-heavy; }
+}
+
+// --- Le témoignage : la voix de quelqu'un d'autre, en grand ---
+.campagne-temoignage {
+  max-width: 44rem;
+  text-align: center;
+
+  blockquote {
+    font-family: v.$family-serif;
+    font-size: 1.35rem;
+    line-height: 1.55;
+    color: v.$purple-heavy;
+    margin-bottom: 1.25rem;
+  }
+
+  figcaption {
+    color: v.$purple;
+  }
+}
+
+// --- Le dernier appel, sur le dégradé violet de la page d'accueil ---
+.campagne-final {
+  background: linear-gradient(135deg, v.$purple 0%, v.$purple-heavy 100%);
+  color: #FFFFFF;
+  padding: 4.5rem 0;
+  text-align: center;
+
+  h2 {
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+  }
+
+  p { color: #FFFFFF; }
+
+  .campagne-actions {
+    justify-content: center;
+    margin: 2rem 0;
+  }
+
+  .button.is-white {
+    color: v.$purple-heavy;
+  }
+
+  .campagne-lien-secondaire {
+    color: #FFFFFF;
+    text-decoration-color: rgba(180, 255, 200, 0.6);
+  }
+
+  .campagne-note {
+    max-width: 36rem;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+}
+
+.campagne-final-florent {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+
+  img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    object-fit: cover;
+  }
+
+  strong { color: #FFFFFF; }
+}
+
+// --- Le parcours de réservation ---
+.campagne-etape {
+  padding-top: 1.5rem;
+
+  .content > h1,
+  .content > p,
+  #introduction-questionnaire-sante,
+  .campagne-encart { max-width: 46rem; }
+
+  .campagne-etapes,
+  form,
+  .campagne-calendrier { max-width: 56rem; }
+
+  h1 {
+    font-size: 2.6rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.campagne-etapes {
+  list-style: none;
+  margin: 0 0 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid v.$purple-light-border;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: v.$purple;
+    opacity: 0.6;
+  }
+
+  li.est-en-cours,
+  li.est-faite { opacity: 1; }
+
+  li.est-en-cours { color: v.$purple-heavy; }
+
+  .campagne-etapes-numero {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid currentColor;
+    font-size: 0.95rem;
+  }
+
+  li.est-en-cours .campagne-etapes-numero {
+    background-color: v.$purple;
+    border-color: v.$purple;
+    color: #FFFFFF;
+  }
+
+  li.est-faite .campagne-etapes-numero {
+    background-color: v.$green-light;
+    border-color: v.$green-light;
+    color: v.$green-heavy;
+  }
+}
+
+.campagne-calendrier {
+  min-width: 320px;
+  height: 720px;
+}
+
+.campagne-encart {
+  background-color: v.$purple-light;
+  border-radius: var(--bulma-radius-large);
+  padding: 1.5rem;
+  color: v.$purple-heavy;
+
+  p + p { margin-top: 1rem; }
+}
+
+// --- Tablette et mobile : l'image passe au-dessus du texte ---
+@include mixins.touch {
+  .campagne-hero {
+    display: block;
+    min-height: 0;
+
+    .campagne-hero-image {
+      position: relative;
+      left: auto;
+      aspect-ratio: 3 / 2;
+
+      img { object-position: 50% 62%; }
+
+      &::after {
+        background: linear-gradient(180deg, rgba(249, 245, 255, 0) 65%, v.$purple-light 100%);
+      }
+    }
+
+    .campagne-hero-texte {
+      max-width: 36rem;
+      padding: 0.5rem 0 2.5rem;
+    }
+  }
+}
+
+// --- Mobile : tout s'empile ---
+@include mixins.mobile {
+  .campagne-hero {
+    .campagne-hero-image { aspect-ratio: 4 / 3; }
+    h1 { font-size: 2.4rem; }
+    .campagne-hero-chapo { font-size: 1.15rem; }
+  }
+
+  .campagne-section,
+  .campagne-final { padding: 3rem 0; }
+
+  .campagne h2 { font-size: 1.85rem; margin-bottom: 1.5rem; }
+
+  .campagne-chemin {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    &::before {
+      top: 1.375rem;
+      bottom: 1.375rem;
+      left: 1.375rem;
+      right: auto;
+      width: 2px;
+      height: auto;
+    }
+
+    li {
+      display: grid;
+      grid-template-columns: 2.75rem 1fr;
+      column-gap: 1rem;
+      row-gap: 0.15rem;
+    }
+
+    .campagne-chemin-numero { grid-row: span 2; }
+    strong { margin-top: 0.2rem; }
+  }
+
+  .campagne-vecu {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .campagne-temoignage blockquote { font-size: 1.2rem; }
+
+  .campagne-etape h1 { font-size: 2rem; }
+
+  // Sur mobile, seul le libellé de l'étape en cours reste visible (les autres restent lus).
+  .campagne-etapes {
+    gap: 0.5rem 1rem;
+
+    li:not(.est-en-cours) .campagne-etapes-libelle {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  }
+
+  .campagne-calendrier { height: 1000px; }
+}
+
+// --- Thème sombre ---
+@mixin campagne-sombre {
+  body.campagne { background-color: v.$dark-purple-heaviest; }
+
+  .campagne h1,
+  .campagne h2,
+  .campagne-hero .campagne-hero-chapo,
+  .campagne-chemin strong,
+  .campagne-chemin-numero,
+  .campagne-vecu dt,
+  .campagne-vecu p,
+  .campagne-temoignage blockquote,
+  .campagne-etapes li.est-en-cours,
+  .campagne-encart,
+  .campagne-lien-secondaire { color: #FFFFFF; }
+
+  .campagne-pied,
+  .campagne-pied a,
+  .campagne-chemin li,
+  .campagne-vecu dd,
+  .campagne-temoignage figcaption,
+  .campagne-etapes li { color: v.$dark-purple; }
+
+  .campagne-section-claire,
+  .campagne-encart { background-color: v.$dark-purple-heavy; }
+
+  .campagne-hero { background-color: v.$dark-purple-heaviest; }
+
+  .campagne-hero .campagne-hero-image::after {
+    background: linear-gradient(90deg, v.$dark-purple-heaviest 0%, rgba(32, 18, 46, 0) 28%);
+  }
+
+  .campagne-faits .is-styled-tag {
+    background-color: v.$dark-purple-heavy;
+    border-color: v.$dark-purple-heavy;
+    color: #FFFFFF;
+  }
+
+  .campagne-chemin::before,
+  .campagne-etapes { border-color: v.$dark-purple-heavy; }
+  .campagne-chemin::before { background-color: v.$dark-purple-heavy; }
+
+  .campagne-chemin-numero {
+    background-color: v.$dark-purple-heaviest;
+    border-color: v.$dark-purple;
+  }
+
+  .campagne-final { background: linear-gradient(135deg, v.$dark-purple-heavy 0%, #2A1740 100%); }
+
+  @include mixins.touch {
+    .campagne-hero .campagne-hero-image::after {
+      background: linear-gradient(180deg, rgba(32, 18, 46, 0) 65%, v.$dark-purple-heaviest 100%);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  @include campagne-sombre;
+}
+
+[data-theme=dark],
+.theme-dark {
+  @include campagne-sombre;
+}

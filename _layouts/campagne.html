@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+  {% include head.html %}
+
+  {% comment %}
+    Pages de campagne (publicité) : pas de navigation, pour ne pas disperser.
+    Le logo ramène à l'accueil, le pied de page garde les liens légaux et le
+    réglage des cookies. Voir respiration-holotropique/decouverte*.html.
+  {% endcomment %}
+  <body class="campagne {{ page.section }}">
+
+    {% include noscript.html %}
+
+    <header class="campagne-entete">
+      <div class="campagne-conteneur">
+        <a href="{{ site.baseurl }}/" class="campagne-logo">{% img_optimized "luminose-logo-hz.png" alt="Luminose" width=240 height=80 loading="eager" %}</a>
+      </div>
+    </header>
+
+    {{ content }}
+
+    <footer class="campagne-pied">
+      <p>© 2019-{{ 'now' | date: "%Y" }}, Luminose.fr</p>
+      <p><a href="{{ site.baseurl }}/mentions-legales.html">Mentions légales</a> <a href="{{ site.baseurl }}/conditions-generales-de-vente.html">Conditions générales de vente</a> <a id="bt-cookies-update" href="#">Cookies et vie privée</a></p>
+    </footer>
+
+    {% include modales/modal-cookies.html %}
+
+    {% include scripts.html %}
+
+  </body>
+
+</html>
