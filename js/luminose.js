@@ -91,6 +91,7 @@ var App = {
           adultevisio:    'https://calendly.com/luminose/seance-adulte-distance?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
           enfant:         'https://calendly.com/luminose/seance-enfant?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
           respiration:    'https://calendly.com/luminose/seance-respiration-holotropique?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
+          rencontre_breathwork: 'https://calendly.com/luminose/rencontre-breathwork?hide_gdpr_banner=1&hide_event_type_details=1&primary_color=6163a5',
         },
         rh: {
           formulaire_paiment: window.location.origin + "/respiration-holotropique/inscription-etape-2.html",
@@ -658,6 +659,14 @@ var App = {
                 urlWithParams.searchParams.append("ville", formData.get("coordonnees_participant[ville]"));
                 urlWithParams.searchParams.append("notion_page_id", formData.get("notion_page_id"));
                 window.location.href = urlWithParams.href;
+              } else if (questionnaireSante.dataset.calendly) {
+                // Questionnaire avant la rencontre (respiration-holotropique/decouverte.html) :
+                // le calendrier s'affiche à la place du formulaire.
+                questionnaireSante.classList.add('is-hidden');
+                messageIntroduction.classList.add('is-hidden');
+                messageSucces.classList.remove('is-hidden');
+                window.scrollTo({ top: messageSucces.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
+                that._afficherCalendlyApresQuestionnaire(questionnaireSante.dataset.calendly, formData);
               } else {
                 window.scroll(0, 0);
                 questionnaireSante.classList.add('is-hidden');
@@ -1478,7 +1487,45 @@ var App = {
     }
     return utm_params;
   },
-  
+
+  // Affiche le calendrier Calendly (clé de this._config.urls.calendly) une fois le
+  // questionnaire de santé envoyé, prérempli avec les coordonnées saisies. Le gclid
+  // part dans utm_content, comme pour les autres prises de rendez-vous.
+  _afficherCalendlyApresQuestionnaire: function(cleCalendly, formData) {
+    var url = this._config.urls.calendly[cleCalendly];
+    var conteneur = document.getElementById('calendly-apres-questionnaire');
+    if (!url || conteneur === null) return;
+
+    var prenom = (formData.get('coordonnees_participant[prenom]') || '').trim();
+    var nom = (formData.get('coordonnees_participant[nom]') || '').trim();
+    var email = (formData.get('coordonnees_participant[email]') || '').trim();
+    var utmParams = this._getUtmParams();
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'questionnaire_sante_envoye', origine: cleCalendly });
+
+    if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
+      Calendly.initInlineWidget({
+        url: url,
+        parentElement: conteneur,
+        prefill: { name: (prenom + ' ' + nom).trim(), firstName: prenom, lastName: nom, email: email },
+        utm: utmParams,
+        resize: true
+      });
+    } else {
+      // Repli si le script Calendly n'a pas chargé : un lien vers la page de réservation.
+      var lien = new URL(url);
+      if (prenom || nom) lien.searchParams.set('name', (prenom + ' ' + nom).trim());
+      if (email) lien.searchParams.set('email', email);
+      if (utmParams.utmContent) lien.searchParams.set('utm_content', utmParams.utmContent);
+      conteneur.style.height = 'auto';
+      conteneur.innerHTML = '<p class="has-text-centered"><a class="button is-primary is-medium" target="_blank" rel="noopener" data-track="bt_decouverte_breathwork_calendly_repli"></a></p>';
+      var bouton = conteneur.querySelector('a');
+      bouton.href = lien.href;
+      bouton.textContent = 'Choisir le moment de notre échange';
+    }
+  },
+
   _setCookie: function(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
