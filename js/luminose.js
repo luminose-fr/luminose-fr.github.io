@@ -131,6 +131,7 @@ var App = {
 
   _run: function() {
     // console.log(`App running in ${this._config.environment} mode`);
+    this._recevoirParametres();
     this.setupViewport();
     this.setupCookiesModal();
     this.setupNavigation();
@@ -495,8 +496,15 @@ var App = {
         var valeur = this._parametrePrive(parametre);
         if (valeur !== '') coordonnees[champ] = valeur;
       });
+      if (Object.keys(coordonnees).length === 0) return;
       document.querySelectorAll('.is-questionnaire-sante').forEach((bouton) => {
-        this._preparerParametres(new URL(bouton.href).pathname, coordonnees);
+        var chemin = new URL(bouton.href).pathname;
+        this._preparerParametres(chemin, coordonnees);
+        // Ouvert dans un nouvel onglet (Ctrl+clic, clic molette, appui long), le questionnaire
+        // n'a pas ce sessionStorage : au geste sur le bouton, on passe aussi par localStorage.
+        ['pointerdown', 'click'].forEach((evenement) => {
+          bouton.addEventListener(evenement, () => this._transmettreParametres(chemin, coordonnees));
+        });
       });
     }
   },
@@ -527,6 +535,33 @@ var App = {
       });
       sessionStorage.setItem(cle, JSON.stringify(ranges));
     } catch (e) { /* sans stockage, la page suivante n'est simplement pas préremplie */ }
+  },
+
+  // sessionStorage ne passe pas d'un onglet à l'autre. Pour un lien qu'on peut ouvrir dans
+  // un nouvel onglet, les valeurs sont confiées à localStorage pour 15 minutes au plus : la
+  // page d'arrivée les reprend dans son sessionStorage et les efface aussitôt, et toute page
+  // du site efface celles qui ont expiré (_recevoirParametres).
+  _CLE_TRANSFERT: 'luminose_transfert:',
+  _DUREE_TRANSFERT: 15 * 60 * 1000,
+
+  _transmettreParametres: function(chemin, valeurs) {
+    try {
+      localStorage.setItem(this._CLE_TRANSFERT + chemin, JSON.stringify({ expire: Date.now() + this._DUREE_TRANSFERT, valeurs: valeurs }));
+    } catch (e) { /* sans stockage, le nouvel onglet n'est simplement pas prérempli */ }
+  },
+
+  _recevoirParametres: function() {
+    try {
+      var clePage = this._CLE_TRANSFERT + window.location.pathname;
+      Object.keys(localStorage).forEach((cle) => {
+        if (cle.indexOf(this._CLE_TRANSFERT) !== 0) return;
+        var transfert = null;
+        try { transfert = JSON.parse(localStorage.getItem(cle)); } catch (e) { transfert = null; }
+        var valide = transfert !== null && transfert.expire > Date.now();
+        if (valide && cle === clePage) this._preparerParametres(window.location.pathname, transfert.valeurs || {});
+        if (!valide || cle === clePage) localStorage.removeItem(cle);
+      });
+    } catch (e) { /* rien à reprendre */ }
   },
 
   getParamFromCurrentPage: function(param_name) {
