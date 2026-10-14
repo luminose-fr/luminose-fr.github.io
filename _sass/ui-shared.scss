@@ -2254,46 +2254,39 @@ section.newsletter {
 //********************************************/
 //************** Modal *****************/
 //********************************************/
-// Bandeau de cookies : une boîte compacte en bas de l'écran. Le fond reste visible,
-// à peine voilé, mais n'est pas cliquable : le choix est requis.
 #md-cookies {
-  justify-content: flex-end;
-
   .modal-background {
-    background-color: rgba(255, 255, 255, .3)
+    background-color: rgba(255, 255, 255, .8)
   }
   .modal-content {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    width: calc(100% - 2.5rem);
-    max-width: 45rem;
-    margin: 0 auto 1.25rem;
+    width:32rem;
     background-image: linear-gradient(135deg, v.$purple, v.$purple-heavy);
     color: #ffffff;
     border-radius: var(--bulma-radius-large);
-    padding: 1rem 1.25rem;
-    font-size: .875rem;
-    line-height: 1.4;
+    padding: calc(2* var(--bulma-block-spacing));
 
-    p {
-      flex: 1;
+    p.content {
+      margin-bottom: var(--bulma-content-block-margin-bottom);
+    }
+    p.content:last-of-type {
+      margin-bottom: calc(2* var(--bulma-content-block-margin-bottom));
     }
     a {
       color: #ffffff;
       text-decoration: underline;
     }
-    .buttons {
-      flex-shrink: 0;
-      flex-wrap: nowrap;
-      margin-bottom: 0;
 
-      .button {
-        margin-bottom: 0;
-        font-size: inherit;
-        padding-left: .875em;
-        padding-right: .875em;
+    .illustration {
+      text-align: center;
+
+      i.icon {
+        font-size: 3rem;
       }
+    }
+
+    .buttons {
+
+      justify-content: center;
     }
   }
 }

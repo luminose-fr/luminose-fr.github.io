@@ -263,17 +263,14 @@
   }
   
   #md-cookies {
-    .modal-content {
-      flex-direction: column;
-      align-items: stretch;
-      gap: .75rem;
-      width: calc(100% - 2rem);
-      margin-bottom: 1rem;
-      padding: 1rem;
-
-      .buttons {
-        .button {
-          flex: 1;
+   .modal-content {
+      width:90%;
+      margin-left: auto;
+      margin-right: auto;
+      padding: var(--bulma-block-spacing);
+      .illustration {
+        i.icon {
+          font-size: 2.5rem;
         }
       }
     }
