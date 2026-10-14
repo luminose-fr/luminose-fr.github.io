@@ -158,75 +158,61 @@ var App = {
     });
   },
 
+  // Le bandeau de cookies. Le choix est gardé six mois dans le cookie luminose_consentement
+  // (« accepte » ou « refuse ») ; le script de tête (_includes/head.html) le rétablit à
+  // chaque page, avant le chargement de Google Tag Manager.
+  _COOKIE_CONSENTEMENT: 'luminose_consentement',
+  _DUREE_CONSENTEMENT: 182, // jours
+
   setupCookiesModal: function() {
     var that = this;
-    that.cookiesConsentValue = that._getCookie('cookiesConsent'); // Not set OR denied OR granted
+    var elementModal = document.querySelector('#md-cookies');
+    if (elementModal === null) return;
 
-    _modal = document.querySelector('#md-cookies');
-    if (_modal !== null) {
-      var modal = new BulmaModal("#md-cookies");
-      var btCookiesReject = _modal.querySelector('#bt-cookies-reject');
-      var btCookiesAccept = _modal.querySelector('#bt-cookies-accept');
-      var btUpdateCookies = document.querySelector('#bt-cookies-update');
+    var modal = new BulmaModal("#md-cookies");
+    var btCookiesReject = elementModal.querySelector('#bt-cookies-reject');
+    var btCookiesAccept = elementModal.querySelector('#bt-cookies-accept');
 
-      if (btUpdateCookies !== null) {
-        btUpdateCookies.addEventListener("click", function(event) {
-          event.preventDefault();
-          that._setCookie('cookiesConsent', '', "Thu, 01 Jan 1970 00:00:00 UTC");
-          that.cookiesConsentValue = that._getCookie('cookiesConsent');
-          modal.show();
-        });
-      }
-
-      btCookiesAccept.addEventListener("click", function(event) {
+    // « Modifier mon choix » : pied de page et page /cookies.html. Le nouveau choix remplace l'ancien.
+    document.querySelectorAll('#bt-cookies-update, .js-modifier-consentement').forEach(function(bouton) {
+      bouton.addEventListener("click", function(event) {
         event.preventDefault();
-        that._setCookie('cookiesConsent', 'granted', 365);
-        that.cookiesConsentValue = that._getCookie('cookiesConsent');
-        gtag('consent', 'update', {
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted',
-          'analytics_storage': 'granted',
-          'personalization_storage': 'granted',
-          'functionality_storage': 'granted',
-          'security_storage': 'granted'
-        });
-        modal.close();
-      });
-
-      btCookiesReject.addEventListener("click", function(event) {
-        event.preventDefault();
-        that._setCookie('cookiesConsent', 'denied', 365);
-        that.cookiesConsentValue = that._getCookie('cookiesConsent');
-        gtag('consent', 'update', {
-          'ad_storage': 'denied',
-          'ad_user_data': 'denied',
-          'ad_personalization': 'denied',
-          'analytics_storage': 'denied',
-          'personalization_storage': 'denied',
-          'functionality_storage': 'denied',
-          'security_storage': 'denied'
-        });
-        modal.close();
-      });
-
-      if (that.cookiesConsentValue != 'granted' && that.cookiesConsentValue != 'denied') {
         modal.show();
-      } else {
-        if (that.cookiesConsentValue == 'granted') {
-          gtag('consent', 'update', {
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted',
-            'analytics_storage': 'granted',
-            'personalization_storage': 'granted',
-            'functionality_storage': 'granted',
-            'security_storage': 'granted'
-          });
-        }
-      }
-    }
+      });
+    });
 
+    btCookiesAccept.addEventListener("click", function(event) {
+      event.preventDefault();
+      that._setCookie(that._COOKIE_CONSENTEMENT, 'accepte', that._DUREE_CONSENTEMENT);
+      gtag('consent', 'update', window.luminoseConsentementAccepte);
+      window.dataLayer.push({ event: 'consentement_accepte' });
+      modal.close();
+    });
+
+    btCookiesReject.addEventListener("click", function(event) {
+      event.preventDefault();
+      that._setCookie(that._COOKIE_CONSENTEMENT, 'refuse', that._DUREE_CONSENTEMENT);
+      gtag('consent', 'update', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied'
+      });
+      // Les cookies publicitaires déjà posés sur le site (Google Ads, Pixel Meta) sont effacés.
+      document.cookie.split(';').forEach(function(cookie) {
+        var nom = cookie.split('=')[0].trim();
+        if (nom.indexOf('_gcl_') === 0 || nom === '_fbp' || nom === '_fbc') {
+          that._effacerCookie(nom);
+          that._effacerCookie(nom, '.luminose.fr');
+        }
+      });
+      modal.close();
+    });
+
+    var choix = that._getCookie(that._COOKIE_CONSENTEMENT);
+    if (choix !== 'accepte' && choix !== 'refuse') {
+      modal.show();
+    }
   },
 
   setupNavigation: function() {
@@ -1595,23 +1581,25 @@ var App = {
   },
 
   _setCookie: function(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    var secure = this._config.environment === "production" ? "; Secure" : "";
+    document.cookie = cname + "=" + cvalue + "; max-age=" + Math.round(exdays * 24 * 60 * 60) + "; path=/; SameSite=Lax" + secure;
   },
-  
+
+  _effacerCookie: function(cname, domaine) {
+    document.cookie = cname + "=; max-age=0; path=/" + (domaine ? "; domain=" + domaine : "");
+  },
+
   _getCookie: function(cname) {
     let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
+    let ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
       while (c.charAt(0) == ' ') {
         c = c.substring(1);
       }
       if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
+        // Un seul cookie mal encodé ne doit pas empêcher de lire les autres.
+        try { return decodeURIComponent(c.substring(name.length, c.length)); } catch (e) { return c.substring(name.length, c.length); }
       }
     }
     return "";
