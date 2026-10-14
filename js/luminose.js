@@ -82,7 +82,8 @@ var App = {
       keys: {
         rh: {
           stripe_public: "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo", // TEST
-        }
+        },
+        recaptcha: "6LcWCPgqAAAAAOIKPvshWxLozgnbLTigI-Y-VVP4", // clé de site, publique
       },
       urls: {
         calendly: {
@@ -144,6 +145,7 @@ var App = {
     this.setupPayerSeance();
     this.setupPaiementConfirme();
     this.setupParcoursDecouverte();
+    this.setupRecaptcha();
     this.respiration.run();
   },
 
@@ -1578,6 +1580,26 @@ var App = {
       try { sessionStorage.removeItem(that._CLE_DECOUVERTE); } catch (err) { /* rien à nettoyer */ }
       setTimeout(function() { window.location.href = that._urlAvecSuivi(conteneur.dataset.etapeSuivante); }, 1500);
     });
+  },
+
+  // reCAPTCHA protège le formulaire de la lettre d'information (Brevo). Il se charge une
+  // seule fois, au premier geste dans ce formulaire, plutôt que sur chaque page. Le script
+  // de Brevo s'en sert à l'envoi (grecaptcha.ready puis execute).
+  setupRecaptcha: function() {
+    var formulaire = document.getElementById('sib-form');
+    if (formulaire === null || this._config.environment !== 'production') return;
+
+    var cle = this._config.keys.recaptcha;
+    var charger = function() {
+      formulaire.removeEventListener('focusin', charger);
+      formulaire.removeEventListener('pointerdown', charger);
+      var script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(cle) + '&hl=fr';
+      script.async = true;
+      document.head.appendChild(script);
+    };
+    formulaire.addEventListener('focusin', charger);
+    formulaire.addEventListener('pointerdown', charger);
   },
 
   _setCookie: function(cname, cvalue, exdays) {

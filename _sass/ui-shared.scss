@@ -2093,6 +2093,12 @@ section.newsletter {
   i.icon {
     padding-left: 6rem;
   }
+
+  // Mention reCAPTCHA : ses liens se distinguent du texte.
+  small a {
+    color: inherit;
+    text-decoration: underline;
+  }
 }
 
 //********************************************/
