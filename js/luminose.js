@@ -494,34 +494,51 @@ var App = {
 
   setupButtonConfirmationQuestionnaireSante: function() {
     if (document.querySelector('.is-questionnaire-sante') !== null) {
-      var that = this;
-
-      var prenom = decodeURIComponent(that.getParamFromCurrentPage('invitee_first_name').replaceAll('+', ' '));
-      var nom = decodeURIComponent(that.getParamFromCurrentPage('invitee_last_name').replaceAll('+', ' '));
-      var email = decodeURIComponent(that.getParamFromCurrentPage('invitee_email').replaceAll('+', ' '));
-      var telephone = decodeURIComponent(that.getParamFromCurrentPage('text_reminder_number').replaceAll('+', ' '));
-      var params = new URLSearchParams();
-
-      if (prenom !== null && prenom !== '') {
-        params.append('coordonnees_participant[prenom]', prenom);
-      }
-      if (nom !== null && nom !== '') {
-        params.append('coordonnees_participant[nom]', nom);
-      }
-      if (email !== null && email !== '') {
-        params.append('coordonnees_participant[email]', email);
-      }
-      if (telephone !== null && telephone !== '') {
-        params.append('coordonnees_participant[telephone]', telephone);
-      }
-      
-      var buttons = document.querySelectorAll('.is-questionnaire-sante');
-      buttons.forEach(function(button) {
-        const url = new URL(button.href);
-        url.search = params;
-        button.href = url.href;
+      // Les coordonnées données à Calendly préremplissent le questionnaire, sans passer
+      // par l'adresse : le lien du bouton reste sans paramètre.
+      var coordonnees = {};
+      var correspondances = {
+        invitee_first_name: 'coordonnees_participant[prenom]',
+        invitee_last_name: 'coordonnees_participant[nom]',
+        invitee_email: 'coordonnees_participant[email]',
+        text_reminder_number: 'coordonnees_participant[telephone]'
+      };
+      Object.entries(correspondances).forEach(([parametre, champ]) => {
+        var valeur = this._parametrePrive(parametre);
+        if (valeur !== '') coordonnees[champ] = valeur;
+      });
+      document.querySelectorAll('.is-questionnaire-sante').forEach((bouton) => {
+        this._preparerParametres(new URL(bouton.href).pathname, coordonnees);
       });
     }
+  },
+
+  // Paramètres personnels : le script de tête (_includes/head.html) les retire de
+  // l'adresse et les range pour la page, dans window.luminoseParametres et dans
+  // sessionStorage. Les valeurs y sont déjà décodées.
+  _CLE_PARAMETRES: 'luminose_parametres:',
+
+  _parametresPrives: function() {
+    var ranges = {};
+    try { ranges = JSON.parse(sessionStorage.getItem(this._CLE_PARAMETRES + window.location.pathname) || '{}') || {}; } catch (e) { ranges = {}; }
+    return Object.assign(ranges, window.luminoseParametres || {});
+  },
+
+  _parametrePrive: function(nom) {
+    var valeurs = this._parametresPrives();
+    return Object.prototype.hasOwnProperty.call(valeurs, nom) ? String(valeurs[nom]) : '';
+  },
+
+  // Range des valeurs pour la page vers laquelle on va (chemin : « /dossier/page.html »).
+  _preparerParametres: function(chemin, valeurs) {
+    try {
+      var cle = this._CLE_PARAMETRES + chemin;
+      var ranges = JSON.parse(sessionStorage.getItem(cle) || '{}') || {};
+      Object.entries(valeurs).forEach(function([nom, valeur]) {
+        if (valeur !== null && valeur !== undefined) ranges[nom] = String(valeur);
+      });
+      sessionStorage.setItem(cle, JSON.stringify(ranges));
+    } catch (e) { /* sans stockage, la page suivante n'est simplement pas préremplie */ }
   },
 
   getParamFromCurrentPage: function(param_name) {
@@ -588,9 +605,8 @@ var App = {
   setupFormPrefill: function() {
     if (document.querySelector('#form-questionnaire-sante') !== null) {
       var questionnaireSante = document.querySelector('#form-questionnaire-sante');
-      params = new URLSearchParams(document.location.search);
-      params.forEach((value, key) => {
-        var field = questionnaireSante.querySelector('[name="' + key + '"]')
+      Object.entries(this._parametresPrives()).forEach(([key, value]) => {
+        var field = questionnaireSante.querySelector('[name="' + CSS.escape(key) + '"]')
         if(field != null) {
           field.value = value
         }
@@ -651,15 +667,17 @@ var App = {
 
               // Si la réponse est OK
               if (estAvecDeuxEtapes) {
-                const urlWithParams = new URL(urlEtapeDeux);
-                urlWithParams.searchParams.append("prenom", formData.get("coordonnees_participant[prenom]"));
-                urlWithParams.searchParams.append("nom", formData.get("coordonnees_participant[nom]"));
-                urlWithParams.searchParams.append("code_postal", formData.get("coordonnees_participant[code_postal]"));
-                urlWithParams.searchParams.append("email", formData.get("coordonnees_participant[email]"));
-                urlWithParams.searchParams.append("telephone", formData.get("coordonnees_participant[telephone]"));
-                urlWithParams.searchParams.append("ville", formData.get("coordonnees_participant[ville]"));
-                urlWithParams.searchParams.append("notion_page_id", formData.get("notion_page_id"));
-                window.location.href = urlWithParams.href;
+                // Les coordonnées suivent vers l'étape 2 par sessionStorage, jamais par l'adresse.
+                that._preparerParametres(new URL(urlEtapeDeux).pathname, {
+                  prenom: formData.get("coordonnees_participant[prenom]"),
+                  nom: formData.get("coordonnees_participant[nom]"),
+                  code_postal: formData.get("coordonnees_participant[code_postal]"),
+                  email: formData.get("coordonnees_participant[email]"),
+                  telephone: formData.get("coordonnees_participant[telephone]"),
+                  ville: formData.get("coordonnees_participant[ville]"),
+                  notion_page_id: formData.get("notion_page_id")
+                });
+                window.location.href = urlEtapeDeux;
               } else if (questionnaireSante.dataset.etapeSuivante) {
                 // Parcours de découverte (respiration-holotropique/decouverte-*.html) :
                 // le questionnaire envoyé, on passe à l'étape du rendez-vous.
@@ -775,8 +793,7 @@ var App = {
     const { keys, urls } = this._config;
     const divDonneesInscription = document.querySelector('#donnees-inscription');
     const stripe = Stripe(keys.rh.stripe_public);
-    const queryStringParams = new URLSearchParams(window.location.search);
-    const metadata = { notion_page_id: decodeURIComponent(queryStringParams.get("notion_page_id")) };
+    const metadata = { notion_page_id: this._parametrePrive("notion_page_id") };
     const futuraFontUrl = urls.futura_font;
     const appearance = {
       theme: 'stripe',
@@ -788,7 +805,7 @@ var App = {
       }
     };
     
-    const billingDetails = this._getBillingDetails(queryStringParams);
+    const billingDetails = this._getBillingDetails();
     const donneesCompletes = this._areBillingDetailsComplete(billingDetails); 
     const clientSecret = await this._createPaymentIntent(urls.rh.make_webhook_get_payment_intent, metadata);
   
@@ -823,9 +840,9 @@ var App = {
     this._setupStripeCouponButton(clientSecret, stripe, optionsPaiements);
   },
   
-  _getBillingDetails: function (queryStringParams) {
+  _getBillingDetails: function () {
     const extractValue = (key) => {
-      const value = decodeURIComponent(queryStringParams.get(key) || "").trim();
+      const value = this._parametrePrive(key).trim();
       return value || null; // Retourne null si la valeur est vide
     };
   
@@ -1331,7 +1348,7 @@ var App = {
     }
 
     const fetchWebhook1 = () => {
-      const email = (this.getParamFromCurrentPage("email") || "").trim();
+      const email = this._parametrePrive("email").trim();
       if (!email) {
         showNoEmail();
         return;
@@ -1388,7 +1405,7 @@ var App = {
         });
     };
 
-    const email = (this.getParamFromCurrentPage("email") || "").trim();
+    const email = this._parametrePrive("email").trim();
     if (!email) {
       showNoEmail();
       return;
