@@ -382,7 +382,6 @@ var App = {
         dejaClient: modalElement.querySelector("#panel-deja-client"),
         adulteChoixLieu: modalElement.querySelector("#panel-seance-adulte")
       };
-      const utmParams = this._getUtmParams();
 
       // Pile de navigation pour gérer l'historique
       let navigationStack = ['home'];
@@ -463,7 +462,8 @@ var App = {
           button.addEventListener('click', (e) => {
             e.preventDefault();
             modal.close();
-            Calendly.initPopupWidget({ url, utm: utmParams });
+            // Calculés au clic : le visiteur a pu faire son choix de cookies depuis le chargement.
+            Calendly.initPopupWidget({ url, utm: this._getUtmParams() });
           });
         }
       });
@@ -1478,12 +1478,15 @@ var App = {
     }
   },
   
+  // À appeler au moment d'ouvrir Calendly : le gclid ne part (Calendly, puis Make, puis
+  // Google) que si le visiteur a accepté les cookies publicitaires à cet instant.
   _getUtmParams: function() {
+    var consentementAccepte = this._getCookie(this._COOKIE_CONSENTEMENT) === 'accepte';
     var utm_params = {
       utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
       utmSource: this.getParamFromCurrentPage("utm_source"),
       utmMedium: this.getParamFromCurrentPage("utm_medium"),
-      utmContent: this.getParamFromCurrentPage("gclid"), // Replacement of: this.getParamFromCurrentPage("utm_content"),
+      utmContent: consentementAccepte ? this.getParamFromCurrentPage("gclid") : "", // Replacement of: this.getParamFromCurrentPage("utm_content"),
       utmTerm: this.getParamFromCurrentPage("utm_term")
       // Not Working: salesforce_uuid: this.getParamFromCurrentPage("gclid")
     }
@@ -1493,7 +1496,7 @@ var App = {
   // --- Parcours de découverte du breathwork (respiration-holotropique/decouverte*.html) ---
   // Landing → questionnaire de santé → rendez-vous (Calendly) → confirmation.
   // Le gclid suit d'une page à l'autre dans l'URL : c'est lui que Calendly transmet
-  // à Make pour la conversion des visiteurs qui refusent les cookies. Prénom, nom et
+  // à Make pour la conversion, si le visiteur a accepté les cookies (_getUtmParams). Prénom, nom et
   // e-mail passent par sessionStorage, jamais par l'URL (ils finiraient dans les
   // pages vues d'Analytics).
   _CLE_DECOUVERTE: 'luminose_decouverte_coordonnees',
