@@ -83,7 +83,7 @@ var App = {
         rh: {
           stripe_public: "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo", // TEST
         },
-        recaptcha: "6LcWCPgqAAAAAOIKPvshWxLozgnbLTigI-Y-VVP4", // clé de site, publique
+        recaptcha: "6LdU--4tAAAAAHDEXbOhexyFtjzmP0XXI0UxYZya", // clé de site, publique
       },
       urls: {
         calendly: {
