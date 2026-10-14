@@ -337,6 +337,12 @@ span[data-tooltip].has-tooltip-primary {
   margin-top: var(--bulma-block-spacing);
 }
 
+// Noms de cookies (page /cookies.html) : dans la palette de l'interface, pas dans le rouge de Bulma.
+.content code {
+  color: v.$purple-heavy;
+  background-color: v.$purple-light;
+}
+
 table.is-purple-bordered.is-bordered {
 
   th,
@@ -2087,6 +2093,12 @@ section.newsletter {
   i.icon {
     padding-left: 6rem;
   }
+
+  // Mention reCAPTCHA : ses liens se distinguent du texte.
+  small a {
+    color: inherit;
+    text-decoration: underline;
+  }
 }
 
 //********************************************/
@@ -2252,28 +2264,28 @@ section.newsletter {
     color: #ffffff;
     border-radius: var(--bulma-radius-large);
     padding: calc(2* var(--bulma-block-spacing));
-    
+
     p.content {
       margin-bottom: var(--bulma-content-block-margin-bottom);
     }
     p.content:last-of-type {
       margin-bottom: calc(2* var(--bulma-content-block-margin-bottom));
     }
-    
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
     .illustration {
       text-align: center;
-    
+
       i.icon {
         font-size: 3rem;
       }
     }
-    
-    .title {
-      color:#FFFFFF;
-      text-align: center;
-    }
+
     .buttons {
-      
+
       justify-content: center;
     }
   }

@@ -10,8 +10,11 @@
 <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 {% endif %}
 
+{% comment %}
+  reCAPTCHA (formulaire de la lettre d'information) se charge à la demande :
+  voir setupRecaptcha dans js/luminose.js.
+{% endcomment %}
 {% if jekyll.environment == "production" %}
-<script async defer src="https://www.google.com/recaptcha/api.js?render=6LcWCPgqAAAAAOIKPvshWxLozgnbLTigI-Y-VVP4&hl=fr"></script>
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", () => {
     App.init({ environment: 'production' });

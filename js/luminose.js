@@ -82,7 +82,8 @@ var App = {
       keys: {
         rh: {
           stripe_public: "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo", // TEST
-        }
+        },
+        recaptcha: "6LcWCPgqAAAAAOIKPvshWxLozgnbLTigI-Y-VVP4", // clé de site, publique
       },
       urls: {
         calendly: {
@@ -130,6 +131,7 @@ var App = {
 
   _run: function() {
     // console.log(`App running in ${this._config.environment} mode`);
+    this._recevoirParametres();
     this.setupViewport();
     this.setupCookiesModal();
     this.setupNavigation();
@@ -144,6 +146,7 @@ var App = {
     this.setupPayerSeance();
     this.setupPaiementConfirme();
     this.setupParcoursDecouverte();
+    this.setupRecaptcha();
     this.respiration.run();
   },
 
@@ -158,75 +161,61 @@ var App = {
     });
   },
 
+  // Le bandeau de cookies. Le choix est gardé six mois dans le cookie luminose_consentement
+  // (« accepte » ou « refuse ») ; le script de tête (_includes/head.html) le rétablit à
+  // chaque page, avant le chargement de Google Tag Manager.
+  _COOKIE_CONSENTEMENT: 'luminose_consentement',
+  _DUREE_CONSENTEMENT: 182, // jours
+
   setupCookiesModal: function() {
     var that = this;
-    that.cookiesConsentValue = that._getCookie('cookiesConsent'); // Not set OR denied OR granted
+    var elementModal = document.querySelector('#md-cookies');
+    if (elementModal === null) return;
 
-    _modal = document.querySelector('#md-cookies');
-    if (_modal !== null) {
-      var modal = new BulmaModal("#md-cookies");
-      var btCookiesReject = _modal.querySelector('#bt-cookies-reject');
-      var btCookiesAccept = _modal.querySelector('#bt-cookies-accept');
-      var btUpdateCookies = document.querySelector('#bt-cookies-update');
+    var modal = new BulmaModal("#md-cookies");
+    var btCookiesReject = elementModal.querySelector('#bt-cookies-reject');
+    var btCookiesAccept = elementModal.querySelector('#bt-cookies-accept');
 
-      if (btUpdateCookies !== null) {
-        btUpdateCookies.addEventListener("click", function(event) {
-          event.preventDefault();
-          that._setCookie('cookiesConsent', '', "Thu, 01 Jan 1970 00:00:00 UTC");
-          that.cookiesConsentValue = that._getCookie('cookiesConsent');
-          modal.show();
-        });
-      }
-
-      btCookiesAccept.addEventListener("click", function(event) {
+    // « Modifier mon choix » : pied de page et page /cookies.html. Le nouveau choix remplace l'ancien.
+    document.querySelectorAll('#bt-cookies-update, .js-modifier-consentement').forEach(function(bouton) {
+      bouton.addEventListener("click", function(event) {
         event.preventDefault();
-        that._setCookie('cookiesConsent', 'granted', 365);
-        that.cookiesConsentValue = that._getCookie('cookiesConsent');
-        gtag('consent', 'update', {
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted',
-          'analytics_storage': 'granted',
-          'personalization_storage': 'granted',
-          'functionality_storage': 'granted',
-          'security_storage': 'granted'
-        });
-        modal.close();
-      });
-
-      btCookiesReject.addEventListener("click", function(event) {
-        event.preventDefault();
-        that._setCookie('cookiesConsent', 'denied', 365);
-        that.cookiesConsentValue = that._getCookie('cookiesConsent');
-        gtag('consent', 'update', {
-          'ad_storage': 'denied',
-          'ad_user_data': 'denied',
-          'ad_personalization': 'denied',
-          'analytics_storage': 'denied',
-          'personalization_storage': 'denied',
-          'functionality_storage': 'denied',
-          'security_storage': 'denied'
-        });
-        modal.close();
-      });
-
-      if (that.cookiesConsentValue != 'granted' && that.cookiesConsentValue != 'denied') {
         modal.show();
-      } else {
-        if (that.cookiesConsentValue == 'granted') {
-          gtag('consent', 'update', {
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted',
-            'analytics_storage': 'granted',
-            'personalization_storage': 'granted',
-            'functionality_storage': 'granted',
-            'security_storage': 'granted'
-          });
-        }
-      }
-    }
+      });
+    });
 
+    btCookiesAccept.addEventListener("click", function(event) {
+      event.preventDefault();
+      that._setCookie(that._COOKIE_CONSENTEMENT, 'accepte', that._DUREE_CONSENTEMENT);
+      gtag('consent', 'update', window.luminoseConsentementAccepte);
+      window.dataLayer.push({ event: 'consentement_accepte' });
+      modal.close();
+    });
+
+    btCookiesReject.addEventListener("click", function(event) {
+      event.preventDefault();
+      that._setCookie(that._COOKIE_CONSENTEMENT, 'refuse', that._DUREE_CONSENTEMENT);
+      gtag('consent', 'update', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied'
+      });
+      // Les cookies publicitaires déjà posés sur le site (Google Ads, Pixel Meta) sont effacés.
+      document.cookie.split(';').forEach(function(cookie) {
+        var nom = cookie.split('=')[0].trim();
+        if (nom.indexOf('_gcl_') === 0 || nom === '_fbp' || nom === '_fbc') {
+          that._effacerCookie(nom);
+          that._effacerCookie(nom, '.luminose.fr');
+        }
+      });
+      modal.close();
+    });
+
+    var choix = that._getCookie(that._COOKIE_CONSENTEMENT);
+    if (choix !== 'accepte' && choix !== 'refuse') {
+      modal.show();
+    }
   },
 
   setupNavigation: function() {
@@ -394,7 +383,6 @@ var App = {
         dejaClient: modalElement.querySelector("#panel-deja-client"),
         adulteChoixLieu: modalElement.querySelector("#panel-seance-adulte")
       };
-      const utmParams = this._getUtmParams();
 
       // Pile de navigation pour gérer l'historique
       let navigationStack = ['home'];
@@ -475,7 +463,8 @@ var App = {
           button.addEventListener('click', (e) => {
             e.preventDefault();
             modal.close();
-            Calendly.initPopupWidget({ url, utm: utmParams });
+            // Calculés au clic : le visiteur a pu faire son choix de cookies depuis le chargement.
+            Calendly.initPopupWidget({ url, utm: this._getUtmParams() });
           });
         }
       });
@@ -494,34 +483,85 @@ var App = {
 
   setupButtonConfirmationQuestionnaireSante: function() {
     if (document.querySelector('.is-questionnaire-sante') !== null) {
-      var that = this;
-
-      var prenom = decodeURIComponent(that.getParamFromCurrentPage('invitee_first_name').replaceAll('+', ' '));
-      var nom = decodeURIComponent(that.getParamFromCurrentPage('invitee_last_name').replaceAll('+', ' '));
-      var email = decodeURIComponent(that.getParamFromCurrentPage('invitee_email').replaceAll('+', ' '));
-      var telephone = decodeURIComponent(that.getParamFromCurrentPage('text_reminder_number').replaceAll('+', ' '));
-      var params = new URLSearchParams();
-
-      if (prenom !== null && prenom !== '') {
-        params.append('coordonnees_participant[prenom]', prenom);
-      }
-      if (nom !== null && nom !== '') {
-        params.append('coordonnees_participant[nom]', nom);
-      }
-      if (email !== null && email !== '') {
-        params.append('coordonnees_participant[email]', email);
-      }
-      if (telephone !== null && telephone !== '') {
-        params.append('coordonnees_participant[telephone]', telephone);
-      }
-      
-      var buttons = document.querySelectorAll('.is-questionnaire-sante');
-      buttons.forEach(function(button) {
-        const url = new URL(button.href);
-        url.search = params;
-        button.href = url.href;
+      // Les coordonnées données à Calendly préremplissent le questionnaire, sans passer
+      // par l'adresse : le lien du bouton reste sans paramètre.
+      var coordonnees = {};
+      var correspondances = {
+        invitee_first_name: 'coordonnees_participant[prenom]',
+        invitee_last_name: 'coordonnees_participant[nom]',
+        invitee_email: 'coordonnees_participant[email]',
+        text_reminder_number: 'coordonnees_participant[telephone]'
+      };
+      Object.entries(correspondances).forEach(([parametre, champ]) => {
+        var valeur = this._parametrePrive(parametre);
+        if (valeur !== '') coordonnees[champ] = valeur;
+      });
+      if (Object.keys(coordonnees).length === 0) return;
+      document.querySelectorAll('.is-questionnaire-sante').forEach((bouton) => {
+        var chemin = new URL(bouton.href).pathname;
+        this._preparerParametres(chemin, coordonnees);
+        // Ouvert dans un nouvel onglet (Ctrl+clic, clic molette, appui long), le questionnaire
+        // n'a pas ce sessionStorage : au geste sur le bouton, on passe aussi par localStorage.
+        ['pointerdown', 'click'].forEach((evenement) => {
+          bouton.addEventListener(evenement, () => this._transmettreParametres(chemin, coordonnees));
+        });
       });
     }
+  },
+
+  // Paramètres personnels : le script de tête (_includes/head.html) les retire de
+  // l'adresse et les range pour la page, dans window.luminoseParametres et dans
+  // sessionStorage. Les valeurs y sont déjà décodées.
+  _CLE_PARAMETRES: 'luminose_parametres:',
+
+  _parametresPrives: function() {
+    var ranges = {};
+    try { ranges = JSON.parse(sessionStorage.getItem(this._CLE_PARAMETRES + window.location.pathname) || '{}') || {}; } catch (e) { ranges = {}; }
+    return Object.assign(ranges, window.luminoseParametres || {});
+  },
+
+  _parametrePrive: function(nom) {
+    var valeurs = this._parametresPrives();
+    return Object.prototype.hasOwnProperty.call(valeurs, nom) ? String(valeurs[nom]) : '';
+  },
+
+  // Range des valeurs pour la page vers laquelle on va (chemin : « /dossier/page.html »).
+  _preparerParametres: function(chemin, valeurs) {
+    try {
+      var cle = this._CLE_PARAMETRES + chemin;
+      var ranges = JSON.parse(sessionStorage.getItem(cle) || '{}') || {};
+      Object.entries(valeurs).forEach(function([nom, valeur]) {
+        if (valeur !== null && valeur !== undefined) ranges[nom] = String(valeur);
+      });
+      sessionStorage.setItem(cle, JSON.stringify(ranges));
+    } catch (e) { /* sans stockage, la page suivante n'est simplement pas préremplie */ }
+  },
+
+  // sessionStorage ne passe pas d'un onglet à l'autre. Pour un lien qu'on peut ouvrir dans
+  // un nouvel onglet, les valeurs sont confiées à localStorage pour 15 minutes au plus : la
+  // page d'arrivée les reprend dans son sessionStorage et les efface aussitôt, et toute page
+  // du site efface celles qui ont expiré (_recevoirParametres).
+  _CLE_TRANSFERT: 'luminose_transfert:',
+  _DUREE_TRANSFERT: 15 * 60 * 1000,
+
+  _transmettreParametres: function(chemin, valeurs) {
+    try {
+      localStorage.setItem(this._CLE_TRANSFERT + chemin, JSON.stringify({ expire: Date.now() + this._DUREE_TRANSFERT, valeurs: valeurs }));
+    } catch (e) { /* sans stockage, le nouvel onglet n'est simplement pas prérempli */ }
+  },
+
+  _recevoirParametres: function() {
+    try {
+      var clePage = this._CLE_TRANSFERT + window.location.pathname;
+      Object.keys(localStorage).forEach((cle) => {
+        if (cle.indexOf(this._CLE_TRANSFERT) !== 0) return;
+        var transfert = null;
+        try { transfert = JSON.parse(localStorage.getItem(cle)); } catch (e) { transfert = null; }
+        var valide = transfert !== null && transfert.expire > Date.now();
+        if (valide && cle === clePage) this._preparerParametres(window.location.pathname, transfert.valeurs || {});
+        if (!valide || cle === clePage) localStorage.removeItem(cle);
+      });
+    } catch (e) { /* rien à reprendre */ }
   },
 
   getParamFromCurrentPage: function(param_name) {
@@ -588,9 +628,8 @@ var App = {
   setupFormPrefill: function() {
     if (document.querySelector('#form-questionnaire-sante') !== null) {
       var questionnaireSante = document.querySelector('#form-questionnaire-sante');
-      params = new URLSearchParams(document.location.search);
-      params.forEach((value, key) => {
-        var field = questionnaireSante.querySelector('[name="' + key + '"]')
+      Object.entries(this._parametresPrives()).forEach(([key, value]) => {
+        var field = questionnaireSante.querySelector('[name="' + CSS.escape(key) + '"]')
         if(field != null) {
           field.value = value
         }
@@ -651,15 +690,17 @@ var App = {
 
               // Si la réponse est OK
               if (estAvecDeuxEtapes) {
-                const urlWithParams = new URL(urlEtapeDeux);
-                urlWithParams.searchParams.append("prenom", formData.get("coordonnees_participant[prenom]"));
-                urlWithParams.searchParams.append("nom", formData.get("coordonnees_participant[nom]"));
-                urlWithParams.searchParams.append("code_postal", formData.get("coordonnees_participant[code_postal]"));
-                urlWithParams.searchParams.append("email", formData.get("coordonnees_participant[email]"));
-                urlWithParams.searchParams.append("telephone", formData.get("coordonnees_participant[telephone]"));
-                urlWithParams.searchParams.append("ville", formData.get("coordonnees_participant[ville]"));
-                urlWithParams.searchParams.append("notion_page_id", formData.get("notion_page_id"));
-                window.location.href = urlWithParams.href;
+                // Les coordonnées suivent vers l'étape 2 par sessionStorage, jamais par l'adresse.
+                that._preparerParametres(new URL(urlEtapeDeux).pathname, {
+                  prenom: formData.get("coordonnees_participant[prenom]"),
+                  nom: formData.get("coordonnees_participant[nom]"),
+                  code_postal: formData.get("coordonnees_participant[code_postal]"),
+                  email: formData.get("coordonnees_participant[email]"),
+                  telephone: formData.get("coordonnees_participant[telephone]"),
+                  ville: formData.get("coordonnees_participant[ville]"),
+                  notion_page_id: formData.get("notion_page_id")
+                });
+                window.location.href = urlEtapeDeux;
               } else if (questionnaireSante.dataset.etapeSuivante) {
                 // Parcours de découverte (respiration-holotropique/decouverte-*.html) :
                 // le questionnaire envoyé, on passe à l'étape du rendez-vous.
@@ -775,8 +816,7 @@ var App = {
     const { keys, urls } = this._config;
     const divDonneesInscription = document.querySelector('#donnees-inscription');
     const stripe = Stripe(keys.rh.stripe_public);
-    const queryStringParams = new URLSearchParams(window.location.search);
-    const metadata = { notion_page_id: decodeURIComponent(queryStringParams.get("notion_page_id")) };
+    const metadata = { notion_page_id: this._parametrePrive("notion_page_id") };
     const futuraFontUrl = urls.futura_font;
     const appearance = {
       theme: 'stripe',
@@ -788,7 +828,7 @@ var App = {
       }
     };
     
-    const billingDetails = this._getBillingDetails(queryStringParams);
+    const billingDetails = this._getBillingDetails();
     const donneesCompletes = this._areBillingDetailsComplete(billingDetails); 
     const clientSecret = await this._createPaymentIntent(urls.rh.make_webhook_get_payment_intent, metadata);
   
@@ -823,9 +863,9 @@ var App = {
     this._setupStripeCouponButton(clientSecret, stripe, optionsPaiements);
   },
   
-  _getBillingDetails: function (queryStringParams) {
+  _getBillingDetails: function () {
     const extractValue = (key) => {
-      const value = decodeURIComponent(queryStringParams.get(key) || "").trim();
+      const value = this._parametrePrive(key).trim();
       return value || null; // Retourne null si la valeur est vide
     };
   
@@ -1331,7 +1371,7 @@ var App = {
     }
 
     const fetchWebhook1 = () => {
-      const email = (this.getParamFromCurrentPage("email") || "").trim();
+      const email = this._parametrePrive("email").trim();
       if (!email) {
         showNoEmail();
         return;
@@ -1388,7 +1428,7 @@ var App = {
         });
     };
 
-    const email = (this.getParamFromCurrentPage("email") || "").trim();
+    const email = this._parametrePrive("email").trim();
     if (!email) {
       showNoEmail();
       return;
@@ -1473,12 +1513,15 @@ var App = {
     }
   },
   
+  // À appeler au moment d'ouvrir Calendly : le gclid ne part (Calendly, puis Make, puis
+  // Google) que si le visiteur a accepté les cookies publicitaires à cet instant.
   _getUtmParams: function() {
+    var consentementAccepte = this._getCookie(this._COOKIE_CONSENTEMENT) === 'accepte';
     var utm_params = {
       utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
       utmSource: this.getParamFromCurrentPage("utm_source"),
       utmMedium: this.getParamFromCurrentPage("utm_medium"),
-      utmContent: this.getParamFromCurrentPage("gclid"), // Replacement of: this.getParamFromCurrentPage("utm_content"),
+      utmContent: consentementAccepte ? this.getParamFromCurrentPage("gclid") : "", // Replacement of: this.getParamFromCurrentPage("utm_content"),
       utmTerm: this.getParamFromCurrentPage("utm_term")
       // Not Working: salesforce_uuid: this.getParamFromCurrentPage("gclid")
     }
@@ -1488,7 +1531,7 @@ var App = {
   // --- Parcours de découverte du breathwork (respiration-holotropique/decouverte*.html) ---
   // Landing → questionnaire de santé → rendez-vous (Calendly) → confirmation.
   // Le gclid suit d'une page à l'autre dans l'URL : c'est lui que Calendly transmet
-  // à Make pour la conversion des visiteurs qui refusent les cookies. Prénom, nom et
+  // à Make pour la conversion, si le visiteur a accepté les cookies (_getUtmParams). Prénom, nom et
   // e-mail passent par sessionStorage, jamais par l'URL (ils finiraient dans les
   // pages vues d'Analytics).
   _CLE_DECOUVERTE: 'luminose_decouverte_coordonnees',
@@ -1577,24 +1620,46 @@ var App = {
     });
   },
 
-  _setCookie: function(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  // reCAPTCHA protège le formulaire de la lettre d'information (Brevo). Il se charge une
+  // seule fois, au premier geste dans ce formulaire, plutôt que sur chaque page. Le script
+  // de Brevo s'en sert à l'envoi (grecaptcha.ready puis execute).
+  setupRecaptcha: function() {
+    var formulaire = document.getElementById('sib-form');
+    if (formulaire === null || this._config.environment !== 'production') return;
+
+    var cle = this._config.keys.recaptcha;
+    var charger = function() {
+      formulaire.removeEventListener('focusin', charger);
+      formulaire.removeEventListener('pointerdown', charger);
+      var script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(cle) + '&hl=fr';
+      script.async = true;
+      document.head.appendChild(script);
+    };
+    formulaire.addEventListener('focusin', charger);
+    formulaire.addEventListener('pointerdown', charger);
   },
-  
+
+  _setCookie: function(cname, cvalue, exdays) {
+    var secure = this._config.environment === "production" ? "; Secure" : "";
+    document.cookie = cname + "=" + cvalue + "; max-age=" + Math.round(exdays * 24 * 60 * 60) + "; path=/; SameSite=Lax" + secure;
+  },
+
+  _effacerCookie: function(cname, domaine) {
+    document.cookie = cname + "=; max-age=0; path=/" + (domaine ? "; domain=" + domaine : "");
+  },
+
   _getCookie: function(cname) {
     let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
+    let ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
       while (c.charAt(0) == ' ') {
         c = c.substring(1);
       }
       if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
+        // Un seul cookie mal encodé ne doit pas empêcher de lire les autres.
+        try { return decodeURIComponent(c.substring(name.length, c.length)); } catch (e) { return c.substring(name.length, c.length); }
       }
     }
     return "";
