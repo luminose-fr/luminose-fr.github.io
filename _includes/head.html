@@ -58,6 +58,68 @@
         'functionality_storage': 'denied',
         'security_storage': 'denied'
       });
+
+      {% comment %}
+        Ce script tourne avant Google Tag Manager, sur toutes les pages et dans tous
+        les environnements. Il ne doit jamais lever d'erreur.
+
+        1. Le choix de cookies du visiteur (cookie luminose_consentement, posé par
+           le bandeau : voir setupCookiesModal dans js/luminose.js) s'applique avant
+           le chargement de GTM, y compris sur les pages sans bandeau (layout essentiel).
+           ad_personalization reste refusé : la finalité annoncée est la mesure des
+           annonces, pas le reciblage. analytics_storage aussi : la page /cookies.html
+           ne déclare pas GA4.
+
+        2. Aucune donnée personnelle ne reste dans l'adresse : Mixpanel, GA4 et le
+           Pixel Meta la lisent. Les paramètres personnels (liens Calendly, liens
+           envoyés par e-mail…) sont retirés de l'adresse et rangés pour la page :
+           dans window.luminoseParametres, et dans sessionStorage sous la clé
+           « luminose_parametres:<chemin> », que relit _parametrePrive.
+      {% endcomment %}
+      try {
+        window.luminoseConsentementAccepte = {
+          ad_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'denied',
+          analytics_storage: 'denied'
+        };
+        // Les accords de l'ancien cookie ont été donnés pour un autre texte : on redemande à tout le monde.
+        document.cookie = 'cookiesConsent=; max-age=0; path=/';
+        if (/(?:^|;\s*)luminose_consentement=accepte(?:;|$)/.test(document.cookie)) {
+          gtag('consent', 'update', window.luminoseConsentementAccepte);
+        }
+      } catch (e) { /* le consentement reste refusé */ }
+
+      try {
+        window.luminoseParametres = {};
+        var prefixesPersonnels = ['invitee_', 'answer_', 'coordonnees_participant['];
+        var nomsPersonnels = ['text_reminder_number', 'guests', 'email', 'prenom', 'nom', 'telephone', 'ville', 'code_postal', 'notion_page_id', 'payment_intent_client_secret'];
+        var segmentsGardes = [];
+        var personnelsTrouves = false;
+        location.search.replace(/^\?/, '').split('&').forEach(function(segment) {
+          if (segment === '') return;
+          // URLSearchParams décode le nom et la valeur (%5B, +…), comme pour la lecture.
+          var paire = new URLSearchParams(segment).entries().next().value || [segment, ''];
+          var nom = paire[0];
+          var estPersonnel = nomsPersonnels.indexOf(nom) >= 0 || prefixesPersonnels.some(function(prefixe) { return nom.indexOf(prefixe) === 0; });
+          if (!estPersonnel) {
+            segmentsGardes.push(segment);
+            return;
+          }
+          personnelsTrouves = true;
+          if (!Object.prototype.hasOwnProperty.call(window.luminoseParametres, nom)) window.luminoseParametres[nom] = paire[1];
+        });
+        if (personnelsTrouves) {
+          try {
+            var cleParametres = 'luminose_parametres:' + location.pathname;
+            var parametresRanges = JSON.parse(sessionStorage.getItem(cleParametres) || '{}') || {};
+            Object.keys(window.luminoseParametres).forEach(function(nom) { parametresRanges[nom] = window.luminoseParametres[nom]; });
+            sessionStorage.setItem(cleParametres, JSON.stringify(parametresRanges));
+          } catch (e) { /* sans stockage, window.luminoseParametres sert la page en cours */ }
+          // Les autres paramètres (utm_*, gclid…) restent tels quels, avec l'ancre.
+          history.replaceState(history.state, '', location.pathname + (segmentsGardes.length ? '?' + segmentsGardes.join('&') : '') + location.hash);
+        }
+      } catch (e) { /* l'adresse reste telle quelle */ }
     </script>
   
   {% if jekyll.environment == "production" %}
