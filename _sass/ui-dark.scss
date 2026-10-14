@@ -204,6 +204,16 @@ textarea.is-purple-bordered.is-success {
 	}
 }
 
+// Tableau de la page /cookies.html : sur le fond de la page, pas sur le gris de Bulma.
+.content code {
+	color: #FFFFFF;
+	background-color: v.$dark-purple-heavy;
+}
+.content .table-container .table {
+	--bulma-table-background-color: transparent;
+	--bulma-table-color: #{v.$dark-purple};
+}
+
 .main-navbar-alt {
 	background: v.$dark-purple-heavy;
 	border: 2px v.$dark-purple-heavy solid;

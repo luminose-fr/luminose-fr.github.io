@@ -337,6 +337,12 @@ span[data-tooltip].has-tooltip-primary {
   margin-top: var(--bulma-block-spacing);
 }
 
+// Noms de cookies (page /cookies.html) : dans la palette de l'interface, pas dans le rouge de Bulma.
+.content code {
+  color: v.$purple-heavy;
+  background-color: v.$purple-light;
+}
+
 table.is-purple-bordered.is-bordered {
 
   th,
