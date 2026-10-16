@@ -134,6 +134,7 @@ var App = {
     // console.log(`App running in ${this._config.environment} mode`);
     this.setupMesure();
     this.setupEvenementsMesure();
+    this.setupOppositionMesure();
     this._recevoirParametres();
     this.setupViewport();
     this.setupCookiesModal();
@@ -332,6 +333,40 @@ var App = {
       var proprietes = {};
       if (this._typeRdv) proprietes.type_rdv = this._typeRdv;
       this._mesurer(nom, proprietes);
+    });
+  },
+
+  // Page /cookies.html : s'opposer à la mesure, ou la rétablir. Le bouton reste désactivé
+  // jusqu'à ce que la bibliothèque dise où en est le visiteur.
+  setupOppositionMesure: function() {
+    var bouton = document.querySelector('.js-mesure-opposition');
+    if (bouton === null) return;
+    var etat = document.querySelector('.js-mesure-etat');
+    var afficher = function(oppose) {
+      bouton.textContent = oppose ? 'Être compté à nouveau' : 'Ne plus être compté';
+      if (etat !== null) etat.classList.toggle('is-hidden', !oppose);
+      bouton.disabled = false;
+    };
+
+    if (this._config.environment !== 'production') {
+      var oppose = false;
+      afficher(oppose);
+      bouton.addEventListener('click', function() {
+        oppose = !oppose;
+        console.log('[mesure]', oppose ? 'opt_out_tracking' : 'opt_in_tracking');
+        afficher(oppose);
+      });
+      return;
+    }
+
+    this._quandMesureChargee(function(mp) {
+      afficher(mp.has_opted_out_tracking());
+      bouton.addEventListener('click', function() {
+        // opt_out_tracking efface le cookie Mixpanel ; le choix est gardé dans le stockage local.
+        if (mp.has_opted_out_tracking()) mp.opt_in_tracking();
+        else mp.opt_out_tracking();
+        afficher(mp.has_opted_out_tracking());
+      });
     });
   },
 
