@@ -186,9 +186,12 @@ var App = {
 
     btCookiesAccept.addEventListener("click", function(event) {
       event.preventDefault();
+      // Un second accord sur la même page ne doit pas renvoyer la page vue Meta
+      // (« FB - Page vue », une fois par événement consentement_accepte).
+      var dejaAccepte = that._getCookie(that._COOKIE_CONSENTEMENT) === 'accepte';
       that._setCookie(that._COOKIE_CONSENTEMENT, 'accepte', that._DUREE_CONSENTEMENT);
       gtag('consent', 'update', window.luminoseConsentementAccepte);
-      window.dataLayer.push({ event: 'consentement_accepte' });
+      if (!dejaAccepte) window.dataLayer.push({ event: 'consentement_accepte' });
       modal.close();
     });
 
@@ -201,14 +204,9 @@ var App = {
         'ad_personalization': 'denied',
         'analytics_storage': 'denied'
       });
-      // Les cookies publicitaires déjà posés sur le site (Google Ads, Pixel Meta) sont effacés.
-      document.cookie.split(';').forEach(function(cookie) {
-        var nom = cookie.split('=')[0].trim();
-        if (nom.indexOf('_gcl_') === 0 || nom === '_fbp' || nom === '_fbc') {
-          that._effacerCookie(nom);
-          that._effacerCookie(nom, '.luminose.fr');
-        }
-      });
+      // Les traces publicitaires déjà posées sur le site (Google Ads, Meta) sont effacées :
+      // cookies et stockage local. La fonction vient du script de tête (_includes/head.html).
+      if (typeof window.luminoseEffacerTraceursPublicitaires === 'function') window.luminoseEffacerTraceursPublicitaires();
       modal.close();
     });
 
@@ -1643,10 +1641,6 @@ var App = {
   _setCookie: function(cname, cvalue, exdays) {
     var secure = this._config.environment === "production" ? "; Secure" : "";
     document.cookie = cname + "=" + cvalue + "; max-age=" + Math.round(exdays * 24 * 60 * 60) + "; path=/; SameSite=Lax" + secure;
-  },
-
-  _effacerCookie: function(cname, domaine) {
-    document.cookie = cname + "=; max-age=0; path=/" + (domaine ? "; domain=" + domaine : "");
   },
 
   _getCookie: function(cname) {
