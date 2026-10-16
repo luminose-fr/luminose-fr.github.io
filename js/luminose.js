@@ -133,6 +133,7 @@ var App = {
   _run: function() {
     // console.log(`App running in ${this._config.environment} mode`);
     this.setupMesure();
+    this.setupEvenementsMesure();
     this._recevoirParametres();
     this.setupViewport();
     this.setupCookiesModal();
@@ -293,6 +294,45 @@ var App = {
       return;
     }
     try { this._mesure.bibliotheque.register(proprietes); } catch (e) { /* idem */ }
+  },
+
+  // Les événements mesurés en plus des pages vues.
+  _typeRdv: null, // la clé de urls.calendly du calendrier ouvert (rencontre, adulte…)
+  _EVENEMENTS_CALENDLY: {
+    'calendly.event_type_viewed': 'Calendly - calendrier affiché',
+    'calendly.date_and_time_selected': 'Calendly - créneau choisi',
+    'calendly.event_scheduled': 'Calendly - rendez-vous pris'
+  },
+
+  setupEvenementsMesure: function() {
+    // « Clic CTA » : un seul écouteur, en phase de capture, pour tous les boutons data-track,
+    // y compris ceux des plugins Jekyll et ceux ajoutés par le JavaScript.
+    document.addEventListener('click', (e) => {
+      var element = e.target instanceof Element ? e.target.closest('[data-track]') : null;
+      if (element === null) return;
+      var cta = element.getAttribute('data-track');
+      // Les clients déjà suivis sortent des analyses d'acquisition, dès ce clic.
+      if (cta === 'bt_prise_rdv_deja_client') this._retenirMesure({ deja_client: true });
+      this._mesurer('Clic CTA', { cta: cta });
+    }, true);
+
+    // Les étapes du calendrier Calendly. Jamais e.data.payload : il contient les adresses
+    // de l'invité et du rendez-vous. Après la prise de rendez-vous, la page change :
+    // l'événement attend dans la file de Mixpanel et part de la page suivante.
+    // Calendly envoie calendly.event_type_viewed deux fois au même instant : un même
+    // message reçu deux fois en moins d'une seconde ne compte qu'une fois.
+    var derniers = {};
+    window.addEventListener('message', (e) => {
+      if (e.origin !== 'https://calendly.com' || !e.data || typeof e.data.event !== 'string') return;
+      if (!Object.prototype.hasOwnProperty.call(this._EVENEMENTS_CALENDLY, e.data.event)) return;
+      var maintenant = Date.now();
+      if (derniers[e.data.event] && maintenant - derniers[e.data.event] < 1000) return;
+      derniers[e.data.event] = maintenant;
+      var nom = this._EVENEMENTS_CALENDLY[e.data.event];
+      var proprietes = {};
+      if (this._typeRdv) proprietes.type_rdv = this._typeRdv;
+      this._mesurer(nom, proprietes);
+    });
   },
 
   // Appelle rappel(mp) une fois la bibliothèque chargée : son état (opposition…) ne se
@@ -613,6 +653,7 @@ var App = {
           button.addEventListener('click', (e) => {
             e.preventDefault();
             modal.close();
+            this._typeRdv = key; // pour la mesure des étapes du calendrier (setupEvenementsMesure)
             // Calculés au clic : le visiteur a pu faire son choix de cookies depuis le chargement.
             Calendly.initPopupWidget({ url, utm: this._getUtmParams() });
           });
@@ -1727,6 +1768,7 @@ var App = {
     }
 
     var url = this._config.urls.calendly[conteneur.dataset.calendly];
+    this._typeRdv = conteneur.dataset.calendly; // pour la mesure des étapes du calendrier (setupEvenementsMesure)
     var coordonnees = {};
     try { coordonnees = JSON.parse(sessionStorage.getItem(this._CLE_DECOUVERTE) || '{}') || {}; } catch (e) { coordonnees = {}; }
     var nomComplet = ((coordonnees.prenom || '') + ' ' + (coordonnees.nom || '')).trim();
