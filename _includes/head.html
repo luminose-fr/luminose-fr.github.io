@@ -75,6 +75,15 @@
            envoyés par e-mail…) sont retirés de l'adresse et rangés pour la page :
            dans window.luminoseParametres, et dans sessionStorage sous la clé
            « luminose_parametres:<chemin> », que relit _parametrePrive.
+
+        3. Les traces publicitaires (Google Ads, Meta) sont effacées à chaque page tant
+           que le visiteur n'a pas accepté : jusqu'aux publications GTM des 14 et
+           15/10/2026, Meta et la balise des appels de Google Ads en déposaient sans
+           accord. « Refuser » se sert de la même fonction. Celles de GA4, retiré le
+           14/10/2026, sont effacées quel que soit le choix.
+
+        4. window.luminosePage donne à la mesure (setupMesure dans js/luminose.js) la
+           section et la catégorie de la page.
       {% endcomment %}
       try {
         window.luminoseConsentementAccepte = {
@@ -120,6 +129,38 @@
           history.replaceState(history.state, '', location.pathname + (segmentsGardes.length ? '?' + segmentsGardes.join('&') : '') + location.hash);
         }
       } catch (e) { /* l'adresse reste telle quelle */ }
+
+      try {
+        // Chaque cookie est effacé deux fois : posé sans domaine, ou sur .luminose.fr.
+        var effacerCookies = function(aEffacer) {
+          document.cookie.split(';').forEach(function(cookie) {
+            var nom = cookie.split('=')[0].trim();
+            if (nom === '' || !aEffacer(nom)) return;
+            document.cookie = nom + '=; max-age=0; path=/';
+            document.cookie = nom + '=; max-age=0; path=/; domain=.luminose.fr';
+          });
+        };
+        window.luminoseEffacerTraceursPublicitaires = function() {
+          try {
+            effacerCookies(function(nom) { return nom.indexOf('_gcl_') === 0 || nom === '_fbp' || nom === '_fbc'; });
+            // Stockage local : Google Ads (_gcl_ls…, suivi des appels p98qCJa8n-4YEPu43I8p, et sa jumelle …_expiresAt), Meta.
+            Object.keys(localStorage).forEach(function(cle) {
+              if (cle.indexOf('_gcl_') === 0 || cle.indexOf('p98qCJa8n-4YEPu43I8p,') === 0 ||
+                  ['multiFbc', 'lastExternalReferrer', 'lastExternalReferrerTime'].indexOf(cle) >= 0) {
+                localStorage.removeItem(cle);
+              }
+            });
+          } catch (e) { /* ce qui n'a pas pu être effacé le sera à la page suivante */ }
+        };
+        if (!/(?:^|;\s*)luminose_consentement=accepte(?:;|$)/.test(document.cookie)) {
+          window.luminoseEffacerTraceursPublicitaires();
+        }
+        effacerCookies(function(nom) { return nom === '_ga' || nom.indexOf('_ga_') === 0; });
+      } catch (e) { /* les traces restent jusqu'à la page suivante */ }
+
+      try {
+        window.luminosePage = { section: {{ page.section | jsonify }}, categorie: {{ page.category | jsonify }} };
+      } catch (e) { window.luminosePage = {}; }
     </script>
   
   {% if jekyll.environment == "production" %}
