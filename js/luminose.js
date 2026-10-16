@@ -84,6 +84,7 @@ var App = {
           stripe_public: "pk_test_jaaVMCX9nPpVoDs4KdUHKOZH00zzHDOBPo", // TEST
         },
         recaptcha: "6LdU--4tAAAAAHDEXbOhexyFtjzmP0XXI0UxYZya", // clé de site, publique
+        mixpanel: "fa35e86c7f3557240400dea308a4d821", // jeton du projet (UE), public par nature
       },
       urls: {
         calendly: {
@@ -131,6 +132,7 @@ var App = {
 
   _run: function() {
     // console.log(`App running in ${this._config.environment} mode`);
+    this.setupMesure();
     this._recevoirParametres();
     this.setupViewport();
     this.setupCookiesModal();
@@ -148,6 +150,156 @@ var App = {
     this.setupParcoursDecouverte();
     this.setupRecaptcha();
     this.respiration.run();
+  },
+
+  // --- Mesure de fréquentation (Mixpanel) ---
+  // Dispensée de consentement (exemption CNIL de la mesure d'audience), à ces conditions :
+  // aucune adresse envoyée ne garde de paramètre, aucun identifiant de clic publicitaire,
+  // aucune identification (jamais d'identify, d'alias ni de people.*), un identifiant de
+  // visiteur de 13 mois au plus, et un moyen de s'y opposer sur /cookies.html.
+  // La bibliothèque (mixpanel-browser 2.84.0, figée dans js/) ne se charge qu'en production.
+  // Elle rejoue les appels faits sur l'objet provisoire de l'extrait avant « loaded », donc
+  // avant le contrôle de l'identifiant : on n'en fait aucun, tout passe par _mesurer et
+  // _retenirMesure, qui attendent « loaded ». En développement, elles écrivent dans la
+  // console ce qui partirait.
+  _mesure: { chargee: false, bibliotheque: null, file: [], quandChargee: [] },
+  _DUREE_IDENTIFIANT: 390, // jours : moins de 13 mois
+
+  setupMesure: function() {
+    if (this._config.environment !== 'production') {
+      this._mesurer('$mp_web_page_view');
+      return;
+    }
+    var that = this;
+    var nettoyer = function(nom, proprietes) { return that._nettoyerMesure(nom, proprietes); };
+    var demarrer = function(mp) { that._demarrerMesure(mp); };
+    try {
+      window.MIXPANEL_CUSTOM_LIB_URL = '/js/mixpanel-2.84.0.min.js';
+      // Extrait officiel de mixpanel-browser 2.84.0 (dist/mixpanel-jslib-snippet.min.js).
+      (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+      for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+      e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]);
+      window.mixpanel.init(this._config.keys.mixpanel, {
+        api_host: 'https://api-eu.mixpanel.com',
+        persistence: 'cookie',
+        cookie_expiration: 390,          // jours : moins de 13 mois
+        cross_subdomain_cookie: false,   // www.luminose.fr seulement
+        secure_cookie: true,
+        stop_utm_persistence: true,      // les utm_* restent sur les événements de la page qui les porte
+        autocapture: false,
+        track_pageview: false,           // la page vue part de « loaded » (_demarrerMesure)
+        record_sessions_percent: 0,
+        record_heatmap_data: false,
+        property_blacklist: ['dclid', 'fbclid', 'gclid', 'gbraid', 'ko_click_id', 'li_fat_id', 'msclkid',
+                             'sccid', 'ttclid', 'twclid', 'wbraid', 'current_url_search'],
+        hooks: { on_track: nettoyer },
+        loaded: demarrer
+      });
+    } catch (e) { /* sans mesure, le site fonctionne */ }
+  },
+
+  // Crochet on_track, appelé pour chaque événement, après la liste noire. Il doit toujours
+  // rendre [nom, proprietes] : sans valeur de retour, Mixpanel jette l'événement.
+  _nettoyerMesure: function(nom, proprietes) {
+    var adresses = ['$current_url', '$referrer', '$initial_referrer'];
+    try {
+      // L'origine et le chemin seulement, sans « ?… » ni « #… ». « $direct » reste tel quel.
+      adresses.forEach(function(cle) {
+        if (typeof proprietes[cle] !== 'string' || proprietes[cle] === '$direct') return;
+        try {
+          var url = new URL(proprietes[cle]);
+          proprietes[cle] = url.origin + url.pathname;
+        } catch (e) { /* pas une adresse (chaîne vide…) : rien à nettoyer */ }
+      });
+      proprietes.page = window.location.pathname;
+      var contexte = window.luminosePage || {};
+      if (contexte.section) proprietes.section = contexte.section;
+      proprietes.theme = this._themePage();
+    } catch (e) {
+      // Au moindre doute, les adresses ne partent pas.
+      adresses.forEach(function(cle) { try { delete proprietes[cle]; } catch (err) { /* rien */ } });
+    }
+    return [nom, proprietes];
+  },
+
+  // La catégorie (articles, événements), sinon la section, sinon le premier dossier de
+  // l'adresse (/respiration-holotropique/questionnaire-sante.html : respiration-holotropique).
+  _themePage: function() {
+    var contexte = window.luminosePage || {};
+    if (contexte.categorie) return contexte.categorie;
+    if (contexte.section) return contexte.section;
+    var morceaux = window.location.pathname.split('/');
+    return morceaux.length > 2 && morceaux[1] !== '' ? morceaux[1] : 'autre';
+  },
+
+  // Rappel « loaded » : la bibliothèque est là.
+  _demarrerMesure: function(mp) {
+    var file = this._mesure.file;
+    this._mesure.file = [];
+    this._mesure.bibliotheque = mp;
+    this._mesure.chargee = true;
+    try {
+      if (!mp.has_opted_out_tracking()) {
+        // Un identifiant de 13 mois au plus, sans prolongation : passé ce délai, ou s'il est
+        // d'avant ce module (hérité de GTM, d'âge inconnu), on en tire un nouveau.
+        var depuis = mp.get_property('mesure_depuis');
+        var age = (Date.now() - Date.parse(depuis)) / (24 * 60 * 60 * 1000);
+        if (typeof depuis !== 'string' || !(age <= this._DUREE_IDENTIFIANT)) {
+          mp.reset();
+          mp.register({ mesure_depuis: this._dateDuJour() });
+        }
+        mp.register_once({ page_entree: window.location.pathname });
+        mp.track_pageview();
+        file.forEach(function(appel) {
+          if (appel[0] === 'register') mp.register(appel[1]);
+          else mp.track(appel[1], appel[2]);
+        });
+      }
+    } catch (e) { /* la mesure ne doit jamais gêner la page */ }
+    this._mesure.quandChargee.forEach(function(rappel) {
+      try { rappel(mp); } catch (e) { /* idem */ }
+    });
+    this._mesure.quandChargee = [];
+  },
+
+  _dateDuJour: function() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  },
+
+  // Un événement. Avant « loaded », il attend dans la file.
+  _mesurer: function(nom, proprietes) {
+    proprietes = Object.assign({}, proprietes);
+    if (this._config.environment !== 'production') {
+      var apercu = this._nettoyerMesure(nom, Object.assign({ $current_url: window.location.href, $referrer: document.referrer }, proprietes));
+      console.log('[mesure]', apercu[0], apercu[1]);
+      return;
+    }
+    if (!this._mesure.chargee) {
+      this._mesure.file.push(['track', nom, proprietes]);
+      return;
+    }
+    try { this._mesure.bibliotheque.track(nom, proprietes); } catch (e) { /* la mesure ne doit jamais gêner la page */ }
+  },
+
+  // Des propriétés gardées pour tous les événements suivants (register). Même file.
+  _retenirMesure: function(proprietes) {
+    if (this._config.environment !== 'production') {
+      console.log('[mesure] register', proprietes);
+      return;
+    }
+    if (!this._mesure.chargee) {
+      this._mesure.file.push(['register', proprietes]);
+      return;
+    }
+    try { this._mesure.bibliotheque.register(proprietes); } catch (e) { /* idem */ }
+  },
+
+  // Appelle rappel(mp) une fois la bibliothèque chargée : son état (opposition…) ne se
+  // lit jamais sur l'objet provisoire de l'extrait.
+  _quandMesureChargee: function(rappel) {
+    if (this._mesure.chargee) rappel(this._mesure.bibliotheque);
+    else this._mesure.quandChargee.push(rappel);
   },
 
   setupViewport: function() {
