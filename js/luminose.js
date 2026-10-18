@@ -1773,10 +1773,12 @@ var App = {
   // visiteur, le clic d'annonce retenu (_clicAnnonce) part dans utm_content au format
   // « type:identifiant » (gclid:…, wbraid:…, gbraid:…), avec les utm_* de la visite qui
   // l'a apporté ; Calendly les transmet à Make, qui se sert d'utm_content et d'utm_term.
-  // Sans accord ou sans clic retenu : aucun paramètre, ni identifiant ni utm_*.
+  // Sans accord ou sans clic retenu : ni identifiant ni utm_*. Calendly recopie pourtant
+  // de lui-même les utm_* de l'adresse de la page (widget.js, getUtmParamsFromHost) ; les
+  // nôtres passent après et l'emportent, des valeurs vides les neutralisent.
   _getUtmParams: function() {
     var clic = this._clicAnnonce();
-    if (clic === null) return {};
+    if (clic === null) return { utmContent: '', utmTerm: '', utmSource: '', utmMedium: '', utmCampaign: '' };
     return {
       utmContent: clic.type + ':' + clic.id,
       utmTerm: clic.utm_term || '',
