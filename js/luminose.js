@@ -194,7 +194,8 @@ var App = {
         record_sessions_percent: 0,
         record_heatmap_data: false,
         property_blacklist: ['dclid', 'fbclid', 'gclid', 'gbraid', 'ko_click_id', 'li_fat_id', 'msclkid',
-                             'sccid', 'ttclid', 'twclid', 'wbraid', 'current_url_search'],
+                             'sccid', 'ttclid', 'twclid', 'wbraid', 'current_url_search',
+                             'utm_content'], // par précaution : le script de tête le retire déjà de l'adresse
         hooks: { on_track: nettoyer },
         loaded: demarrer
       });

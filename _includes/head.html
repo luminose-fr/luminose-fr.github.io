@@ -75,6 +75,8 @@
            envoyés par e-mail…) sont retirés de l'adresse et rangés pour la page :
            dans window.luminoseParametres, et dans sessionStorage sous la clé
            « luminose_parametres:<chemin> », que relit _parametrePrive.
+           utm_content est retiré lui aussi, sans être rangé : après une réservation,
+           Calendly y renvoie le clic d'annonce (gclid:…), et le site ne le lit jamais.
 
         3. Les traces publicitaires (Google Ads, Meta) sont effacées à chaque page tant
            que le visiteur n'a pas accepté : jusqu'aux publications GTM des 14 et
@@ -108,11 +110,16 @@
         var nomsPersonnels = ['text_reminder_number', 'guests', 'email', 'prenom', 'nom', 'telephone', 'ville', 'code_postal', 'notion_page_id', 'payment_intent_client_secret'];
         var segmentsGardes = [];
         var personnelsTrouves = false;
+        var utmContentTrouve = false;
         location.search.replace(/^\?/, '').split('&').forEach(function(segment) {
           if (segment === '') return;
           // URLSearchParams décode le nom et la valeur (%5B, +…), comme pour la lecture.
           var paire = new URLSearchParams(segment).entries().next().value || [segment, ''];
           var nom = paire[0];
+          if (nom === 'utm_content') {
+            utmContentTrouve = true;
+            return;
+          }
           var estPersonnel = nomsPersonnels.indexOf(nom) >= 0 || prefixesPersonnels.some(function(prefixe) { return nom.indexOf(prefixe) === 0; });
           if (!estPersonnel) {
             segmentsGardes.push(segment);
@@ -128,6 +135,8 @@
             Object.keys(window.luminoseParametres).forEach(function(nom) { parametresRanges[nom] = window.luminoseParametres[nom]; });
             sessionStorage.setItem(cleParametres, JSON.stringify(parametresRanges));
           } catch (e) { /* sans stockage, window.luminoseParametres sert la page en cours */ }
+        }
+        if (personnelsTrouves || utmContentTrouve) {
           // Les autres paramètres (utm_*, gclid…) restent tels quels, avec l'ancre.
           history.replaceState(history.state, '', location.pathname + (segmentsGardes.length ? '?' + segmentsGardes.join('&') : '') + location.hash);
         }
