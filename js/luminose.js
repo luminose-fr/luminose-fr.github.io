@@ -1807,19 +1807,21 @@ var App = {
     }
   },
   
-  // À appeler au moment d'ouvrir Calendly : le gclid ne part (Calendly, puis Make, puis
-  // Google) que si le visiteur a accepté les cookies publicitaires à cet instant.
+  // Les paramètres utm de Calendly, à calculer au moment de l'ouvrir. Avec l'accord du
+  // visiteur, le clic d'annonce retenu (_clicAnnonce) part dans utm_content au format
+  // « type:identifiant » (gclid:…, wbraid:…, gbraid:…), avec les utm_* de la visite qui
+  // l'a apporté ; Calendly les transmet à Make, qui se sert d'utm_content et d'utm_term.
+  // Sans accord ou sans clic retenu : aucun paramètre, ni identifiant ni utm_*.
   _getUtmParams: function() {
-    var consentementAccepte = this._getCookie(this._COOKIE_CONSENTEMENT) === 'accepte';
-    var utm_params = {
-      utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
-      utmSource: this.getParamFromCurrentPage("utm_source"),
-      utmMedium: this.getParamFromCurrentPage("utm_medium"),
-      utmContent: consentementAccepte ? this.getParamFromCurrentPage("gclid") : "", // Replacement of: this.getParamFromCurrentPage("utm_content"),
-      utmTerm: this.getParamFromCurrentPage("utm_term")
-      // Not Working: salesforce_uuid: this.getParamFromCurrentPage("gclid")
-    }
-    return utm_params;
+    var clic = this._clicAnnonce();
+    if (clic === null) return {};
+    return {
+      utmContent: clic.type + ':' + clic.id,
+      utmTerm: clic.utm_term || '',
+      utmSource: clic.utm_source || '',
+      utmMedium: clic.utm_medium || '',
+      utmCampaign: clic.utm_campaign || ''
+    };
   },
 
   // --- Parcours de découverte du breathwork (respiration-holotropique/decouverte*.html) ---
@@ -1896,6 +1898,7 @@ var App = {
         if (nomComplet) lien.searchParams.set('name', nomComplet);
         if (coordonnees.email) lien.searchParams.set('email', coordonnees.email);
         if (utm.utmContent) lien.searchParams.set('utm_content', utm.utmContent);
+        if (utm.utmTerm) lien.searchParams.set('utm_term', utm.utmTerm);
         conteneur.style.height = 'auto';
         conteneur.innerHTML = '<p><a class="button is-primary is-medium" data-track="bt_decouverte_breathwork_calendly_repli"></a></p>';
         conteneur.querySelector('a').href = lien.href;
