@@ -143,7 +143,7 @@ var App = {
     this.setupButtonPriseRdv();
     this.setupSocialLinks();
     this.setupButtonConfirmationQuestionnaireSante();
-    this.setupUTMParamsPropagation();
+    this.setupClicAnnonce();
     this.setupFormPrefill();
     this.setupFormValidation();
     this.setupPaiementAtelier();
@@ -193,7 +193,8 @@ var App = {
         record_sessions_percent: 0,
         record_heatmap_data: false,
         property_blacklist: ['dclid', 'fbclid', 'gclid', 'gbraid', 'ko_click_id', 'li_fat_id', 'msclkid',
-                             'sccid', 'ttclid', 'twclid', 'wbraid', 'current_url_search'],
+                             'sccid', 'ttclid', 'twclid', 'wbraid', 'current_url_search',
+                             'utm_content'], // par précaution : le script de tête le retire déjà de l'adresse
         hooks: { on_track: nettoyer },
         loaded: demarrer
       });
@@ -418,6 +419,7 @@ var App = {
       var dejaAccepte = that._getCookie(that._COOKIE_CONSENTEMENT) === 'accepte';
       that._setCookie(that._COOKIE_CONSENTEMENT, 'accepte', that._DUREE_CONSENTEMENT);
       gtag('consent', 'update', window.luminoseConsentementAccepte);
+      that._retenirClicAnnonce(); // l'adresse de la page peut porter le clic d'annonce
       if (!dejaAccepte) window.dataLayer.push({ event: 'consentement_accepte' });
       modal.close();
     });
@@ -790,6 +792,72 @@ var App = {
     } catch (e) { /* rien à reprendre */ }
   },
 
+  // --- Le clic d'annonce (Google Ads) ---
+  // Avec l'accord du visiteur seulement, l'identifiant du clic (gclid, ou wbraid et gbraid
+  // sur iPhone) est rangé dans le stockage local, 90 jours au plus, avec les utm_* de la
+  // même adresse. Calendly le reçoit au format « type:identifiant » (_getUtmParams), puis
+  // Make, qui le transmet à Google. Sans accord, rien n'est rangé, et le script de tête
+  // efface ce qui l'était (luminoseEffacerTraceursPublicitaires, _includes/head.html).
+  _CLE_CLIC_ANNONCE: 'luminose_clic_annonce',
+  _DUREE_CLIC_ANNONCE: 90, // jours
+  _TYPES_CLIC_ANNONCE: ['gclid', 'wbraid', 'gbraid'], // dans cet ordre de préférence
+
+  setupClicAnnonce: function() {
+    this._retenirClicAnnonce();
+  },
+
+  _identifiantClicValable: function(id) {
+    return typeof id === 'string' && /^[A-Za-z0-9_-]{1,200}$/.test(id);
+  },
+
+  // Une adresse qui porte un identifiant valable remplace l'enregistrement. Une adresse sans
+  // identifiant n'y touche pas : une visite venue d'ailleurs ne retire pas son crédit au
+  // clic, comme dans Google Ads.
+  _retenirClicAnnonce: function() {
+    try {
+      if (this._getCookie(this._COOKIE_CONSENTEMENT) !== 'accepte') return;
+      var parametres = new URLSearchParams(window.location.search);
+      var type = this._TYPES_CLIC_ANNONCE.find(function(t) { return parametres.has(t); });
+      if (!type || !this._identifiantClicValable(parametres.get(type))) return;
+      // Les utm_* restent tels qu'ils figurent dans l'adresse, encore encodés :
+      // Make décode le mot-clé (decodeURL) avant de l'écrire dans Notion.
+      localStorage.setItem(this._CLE_CLIC_ANNONCE, JSON.stringify({
+        type: type,
+        id: parametres.get(type),
+        utm_source: this.getParamFromCurrentPage('utm_source'),
+        utm_medium: this.getParamFromCurrentPage('utm_medium'),
+        utm_campaign: this.getParamFromCurrentPage('utm_campaign'),
+        utm_term: this.getParamFromCurrentPage('utm_term'),
+        date: Date.now()
+      }));
+    } catch (e) { /* sans stockage, le clic n'est simplement pas retenu */ }
+  },
+
+  // Le clic retenu, { type, id, utm_* }, ou null.
+  _clicAnnonce: function() {
+    try {
+      if (this._getCookie(this._COOKIE_CONSENTEMENT) !== 'accepte') return null;
+      var brut = localStorage.getItem(this._CLE_CLIC_ANNONCE);
+      if (brut !== null) {
+        var clic = null;
+        try { clic = JSON.parse(brut); } catch (e) { clic = null; }
+        var lisible = clic !== null && typeof clic === 'object' && this._TYPES_CLIC_ANNONCE.indexOf(clic.type) >= 0 &&
+          this._identifiantClicValable(clic.id) && typeof clic.date === 'number';
+        if (lisible && Date.now() - clic.date <= this._DUREE_CLIC_ANNONCE * 24 * 60 * 60 * 1000) {
+          return { type: clic.type, id: clic.id, utm_source: clic.utm_source || '', utm_medium: clic.utm_medium || '',
+                   utm_campaign: clic.utm_campaign || '', utm_term: clic.utm_term || '' };
+        }
+        localStorage.removeItem(this._CLE_CLIC_ANNONCE); // plus de 90 jours, ou illisible
+        return null;
+      }
+      // Repli, surtout pour les visiteurs qui ont accepté avant ce module : le cookie _gcl_aw
+      // de la balise Google, « GCL.<horodatage>.<gclid> ». Pas de repli sur _gcl_gb : on ne
+      // sait pas s'il porte un gbraid ou un wbraid, et Google refuserait le mauvais type.
+      var id = this._getCookie('_gcl_aw').split('.').slice(2).join('.');
+      return this._identifiantClicValable(id) ? { type: 'gclid', id: id } : null;
+    } catch (e) { return null; }
+  },
+
   getParamFromCurrentPage: function(param_name) {
     param_name = param_name.replace(/([\[\]])/g, "\\\$1");
     var regex = new RegExp("[\\?&]" + param_name + "=([^&#]*)"),
@@ -813,44 +881,6 @@ var App = {
     });
   },
 
-  setupUTMParamsPropagation: function() {
-    // use URLSerachParams to get strings <- does not work in Internet Explorer
-    let deleteParams = [];
-    const utmParamQueryString = new URLSearchParams(window.location.search);
-
-    utmParamQueryString.forEach(function(value, key) {
-      if (!key.startsWith("utm_")) {
-        deleteParams.push(key);
-      }
-    });
-    deleteParams.forEach(function(value, key) {
-      utmParamQueryString.delete(value);
-    });
-
-    if (utmParamQueryString) {
-      // get all the links on the page
-      document.querySelectorAll("a").forEach(function(item) {
-        if (item.href && item.href != "") {
-          const checkUrl = new URL(item.href);
-          // if the links hrefs are not navigating to the same domain, then skip processing them
-          if (checkUrl.host === location.host) {
-            let doNotProcess = false;
-            const linkSearchParams = new URLSearchParams(checkUrl.search);
-            linkSearchParams.forEach(function(value, key) {
-              if (key.startsWith("utm_")) doNotProcess = true;
-            });
-            if (doNotProcess) return;
-            checkUrl.search = new URLSearchParams({
-              ...Object.fromEntries(utmParamQueryString),
-              ...Object.fromEntries(linkSearchParams),
-            });
-            item.href = checkUrl.href;
-          }
-        }
-      });
-    }
-  },
-  
   setupFormPrefill: function() {
     if (document.querySelector('#form-questionnaire-sante') !== null) {
       var questionnaireSante = document.querySelector('#form-questionnaire-sante');
@@ -1739,37 +1769,32 @@ var App = {
     }
   },
   
-  // À appeler au moment d'ouvrir Calendly : le gclid ne part (Calendly, puis Make, puis
-  // Google) que si le visiteur a accepté les cookies publicitaires à cet instant.
+  // Les paramètres utm de Calendly, à calculer au moment de l'ouvrir. Avec l'accord du
+  // visiteur, le clic d'annonce retenu (_clicAnnonce) part dans utm_content au format
+  // « type:identifiant » (gclid:…, wbraid:…, gbraid:…), avec les utm_* de la visite qui
+  // l'a apporté ; Calendly les transmet à Make, qui se sert d'utm_content et d'utm_term.
+  // Sans accord ou sans clic retenu : ni identifiant ni utm_*. Calendly recopie pourtant
+  // de lui-même les utm_* de l'adresse de la page (widget.js, getUtmParamsFromHost) ; les
+  // nôtres passent après et l'emportent, des valeurs vides les neutralisent.
   _getUtmParams: function() {
-    var consentementAccepte = this._getCookie(this._COOKIE_CONSENTEMENT) === 'accepte';
-    var utm_params = {
-      utmCampaign: this.getParamFromCurrentPage("utm_campaign"),
-      utmSource: this.getParamFromCurrentPage("utm_source"),
-      utmMedium: this.getParamFromCurrentPage("utm_medium"),
-      utmContent: consentementAccepte ? this.getParamFromCurrentPage("gclid") : "", // Replacement of: this.getParamFromCurrentPage("utm_content"),
-      utmTerm: this.getParamFromCurrentPage("utm_term")
-      // Not Working: salesforce_uuid: this.getParamFromCurrentPage("gclid")
-    }
-    return utm_params;
+    var clic = this._clicAnnonce();
+    if (clic === null) return { utmContent: '', utmTerm: '', utmSource: '', utmMedium: '', utmCampaign: '' };
+    return {
+      utmContent: clic.type + ':' + clic.id,
+      utmTerm: clic.utm_term || '',
+      utmSource: clic.utm_source || '',
+      utmMedium: clic.utm_medium || '',
+      utmCampaign: clic.utm_campaign || ''
+    };
   },
 
   // --- Parcours de découverte du breathwork (respiration-holotropique/decouverte*.html) ---
   // Landing → questionnaire de santé → rendez-vous (Calendly) → confirmation.
-  // Le gclid suit d'une page à l'autre dans l'URL : c'est lui que Calendly transmet
-  // à Make pour la conversion, si le visiteur a accepté les cookies (_getUtmParams). Prénom, nom et
-  // e-mail passent par sessionStorage, jamais par l'URL (ils finiraient dans les
-  // pages vues d'Analytics).
+  // Le clic d'annonce ne suit plus dans l'adresse : avec l'accord du visiteur, il est
+  // rangé dès la landing (_retenirClicAnnonce) et Calendly le reçoit à l'étape du
+  // rendez-vous (_getUtmParams). Seuls le prénom, le nom et l'e-mail passent d'une page
+  // à l'autre, par sessionStorage, jamais par l'adresse (la mesure la lit).
   _CLE_DECOUVERTE: 'luminose_decouverte_coordonnees',
-
-  _urlAvecSuivi: function(chemin, extra) {
-    var url = new URL(chemin, window.location.origin);
-    new URLSearchParams(window.location.search).forEach(function(valeur, cle) {
-      if (cle === 'gclid' || cle.indexOf('utm_') === 0) url.searchParams.set(cle, valeur);
-    });
-    Object.entries(extra || {}).forEach(function([cle, valeur]) { url.searchParams.set(cle, valeur); });
-    return url.href;
-  },
 
   _passerAuRendezVous: function(etapeSuivante, formData) {
     try {
@@ -1781,17 +1806,13 @@ var App = {
     } catch (e) { /* sans stockage, le calendrier n'est simplement pas prérempli */ }
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: 'questionnaire_sante_envoye', parcours: 'decouverte_breathwork' });
-    window.location.href = this._urlAvecSuivi(etapeSuivante, { questionnaire: 'envoye' });
+    var suite = new URL(etapeSuivante, window.location.origin);
+    suite.searchParams.set('questionnaire', 'envoye');
+    window.location.href = suite.href;
   },
 
   setupParcoursDecouverte: function() {
     var that = this;
-
-    // Les liens du parcours gardent le gclid (les utm_ suivent déjà : setupUTMParamsPropagation).
-    document.querySelectorAll('a[data-garder-gclid]').forEach(function(lien) {
-      lien.href = that._urlAvecSuivi(lien.getAttribute('href'));
-    });
-
     var conteneur = document.getElementById('calendly-decouverte');
     if (conteneur === null) return;
 
@@ -1828,6 +1849,7 @@ var App = {
         if (nomComplet) lien.searchParams.set('name', nomComplet);
         if (coordonnees.email) lien.searchParams.set('email', coordonnees.email);
         if (utm.utmContent) lien.searchParams.set('utm_content', utm.utmContent);
+        if (utm.utmTerm) lien.searchParams.set('utm_term', utm.utmTerm);
         conteneur.style.height = 'auto';
         conteneur.innerHTML = '<p><a class="button is-primary is-medium" data-track="bt_decouverte_breathwork_calendly_repli"></a></p>';
         conteneur.querySelector('a').href = lien.href;
@@ -1843,7 +1865,7 @@ var App = {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'rendez_vous_decouverte_breathwork' });
       try { sessionStorage.removeItem(that._CLE_DECOUVERTE); } catch (err) { /* rien à nettoyer */ }
-      setTimeout(function() { window.location.href = that._urlAvecSuivi(conteneur.dataset.etapeSuivante); }, 1500);
+      setTimeout(function() { window.location.href = new URL(conteneur.dataset.etapeSuivante, window.location.origin).href; }, 1500);
     });
   },
 
