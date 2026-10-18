@@ -143,7 +143,6 @@ var App = {
     this.setupButtonPriseRdv();
     this.setupSocialLinks();
     this.setupButtonConfirmationQuestionnaireSante();
-    this.setupUTMParamsPropagation();
     this.setupClicAnnonce();
     this.setupFormPrefill();
     this.setupFormValidation();
@@ -882,44 +881,6 @@ var App = {
     });
   },
 
-  setupUTMParamsPropagation: function() {
-    // use URLSerachParams to get strings <- does not work in Internet Explorer
-    let deleteParams = [];
-    const utmParamQueryString = new URLSearchParams(window.location.search);
-
-    utmParamQueryString.forEach(function(value, key) {
-      if (!key.startsWith("utm_")) {
-        deleteParams.push(key);
-      }
-    });
-    deleteParams.forEach(function(value, key) {
-      utmParamQueryString.delete(value);
-    });
-
-    if (utmParamQueryString) {
-      // get all the links on the page
-      document.querySelectorAll("a").forEach(function(item) {
-        if (item.href && item.href != "") {
-          const checkUrl = new URL(item.href);
-          // if the links hrefs are not navigating to the same domain, then skip processing them
-          if (checkUrl.host === location.host) {
-            let doNotProcess = false;
-            const linkSearchParams = new URLSearchParams(checkUrl.search);
-            linkSearchParams.forEach(function(value, key) {
-              if (key.startsWith("utm_")) doNotProcess = true;
-            });
-            if (doNotProcess) return;
-            checkUrl.search = new URLSearchParams({
-              ...Object.fromEntries(utmParamQueryString),
-              ...Object.fromEntries(linkSearchParams),
-            });
-            item.href = checkUrl.href;
-          }
-        }
-      });
-    }
-  },
-  
   setupFormPrefill: function() {
     if (document.querySelector('#form-questionnaire-sante') !== null) {
       var questionnaireSante = document.querySelector('#form-questionnaire-sante');
@@ -1827,20 +1788,11 @@ var App = {
 
   // --- Parcours de découverte du breathwork (respiration-holotropique/decouverte*.html) ---
   // Landing → questionnaire de santé → rendez-vous (Calendly) → confirmation.
-  // Le gclid suit d'une page à l'autre dans l'URL : c'est lui que Calendly transmet
-  // à Make pour la conversion, si le visiteur a accepté les cookies (_getUtmParams). Prénom, nom et
-  // e-mail passent par sessionStorage, jamais par l'URL (ils finiraient dans les
-  // pages vues d'Analytics).
+  // Le clic d'annonce ne suit plus dans l'adresse : avec l'accord du visiteur, il est
+  // rangé dès la landing (_retenirClicAnnonce) et Calendly le reçoit à l'étape du
+  // rendez-vous (_getUtmParams). Seuls le prénom, le nom et l'e-mail passent d'une page
+  // à l'autre, par sessionStorage, jamais par l'adresse (la mesure la lit).
   _CLE_DECOUVERTE: 'luminose_decouverte_coordonnees',
-
-  _urlAvecSuivi: function(chemin, extra) {
-    var url = new URL(chemin, window.location.origin);
-    new URLSearchParams(window.location.search).forEach(function(valeur, cle) {
-      if (cle === 'gclid' || cle.indexOf('utm_') === 0) url.searchParams.set(cle, valeur);
-    });
-    Object.entries(extra || {}).forEach(function([cle, valeur]) { url.searchParams.set(cle, valeur); });
-    return url.href;
-  },
 
   _passerAuRendezVous: function(etapeSuivante, formData) {
     try {
@@ -1852,17 +1804,13 @@ var App = {
     } catch (e) { /* sans stockage, le calendrier n'est simplement pas prérempli */ }
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: 'questionnaire_sante_envoye', parcours: 'decouverte_breathwork' });
-    window.location.href = this._urlAvecSuivi(etapeSuivante, { questionnaire: 'envoye' });
+    var suite = new URL(etapeSuivante, window.location.origin);
+    suite.searchParams.set('questionnaire', 'envoye');
+    window.location.href = suite.href;
   },
 
   setupParcoursDecouverte: function() {
     var that = this;
-
-    // Les liens du parcours gardent le gclid (les utm_ suivent déjà : setupUTMParamsPropagation).
-    document.querySelectorAll('a[data-garder-gclid]').forEach(function(lien) {
-      lien.href = that._urlAvecSuivi(lien.getAttribute('href'));
-    });
-
     var conteneur = document.getElementById('calendly-decouverte');
     if (conteneur === null) return;
 
@@ -1915,7 +1863,7 @@ var App = {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'rendez_vous_decouverte_breathwork' });
       try { sessionStorage.removeItem(that._CLE_DECOUVERTE); } catch (err) { /* rien à nettoyer */ }
-      setTimeout(function() { window.location.href = that._urlAvecSuivi(conteneur.dataset.etapeSuivante); }, 1500);
+      setTimeout(function() { window.location.href = new URL(conteneur.dataset.etapeSuivante, window.location.origin).href; }, 1500);
     });
   },
 
