@@ -144,6 +144,7 @@ var App = {
     this.setupSocialLinks();
     this.setupButtonConfirmationQuestionnaireSante();
     this.setupUTMParamsPropagation();
+    this.setupClicAnnonce();
     this.setupFormPrefill();
     this.setupFormValidation();
     this.setupPaiementAtelier();
@@ -418,6 +419,7 @@ var App = {
       var dejaAccepte = that._getCookie(that._COOKIE_CONSENTEMENT) === 'accepte';
       that._setCookie(that._COOKIE_CONSENTEMENT, 'accepte', that._DUREE_CONSENTEMENT);
       gtag('consent', 'update', window.luminoseConsentementAccepte);
+      that._retenirClicAnnonce(); // l'adresse de la page peut porter le clic d'annonce
       if (!dejaAccepte) window.dataLayer.push({ event: 'consentement_accepte' });
       modal.close();
     });
@@ -788,6 +790,72 @@ var App = {
         if (!valide || cle === clePage) localStorage.removeItem(cle);
       });
     } catch (e) { /* rien à reprendre */ }
+  },
+
+  // --- Le clic d'annonce (Google Ads) ---
+  // Avec l'accord du visiteur seulement, l'identifiant du clic (gclid, ou wbraid et gbraid
+  // sur iPhone) est rangé dans le stockage local, 90 jours au plus, avec les utm_* de la
+  // même adresse. Calendly le reçoit au format « type:identifiant » (_getUtmParams), puis
+  // Make, qui le transmet à Google. Sans accord, rien n'est rangé, et le script de tête
+  // efface ce qui l'était (luminoseEffacerTraceursPublicitaires, _includes/head.html).
+  _CLE_CLIC_ANNONCE: 'luminose_clic_annonce',
+  _DUREE_CLIC_ANNONCE: 90, // jours
+  _TYPES_CLIC_ANNONCE: ['gclid', 'wbraid', 'gbraid'], // dans cet ordre de préférence
+
+  setupClicAnnonce: function() {
+    this._retenirClicAnnonce();
+  },
+
+  _identifiantClicValable: function(id) {
+    return typeof id === 'string' && /^[A-Za-z0-9_-]{1,200}$/.test(id);
+  },
+
+  // Une adresse qui porte un identifiant valable remplace l'enregistrement. Une adresse sans
+  // identifiant n'y touche pas : une visite venue d'ailleurs ne retire pas son crédit au
+  // clic, comme dans Google Ads.
+  _retenirClicAnnonce: function() {
+    try {
+      if (this._getCookie(this._COOKIE_CONSENTEMENT) !== 'accepte') return;
+      var parametres = new URLSearchParams(window.location.search);
+      var type = this._TYPES_CLIC_ANNONCE.find(function(t) { return parametres.has(t); });
+      if (!type || !this._identifiantClicValable(parametres.get(type))) return;
+      // Les utm_* restent tels qu'ils figurent dans l'adresse, encore encodés :
+      // Make décode le mot-clé (decodeURL) avant de l'écrire dans Notion.
+      localStorage.setItem(this._CLE_CLIC_ANNONCE, JSON.stringify({
+        type: type,
+        id: parametres.get(type),
+        utm_source: this.getParamFromCurrentPage('utm_source'),
+        utm_medium: this.getParamFromCurrentPage('utm_medium'),
+        utm_campaign: this.getParamFromCurrentPage('utm_campaign'),
+        utm_term: this.getParamFromCurrentPage('utm_term'),
+        date: Date.now()
+      }));
+    } catch (e) { /* sans stockage, le clic n'est simplement pas retenu */ }
+  },
+
+  // Le clic retenu, { type, id, utm_* }, ou null.
+  _clicAnnonce: function() {
+    try {
+      if (this._getCookie(this._COOKIE_CONSENTEMENT) !== 'accepte') return null;
+      var brut = localStorage.getItem(this._CLE_CLIC_ANNONCE);
+      if (brut !== null) {
+        var clic = null;
+        try { clic = JSON.parse(brut); } catch (e) { clic = null; }
+        var lisible = clic !== null && typeof clic === 'object' && this._TYPES_CLIC_ANNONCE.indexOf(clic.type) >= 0 &&
+          this._identifiantClicValable(clic.id) && typeof clic.date === 'number';
+        if (lisible && Date.now() - clic.date <= this._DUREE_CLIC_ANNONCE * 24 * 60 * 60 * 1000) {
+          return { type: clic.type, id: clic.id, utm_source: clic.utm_source || '', utm_medium: clic.utm_medium || '',
+                   utm_campaign: clic.utm_campaign || '', utm_term: clic.utm_term || '' };
+        }
+        localStorage.removeItem(this._CLE_CLIC_ANNONCE); // plus de 90 jours, ou illisible
+        return null;
+      }
+      // Repli, surtout pour les visiteurs qui ont accepté avant ce module : le cookie _gcl_aw
+      // de la balise Google, « GCL.<horodatage>.<gclid> ». Pas de repli sur _gcl_gb : on ne
+      // sait pas s'il porte un gbraid ou un wbraid, et Google refuserait le mauvais type.
+      var id = this._getCookie('_gcl_aw').split('.').slice(2).join('.');
+      return this._identifiantClicValable(id) ? { type: 'gclid', id: id } : null;
+    } catch (e) { return null; }
   },
 
   getParamFromCurrentPage: function(param_name) {
