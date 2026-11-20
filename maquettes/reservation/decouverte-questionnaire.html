@@ -1,0 +1,20 @@
+---
+layout: campagne
+title: "Maquette — Découverte, questionnaire de santé - Luminose"
+section: maquette-reservation
+sitemap: false
+---
+
+<section class="campagne-section campagne-etape">
+  <div class="campagne-conteneur">
+    <div class="res-page">
+      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
+
+      {% include reservation/etapes.html etape=2 libelles="Rendez-vous|Questionnaire de santé|Confirmation" %}
+      <h1>Le questionnaire de santé</h1>
+      {% include reservation/bandeau.html etiquette="Entretien réservé" %}
+      {% include reservation/questionnaire.html contexte="decouverte" suite="/maquettes/reservation/decouverte-entretien-reserve.html" %}
+    </div>
+  </div>
+</section>
+<script defer src="{{ site.baseurl }}/js/reservation.js"></script>

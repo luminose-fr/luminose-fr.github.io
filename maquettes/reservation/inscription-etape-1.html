@@ -1,0 +1,28 @@
+---
+layout: campagne
+title: "Maquette — Inscription à une journée - Luminose"
+section: maquette-reservation
+sitemap: false
+evenements_maquette:
+  - id: maquette-1
+    date: Samedi 30 janvier
+    heure: de 9 h 30 à 18 h 30
+    places: il reste 2 places
+  - id: maquette-2
+    date: Samedi 13 mars
+    heure: de 9 h 30 à 18 h 30
+---
+
+<section class="campagne-section campagne-etape">
+  <div class="campagne-conteneur">
+    <div class="res-page">
+      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
+
+      {% include reservation/etapes.html etape=1 libelles="Inscription|Paiement|Confirmation" %}
+      <h1>Votre inscription</h1>
+      <p class="res-chapo">Journée de breathwork holotropique, en groupe.</p>
+      {% include reservation/questionnaire.html contexte="groupe" evenements=page.evenements_maquette suite="/maquettes/reservation/paiement.html" %}
+    </div>
+  </div>
+</section>
+<script defer src="{{ site.baseurl }}/js/reservation.js"></script>
