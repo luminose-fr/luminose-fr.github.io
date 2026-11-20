@@ -1,0 +1,13 @@
+{% comment %}
+  Les étapes d'un parcours de réservation, dans le style de campagne/etapes.html.
+  Paramètres : etape (numéro de l'étape en cours) ; libelles (séparés par « | »).
+  Sur mobile, seul le libellé de l'étape en cours reste affiché (ui-campagne).
+{% endcomment %}
+{% assign etape = include.etape | plus: 0 %}
+{% assign libelles = include.libelles | split: "|" %}
+<ol class="campagne-etapes" aria-label="Étapes">
+  {% for libelle in libelles %}
+  {% assign n = forloop.index %}
+  <li class="{% if etape > n %}est-faite{% elsif etape == n %}est-en-cours{% endif %}"{% if etape == n %} aria-current="step"{% endif %}><span class="campagne-etapes-numero">{% if etape > n %}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span class="is-sr-only">Fait :</span>{% else %}{{ n }}{% endif %}</span> <span class="campagne-etapes-libelle">{{ libelle }}</span></li>
+  {% endfor %}
+</ol>

@@ -1,0 +1,13 @@
+{% comment %}
+  Une question du questionnaire de santé, deux réponses.
+  Paramètres : nom (le champ envoyé, inchangé pour les scénarios Make), libelle,
+  version (facultatif : « complet » ou « suivi » si la question n'existe que dans cette version).
+{% endcomment %}
+<fieldset class="res-question" data-requis{% if include.version %} data-version="{{ include.version }}"{% endif %}>
+  <legend>{{ include.libelle }}</legend>
+  <div class="res-options">
+    <label class="res-option"><input type="radio" name="{{ include.nom }}" value="oui"><span>Oui</span></label>
+    <label class="res-option"><input type="radio" name="{{ include.nom }}" value="non"><span>Non</span></label>
+  </div>
+  <p class="res-erreur">Répondez par oui ou par non.</p>
+</fieldset>

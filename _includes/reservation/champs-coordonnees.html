@@ -1,0 +1,78 @@
+{% comment %}
+  Adresse, date de naissance, profession et personne de confiance : ce qu'un
+  questionnaire de suivi peut reprendre du précédent. Les noms des champs restent
+  ceux des scénarios Make. Paramètre : prefixe (pour des id uniques, le bloc pouvant
+  figurer deux fois dans la page, dans la version complète et dans celle de suivi).
+{% endcomment %}
+{% assign p = include.prefixe %}
+<div class="res-champ res-champ-court" data-requis>
+  <label for="{{ p }}-genre">Civilité</label>
+  <select id="{{ p }}-genre" name="coordonnees_participant[genre]" autocomplete="honorific-prefix">
+    <option value=""></option>
+    <option value="Mme">Mme</option>
+    <option value="M.">M.</option>
+    <option value="Autre">Autre</option>
+  </select>
+  <p class="res-erreur">Choisissez une civilité.</p>
+</div>
+<div class="res-champ" data-requis>
+  <label for="{{ p }}-naissance">Date de naissance</label>
+  <span class="res-champ-aide" id="{{ p }}-naissance-aide">Par exemple : 14/03/1985</span>
+  <input id="{{ p }}-naissance" type="text" inputmode="numeric" name="coordonnees_participant[date-naissance]" autocomplete="bday" aria-describedby="{{ p }}-naissance-aide" data-format="date">
+  <p class="res-erreur">Indiquez une date au format jj/mm/aaaa.</p>
+</div>
+<div class="res-champ" data-requis>
+  <label for="{{ p }}-adresse">Adresse</label>
+  <input id="{{ p }}-adresse" type="text" name="coordonnees_participant[adresse]" autocomplete="street-address">
+  <p class="res-erreur">Indiquez votre adresse.</p>
+</div>
+<div class="res-champs-ligne">
+  <div class="res-champ" data-requis>
+    <label for="{{ p }}-cp">Code postal</label>
+    <input id="{{ p }}-cp" type="text" inputmode="numeric" name="coordonnees_participant[code_postal]" autocomplete="postal-code">
+    <p class="res-erreur">À compléter.</p>
+  </div>
+  <div class="res-champ" data-requis>
+    <label for="{{ p }}-ville">Ville</label>
+    <input id="{{ p }}-ville" type="text" name="coordonnees_participant[ville]" autocomplete="address-level2">
+    <p class="res-erreur">Indiquez votre ville.</p>
+  </div>
+</div>
+<div class="res-champ" data-requis>
+  <label for="{{ p }}-profession">Profession</label>
+  <input id="{{ p }}-profession" type="text" name="coordonnees_participant[profession]" autocomplete="organization-title">
+  <p class="res-erreur">Indiquez votre profession.</p>
+</div>
+
+<h3 class="res-sous-titre">Votre personne de confiance</h3>
+<p class="res-note">La personne à contacter en cas de nécessité.</p>
+<div class="res-champ res-champ-court" data-requis>
+  <label for="{{ p }}-pc-genre">Civilité</label>
+  <select id="{{ p }}-pc-genre" name="coordonnees_secours[genre]">
+    <option value=""></option>
+    <option value="Mme">Mme</option>
+    <option value="M.">M.</option>
+    <option value="Autre">Autre</option>
+  </select>
+  <p class="res-erreur">Choisissez une civilité.</p>
+</div>
+<div class="res-champ" data-requis>
+  <label for="{{ p }}-pc-prenom">Prénom</label>
+  <input id="{{ p }}-pc-prenom" type="text" name="coordonnees_secours[prenom]" autocomplete="off">
+  <p class="res-erreur">Indiquez son prénom.</p>
+</div>
+<div class="res-champ" data-requis>
+  <label for="{{ p }}-pc-nom">Nom</label>
+  <input id="{{ p }}-pc-nom" type="text" name="coordonnees_secours[nom]" autocomplete="off">
+  <p class="res-erreur">Indiquez son nom.</p>
+</div>
+<div class="res-champ" data-requis>
+  <label for="{{ p }}-pc-tel">Téléphone</label>
+  <input id="{{ p }}-pc-tel" type="tel" name="coordonnees_secours[telephone]" autocomplete="off">
+  <p class="res-erreur">Indiquez son numéro de téléphone.</p>
+</div>
+<div class="res-champ" data-requis>
+  <label for="{{ p }}-pc-email">E-mail</label>
+  <input id="{{ p }}-pc-email" type="email" name="coordonnees_secours[email]" autocomplete="off" data-format="email">
+  <p class="res-erreur">Indiquez une adresse e-mail valide.</p>
+</div>

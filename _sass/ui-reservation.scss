@@ -1,0 +1,615 @@
+// ============================================
+// Réservation et questionnaire de santé — composants « res- ».
+// Branche parcours/reservation-questionnaire : d'abord servis par les maquettes
+// (maquettes/reservation/), puis par les vraies pages une fois validés.
+//
+// Mobile d'abord. Une seule échelle, pour que les écrans restent calmes :
+// - texte 16px (1rem), petit texte 14px (0.875rem), titre d'étape 24px, titre de page 32px ;
+// - interligne 1.5 pour le texte, 1.15 pour les titres ;
+// - espacements 8 / 16 / 24 / 32 / 48 px ; rayon 8px (celui du site) ;
+// - Futura Book pour le texte, Futura Medium pour les boutons seulement.
+// Les champs restent à 16px : en dessous, Safari sur iPhone zoome à la saisie.
+// ============================================
+@use "ui-variables" as v;
+@use "bulma-1.0.4/sass/utilities/mixins";
+
+// Le seul rouge de la palette d'interface : contraste suffisant sur fond blanc.
+$erreur: v.$dark-warning-tag-background;
+$erreur-sombre: v.$dark-warning-tag-color;
+$medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+$rayon: 8px;
+
+// Les couleurs passent par des variables : le thème sombre n'a qu'elles à changer,
+// sans course à la spécificité entre ses sélecteurs et ceux du thème clair.
+:root {
+  --res-texte: #{v.$purple-heavy};
+  --res-accent: #{v.$purple};
+  --res-fond: #FFFFFF;
+  --res-fond-doux: #{v.$purple-light};
+  --res-trait: #{v.$purple-light-border};
+  --res-erreur: #{$erreur};
+  --res-alerte-fond: #{v.$warning-tag-background};
+  --res-alerte-texte: #{v.$warning-tag-color};
+}
+
+// --- Bandeau « maquette » : le seul élément qui n'ira pas en ligne ---
+.res-maquette {
+  margin: 0 0 1.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: $rayon;
+  background-color: var(--res-alerte-fond);
+  color: var(--res-alerte-texte);
+  font-size: 0.875rem;
+}
+
+.res-page {
+  max-width: 36rem;
+  color: var(--res-texte);
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+
+  > h1 { margin-bottom: 0.5rem; }
+}
+
+// Le reset de Bulma donne « display: block » aux sections : l'attribut hidden,
+// qui masque les étapes et les questions d'une autre version, doit l'emporter.
+.res-page [hidden] { display: none !important; }
+
+// Sans poids (:where) : les classes des paragraphes gardent la main sur leurs marges.
+:where(.res-page) p { margin: 0; }
+:where(.res-page) p + p { margin-top: 1rem; }
+
+.res-chapo {
+  color: var(--res-accent);
+  margin-bottom: 1.5rem;
+}
+
+[data-apres-version] { margin-top: 0.5rem; }
+
+.res-bloc { margin-top: 1.5rem; }
+.res-page > .res-etiquette + h1 { margin-top: 1rem; }
+
+// Les étapes à venir restent lisibles : pas de transparence (ui-campagne en met une).
+.res-page .campagne-etapes li { opacity: 1; }
+
+// La question qui chapeaute la liste se détache de la première réponse.
+.res-lead { margin-bottom: 0.5rem; }
+.res-lead + .res-question { border-top: 1px solid var(--res-trait); }
+
+// --- Ce qui est déjà réservé : une ligne, une coche ---
+.res-bandeau {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: $rayon;
+  background-color: var(--res-fond-doux);
+
+  .res-bandeau-texte { display: flex; flex-direction: column; }
+  .res-bandeau-etiquette { font-size: 0.875rem; color: var(--res-accent); }
+  .res-bandeau-valeur { color: var(--res-texte); }
+}
+
+.res-coche {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: v.$green-light;
+  color: v.$green-heavy;
+
+  svg { width: 1rem; height: 1rem; }
+}
+
+// --- Progression dans le questionnaire ---
+.res-progression {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--res-accent);
+}
+
+.res-progression-barre {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+
+  span {
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--res-trait);
+  }
+
+  span.est-faite { background-color: var(--res-accent); }
+}
+
+// Préfixés par .res-page : « .campagne h2 » (ui-campagne) l'emporterait sinon.
+.res-page .res-etape-titre {
+  font-family: v.$family-serif;
+  font-weight: 300;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  color: var(--res-texte);
+  margin: 0 0 1.5rem;
+
+  &:focus { outline: none; }
+}
+
+.res-page .res-sous-titre {
+  font-family: v.$family-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  color: var(--res-texte);
+  margin: 2rem 0 0.5rem;
+}
+
+.res-encart {
+  padding: 1rem;
+  border-radius: $rayon;
+  background-color: var(--res-fond-doux);
+  color: var(--res-texte);
+
+  a { color: var(--res-texte); text-decoration: underline; }
+}
+
+.res-lead { margin-top: 2rem; }
+
+.res-note {
+  font-size: 0.875rem;
+  color: var(--res-accent);
+}
+
+.res-sous-titre + .res-note { margin-bottom: 1rem; }
+
+// --- Une question, deux réponses ---
+// Le fieldset garde sa sémantique (le lecteur d'écran annonce la question avec
+// chaque réponse) ; la légende flotte pour se mettre en page comme un paragraphe.
+.res-question,
+.res-choix {
+  border: 0;
+  margin: 0;
+  padding: 1rem 0;
+  min-width: 0;
+
+  legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0.75rem;
+    color: var(--res-texte);
+    line-height: 1.5;
+  }
+
+  legend + * { clear: left; }
+}
+
+.res-question + .res-question { border-top: 1px solid var(--res-trait); }
+
+.res-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.res-choix .res-options { grid-template-columns: 1fr; }
+
+.res-option {
+  position: relative;
+  display: block;
+  margin: 0;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--res-accent);
+    border-radius: $rayon;
+    background-color: var(--res-fond);
+    color: var(--res-texte);
+    text-align: center;
+    line-height: 1.25;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  input:checked + span {
+    background-color: var(--res-accent);
+    border-color: var(--res-accent);
+    color: var(--res-fond);
+  }
+
+  input:focus-visible + span {
+    outline: 2px solid var(--res-texte);
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) {
+    &:hover input:not(:checked) + span { background-color: var(--res-fond-doux); }
+  }
+}
+
+.res-choix .res-option > span {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.res-option-texte {
+  display: flex;
+  flex-direction: column;
+}
+
+.res-option-detail { font-size: 0.875rem; }
+
+// --- Champs : le libellé au-dessus, jamais dans le champ ---
+.res-champ {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.375rem;
+    color: var(--res-texte);
+  }
+
+  input,
+  select,
+  textarea {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--res-accent);
+    border-radius: $rayon;
+    background-color: var(--res-fond);
+    color: var(--res-texte);
+    font-family: v.$family-sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: none;
+
+    &:focus {
+      outline: 2px solid var(--res-texte);
+      outline-offset: 1px;
+    }
+  }
+
+  select {
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236163A5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+  }
+
+  textarea {
+    min-height: 7.5rem;
+    resize: vertical;
+  }
+}
+
+.res-champ-aide {
+  display: block;
+  margin: -0.125rem 0 0.375rem;
+  font-size: 0.875rem;
+  color: var(--res-accent);
+}
+
+.res-champs-ligne {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0 0.75rem;
+}
+
+.res-champ-court { max-width: 10rem; }
+
+// --- Erreurs : dites à l'endroit où elles se corrigent ---
+.res-erreur {
+  display: none;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--res-erreur);
+}
+
+.est-en-erreur {
+  > .res-erreur { display: block; }
+
+  .res-option > span,
+  input,
+  select,
+  textarea { border-color: var(--res-erreur); }
+
+  input,
+  select,
+  textarea { box-shadow: 0 0 0 1px var(--res-erreur); }
+}
+
+// --- Ce qui vient de Calendly : résumé, modifiable ---
+.res-resume {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: $rayon;
+  background-color: var(--res-fond-doux);
+
+  p { overflow-wrap: anywhere; }
+  p + p { margin-top: 0; }
+}
+
+.res-lien {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: v.$family-sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: var(--res-texte);
+  text-decoration: underline;
+  text-decoration-color: v.$green-light;
+  text-decoration-thickness: 0.3em;
+  text-underline-offset: -0.1em;
+  text-decoration-skip-ink: none;
+  cursor: pointer;
+
+  &:hover { color: v.$purple-logo; }
+}
+
+// --- Déclaration : une vraie case, grande ---
+.res-declaration {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.5rem 0 0;
+  padding: 1rem;
+  border-radius: $rayon;
+  background-color: var(--res-fond-doux);
+  cursor: pointer;
+
+  input {
+    flex: 0 0 auto;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0;
+    border: 1px solid var(--res-accent);
+    border-radius: 4px;
+    background-color: var(--res-fond);
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+
+    &:checked {
+      background-color: var(--res-accent);
+      border-color: var(--res-accent);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E");
+      background-size: 1rem;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--res-texte);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.est-en-erreur.res-declaration-bloc .res-declaration input { border-color: var(--res-erreur); box-shadow: 0 0 0 1px var(--res-erreur); }
+
+.res-rappel {
+  margin-top: 1rem;
+
+  summary {
+    cursor: pointer;
+    color: var(--res-texte);
+    text-decoration: underline;
+    text-decoration-color: v.$green-light;
+    text-decoration-thickness: 0.3em;
+    text-underline-offset: -0.1em;
+    text-decoration-skip-ink: none;
+  }
+
+  .res-encart { margin-top: 0.75rem; }
+}
+
+// --- Actions : le bouton principal en pleine largeur sur téléphone ---
+.res-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  .button {
+    height: auto;
+    min-height: 3rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: $rayon;
+    font-family: $medium;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    white-space: normal;
+  }
+
+  .res-lien,
+  .campagne-lien-secondaire { align-self: center; }
+  .res-note { text-align: center; }
+}
+
+// --- Fin de parcours ---
+.res-confirmation {
+  .res-coche {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+
+    svg { width: 1.5rem; height: 1.5rem; }
+  }
+}
+
+.res-suite {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  counter-reset: suite;
+
+  li {
+    position: relative;
+    padding: 0 0 1rem 2.75rem;
+    counter-increment: suite;
+    min-height: 2rem;
+
+    &::before {
+      content: counter(suite);
+      position: absolute;
+      left: 0;
+      top: -0.125rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: 1px solid var(--res-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      color: var(--res-texte);
+    }
+  }
+}
+
+// --- Calendly : réserve sa place, le temps qu'il se charge ---
+.res-calendrier-maquette {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 20rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 1px dashed var(--res-accent);
+  border-radius: $rayon;
+  text-align: center;
+  color: var(--res-accent);
+}
+
+// --- Bloc d'inscription d'une page d'évènement ---
+.res-inscription {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem;
+  border-radius: $rayon;
+  background-color: var(--res-fond-doux);
+  color: var(--res-texte);
+  letter-spacing: 0.02em;
+
+  .res-inscription-quand {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .res-inscription-date { font-size: 1.125rem; }
+  .res-inscription-heure { color: var(--res-accent); }
+
+  .button {
+    height: auto;
+    min-height: 3rem;
+    border-radius: $rayon;
+    font-family: $medium;
+    white-space: normal;
+  }
+
+  // Dans le .content des pages d'évènement, Bulma ajoute des marges aux paragraphes.
+  .res-inscription-quand,
+  .res-note { margin: 0 !important; }
+}
+
+.res-etiquette {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: $rayon;
+  background-color: var(--res-alerte-fond);
+  color: var(--res-alerte-texte);
+  font-size: 0.875rem;
+}
+
+// --- Tablette et ordinateur : les boutons reprennent leur largeur ---
+@include mixins.tablet {
+  .res-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .res-note { flex-basis: 100%; text-align: left; order: 3; }
+  }
+
+  .res-inscription .button { align-self: flex-start; }
+}
+
+// --- La question de la modale « Prendre un rendez-vous » ---
+#md-prise-rdv .modal-card .res-modale-question {
+  text-align: left;
+  margin-bottom: 1rem;
+
+  strong {
+    display: block;
+    font-family: v.$family-serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    color: v.$purple-heavy;
+    margin-bottom: 0.5rem;
+  }
+
+  span {
+    display: block;
+    color: v.$purple;
+  }
+}
+
+// --- Thème sombre ---
+// La modale « Prendre un rendez-vous » reste claire dans les deux thèmes : sa question
+// garde ses couleurs fixes, hors variables.
+@mixin reservation-sombre {
+  --res-texte: #FFFFFF;
+  --res-accent: #{v.$dark-purple};
+  --res-fond: #{v.$dark-purple-heaviest};
+  --res-fond-doux: #{v.$dark-purple-heavy};
+  --res-trait: #{v.$dark-purple-heavy};
+  --res-erreur: #{$erreur-sombre};
+  --res-alerte-fond: #{v.$dark-warning-tag-background};
+  --res-alerte-texte: #{v.$dark-warning-tag-color};
+
+  .res-champ select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BB95DD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { @include reservation-sombre; }
+}
+
+[data-theme=dark],
+.theme-dark {
+  @include reservation-sombre;
+}

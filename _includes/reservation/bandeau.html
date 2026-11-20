@@ -1,0 +1,12 @@
+{% comment %}
+  Ce qui est déjà réservé, en une ligne. Paramètre : etiquette (« Séance réservée »…).
+  La date vient de la redirection de Calendly (event_start_time), lue par js/reservation.js ;
+  sans elle, la ligne renvoie à l'e-mail de confirmation.
+{% endcomment %}
+<div class="res-bandeau">
+  {% include reservation/coche.html %}
+  <p class="res-bandeau-texte">
+    <span class="res-bandeau-etiquette">{{ include.etiquette }}</span>
+    <span class="res-bandeau-valeur" data-reservation-date>Le détail est dans l'e-mail de confirmation.</span>
+  </p>
+</div>
