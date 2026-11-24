@@ -1,19 +1,23 @@
 ---
-layout: campagne
+layout: default
 title: "Maquette — Questionnaire reçu - Luminose"
-section: maquette-reservation
+layout_remove_florent: true
+layout_remove_newsletter: true
 sitemap: false
 ---
-
-<section class="campagne-section res-section">
-  <div class="campagne-conteneur">
-    <div class="res-page">
-      {% include reservation/parcours.html etape=2 libelles="Questionnaire|Inscription" %}
-      {% include reservation/coche.html %}
-      <h1>Votre questionnaire est bien arrivé</h1>
-      <p>Il vous reste à vous inscrire auprès de l'organisateur de la journée.</p>
-      <div class="res-actions">
-        <a class="button is-primary" href="https://www.helloasso.com/" target="_blank" rel="noopener">S'inscrire chez l'organisateur</a>
+<section class="section article confirmation">
+  <div class="container">
+    <div class="content">
+      <div class="columns is-multiline is-centered">
+        <div class="column is-12-mobile is-12-tablet is-7-desktop is-7-widescreen is-7-fullhd ">
+          <div class="purple-border">
+            <div class="block">
+              <h1 class="icon-text"><i class="icon icon-confirmation"></i> Votre questionnaire est bien arrivé !</h1>
+              <p>Il vous reste à vous inscrire auprès de l'organisateur de la journée.</p>
+              <p><a class="button is-primary" href="https://www.helloasso.com/" target="_blank" rel="noopener">S'inscrire chez l'organisateur</a></p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

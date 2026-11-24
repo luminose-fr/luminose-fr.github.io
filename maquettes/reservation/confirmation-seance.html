@@ -1,24 +1,42 @@
 ---
-layout: campagne
+layout: default
 title: "Maquette — Tout est prêt - Luminose"
-section: maquette-reservation
+layout_remove_florent: true
+layout_remove_newsletter: true
 sitemap: false
 ---
-
-<section class="campagne-section res-section">
-  <div class="campagne-conteneur">
-    <div class="res-page">
-      {% include reservation/parcours.html etape=3 libelles="Rendez-vous|Questionnaire|Confirmation" avancement=100 %}
-      {% include reservation/coche.html %}
-      <h1>Tout est prêt</h1>
-      <p>Votre questionnaire de santé est bien arrivé. Vous allez recevoir un e-mail de confirmation, avec la date, l'heure et l'adresse.</p>
-      <ol class="res-suite">
-        <li>Je relis votre questionnaire avant la séance. Si une réponse demande que nous en parlions, je vous appelle.</li>
-        <li>Le paiement se fait au moins 3 jours avant la séance.</li>
-        <li>Une séance d'intégration de 30 minutes suit, une à deux semaines après.</li>
-      </ol>
-      <div class="res-actions">
-        <a class="button is-purple-bordered" href="{{ site.baseurl }}/">Retour au site</a>
+{% if site.evenements %}
+  {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+{% endif %}
+{% if evenements_futurs.size >= 1 %}
+  {% assign contient_evenements_futurs = true %}
+  {% assign purple_border_extra_css_class = "with-push-confirmation" %}
+{% else %}
+  {% assign columns_extra_css_class = "is-centered" %}
+{% endif %}
+<section class="section article confirmation">
+  <div class="container">
+    <div class="content">
+      <div class="columns is-multiline {{ columns_extra_css_class }}">
+        <div class="column is-12-mobile is-12-tablet is-7-desktop is-7-widescreen is-7-fullhd ">
+          <div class="purple-border {{ purple_border_extra_css_class }}">
+            <div class="block">
+              <h1 class="icon-text"><i class="icon icon-confirmation"></i> Tout est prêt !</h1>
+              <p>Votre questionnaire de santé est bien arrivé. Vous allez recevoir un email de confirmation contenant l'adresse, la date et l'heure du rendez-vous. Vous pourrez également modifier le rendez-vous si besoin.</p>
+              <div class="light-bg">
+                <h3>La suite</h3>
+                <ol>
+                  <li>Je relis votre questionnaire avant la séance. Si une réponse demande que nous en parlions, je vous appelle.</li>
+                  <li>Le paiement se fait au moins 3 jours avant la séance.</li>
+                  <li>Une séance d'intégration de 30 minutes suit, une à deux semaines après.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% if contient_evenements_futurs %}
+        {% include push-confirmation.html %}
+      {% endif %}
       </div>
     </div>
   </div>
