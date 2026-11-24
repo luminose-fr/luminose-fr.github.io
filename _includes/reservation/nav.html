@@ -5,7 +5,7 @@
 {% endcomment %}
 <div class="res-nav">
   {% unless include.retour == "non" %}
-  <button type="button" class="button is-purple-bordered res-nav-retour" data-precedent><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>Retour</button>
+  <button type="button" class="button is-white is-purple-bordered res-nav-retour" data-precedent>Retour</button>
   {% endunless %}
   {% if include.envoi == "oui" %}
   <button type="submit" class="button is-primary">{{ include.libelle }}</button>

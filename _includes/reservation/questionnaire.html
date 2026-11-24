@@ -80,7 +80,7 @@
           <label for="journee-{{ forloop.index }}">{{ e.date }}<span class="res-choix-detail">{{ e.heure }}{% if e.places %} · {{ e.places }}{% endif %}</span></label>
         </div>
         {% endfor %}
-        <p class="res-erreur">Choisissez une date.</p>
+        <p class="help is-danger res-erreur">Choisissez une date.</p>
       </div>
     </div>
     {% include reservation/nav.html retour="non" %}
@@ -104,7 +104,7 @@
           <input class="is-checkradio" id="version-suivi" type="radio" name="version" value="suivi">
           <label for="version-suivi">Oui, déjà</label>
         </div>
-        <p class="res-erreur">Choisissez une réponse.</p>
+        <p class="help is-danger res-erreur">Choisissez une réponse.</p>
       </div>
     </div>
     {% include reservation/nav.html %}
@@ -113,7 +113,7 @@
 
   {% comment %} ——— L'avertissement. En entier pour une première fois. Pour qui a déjà fait
   du breathwork avec Florent (décision du 24/11) : un rappel en deux phrases, la phrase
-  d'origine sur la confidentialité, et le texte complet à déplier pour qui veut le relire. ——— {% endcomment %}
+  d'origine sur la confidentialité, et un bouton qui déplie le texte complet. ——— {% endcomment %}
   <section class="res-ecran" data-ecran="avertissement" data-version="complet">
     <h1 tabindex="-1">À lire avant de répondre</h1>
     {% include reservation/avertissement.html objet=objet %}
@@ -126,10 +126,10 @@
     <p>Le breathwork holotropique peut impliquer des expériences intenses, et il n'est pas recommandé dans certaines situations de santé.</p>
     <p>Votre situation a pu changer depuis votre dernière séance&nbsp;: répondez selon ce qu'elle est aujourd'hui.</p>
     <p>Les réponses aux questions suivantes sont destinées à m'aider à préparer {% if contexte == "seance" %}votre séance{% else %}la journée{% endif %} et resteront strictement confidentielles.</p>
-    <details class="res-details">
-      <summary>Relire le texte complet</summary>
+    <p><button type="button" class="button is-white is-purple-bordered" data-deplier="texte-complet" data-libelle-ouvert="Masquer le texte complet" aria-expanded="false" aria-controls="texte-complet">Relire le texte complet</button></p>
+    <div id="texte-complet" class="res-deplie" hidden>
       {% include reservation/avertissement.html %}
-    </details>
+    </div>
     {% include reservation/nav.html %}
   </section>
   {% endunless %}
@@ -165,8 +165,8 @@
       </div>
       <div class="res-champ">
         <label for="informations-complementaires">Merci de partager ici toute information que vous souhaitez porter à ma connaissance.</label>
-        <span class="res-champ-aide">Ce champ est facultatif.</span>
-        <textarea id="informations-complementaires" name="informations-complementaires"></textarea>
+        <p class="help">Ce champ est facultatif.</p>
+        <textarea class="textarea is-purple-bordered" id="informations-complementaires" name="informations-complementaires"></textarea>
       </div>
     </div>
     {% include reservation/nav.html %}
@@ -179,23 +179,23 @@
     <div class="res-panneau">
       <div class="res-champ" data-requis data-identite="prenom">
         <label for="prenom">Prénom</label>
-        <input id="prenom" type="text" name="coordonnees_participant[prenom]" autocomplete="given-name">
-        <p class="res-erreur">Indiquez votre prénom.</p>
+        <input class="input is-purple-bordered" id="prenom" type="text" name="coordonnees_participant[prenom]" autocomplete="given-name">
+        <p class="help is-danger res-erreur">Indiquez votre prénom.</p>
       </div>
       <div class="res-champ" data-requis data-identite="nom">
         <label for="nom">Nom</label>
-        <input id="nom" type="text" name="coordonnees_participant[nom]" autocomplete="family-name">
-        <p class="res-erreur">Indiquez votre nom.</p>
+        <input class="input is-purple-bordered" id="nom" type="text" name="coordonnees_participant[nom]" autocomplete="family-name">
+        <p class="help is-danger res-erreur">Indiquez votre nom.</p>
       </div>
       <div class="res-champ" data-requis data-identite="email">
         <label for="email">E-mail</label>
-        <input id="email" type="email" name="coordonnees_participant[email]" autocomplete="email" data-format="email">
-        <p class="res-erreur">Indiquez une adresse e-mail valide.</p>
+        <input class="input is-purple-bordered" id="email" type="email" name="coordonnees_participant[email]" autocomplete="email" data-format="email">
+        <p class="help is-danger res-erreur">Indiquez une adresse e-mail valide.</p>
       </div>
       <div class="res-champ" data-requis data-identite="telephone">
         <label for="telephone">Téléphone</label>
-        <input id="telephone" type="tel" name="coordonnees_participant[telephone]" autocomplete="tel">
-        <p class="res-erreur">Indiquez votre numéro de téléphone.</p>
+        <input class="input is-purple-bordered" id="telephone" type="tel" name="coordonnees_participant[telephone]" autocomplete="tel">
+        <p class="help is-danger res-erreur">Indiquez votre numéro de téléphone.</p>
       </div>
     </div>
     {% if avec_questionnaire %}
@@ -219,7 +219,7 @@
           <input class="is-checkradio" id="reprise-maj" type="radio" name="coordonnees_reprises" value="mettre-a-jour">
           <label for="reprise-maj">Oui, je les mets à jour</label>
         </div>
-        <p class="res-erreur">Choisissez une réponse.</p>
+        <p class="help is-danger res-erreur">Choisissez une réponse.</p>
       </div>
     </div>
     {% include reservation/nav.html %}
@@ -230,24 +230,24 @@
     <div class="res-panneau">
       <div class="res-champ res-champ-court" data-requis>
         <label for="genre">Civilité</label>
-        <select id="genre" name="coordonnees_participant[genre]" autocomplete="honorific-prefix">
+        <div class="select"><select class="is-purple-bordered" id="genre" name="coordonnees_participant[genre]" autocomplete="honorific-prefix">
           <option value=""></option>
           <option value="Mme">Mme</option>
           <option value="M.">M.</option>
           <option value="Autre">Autre</option>
-        </select>
-        <p class="res-erreur">Choisissez une civilité.</p>
+        </select></div>
+        <p class="help is-danger res-erreur">Choisissez une civilité.</p>
       </div>
       <div class="res-champ" data-requis>
         <label for="naissance">Date de naissance</label>
-        <span class="res-champ-aide" id="naissance-aide">Par exemple&nbsp;: 14/03/1985</span>
-        <input id="naissance" type="text" inputmode="numeric" name="coordonnees_participant[date-naissance]" autocomplete="bday" aria-describedby="naissance-aide" data-format="date">
-        <p class="res-erreur">Indiquez une date au format jj/mm/aaaa.</p>
+        <p class="help" id="naissance-aide">Par exemple&nbsp;: 14/03/1985</p>
+        <input class="input is-purple-bordered" id="naissance" type="text" inputmode="numeric" name="coordonnees_participant[date-naissance]" autocomplete="bday" aria-describedby="naissance-aide" data-format="date">
+        <p class="help is-danger res-erreur">Indiquez une date au format jj/mm/aaaa.</p>
       </div>
       <div class="res-champ" data-requis>
         <label for="profession">Profession</label>
-        <input id="profession" type="text" name="coordonnees_participant[profession]" autocomplete="organization-title">
-        <p class="res-erreur">Indiquez votre profession.</p>
+        <input class="input is-purple-bordered" id="profession" type="text" name="coordonnees_participant[profession]" autocomplete="organization-title">
+        <p class="help is-danger res-erreur">Indiquez votre profession.</p>
       </div>
     </div>
     {% include reservation/nav.html %}
@@ -258,19 +258,19 @@
     <div class="res-panneau">
       <div class="res-champ" data-requis>
         <label for="adresse">Adresse</label>
-        <input id="adresse" type="text" name="coordonnees_participant[adresse]" autocomplete="street-address">
-        <p class="res-erreur">Indiquez votre adresse.</p>
+        <input class="input is-purple-bordered" id="adresse" type="text" name="coordonnees_participant[adresse]" autocomplete="street-address">
+        <p class="help is-danger res-erreur">Indiquez votre adresse.</p>
       </div>
       <div class="res-champs-ligne">
         <div class="res-champ" data-requis>
           <label for="code-postal">Code postal</label>
-          <input id="code-postal" type="text" inputmode="numeric" name="coordonnees_participant[code_postal]" autocomplete="postal-code">
-          <p class="res-erreur">À compléter.</p>
+          <input class="input is-purple-bordered" id="code-postal" type="text" inputmode="numeric" name="coordonnees_participant[code_postal]" autocomplete="postal-code">
+          <p class="help is-danger res-erreur">À compléter.</p>
         </div>
         <div class="res-champ" data-requis>
           <label for="ville">Ville</label>
-          <input id="ville" type="text" name="coordonnees_participant[ville]" autocomplete="address-level2">
-          <p class="res-erreur">Indiquez votre ville.</p>
+          <input class="input is-purple-bordered" id="ville" type="text" name="coordonnees_participant[ville]" autocomplete="address-level2">
+          <p class="help is-danger res-erreur">Indiquez votre ville.</p>
         </div>
       </div>
     </div>
@@ -283,33 +283,33 @@
     <div class="res-panneau">
       <div class="res-champ res-champ-court" data-requis>
         <label for="pc-genre">Civilité</label>
-        <select id="pc-genre" name="coordonnees_secours[genre]">
+        <div class="select"><select class="is-purple-bordered" id="pc-genre" name="coordonnees_secours[genre]">
           <option value=""></option>
           <option value="Mme">Mme</option>
           <option value="M.">M.</option>
           <option value="Autre">Autre</option>
-        </select>
-        <p class="res-erreur">Choisissez une civilité.</p>
+        </select></div>
+        <p class="help is-danger res-erreur">Choisissez une civilité.</p>
       </div>
       <div class="res-champ" data-requis>
         <label for="pc-prenom">Prénom</label>
-        <input id="pc-prenom" type="text" name="coordonnees_secours[prenom]" autocomplete="off">
-        <p class="res-erreur">Indiquez son prénom.</p>
+        <input class="input is-purple-bordered" id="pc-prenom" type="text" name="coordonnees_secours[prenom]" autocomplete="off">
+        <p class="help is-danger res-erreur">Indiquez son prénom.</p>
       </div>
       <div class="res-champ" data-requis>
         <label for="pc-nom">Nom</label>
-        <input id="pc-nom" type="text" name="coordonnees_secours[nom]" autocomplete="off">
-        <p class="res-erreur">Indiquez son nom.</p>
+        <input class="input is-purple-bordered" id="pc-nom" type="text" name="coordonnees_secours[nom]" autocomplete="off">
+        <p class="help is-danger res-erreur">Indiquez son nom.</p>
       </div>
       <div class="res-champ" data-requis>
         <label for="pc-tel">Téléphone</label>
-        <input id="pc-tel" type="tel" name="coordonnees_secours[telephone]" autocomplete="off">
-        <p class="res-erreur">Indiquez son numéro de téléphone.</p>
+        <input class="input is-purple-bordered" id="pc-tel" type="tel" name="coordonnees_secours[telephone]" autocomplete="off">
+        <p class="help is-danger res-erreur">Indiquez son numéro de téléphone.</p>
       </div>
       <div class="res-champ" data-requis>
         <label for="pc-email">E-mail</label>
-        <input id="pc-email" type="email" name="coordonnees_secours[email]" autocomplete="off" data-format="email">
-        <p class="res-erreur">Indiquez une adresse e-mail valide.</p>
+        <input class="input is-purple-bordered" id="pc-email" type="email" name="coordonnees_secours[email]" autocomplete="off" data-format="email">
+        <p class="help is-danger res-erreur">Indiquez une adresse e-mail valide.</p>
       </div>
     </div>
     {% include reservation/nav.html %}
@@ -321,11 +321,11 @@
       <div class="res-declaration" data-requis>
         <input class="is-checkradio" id="declaration-sante" type="checkbox" name="declaration-sante" value="on">
         <label for="declaration-sante">Je confirme par la présente que j'ai lu et compris les informations ci-dessus, que j'ai répondu à toutes les questions de manière complète et honnête et que je n'ai dissimulé aucune information. Pour autant que je sache, mon état de santé générale est bon.</label>
-        <p class="res-erreur">Cochez la déclaration pour continuer.</p>
+        <p class="help is-danger res-erreur">Cochez la déclaration pour continuer.</p>
       </div>
     </div>
     {% include reservation/nav.html envoi="oui" libelle=bouton_envoi %}
-    <p class="res-note">Vous recevrez une copie de vos réponses par e-mail.</p>
+    <p class="help">Vous recevrez une copie de vos réponses par e-mail.</p>
   </section>
   {% endif %}
 </form>

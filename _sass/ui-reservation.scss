@@ -8,29 +8,24 @@
 // Ce qui a déjà été dit (la date réservée, l'avertissement, les coordonnées saisies
 // dans Calendly) n'est pas répété sur les écrans suivants.
 //
-// Mobile d'abord. Une seule échelle :
-// - texte 16px (1rem), petit texte 14px (0.875rem), titre d'écran 28px ;
-// - interligne 1.5 pour le texte, 1.15 pour les titres ;
-// - espacements 8 / 16 / 24 / 32 px ; rayon 8px (celui du site) ;
-// - Futura Book pour le texte, Futura Medium pour les boutons seulement.
-// Les champs restent à 16px : en dessous, Safari sur iPhone zoome à la saisie.
+// LA RÈGLE DE CETTE FEUILLE : elle ne dessine rien que le site dessine déjà.
+// Titres, textes, liens, boutons, champs, aides, erreurs, étiquettes et radios portent
+// les classes du site (.button, .input.is-purple-bordered, .select, .textarea, .help,
+// .is-danger, .tag, .is-checkradio…) et en reçoivent l'apparence, thème sombre compris.
+// Ne vivent ici que : la mise en place (colonne, marges, rangées), et les trois choses
+// que le site n'a pas — la barre du parcours, l'enchaînement des écrans, le panneau
+// d'un écran (qui reprend le fond pâle et les blocs blancs de .light-bg / .white-bg).
 // Les actions sont des boutons ; les liens restent au texte courant.
 // ============================================
 @use "ui-variables" as v;
 @use "bulma-1.0.4/sass/utilities/mixins";
 
-// Le seul rouge de la palette d'interface : contraste suffisant sur fond blanc.
-$erreur: v.$dark-warning-tag-background;
-$erreur-sombre: v.$dark-warning-tag-color;
-$medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
-$rayon: 8px;
 // Le vert de l'icône de confirmation du site (ui-shared, i.icon.icon-confirmation).
 $vert-confirmation: #39B66B;
 
-// Les couleurs passent par des variables : le thème sombre n'a qu'elles à changer,
-// sans course à la spécificité entre ses sélecteurs et ceux du thème clair.
-// Elles suivent la convention du site (_sass/bulma.scss) : le texte courant en violet-bleu
-// ($text), les titres, les libellés de champ, les saisies et les liens en violet ($text-strong).
+// Les couleurs des trois composants propres à cette feuille, par variables : le thème
+// sombre n'a qu'elles à changer. Mêmes valeurs que le site (bulma.scss, ui-dark.scss) :
+// texte en violet-bleu, titres en violet ; panneau = .light-bg, bloc blanc = .white-bg.
 :root {
   --res-titre: #{v.$purple-heavy};
   --res-texte: #{v.$purple};
@@ -39,9 +34,6 @@ $vert-confirmation: #39B66B;
   --res-fond: #FFFFFF;
   --res-fond-doux: #{v.$purple-light};
   --res-trait: #{v.$purple-light-border};
-  --res-erreur: #{$erreur};
-  --res-alerte-fond: #{v.$warning-tag-background};
-  --res-alerte-texte: #{v.$warning-tag-color};
 }
 
 // --- La page : une colonne étroite, centrée, qui commence juste sous le logo ---
@@ -53,19 +45,9 @@ $vert-confirmation: #39B66B;
   min-height: 75vh;
   min-height: 75svh;
   margin: 0 auto;
-  color: var(--res-texte);
-  font-size: 1rem;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
 
-  h1 {
-    font-size: 1.75rem;
-    line-height: 1.15;
-    margin: 0 0 1rem;
-    color: var(--res-titre);
-
-    &:focus { outline: none; }
-  }
+  // Le titre reçoit le focus à chaque changement d'écran, sans cadre.
+  h1:focus { outline: none; }
 }
 
 // Le reset de Bulma donne « display: block » aux sections : l'attribut hidden,
@@ -76,26 +58,7 @@ $vert-confirmation: #39B66B;
 :where(.res-page) p { margin: 0; }
 :where(.res-page) p + p { margin-top: 1rem; }
 
-// Les liens n'existent que dans le texte courant ; toute action est un bouton.
-.res-page p a {
-  color: var(--res-titre);
-  text-decoration: underline;
-}
-
-// Un texte à déplier, dans le fil du texte : il se présente comme un lien.
-.res-details {
-  margin-top: 1rem;
-
-  summary {
-    color: var(--res-titre);
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  > p:first-of-type { margin-top: 1rem; }
-}
-
-// --- Le parcours : UNE barre pour deux niveaux ---
+// --- Le parcours : UNE barre pour deux niveaux (le site n'en a pas) ---
 // Chaque segment est une étape du parcours (rendez-vous, questionnaire, confirmation) ;
 // celui de l'étape en cours se remplit au fil des écrans du questionnaire. Pas de
 // second compteur dans la page.
@@ -131,6 +94,7 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   margin: 0 0 2rem;
   padding: 0;
 
+  // La taille des petits textes de la mise en page de campagne (son pied de page).
   li {
     min-width: 0;
     font-size: 0.875rem;
@@ -187,22 +151,19 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 .res-contexte {
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: var(--res-accent);
 }
 
 // Le paragraphe qui suit le titre : la consigne de l'écran.
 .res-intro { margin-bottom: 1.5rem; }
 
-// Sur l'écran d'accueil, la date réservée.
-.res-date {
-  color: var(--res-titre);
-  font-size: 1.125rem;
-  margin-bottom: 1rem;
-}
+// Un texte déplié par un bouton, et une étiquette posée au-dessus d'un titre.
+.res-deplie { margin-top: 1rem; }
+.res-avant-titre { margin-bottom: 1rem; }
 
-.res-note {
-  font-size: 0.875rem;
-  color: var(--res-accent);
+// Sur l'écran d'accueil, la date réservée : la couleur des textes forts du site.
+.res-date {
+  margin-bottom: 1rem;
+  color: var(--res-titre);
 }
 
 // --- Un titre qui annonce une réussite : la coche à sa gauche, sur sa première ligne ---
@@ -215,10 +176,10 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 
   i.icon {
     flex: 0 0 auto;
-    // La hauteur d'une ligne du titre (28px × 1,15) : la coche s'aligne sur la première.
-    width: 2rem;
-    height: 2rem;
-    font-size: 2rem;
+    // La hauteur d'une ligne du titre : la coche s'aligne sur la première.
+    width: 1.15em;
+    height: 1.15em;
+    font-size: 1.15em;
     color: $vert-confirmation;
   }
 }
@@ -239,7 +200,6 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   margin: 0;
   padding: 0.625rem 0.5rem 0.625rem 2rem;
   line-height: 1.5rem;
-  color: var(--res-texte);
 }
 
 // Le rond et son point sont posés en absolu par la bibliothèque : une marge les
@@ -255,16 +215,17 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 }
 
 // --- Le panneau : ce qu'il y a à remplir, en blanc sur un fond pâle arrondi ---
-// La signature des formulaires du site (.light-bg et ses blocs blancs). Un seul par
-// écran, autour des questions ou des champs ; les écrans de texte n'en ont pas.
+// Le fond pâle (.light-bg) et les blocs blancs (.white-bg) des formulaires du site,
+// à ses mesures : 0,75rem de marge intérieure sur téléphone, le rayon large de Bulma.
+// Un seul par écran ; les écrans de texte n'en ont pas.
 .res-panneau {
-  padding: 1rem;
-  border-radius: $rayon;
+  padding: 0.75rem;
+  border-radius: var(--bulma-radius-large);
   background-color: var(--res-fond-doux);
 
   // La question qui chapeaute une liste de réponses.
   > .res-intro {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     color: var(--res-titre);
   }
 
@@ -273,12 +234,12 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 
 // --- Les questions de santé : un bloc blanc, une ligne pâle entre deux questions ---
 // Sur téléphone, Oui / Non passent SOUS le texte, comme sur le site aujourd'hui : la
-// question garde toute la largeur pour se lire. À côté, la colonne de texte tombait à
-// 170px et une question s'étirait sur sept lignes. À partir de la tablette, la place
+// question garde toute la largeur pour se lire. À partir de la tablette, la place
 // ne manque plus : réponses à droite, alignées en colonne.
 .res-lignes,
-.res-choix {
-  border-radius: $rayon;
+.res-choix,
+.res-declaration {
+  border-radius: var(--bulma-radius-large);
   background-color: var(--res-fond);
   overflow: hidden;
 }
@@ -312,7 +273,6 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   .res-choix-detail {
     display: block;
     font-size: 0.875rem;
-    color: var(--res-accent);
   }
 
   .res-erreur {
@@ -321,7 +281,11 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   }
 }
 
-// --- Champs : le libellé au-dessus, jamais dans le champ ---
+// --- La déclaration : la case du site dans un bloc blanc, comme aujourd'hui ---
+.res-declaration { padding: 0.25rem 0.75rem; }
+
+// --- Les champs : ceux du site (.input, .select, .textarea en .is-purple-bordered) ---
+// Seule la mise en place est d'ici : le libellé au-dessus du champ, jamais dedans.
 .res-champ {
   margin-bottom: 1rem;
 
@@ -331,52 +295,14 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
     color: var(--res-titre);
   }
 
-  input,
-  select,
-  textarea {
-    display: block;
-    width: 100%;
-    min-height: 3rem;
-    padding: 0.625rem 0.75rem;
-    border: 1px solid var(--res-accent);
-    border-radius: $rayon;
-    background-color: var(--res-fond);
-    color: var(--res-titre);
-    font-family: v.$family-sans-serif;
-    font-size: 1rem;
-    letter-spacing: 0.02em;
-    -webkit-appearance: none;
-    appearance: none;
-    box-shadow: none;
+  .select,
+  .select select { width: 100%; }
 
-    &:focus {
-      outline: 2px solid var(--res-titre);
-      outline-offset: 1px;
-    }
-  }
-
-  select {
-    padding-right: 2.5rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236163A5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 1.25rem;
-  }
-
-  textarea {
-    min-height: 7.5rem;
-    resize: vertical;
-  }
+  // L'aide (.help du site) se lit entre le libellé et le champ.
+  > .help:not(.res-erreur) { margin: -0.125rem 0 0.375rem; }
 }
 
 .res-lignes + .res-champ { margin-top: 1.5rem; }
-
-.res-champ-aide {
-  display: block;
-  margin: -0.125rem 0 0.375rem;
-  font-size: 0.875rem;
-  color: var(--res-accent);
-}
 
 .res-champs-ligne {
   display: grid;
@@ -387,70 +313,54 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 .res-champ-court { max-width: 10rem; }
 
 // --- Erreurs : dites à l'endroit où elles se corrigent ---
-.res-erreur {
-  display: none;
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--res-erreur);
-}
+// Le message est une aide du site en .is-danger, le champ porte .is-danger (le contour
+// rouge que le site lui donne déjà) : cette feuille ne fait que montrer ou cacher.
+.res-erreur { display: none; }
 
 .est-en-erreur {
   > .res-erreur,
   &.res-ligne .res-erreur { display: block; }
-
-  input,
-  select,
-  textarea {
-    border-color: var(--res-erreur);
-    box-shadow: 0 0 0 1px var(--res-erreur);
-  }
-
-  .is-checkradio + label::before { border-color: var(--res-erreur) !important; }
-}
-
-// --- La déclaration : la case du site dans un bloc blanc, comme aujourd'hui (posée
-// à même le fond teinté, son contour gris clair ne se verrait plus) ---
-.res-declaration {
-  padding: 0.5rem 0.75rem;
-  border-radius: $rayon;
-  background-color: var(--res-fond);
 }
 
 // --- Les boutons d'un écran : Retour à gauche, la suite à droite ---
+// Ce sont les boutons du site, à leur taille ; seule leur mise en rangée est d'ici.
 .res-nav,
 .res-actions {
   display: flex;
   gap: 0.75rem;
   margin-top: 2rem;
-
-  .button {
-    height: auto;
-    min-height: 3rem;
-    padding: 0.625rem 1.25rem;
-    border-radius: $rayon;
-    font-family: $medium;
-    font-size: 1rem;
-    letter-spacing: 0.02em;
-    white-space: normal;
-  }
 }
 
 .res-nav {
   .button.is-primary { flex: 1 1 auto; }
 
+  // La flèche du bouton « Retour » de la modale de rendez-vous (ui-shared).
   .res-nav-retour {
     flex: 0 0 auto;
-    padding-left: 0.875rem;
+    position: relative;
+    padding-left: 1.6rem;
 
-    svg {
-      width: 1rem;
-      height: 1rem;
-      margin-right: 0.25rem;
+    &::before {
+      content: '\0042';
+      rotate: 180deg;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      font-size: var(--bulma-size-7);
+      font-family: 'luminose';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
   }
 }
 
-.res-nav + .res-note {
+.res-nav + .help {
   margin-top: 1rem;
   text-align: center;
 }
@@ -458,38 +368,7 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 // Fin de parcours : les boutons s'empilent, le principal d'abord.
 .res-actions { flex-direction: column; }
 
-// --- Fin de parcours : ce qui suit, en trois points ---
-.res-suite {
-  list-style: none;
-  margin: 1.5rem 0 0;
-  padding: 0;
-  counter-reset: suite;
-
-  li {
-    position: relative;
-    padding: 0 0 1rem 2.75rem;
-    counter-increment: suite;
-    min-height: 2rem;
-
-    &::before {
-      content: counter(suite);
-      position: absolute;
-      left: 0;
-      top: -0.125rem;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      border: 1px solid var(--res-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.875rem;
-      color: var(--res-titre);
-    }
-  }
-}
-
-// --- Calendly : réserve sa place dans la maquette ---
+// --- Calendly : réserve sa place dans la maquette (n'ira pas en ligne) ---
 .res-calendrier-maquette {
   display: flex;
   flex-direction: column;
@@ -500,70 +379,14 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   margin-top: 1.5rem;
   padding: 1.5rem;
   border: 1px dashed var(--res-accent);
-  border-radius: $rayon;
+  border-radius: var(--bulma-radius-large);
   text-align: center;
-  color: var(--res-accent);
 }
-
-// --- Bloc d'inscription d'une page d'évènement ---
-.res-inscription {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1.5rem 0 2rem;
-  padding: 1rem;
-  border-radius: $rayon;
-  background-color: var(--res-fond-doux);
-  color: var(--res-texte);
-  letter-spacing: 0.02em;
-
-  .res-inscription-quand {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .res-inscription-date { color: var(--res-titre); font-size: 1.125rem; }
-  .res-inscription-heure { color: var(--res-accent); }
-
-  .button {
-    height: auto;
-    min-height: 3rem;
-    border-radius: $rayon;
-    font-family: $medium;
-    white-space: normal;
-  }
-
-  // Dans le .content des pages d'évènement, Bulma ajoute des marges aux paragraphes.
-  .res-inscription-quand,
-  .res-note { margin: 0 !important; }
-}
-
-.res-etiquette {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: $rayon;
-  background-color: var(--res-alerte-fond);
-  color: var(--res-alerte-texte);
-  font-size: 0.875rem;
-}
-
-.res-inscription .res-etiquette { margin-bottom: 0; }
 
 // --- Tablette et ordinateur ---
 @include mixins.tablet {
   .campagne-section.res-section { padding-top: 1.5rem; }
-  .res-page h1 { font-size: 2.25rem; }
-
-  .res-page h1.res-titre-coche i.icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 2.5rem;
-  }
   .res-nav .button.is-primary { flex: 0 1 auto; min-width: 12rem; }
-
   .res-panneau { padding: 1.5rem; }
 
   .res-ligne {
@@ -576,11 +399,11 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
     .res-ligne-reponses label:last-of-type { padding-right: 0; }
     .res-erreur { grid-column: 1 / -1; margin: 0 0 0.25rem; }
   }
+
   .res-actions { flex-direction: row; }
-  .res-inscription .button { align-self: flex-start; }
 }
 
-// --- Thème sombre ---
+// --- Thème sombre : les couleurs que le site donne à .light-bg et .white-bg ---
 @mixin reservation-sombre {
   --res-titre: #FFFFFF;
   --res-texte: #{v.$dark-purple};
@@ -589,13 +412,6 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   --res-fond: #{v.$dark-purple-heaviest};
   --res-fond-doux: #{v.$dark-purple-heavy};
   --res-trait: #{v.$dark-purple-heavy};
-  --res-erreur: #{$erreur-sombre};
-  --res-alerte-fond: #{v.$dark-warning-tag-background};
-  --res-alerte-texte: #{v.$dark-warning-tag-color};
-
-  .res-champ select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23BB95DD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  }
 }
 
 @media (prefers-color-scheme: dark) {

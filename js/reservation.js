@@ -57,12 +57,21 @@
     return !format || formats[format].test(valeur);
   }
 
+  // L'erreur s'affiche avec les moyens du site : .is-danger sur le champ (son contour
+  // rouge) et une aide .help.is-danger dessous, que la feuille montre ou cache.
+  function marquer(bloc, enErreur) {
+    bloc.classList.toggle('est-en-erreur', enErreur);
+    bloc.querySelectorAll('input, select, textarea').forEach(function (champ) {
+      champ.classList.toggle('is-danger', enErreur);
+    });
+  }
+
   function verifier(ecran) {
     var premier = null;
     ecran.querySelectorAll('[data-requis]').forEach(function (bloc) {
       if (bloc.closest('[hidden]')) return;
       var ok = blocValide(bloc);
-      bloc.classList.toggle('est-en-erreur', !ok);
+      marquer(bloc, !ok);
       if (!ok && !premier) premier = bloc;
     });
     if (premier) {
@@ -76,7 +85,7 @@
   // L'erreur disparaît dès que la réponse est donnée.
   function effacer(e) {
     var bloc = e.target.closest('[data-requis]');
-    if (bloc && bloc.classList.contains('est-en-erreur') && blocValide(bloc)) bloc.classList.remove('est-en-erreur');
+    if (bloc && bloc.classList.contains('est-en-erreur') && blocValide(bloc)) marquer(bloc, false);
   }
   form.addEventListener('input', effacer);
   form.addEventListener('change', effacer);
@@ -239,6 +248,17 @@
   }
 
   form.addEventListener('click', function (e) {
+    // Un bouton qui déplie un texte (le texte complet de l'avertissement) et le replie.
+    var deplier = e.target.closest('[data-deplier]');
+    if (deplier) {
+      var texte = document.getElementById(deplier.dataset.deplier);
+      var ouvert = texte.hidden;
+      texte.hidden = !ouvert;
+      deplier.setAttribute('aria-expanded', ouvert ? 'true' : 'false');
+      if (!deplier.dataset.libelleFerme) deplier.dataset.libelleFerme = deplier.textContent;
+      deplier.textContent = ouvert ? deplier.dataset.libelleOuvert : deplier.dataset.libelleFerme;
+      return;
+    }
     if (e.target.closest('[data-suivant]')) avancer();
     if (e.target.closest('[data-precedent]') && !enTransition) history.back();
   });

@@ -1,33 +1,31 @@
 {% comment %}
-  Le bloc d'inscription d'une page d'évènement, en haut de page.
-  Paramètres : variante (questionnaire, sans, externe, externe-questionnaire, complet),
-  date, heure, places (facultatif), lien (inscription), lien_questionnaire, lien_autres.
-  Dans contenu-evenement.html, la variante viendra de l'adresse d'inscription, de la case
-  « Questionnaire de santé » de l'évènement et du nombre de places libres.
+  Le bloc d'inscription d'une page d'évènement : celui du site, à l'identique
+  (contenu-evenement.html : .purple-border.inscription-rapide, ses étiquettes, son
+  bouton « S'inscrire »). Rien ne change à l'œil ; seule la destination du bouton
+  dépend de la case « Questionnaire de santé » de l'évènement :
+  - journée du site : l'inscription, qui contient le questionnaire si la case est cochée ;
+  - journée chez un organisateur, case cochée (externe-questionnaire) : le questionnaire
+    d'abord, qui renvoie ensuite chez l'organisateur — une aide le dit sous le bloc ;
+  - journée chez un organisateur, case décochée (externe) : son site, comme aujourd'hui.
+  Paramètres : variante, date, heure, lien (inscription), lien_questionnaire.
 {% endcomment %}
 {% assign variante = include.variante %}
-<div class="res-inscription">
-  <p class="res-inscription-quand">
-    <span class="res-inscription-date">{{ include.date }}</span>
-    <span class="res-inscription-heure">{{ include.heure }}</span>
-  </p>
-
-  {% if variante == "complet" %}
-    <span class="res-etiquette">Complet</span>
-    <a class="button is-primary" href="{{ include.lien_autres }}">Voir les autres dates</a>
+{% if variante == "complet" %}
+<div class="purple-border inscription-rapide">
+  <span class="tag is-medium is-warning is-light">L'inscription est impossible car l'évènement est complet</span>
+</div>
+{% else %}
+<div class="purple-border inscription-rapide">
+  <span class="valeur is-styled-tag">{{ include.date }}</span> <span class="valeur is-styled-tag">{{ include.heure }}</span>
+  {% if variante == "externe-questionnaire" %}
+  <a href="{{ include.lien_questionnaire }}" class="button is-primary" data-track="bt_inscription_externe">S'inscrire</a>
+  {% elsif variante == "externe" %}
+  <a href="{{ include.lien }}" target="_blank" class="button is-primary" data-track="bt_inscription_externe">S'inscrire</a>
   {% else %}
-    {% if include.places %}<span class="res-etiquette">{{ include.places }}</span>{% endif %}
-
-    {% if variante == "externe-questionnaire" %}
-      <a class="button is-primary" href="{{ include.lien_questionnaire }}">Remplir le questionnaire de santé</a>
-      <p class="res-note">Obligatoire avant la journée. L'inscription se fait ensuite sur le site de l'organisateur.</p>
-    {% elsif variante == "externe" %}
-      <a class="button is-primary" href="{{ include.lien }}" target="_blank" rel="noopener">S'inscrire sur le site de l'organisateur</a>
-    {% else %}
-      <a class="button is-primary" href="{{ include.lien }}">S'inscrire</a>
-      {% if variante == "questionnaire" %}
-      <p class="res-note">Le questionnaire de santé se remplit à l'inscription, avant le paiement.</p>
-      {% endif %}
-    {% endif %}
+  <a href="{{ include.lien }}" class="button is-primary" data-track="bt_inscription_breathwork">S'inscrire</a>
   {% endif %}
 </div>
+{% if variante == "externe-questionnaire" %}
+<p class="help">L'inscription commence par le questionnaire de santé, obligatoire avant la journée. Elle se termine sur le site de l'organisateur.</p>
+{% endif %}
+{% endif %}
