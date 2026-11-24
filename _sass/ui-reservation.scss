@@ -208,26 +208,51 @@ $rayon: 8px;
   outline-offset: 2px;
 }
 
-// --- Une question de santé ---
+// --- Le panneau : ce qu'il y a à remplir, en blanc sur un fond pâle arrondi ---
+// La signature des formulaires du site (.light-bg et ses blocs blancs). Un seul par
+// écran, autour des questions ou des champs ; les écrans de texte n'en ont pas.
+.res-panneau {
+  padding: 1rem;
+  border-radius: $rayon;
+  background-color: var(--res-fond-doux);
+
+  // La question qui chapeaute une liste de réponses.
+  > .res-intro {
+    margin-bottom: 1rem;
+    color: var(--res-titre);
+  }
+
+  > :last-child { margin-bottom: 0; }
+}
+
+// --- Les questions de santé : un bloc blanc, une ligne pâle entre deux questions ---
 // Sur téléphone, Oui / Non passent SOUS le texte, comme sur le site aujourd'hui : la
 // question garde toute la largeur pour se lire. À côté, la colonne de texte tombait à
 // 170px et une question s'étirait sur sept lignes. À partir de la tablette, la place
 // ne manque plus : réponses à droite, alignées en colonne.
-.res-ligne {
-  padding: 0.75rem 0 0.25rem;
-  border-top: 1px solid var(--res-trait);
+.res-lignes,
+.res-choix {
+  border-radius: $rayon;
+  background-color: var(--res-fond);
+  overflow: hidden;
+}
 
-  &:last-of-type { border-bottom: 1px solid var(--res-trait); }
+.res-ligne {
+  padding: 0.75rem 0.75rem 0.25rem;
+
+  & + & { border-top: 2px solid var(--res-fond-doux); }
 
   .res-ligne-reponses { white-space: nowrap; }
   .res-erreur { margin: 0 0 0.5rem; }
 }
 
-// --- Un choix dans une liste : une réponse par ligne ---
+// --- Un choix dans une liste : une réponse par ligne, dans le même bloc blanc ---
 .res-choix {
-  border-top: 1px solid var(--res-trait);
+  .res-choix-option {
+    padding: 0 0.75rem;
 
-  .res-choix-option { border-bottom: 1px solid var(--res-trait); }
+    & + .res-choix-option { border-top: 2px solid var(--res-fond-doux); }
+  }
 
   .is-checkradio[type=radio] + label {
     display: block;
@@ -244,7 +269,10 @@ $rayon: 8px;
     color: var(--res-accent);
   }
 
-  .res-erreur { margin-top: 0.5rem; }
+  .res-erreur {
+    margin: 0;
+    padding: 0.5rem 0.75rem 0.75rem;
+  }
 }
 
 // --- Champs : le libellé au-dessus, jamais dans le champ ---
@@ -295,7 +323,7 @@ $rayon: 8px;
   }
 }
 
-.res-ligne + .res-champ { margin-top: 1.5rem; }
+.res-lignes + .res-champ { margin-top: 1.5rem; }
 
 .res-champ-aide {
   display: block;
@@ -334,12 +362,12 @@ $rayon: 8px;
   .is-checkradio + label::before { border-color: var(--res-erreur) !important; }
 }
 
-// --- La déclaration : la case du site, sur fond blanc comme aujourd'hui (sur un fond
-// teinté, son contour gris clair ne se voit plus) ---
+// --- La déclaration : la case du site dans un bloc blanc, comme aujourd'hui (posée
+// à même le fond teinté, son contour gris clair ne se verrait plus) ---
 .res-declaration {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--res-trait);
+  padding: 0.5rem 0.75rem;
   border-radius: $rayon;
+  background-color: var(--res-fond);
 }
 
 // --- Les boutons d'un écran : Retour à gauche, la suite à droite ---
@@ -484,12 +512,14 @@ $rayon: 8px;
   .res-page h1 { font-size: 2.25rem; }
   .res-nav .button.is-primary { flex: 0 1 auto; min-width: 12rem; }
 
+  .res-panneau { padding: 1.5rem; }
+
   .res-ligne {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     column-gap: 1.5rem;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.75rem;
 
     .res-ligne-reponses label:last-of-type { padding-right: 0; }
     .res-erreur { grid-column: 1 / -1; margin: 0 0 0.25rem; }
