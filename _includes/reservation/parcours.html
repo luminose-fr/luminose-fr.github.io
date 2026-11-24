@@ -1,0 +1,18 @@
+{% comment %}
+  Le parcours, en UNE barre : un segment par étape (rendez-vous, questionnaire,
+  confirmation…). Le segment de l'étape en cours se remplit au fil des écrans du
+  questionnaire (js/reservation.js) : pas de second compteur dans la page.
+  Paramètres : etape (numéro de l'étape en cours) ; libelles (séparés par « | ») ;
+  avancement (facultatif, en %, pour une étape d'un seul écran — 50 par défaut).
+{% endcomment %}
+{% assign etape = include.etape | plus: 0 %}
+{% assign libelles = include.libelles | split: "|" %}
+<ol class="res-parcours" aria-label="Étapes">
+  {% for libelle in libelles %}
+  {% assign n = forloop.index %}
+  <li class="{% if etape > n %}est-faite{% elsif etape == n %}est-en-cours{% endif %}"{% if etape == n %} aria-current="step"{% endif %}>
+    <span class="res-parcours-trait"><span{% if etape == n %} data-avancement style="width: {{ include.avancement | default: 50 }}%"{% endif %}></span></span>
+    <span class="res-parcours-libelle">{% if etape > n %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span class="is-sr-only">Fait : </span>{% endif %}{{ libelle }}</span>
+  </li>
+  {% endfor %}
+</ol>

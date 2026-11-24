@@ -1,192 +1,287 @@
 {% comment %}
-  Le questionnaire de santé, en étapes : santé d'abord (une contre-indication se voit
-  avant de saisir son adresse), coordonnées ensuite, déclaration pour finir.
+  Le questionnaire de santé, un sujet par écran. Chaque écran : un titre, le contenu,
+  les boutons — rien de ce qui a déjà été dit n'y revient. L'avancement se lit dans la
+  barre du parcours (reservation/parcours.html), que la page pose au-dessus.
+
   Paramètres :
   - contexte : seance (après une réservation Calendly), decouverte (toujours la version
-    complète) ou groupe (inscription à une journée : choix de la date en premier) ;
+    complète), groupe (inscription à une journée : le choix de la date en premier) ou
+    journee (questionnaire seul d'une journée inscrite chez l'organisateur) ;
   - suite : la page qui suit l'envoi ;
   - questionnaire : « non » pour une journée sans breathwork (date et coordonnées seules) ;
-  - evenements : pour un groupe, la liste des dates proposées (id, date, heure, places) ;
-    une seule date (journée externe, lien du questionnaire) : pas de choix à faire ;
-  - paiement : « non » quand le paiement se fait ailleurs (journée externe).
-  Comportement : js/reservation.js. Aucune réponse n'est gardée dans le navigateur.
+  - evenements : pour un groupe, les dates proposées (id, date, heure, places) ;
+  - intitule : pour un groupe ou une journée, la phrase qui la nomme.
+
+  La suite des écrans dépend des réponses (js/reservation.js) :
+  - data-version : l'écran ou la question n'existe que dans cette version ;
+  - data-si-coordonnees : écrans de la version complète, ou de la version de suivi
+    quand la personne choisit de mettre ses informations à jour ;
+  - l'écran « identite » ne s'ouvre que s'il manque une coordonnée (Calendly les
+    transmet : on ne les redemande pas).
+  Aucune réponse n'est gardée dans le navigateur.
 {% endcomment %}
 {% assign contexte = include.contexte | default: "seance" %}
-{% assign choix_date = false %}
-{% if contexte == "groupe" and include.evenements.size > 1 %}{% assign choix_date = true %}{% endif %}
 {% assign avec_questionnaire = true %}
 {% if include.questionnaire == "non" %}{% assign avec_questionnaire = false %}{% endif %}
 {% if contexte == "decouverte" %}
   {% capture objet %}notre entretien préalable{% endcapture %}
-{% elsif contexte == "groupe" %}
-  {% capture objet %}<span data-version="complet">notre entretien préalable</span><span data-version="suivi">la journée</span>{% endcapture %}
-{% else %}
+{% elsif contexte == "seance" %}
   {% capture objet %}votre séance{% endcapture %}
+{% else %}
+  {% capture objet %}<span data-version="complet">notre entretien préalable</span><span data-version="suivi">la journée</span>{% endcapture %}
 {% endif %}
-{% if contexte == "groupe" and include.paiement != "non" %}
-  {% capture bouton_envoi %}Valider et passer au paiement{% endcapture %}
+{% if contexte == "groupe" %}
+  {% capture bouton_envoi %}Passer au paiement{% endcapture %}
 {% else %}
   {% capture bouton_envoi %}Envoyer le questionnaire{% endcapture %}
 {% endif %}
 
 <form class="res-formulaire" data-questionnaire data-suite="{{ include.suite }}"{% if contexte == "decouverte" %} data-version-fixe="complet"{% endif %}{% unless avec_questionnaire %} data-version-fixe="aucune"{% endunless %} novalidate>
+  <p class="is-sr-only" aria-live="polite" data-annonce></p>
 
-  {% if contexte == "groupe" and choix_date == false %}
+  {% comment %} ——— Premier écran : ce qui vient d'être réservé, ou la date à choisir ——— {% endcomment %}
+  {% if contexte == "seance" %}
+  <section class="res-ecran" data-ecran="accueil">
+    {% include reservation/coche.html %}
+    <h1 tabindex="-1">Votre séance est réservée</h1>
+    <p class="res-date" data-reservation-date hidden></p>
+    <p>Il reste le questionnaire de santé, obligatoire avant la séance. Comptez une dizaine de minutes au plus.</p>
+    {% include reservation/nav.html retour="non" libelle="Commencer" %}
+  </section>
+  {% elsif contexte == "decouverte" %}
+  <section class="res-ecran" data-ecran="accueil">
+    {% include reservation/coche.html %}
+    <h1 tabindex="-1">Votre entretien est réservé</h1>
+    <p class="res-date" data-reservation-date hidden></p>
+    <p>Il reste le questionnaire de santé, obligatoire avant l'entretien. Comptez une dizaine de minutes.</p>
+    {% include reservation/nav.html retour="non" libelle="Commencer" %}
+  </section>
+  {% elsif contexte == "journee" %}
   {% assign e = include.evenements | first %}
   <input type="hidden" name="notion_page_id" value="{{ e.id }}">
+  <section class="res-ecran" data-ecran="accueil">
+    <h1 tabindex="-1">Le questionnaire de santé</h1>
+    <p>{{ include.intitule }}</p>
+    <p>Il est obligatoire avant la journée. Comptez une dizaine de minutes au plus.</p>
+    {% include reservation/nav.html retour="non" libelle="Commencer" %}
+  </section>
+  {% else %}
+  <section class="res-ecran" data-ecran="journee">
+    <h1 id="t-journee" tabindex="-1">Choisissez votre journée</h1>
+    <p class="res-intro">{{ include.intitule }}</p>
+    <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-journee">
+      {% for e in include.evenements %}
+      <div class="res-choix-option">
+        <input class="is-checkradio" id="journee-{{ forloop.index }}" type="radio" name="notion_page_id" value="{{ e.id }}">
+        <label for="journee-{{ forloop.index }}">{{ e.date }}<span class="res-choix-detail">{{ e.heure }}{% if e.places %} · {{ e.places }}{% endif %}</span></label>
+      </div>
+      {% endfor %}
+      <p class="res-erreur">Choisissez une date.</p>
+    </div>
+    {% include reservation/nav.html retour="non" %}
+  </section>
   {% endif %}
 
-  {% if avec_questionnaire and contexte != "decouverte" and choix_date == false %}
-  {% include reservation/choix-version.html %}
+  {% if avec_questionnaire %}
+  {% comment %} ——— La question qui décide de la version. Le serveur ne la déduit jamais :
+  afficher ce qu'il sait d'une adresse e-mail dirait à n'importe qui si cette personne
+  est déjà venue. ——— {% endcomment %}
+  {% unless contexte == "decouverte" %}
+  <section class="res-ecran" data-ecran="version">
+    <h1 id="t-version" tabindex="-1">Avez-vous déjà fait du breathwork avec moi&nbsp;?</h1>
+    <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-version">
+      <div class="res-choix-option">
+        <input class="is-checkradio" id="version-complet" type="radio" name="version" value="complet">
+        <label for="version-complet">Non, ce sera la première fois</label>
+      </div>
+      <div class="res-choix-option">
+        <input class="is-checkradio" id="version-suivi" type="radio" name="version" value="suivi">
+        <label for="version-suivi">Oui, déjà</label>
+      </div>
+      <p class="res-erreur">Choisissez une réponse.</p>
+    </div>
+    {% include reservation/nav.html %}
+  </section>
+  {% endunless %}
+
+  <section class="res-ecran" data-ecran="avertissement">
+    <h1 tabindex="-1">À lire avant de répondre</h1>
+    {% include reservation/avertissement.html objet=objet %}
+    {% include reservation/nav.html %}
+  </section>
+
+  <section class="res-ecran" data-ecran="sante-1">
+    <h1 tabindex="-1">Votre santé</h1>
+    <p class="res-intro">Avez-vous des antécédents, avez-vous été diagnostiqué ou êtes-vous actuellement confronté à l'une des situations suivantes&nbsp;?</p>
+    {% include reservation/question.html id="cardio" nom="sante[maladie-cardio]" libelle="Maladies cardiovasculaires, hypertension artérielle non régulée" %}
+    {% include reservation/question.html id="avc" nom="sante[avc]" libelle="Accidents vasculaires cérébraux, accident ischémique transitoire, anévrisme connu, crises d'épilepsie ou autres troubles cérébraux ou neurologiques" %}
+    {% include reservation/question.html id="psy" nom="sante[trouble-psy]" libelle="Trouble psychiatrique diagnostiqué et traitement éventuel" version="complet" %}
+    {% include reservation/question.html id="psy-depuis" nom="sante[trouble-psy-depuis]" libelle="Depuis votre dernière séance, un trouble psychiatrique a-t-il été diagnostiqué, ou un traitement a-t-il été commencé, modifié ou arrêté&nbsp;?" version="suivi" %}
+    {% include reservation/question.html id="chirurgie" nom="sante[chirurgie]" libelle="Chirurgie récente (&lt;1&nbsp;an), ostéoporose sévère" %}
+    {% include reservation/question.html id="infection" nom="sante[infection]" libelle="Maladies infectieuses ou transmissibles présentes ou actuelles" %}
+    {% include reservation/question.html id="glaucome" nom="sante[glaucome]" libelle="Glaucome, Décollement de la rétine" %}
+    {% include reservation/question.html id="asthme" nom="sante[asthme]" libelle="Asthme sévère" %}
+    {% include reservation/nav.html %}
+  </section>
+
+  <section class="res-ecran" data-ecran="sante-2">
+    <h1 tabindex="-1">Autres informations</h1>
+    {% include reservation/question.html id="enceinte" nom="sante_suite[enceinte]" libelle="Êtes-vous actuellement enceinte&nbsp;?" %}
+    {% include reservation/question.html id="suivi" nom="sante_suite[suivi]" libelle="Suivez-vous actuellement une thérapie ou participez-vous à un groupe de soutien quelconque&nbsp;?" %}
+    {% include reservation/question.html id="deja-rh" nom="sante_suite[deja-rh]" libelle="Avez-vous déjà fait l'expérience de la Respiration Holotropique&nbsp;? Dans quelles conditions&nbsp;? (détailler plus bas)" version="complet" %}
+    {% include reservation/question.html id="spirituel" nom="sante_suite[spirituel]" libelle="Avez-vous déjà vécu des expériences spirituelles difficiles à intégrer&nbsp;?" version="complet" %}
+    {% include reservation/question.html id="difficile-depuis" nom="sante_suite[difficile-depuis]" libelle="Depuis votre dernière séance, avez-vous vécu des expériences difficiles à intégrer&nbsp;?" version="suivi" %}
+    {% include reservation/question.html id="autre" nom="sante_suite[autre]" libelle="Y a-t-il autre chose concernant votre état physique ou émotionnel dont nous devrions être informés&nbsp;? (détailler plus bas)" %}
+    <div class="res-champ">
+      <label for="informations-complementaires">Merci de partager ici toute information que vous souhaitez porter à ma connaissance.</label>
+      <span class="res-champ-aide">Ce champ est facultatif.</span>
+      <textarea id="informations-complementaires" name="informations-complementaires"></textarea>
+    </div>
+    {% include reservation/nav.html %}
+  </section>
+
   {% endif %}
 
-  <div data-apres-version>
-    <p class="res-progression" data-progression></p>
-    <div class="res-progression-barre" data-progression-barre aria-hidden="true"></div>
-
-    {% if choix_date %}
-    <section class="res-etape" data-etape aria-labelledby="titre-journee">
-      <h2 class="res-etape-titre" id="titre-journee" tabindex="-1">Votre journée</h2>
-      <fieldset class="res-choix" data-requis>
-        <legend>Choisissez la date</legend>
-        <div class="res-options">
-          {% for e in include.evenements %}
-          <label class="res-option"><input type="radio" name="notion_page_id" value="{{ e.id }}"><span><span class="res-option-texte"><span>{{ e.date }}</span><span class="res-option-detail">{{ e.heure }}{% if e.places %} · {{ e.places }}{% endif %}</span></span></span></label>
-          {% endfor %}
-        </div>
-        <p class="res-erreur">Choisissez une date.</p>
-      </fieldset>
-      {% if avec_questionnaire %}{% include reservation/choix-version.html %}{% endif %}
-      <div class="res-actions">
-        <button type="button" class="button is-primary" data-suivant>Continuer</button>
-      </div>
-    </section>
-    {% endif %}
-
+  <section class="res-ecran" data-ecran="identite">
+    <h1 tabindex="-1">Vos coordonnées</h1>
+    <div class="res-champ" data-requis data-identite="prenom">
+      <label for="prenom">Prénom</label>
+      <input id="prenom" type="text" name="coordonnees_participant[prenom]" autocomplete="given-name">
+      <p class="res-erreur">Indiquez votre prénom.</p>
+    </div>
+    <div class="res-champ" data-requis data-identite="nom">
+      <label for="nom">Nom</label>
+      <input id="nom" type="text" name="coordonnees_participant[nom]" autocomplete="family-name">
+      <p class="res-erreur">Indiquez votre nom.</p>
+    </div>
+    <div class="res-champ" data-requis data-identite="email">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" name="coordonnees_participant[email]" autocomplete="email" data-format="email">
+      <p class="res-erreur">Indiquez une adresse e-mail valide.</p>
+    </div>
+    <div class="res-champ" data-requis data-identite="telephone">
+      <label for="telephone">Téléphone</label>
+      <input id="telephone" type="tel" name="coordonnees_participant[telephone]" autocomplete="tel">
+      <p class="res-erreur">Indiquez votre numéro de téléphone.</p>
+    </div>
     {% if avec_questionnaire %}
-    <section class="res-etape" data-etape aria-labelledby="titre-sante">
-      <h2 class="res-etape-titre" id="titre-sante" tabindex="-1">Votre santé</h2>
-      {% include reservation/avertissement.html objet=objet %}
-
-      <p class="res-lead">Avez-vous des antécédents, avez-vous été diagnostiqué ou êtes-vous actuellement confronté à l'une des situations suivantes ?</p>
-      {% include reservation/question.html nom="sante[maladie-cardio]" libelle="Maladies cardiovasculaires, hypertension artérielle non régulée" %}
-      {% include reservation/question.html nom="sante[avc]" libelle="Accidents vasculaires cérébraux, accident ischémique transitoire, anévrisme connu, crises d'épilepsie ou autres troubles cérébraux ou neurologiques" %}
-      {% include reservation/question.html nom="sante[trouble-psy]" libelle="Trouble psychiatrique diagnostiqué et traitement éventuel" version="complet" %}
-      {% include reservation/question.html nom="sante[trouble-psy-depuis]" libelle="Depuis votre dernière séance, un trouble psychiatrique a-t-il été diagnostiqué, ou un traitement a-t-il été commencé, modifié ou arrêté ?" version="suivi" %}
-      {% include reservation/question.html nom="sante[chirurgie]" libelle="Chirurgie récente (&lt;1 an), ostéoporose sévère" %}
-      {% include reservation/question.html nom="sante[infection]" libelle="Maladies infectieuses ou transmissibles présentes ou actuelles" %}
-      {% include reservation/question.html nom="sante[glaucome]" libelle="Glaucome, Décollement de la rétine" %}
-      {% include reservation/question.html nom="sante[asthme]" libelle="Asthme sévère" %}
-
-      <h3 class="res-sous-titre">Autres informations</h3>
-      {% include reservation/question.html nom="sante_suite[enceinte]" libelle="Êtes-vous actuellement enceinte ?" %}
-      {% include reservation/question.html nom="sante_suite[suivi]" libelle="Suivez-vous actuellement une thérapie ou participez-vous à un groupe de soutien quelconque ?" %}
-      {% include reservation/question.html nom="sante_suite[deja-rh]" libelle="Avez-vous déjà fait l'expérience de la Respiration Holotropique ? Dans quelles conditions ? (détailler plus bas)" version="complet" %}
-      {% include reservation/question.html nom="sante_suite[spirituel]" libelle="Avez-vous déjà vécu des expériences spirituelles difficiles à intégrer ?" version="complet" %}
-      {% include reservation/question.html nom="sante_suite[difficile-depuis]" libelle="Depuis votre dernière séance, avez-vous vécu des expériences difficiles à intégrer ?" version="suivi" %}
-      {% include reservation/question.html nom="sante_suite[autre]" libelle="Y a-t-il autre chose concernant votre état physique ou émotionnel dont nous devrions être informés ? (détailler plus bas)" %}
-
-      <h3 class="res-sous-titre">Informations complémentaires</h3>
-      <div class="res-champ">
-        <label for="informations-complementaires">Merci de partager ici toute information que vous souhaitez porter à ma connaissance.</label>
-        <span class="res-champ-aide">Ce champ est facultatif.</span>
-        <textarea id="informations-complementaires" name="informations-complementaires"></textarea>
-      </div>
-
-      <div class="res-actions">
-        <button type="button" class="button is-primary" data-suivant>Continuer</button>
-        {% if choix_date %}<button type="button" class="res-lien" data-precedent>Retour</button>{% endif %}
-      </div>
-    </section>
+    {% include reservation/nav.html %}
+    {% else %}
+    {% include reservation/nav.html envoi="oui" libelle=bouton_envoi %}
     {% endif %}
+  </section>
 
-    <section class="res-etape" data-etape aria-labelledby="titre-vous">
-      <h2 class="res-etape-titre" id="titre-vous" tabindex="-1">Vos coordonnées</h2>
+  {% if avec_questionnaire %}
+  <section class="res-ecran" data-ecran="reprise" data-version="suivi">
+    <h1 tabindex="-1">Depuis votre dernier questionnaire</h1>
+    <p class="res-intro" id="t-reprise">Votre adresse, votre profession ou votre personne de confiance ont-elles changé&nbsp;?</p>
+    <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-reprise">
+      <div class="res-choix-option">
+        <input class="is-checkradio" id="reprise-garder" type="radio" name="coordonnees_reprises" value="garder">
+        <label for="reprise-garder">Non, rien n'a changé</label>
+      </div>
+      <div class="res-choix-option">
+        <input class="is-checkradio" id="reprise-maj" type="radio" name="coordonnees_reprises" value="mettre-a-jour">
+        <label for="reprise-maj">Oui, je les mets à jour</label>
+      </div>
+      <p class="res-erreur">Choisissez une réponse.</p>
+    </div>
+    {% include reservation/nav.html %}
+  </section>
 
-      {% comment %} Prénom, nom, e-mail et téléphone : préremplis depuis Calendly quand il les transmet. {% endcomment %}
-      <div class="res-resume" data-resume hidden>
-        <div>
-          <p data-resume-nom></p>
-          <p data-resume-email></p>
-          <p data-resume-telephone></p>
-        </div>
-        <button type="button" class="res-lien" data-resume-modifier>Modifier</button>
-      </div>
-      <div class="res-champ" data-requis data-identite="prenom">
-        <label for="prenom">Prénom</label>
-        <input id="prenom" type="text" name="coordonnees_participant[prenom]" autocomplete="given-name">
-        <p class="res-erreur">Indiquez votre prénom.</p>
-      </div>
-      <div class="res-champ" data-requis data-identite="nom">
-        <label for="nom">Nom</label>
-        <input id="nom" type="text" name="coordonnees_participant[nom]" autocomplete="family-name">
-        <p class="res-erreur">Indiquez votre nom.</p>
-      </div>
-      <div class="res-champ" data-requis data-identite="email">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" name="coordonnees_participant[email]" autocomplete="email" data-format="email">
-        <p class="res-erreur">Indiquez une adresse e-mail valide.</p>
-      </div>
-      <div class="res-champ" data-requis data-identite="telephone">
-        <label for="telephone">Téléphone</label>
-        <input id="telephone" type="tel" name="coordonnees_participant[telephone]" autocomplete="tel">
-        <p class="res-erreur">Indiquez votre numéro de téléphone.</p>
-      </div>
+  <section class="res-ecran" data-ecran="vous" data-si-coordonnees>
+    <h1 tabindex="-1">À propos de vous</h1>
+    <div class="res-champ res-champ-court" data-requis>
+      <label for="genre">Civilité</label>
+      <select id="genre" name="coordonnees_participant[genre]" autocomplete="honorific-prefix">
+        <option value=""></option>
+        <option value="Mme">Mme</option>
+        <option value="M.">M.</option>
+        <option value="Autre">Autre</option>
+      </select>
+      <p class="res-erreur">Choisissez une civilité.</p>
+    </div>
+    <div class="res-champ" data-requis>
+      <label for="naissance">Date de naissance</label>
+      <span class="res-champ-aide" id="naissance-aide">Par exemple&nbsp;: 14/03/1985</span>
+      <input id="naissance" type="text" inputmode="numeric" name="coordonnees_participant[date-naissance]" autocomplete="bday" aria-describedby="naissance-aide" data-format="date">
+      <p class="res-erreur">Indiquez une date au format jj/mm/aaaa.</p>
+    </div>
+    <div class="res-champ" data-requis>
+      <label for="profession">Profession</label>
+      <input id="profession" type="text" name="coordonnees_participant[profession]" autocomplete="organization-title">
+      <p class="res-erreur">Indiquez votre profession.</p>
+    </div>
+    {% include reservation/nav.html %}
+  </section>
 
-      {% if avec_questionnaire %}
-      <div data-version="complet">
-        {% include reservation/champs-coordonnees.html prefixe="complet" %}
+  <section class="res-ecran" data-ecran="adresse" data-si-coordonnees>
+    <h1 tabindex="-1">Votre adresse</h1>
+    <div class="res-champ" data-requis>
+      <label for="adresse">Adresse</label>
+      <input id="adresse" type="text" name="coordonnees_participant[adresse]" autocomplete="street-address">
+      <p class="res-erreur">Indiquez votre adresse.</p>
+    </div>
+    <div class="res-champs-ligne">
+      <div class="res-champ" data-requis>
+        <label for="code-postal">Code postal</label>
+        <input id="code-postal" type="text" inputmode="numeric" name="coordonnees_participant[code_postal]" autocomplete="postal-code">
+        <p class="res-erreur">À compléter.</p>
       </div>
-
-      <div data-version="suivi">
-        <p class="res-encart">Je reprends votre adresse, votre profession, votre date de naissance et votre personne de confiance depuis votre dernier questionnaire.</p>
-        <fieldset class="res-choix" data-requis>
-          <legend>Ces informations sont-elles toujours à jour ?</legend>
-          <div class="res-options">
-            <label class="res-option"><input type="radio" name="coordonnees_reprises" value="garder"><span>Garder les informations précédentes</span></label>
-            <label class="res-option"><input type="radio" name="coordonnees_reprises" value="mettre-a-jour"><span>Mettre à jour ces informations</span></label>
-          </div>
-          <p class="res-erreur">Choisissez une réponse.</p>
-        </fieldset>
-        <div data-si-mise-a-jour hidden>
-          {% include reservation/champs-coordonnees.html prefixe="suivi" %}
-        </div>
+      <div class="res-champ" data-requis>
+        <label for="ville">Ville</label>
+        <input id="ville" type="text" name="coordonnees_participant[ville]" autocomplete="address-level2">
+        <p class="res-erreur">Indiquez votre ville.</p>
       </div>
-      {% endif %}
+    </div>
+    {% include reservation/nav.html %}
+  </section>
 
-      <div class="res-actions">
-        {% if avec_questionnaire %}
-        <button type="button" class="button is-primary" data-suivant>Continuer</button>
-        {% else %}
-        <button type="submit" class="button is-primary">{{ bouton_envoi }}</button>
-        {% endif %}
-        <button type="button" class="res-lien" data-precedent>Retour</button>
-      </div>
-    </section>
+  <section class="res-ecran" data-ecran="confiance" data-si-coordonnees>
+    <h1 tabindex="-1">Votre personne de confiance</h1>
+    <p class="res-intro">La personne à contacter en cas de nécessité.</p>
+    <div class="res-champ res-champ-court" data-requis>
+      <label for="pc-genre">Civilité</label>
+      <select id="pc-genre" name="coordonnees_secours[genre]">
+        <option value=""></option>
+        <option value="Mme">Mme</option>
+        <option value="M.">M.</option>
+        <option value="Autre">Autre</option>
+      </select>
+      <p class="res-erreur">Choisissez une civilité.</p>
+    </div>
+    <div class="res-champ" data-requis>
+      <label for="pc-prenom">Prénom</label>
+      <input id="pc-prenom" type="text" name="coordonnees_secours[prenom]" autocomplete="off">
+      <p class="res-erreur">Indiquez son prénom.</p>
+    </div>
+    <div class="res-champ" data-requis>
+      <label for="pc-nom">Nom</label>
+      <input id="pc-nom" type="text" name="coordonnees_secours[nom]" autocomplete="off">
+      <p class="res-erreur">Indiquez son nom.</p>
+    </div>
+    <div class="res-champ" data-requis>
+      <label for="pc-tel">Téléphone</label>
+      <input id="pc-tel" type="tel" name="coordonnees_secours[telephone]" autocomplete="off">
+      <p class="res-erreur">Indiquez son numéro de téléphone.</p>
+    </div>
+    <div class="res-champ" data-requis>
+      <label for="pc-email">E-mail</label>
+      <input id="pc-email" type="email" name="coordonnees_secours[email]" autocomplete="off" data-format="email">
+      <p class="res-erreur">Indiquez une adresse e-mail valide.</p>
+    </div>
+    {% include reservation/nav.html %}
+  </section>
 
-    {% if avec_questionnaire %}
-    <section class="res-etape" data-etape aria-labelledby="titre-declaration">
-      <h2 class="res-etape-titre" id="titre-declaration" tabindex="-1">Votre déclaration</h2>
-
-      <details class="res-rappel">
-        <summary>Relire l'avertissement sur les contre-indications</summary>
-        {% include reservation/avertissement.html %}
-      </details>
-
-      <div class="res-declaration-bloc" data-requis>
-        <label class="res-declaration">
-          <input type="checkbox" name="declaration-sante" value="on">
-          <span>Je confirme par la présente que j'ai lu et compris les informations ci-dessus, que j'ai répondu à toutes les questions de manière complète et honnête et que je n'ai dissimulé aucune information. Pour autant que je sache, mon état de santé générale est bon.</span>
-        </label>
-        <p class="res-erreur">Cochez la déclaration pour envoyer le questionnaire.</p>
-      </div>
-
-      <div class="res-actions">
-        <button type="submit" class="button is-primary">{{ bouton_envoi }}</button>
-        <p class="res-note">Vous recevrez une copie de vos réponses par e-mail.</p>
-        <button type="button" class="res-lien" data-precedent>Retour</button>
-      </div>
-    </section>
-    {% endif %}
-  </div>
+  <section class="res-ecran" data-ecran="declaration">
+    <h1 tabindex="-1">Votre déclaration</h1>
+    <div class="res-declaration" data-requis>
+      <input class="is-checkradio" id="declaration-sante" type="checkbox" name="declaration-sante" value="on">
+      <label for="declaration-sante">Je confirme par la présente que j'ai lu et compris les informations ci-dessus, que j'ai répondu à toutes les questions de manière complète et honnête et que je n'ai dissimulé aucune information. Pour autant que je sache, mon état de santé générale est bon.</label>
+      <p class="res-erreur">Cochez la déclaration pour continuer.</p>
+    </div>
+    {% include reservation/nav.html envoi="oui" libelle=bouton_envoi %}
+    <p class="res-note">Vous recevrez une copie de vos réponses par e-mail.</p>
+  </section>
+  {% endif %}
 </form>

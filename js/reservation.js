@@ -1,8 +1,7 @@
-// Questionnaire de santé en étapes (_includes/reservation/questionnaire.html).
+// Questionnaire de santé, un sujet par écran (_includes/reservation/questionnaire.html).
 //
 // Rien de ce que la personne répond ne quitte la page avant l'envoi, ni ne reste dans
 // le navigateur : pas de sessionStorage pour les réponses de santé. Seuls sont lus :
-// - la version choisie dans la modale de réservation (« premiere » ou « suivi ») ;
 // - les coordonnées que Calendly transmet en redirigeant (rangées par head.html) ;
 // - la date de la réservation (event_start_time), qui n'a rien de personnel.
 (function () {
@@ -11,8 +10,13 @@
   var form = document.querySelector('[data-questionnaire]');
   if (!form) return;
 
-  var etapes = Array.prototype.slice.call(form.querySelectorAll('[data-etape]'));
-  var courante = 0;
+  var ecrans = Array.prototype.slice.call(form.querySelectorAll('[data-ecran]'));
+  var avancement = document.querySelector('[data-avancement]');
+  var annonce = form.querySelector('[data-annonce]');
+  var sansMouvement = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DUREE = sansMouvement ? 0 : 180;
+  var courant = null;
+  var enTransition = false;
 
   // --- Ce que la page reçoit ---
   var parametres = {};
@@ -22,9 +26,9 @@
   Object.assign(parametres, window.luminoseParametres || {});
   var adresse = new URLSearchParams(location.search);
 
-  // --- La date réservée, en toutes lettres ---
+  // --- La date réservée, en toutes lettres, sur le premier écran seulement ---
   var debut = adresse.get('event_start_time');
-  var champDate = document.querySelector('[data-reservation-date]');
+  var champDate = form.querySelector('[data-reservation-date]');
   if (debut && champDate) {
     var date = new Date(debut);
     if (!isNaN(date)) {
@@ -32,129 +36,15 @@
       var heures = new Intl.DateTimeFormat('fr-FR', { hour: 'numeric', minute: '2-digit', hour12: false, timeZone: 'Europe/Paris' }).format(date).split(':');
       var heure = Number(heures[0]) + ' h' + (heures[1] !== '00' ? ' ' + heures[1] : '');
       champDate.textContent = jour.charAt(0).toUpperCase() + jour.slice(1) + ', à ' + heure;
+      champDate.hidden = false;
     }
   }
 
-  // --- Les coordonnées venues de Calendly : un résumé, et les champs restent modifiables ---
-  var correspondances = {
-    prenom: 'invitee_first_name',
-    nom: 'invitee_last_name',
-    email: 'invitee_email',
-    telephone: 'text_reminder_number'
-  };
-  var resume = form.querySelector('[data-resume]');
-  var connus = [];
-  Object.keys(correspondances).forEach(function (cle) {
-    var valeur = parametres[correspondances[cle]];
-    var bloc = form.querySelector('[data-identite="' + cle + '"]');
-    if (!bloc || !valeur) return;
-    bloc.querySelector('input').value = valeur;
-    connus.push(bloc);
-  });
-  if (resume && connus.length) {
-    // textContent, jamais innerHTML : ces valeurs viennent de l'adresse.
-    resume.querySelector('[data-resume-nom]').textContent = [parametres.invitee_first_name, parametres.invitee_last_name].filter(Boolean).join(' ');
-    resume.querySelector('[data-resume-email]').textContent = parametres.invitee_email || '';
-    resume.querySelector('[data-resume-telephone]').textContent = parametres.text_reminder_number || '';
-    connus.forEach(function (bloc) { bloc.hidden = true; });
-    resume.hidden = false;
-    resume.querySelector('[data-resume-modifier]').addEventListener('click', function () {
-      connus.forEach(function (bloc) { bloc.hidden = false; });
-      resume.hidden = true;
-      connus[0].querySelector('input').focus();
-    });
-  }
-
-  // --- La version : complète ou de suivi ---
-  var apresVersion = form.querySelector('[data-apres-version]');
-  var choix = form.querySelector('[data-choix-version]');
-  // Après une séance réservée, la question précède les étapes : elles n'apparaissent
-  // qu'une fois la version connue. Pour un groupe, elle fait partie de la première étape.
-  var choixHorsEtapes = !!(choix && apresVersion && !apresVersion.contains(choix));
-
-  function appliquerVersion(version) {
-    form.dataset.version = version || '';
-    form.querySelectorAll('[data-version]').forEach(function (el) {
-      var visible = el.dataset.version === version;
-      el.hidden = !visible;
-      el.querySelectorAll('input, select, textarea').forEach(function (champ) {
-        // Une question cachée n'est ni vérifiée ni envoyée.
-        champ.disabled = !visible || !!champ.closest('[data-si-mise-a-jour][hidden]');
-      });
-    });
-    if (choixHorsEtapes) apresVersion.hidden = !version;
-    afficher(courante, false);
-  }
-
-  var versionFixe = form.dataset.versionFixe;
-  var versionDepart = '';
-  if (versionFixe) {
-    versionDepart = versionFixe;
-  } else {
-    var dansAdresse = adresse.get('version');
-    var dansModale = '';
-    try { dansModale = sessionStorage.getItem('luminose_breathwork') || ''; } catch (e) { dansModale = ''; }
-    // Un lien qui précise la version l'emporte sur la modale, même pour dire « inconnue ».
-    if (adresse.has('version')) versionDepart = (dansAdresse === 'complet' || dansAdresse === 'suivi') ? dansAdresse : '';
-    else if (dansModale === 'premiere') versionDepart = 'complet';
-    else if (dansModale === 'suivi') versionDepart = 'suivi';
-    if (versionDepart) {
-      form.querySelectorAll('input[name="version"]').forEach(function (r) { r.checked = r.value === versionDepart; });
-    }
-  }
-  form.querySelectorAll('input[name="version"]').forEach(function (radio) {
-    radio.addEventListener('change', function () { appliquerVersion(radio.value); });
-  });
-
-  // « Mettre à jour ces informations » ouvre les champs, vides : rien du questionnaire
-  // précédent n'est jamais affiché.
-  form.querySelectorAll('input[name="coordonnees_reprises"]').forEach(function (radio) {
-    radio.addEventListener('change', function () {
-      var bloc = form.querySelector('[data-si-mise-a-jour]');
-      bloc.hidden = radio.value !== 'mettre-a-jour';
-      bloc.querySelectorAll('input, select, textarea').forEach(function (champ) { champ.disabled = bloc.hidden; });
-    });
-  });
-
-  // --- Les étapes ---
-  var progression = form.querySelector('[data-progression]');
-  var barre = form.querySelector('[data-progression-barre]');
-
-  function afficher(index, deplacer) {
-    courante = index;
-    etapes.forEach(function (etape, i) { etape.hidden = i !== index; });
-    // Le choix de version ne reste visible qu'au début.
-    if (choixHorsEtapes) choix.hidden = index > 0;
-    if (progression && etapes.length > 1) {
-      // « Partie » et non « Étape » : les parcours ont déjà leurs étapes (rendez-vous, paiement…).
-      progression.textContent = 'Partie ' + (index + 1) + ' sur ' + etapes.length;
-      barre.innerHTML = '';
-      etapes.forEach(function (_, i) {
-        var trait = document.createElement('span');
-        if (i <= index) trait.className = 'est-faite';
-        barre.appendChild(trait);
-      });
-    } else if (progression) {
-      progression.hidden = true;
-      barre.hidden = true;
-    }
-    if (deplacer) {
-      var haut = form.getBoundingClientRect().top + window.scrollY - 16;
-      window.scrollTo({ top: haut, behavior: 'auto' });
-      var titre = etapes[index].querySelector('.res-etape-titre');
-      if (titre) titre.focus({ preventScroll: true });
-    }
-  }
-
-  // --- Vérification, étape par étape, à l'endroit où l'erreur se corrige ---
+  // --- Vérification, à l'endroit où l'erreur se corrige ---
   var formats = {
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     date: /^(0?[1-9]|[12]\d|3[01])\/(0?[1-9]|1[0-2])\/(19|20)\d\d$/
   };
-
-  function estVisible(el) {
-    return !el.closest('[hidden]');
-  }
 
   function blocValide(bloc) {
     var champs = Array.prototype.slice.call(bloc.querySelectorAll('input, select, textarea')).filter(function (c) { return !c.disabled; });
@@ -167,10 +57,10 @@
     return !format || formats[format].test(valeur);
   }
 
-  function verifier(zone) {
+  function verifier(ecran) {
     var premier = null;
-    zone.querySelectorAll('[data-requis]').forEach(function (bloc) {
-      if (!estVisible(bloc)) return;
+    ecran.querySelectorAll('[data-requis]').forEach(function (bloc) {
+      if (bloc.closest('[hidden]')) return;
       var ok = blocValide(bloc);
       bloc.classList.toggle('est-en-erreur', !ok);
       if (!ok && !premier) premier = bloc;
@@ -184,36 +74,164 @@
   }
 
   // L'erreur disparaît dès que la réponse est donnée.
-  form.addEventListener('input', effacer);
-  form.addEventListener('change', effacer);
   function effacer(e) {
     var bloc = e.target.closest('[data-requis]');
     if (bloc && bloc.classList.contains('est-en-erreur') && blocValide(bloc)) bloc.classList.remove('est-en-erreur');
   }
+  form.addEventListener('input', effacer);
+  form.addEventListener('change', effacer);
+
+  // --- Les coordonnées venues de Calendly ne sont pas redemandées ---
+  // Seules celles qui manquent (le téléphone, si la personne n'a pas voulu de SMS) ou
+  // qui sont invalides restent à l'écran « identite » ; s'il n'en reste aucune, il saute.
+  var correspondances = {
+    prenom: 'invitee_first_name',
+    nom: 'invitee_last_name',
+    email: 'invitee_email',
+    telephone: 'text_reminder_number'
+  };
+  var identite = form.querySelector('[data-ecran="identite"]');
+  if (identite) {
+    var manquantes = 0;
+    Object.keys(correspondances).forEach(function (cle) {
+      var bloc = identite.querySelector('[data-identite="' + cle + '"]');
+      var valeur = parametres[correspondances[cle]];
+      if (valeur) bloc.querySelector('input').value = valeur;
+      if (valeur && blocValide(bloc)) bloc.hidden = true;
+      else manquantes += 1;
+    });
+    if (!manquantes) identite.dataset.inactif = '';
+  }
+
+  // --- La version, et la suite d'écrans qui en découle ---
+  function version() {
+    if (form.dataset.versionFixe) return form.dataset.versionFixe;
+    var choix = form.querySelector('input[name="version"]:checked');
+    return choix ? choix.value : '';
+  }
+
+  function miseAJour() {
+    var choix = form.querySelector('input[name="coordonnees_reprises"]:checked');
+    return !!choix && choix.value === 'mettre-a-jour';
+  }
+
+  function estActif(ecran) {
+    var v = version();
+    if ('inactif' in ecran.dataset) return false;
+    if (ecran.dataset.version && ecran.dataset.version !== v) return false;
+    if ('siCoordonnees' in ecran.dataset) return v === 'complet' || (v === 'suivi' && miseAJour());
+    return true;
+  }
+
+  function actifs() {
+    return ecrans.filter(estActif);
+  }
+
+  // Une question d'une autre version, ou un écran hors de la suite, n'est ni vérifié
+  // ni envoyé.
+  function appliquerVersion() {
+    var v = version();
+    form.querySelectorAll('[data-version]').forEach(function (el) {
+      var visible = el.dataset.version === v;
+      if (!el.hasAttribute('data-ecran')) el.hidden = !visible;
+      el.querySelectorAll('input, select, textarea').forEach(function (champ) { champ.disabled = !visible; });
+    });
+    form.querySelectorAll('[data-si-coordonnees]').forEach(function (el) {
+      var actif = estActif(el);
+      el.querySelectorAll('input, select, textarea').forEach(function (champ) { champ.disabled = !actif; });
+    });
+    mesurer();
+  }
+  form.querySelectorAll('input[name="version"], input[name="coordonnees_reprises"]').forEach(function (radio) {
+    radio.addEventListener('change', appliquerVersion);
+  });
+
+  // --- L'avancement : le segment de l'étape en cours, dans la barre du parcours ---
+  function mesurer() {
+    if (!courant) return;
+    var suite = actifs();
+    var rang = suite.indexOf(courant);
+    if (avancement) avancement.style.width = Math.round(((rang + 1) / (suite.length + 1)) * 100) + '%';
+    if (annonce) annonce.textContent = 'Écran ' + (rang + 1) + ' sur ' + suite.length;
+  }
+
+  // --- Passer d'un écran à l'autre : il glisse dans le sens de la marche ---
+  function montrer(cible, sens, sansEffet) {
+    if (!cible || cible === courant) return;
+    var sortant = courant;
+    courant = cible;
+    enTransition = true;
+
+    function entrer() {
+      if (sortant) {
+        sortant.hidden = true;
+        sortant.classList.remove('est-hors-champ');
+      }
+      cible.style.setProperty('--res-decalage', (sens >= 0 ? 12 : -12) + 'px');
+      if (!sansEffet) cible.classList.add('est-hors-champ');
+      cible.hidden = false;
+      window.scrollTo(0, 0);
+      mesurer();
+      // Deux images : la première pose l'état de départ, la seconde lance la transition.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          cible.classList.remove('est-hors-champ');
+          enTransition = false;
+          var titre = cible.querySelector('h1');
+          if (titre && !sansEffet) titre.focus({ preventScroll: true });
+        });
+      });
+    }
+
+    if (sortant && !sansEffet && DUREE) {
+      sortant.style.setProperty('--res-decalage', (sens >= 0 ? -12 : 12) + 'px');
+      sortant.classList.add('est-hors-champ');
+      setTimeout(entrer, DUREE);
+    } else {
+      entrer();
+    }
+  }
+
+  function parNom(nom) {
+    return ecrans.filter(function (e) { return e.dataset.ecran === nom && estActif(e); })[0] || null;
+  }
+
+  function avancer() {
+    if (enTransition || !verifier(courant)) return;
+    var suite = actifs();
+    var suivant = suite[suite.indexOf(courant) + 1];
+    if (!suivant) {
+      // Maquette : rien n'est envoyé.
+      if (form.dataset.suite) location.href = form.dataset.suite;
+      return;
+    }
+    // Chaque écran entre dans l'historique : le bouton et le geste « retour » du
+    // navigateur reviennent à l'écran précédent, sans quitter la page ni rien perdre.
+    history.pushState({ ecran: suivant.dataset.ecran }, '');
+    montrer(suivant, 1);
+  }
 
   form.addEventListener('click', function (e) {
-    if (e.target.closest('[data-suivant]') && verifier(etapes[courante])) {
-      afficher(courante + 1, true);
-    }
-    if (e.target.closest('[data-precedent]')) {
-      afficher(Math.max(0, courante - 1), true);
-    }
+    if (e.target.closest('[data-suivant]')) avancer();
+    if (e.target.closest('[data-precedent]') && !enTransition) history.back();
   });
 
+  // Entrée dans un champ, ou le bouton d'envoi du dernier écran.
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!verifier(etapes[courante])) return;
-    // Entrée dans un champ, avant la dernière étape : on passe à la suivante.
-    if (courante < etapes.length - 1) { afficher(courante + 1, true); return; }
-    // Maquette : rien n'est envoyé.
-    if (form.dataset.suite) location.href = form.dataset.suite;
+    avancer();
   });
 
-  // Une coordonnée transmise mais invalide (e-mail mal saisi dans Calendly) reste visible.
-  connus.forEach(function (bloc) {
-    if (!blocValide(bloc)) { bloc.hidden = false; if (resume) resume.hidden = true; }
+  window.addEventListener('popstate', function (e) {
+    var cible = parNom(e.state && e.state.ecran) || actifs()[0];
+    var suite = actifs();
+    montrer(cible, suite.indexOf(cible) < suite.indexOf(courant) ? -1 : 1);
   });
 
-  appliquerVersion(versionDepart);
-  afficher(0, false);
+  // --- Départ ---
+  ecrans.forEach(function (ecran) { ecran.hidden = true; });
+  appliquerVersion();
+  var premier = actifs()[0];
+  history.replaceState({ ecran: premier.dataset.ecran }, '');
+  montrer(premier, 1, true);
 })();
