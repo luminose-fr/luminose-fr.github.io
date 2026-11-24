@@ -24,6 +24,8 @@ $erreur: v.$dark-warning-tag-background;
 $erreur-sombre: v.$dark-warning-tag-color;
 $medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
 $rayon: 8px;
+// Le vert de l'icône de confirmation du site (ui-shared, i.icon.icon-confirmation).
+$vert-confirmation: #39B66B;
 
 // Les couleurs passent par des variables : le thème sombre n'a qu'elles à changer,
 // sans course à la spécificité entre ses sélecteurs et ceux du thème clair.
@@ -183,19 +185,22 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   color: var(--res-accent);
 }
 
-.res-coche {
-  flex: 0 0 auto;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin-bottom: 1rem;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: v.$green-light;
-  color: v.$green-heavy;
+// --- Un titre qui annonce une réussite : la coche à sa gauche, sur sa première ligne ---
+// Elle qualifie le titre, donc elle se lit avec lui — comme sur les pages de
+// confirmation du site (h1.icon-text), dont elle reprend l'icône et le vert.
+.res-page h1.res-titre-coche {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
 
-  svg { width: 1.25rem; height: 1.25rem; }
+  i.icon {
+    flex: 0 0 auto;
+    // La hauteur d'une ligne du titre (28px × 1,15) : la coche s'aligne sur la première.
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+    color: $vert-confirmation;
+  }
 }
 
 // --- Les radios et la case du site (bulma-checkradio), inchangés à l'œil ---
@@ -531,6 +536,12 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 @include mixins.tablet {
   .campagne-section.res-section { padding-top: 1.5rem; }
   .res-page h1 { font-size: 2.25rem; }
+
+  .res-page h1.res-titre-coche i.icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 2.5rem;
+  }
   .res-nav .button.is-primary { flex: 0 1 auto; min-width: 12rem; }
 
   .res-panneau { padding: 1.5rem; }

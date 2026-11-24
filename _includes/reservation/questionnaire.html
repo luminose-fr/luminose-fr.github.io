@@ -30,7 +30,7 @@
 {% elsif contexte == "seance" %}
   {% capture objet %}votre séance{% endcapture %}
 {% else %}
-  {% capture objet %}<span data-version="complet">notre entretien préalable</span><span data-version="suivi">la journée</span>{% endcapture %}
+  {% capture objet %}notre entretien préalable{% endcapture %}
 {% endif %}
 {% if contexte == "groupe" %}
   {% capture bouton_envoi %}Passer au paiement{% endcapture %}
@@ -44,16 +44,14 @@
   {% comment %} ——— Premier écran : ce qui vient d'être réservé, ou la date à choisir ——— {% endcomment %}
   {% if contexte == "seance" %}
   <section class="res-ecran" data-ecran="accueil">
-    {% include reservation/coche.html %}
-    <h1 tabindex="-1">Votre séance est réservée</h1>
+    <h1 class="res-titre-coche" tabindex="-1"><i class="icon icon-confirmation" aria-hidden="true"></i><span>Votre séance est réservée</span></h1>
     <p class="res-date" data-reservation-date hidden></p>
     <p>Il reste le questionnaire de santé, obligatoire avant la séance. Comptez une dizaine de minutes au plus.</p>
     {% include reservation/nav.html retour="non" libelle="Commencer" %}
   </section>
   {% elsif contexte == "decouverte" %}
   <section class="res-ecran" data-ecran="accueil">
-    {% include reservation/coche.html %}
-    <h1 tabindex="-1">Votre entretien est réservé</h1>
+    <h1 class="res-titre-coche" tabindex="-1"><i class="icon icon-confirmation" aria-hidden="true"></i><span>Votre entretien est réservé</span></h1>
     <p class="res-date" data-reservation-date hidden></p>
     <p>Il reste le questionnaire de santé, obligatoire avant l'entretien. Comptez une dizaine de minutes.</p>
     {% include reservation/nav.html retour="non" libelle="Commencer" %}
@@ -110,7 +108,10 @@
   </section>
   {% endunless %}
 
-  <section class="res-ecran" data-ecran="avertissement">
+  {% comment %} ——— L'avertissement : pour une première fois seulement. Décision de Florent du
+  24/11 : qui a déjà fait du breathwork avec lui l'a lu et en a parlé avec lui ; les
+  questions de santé, elles, restent posées à tout le monde. ——— {% endcomment %}
+  <section class="res-ecran" data-ecran="avertissement" data-version="complet">
     <h1 tabindex="-1">À lire avant de répondre</h1>
     {% include reservation/avertissement.html objet=objet %}
     {% include reservation/nav.html %}
