@@ -104,14 +104,21 @@
   }
 
   // --- La journée déjà choisie sur la page d'un évènement ---
-  // Le lien « S'inscrire » de cette page porte ?evenement=<id> : la date est retenue et
-  // l'écran du choix ne s'ouvre pas. Sans ce paramètre (lien général, arrivée directe),
-  // ou si la date n'est plus proposée, le choix reste à faire.
+  // Le bouton « S'inscrire » d'une page d'évènement porte déjà ?notion_page_id=<id>
+  // (_plugins/page_drop.rb) ; head.html le retire de l'adresse et le range.
+  // - Reçu avec CETTE arrivée : la date est retenue et l'écran du choix ne s'ouvre pas.
+  // - Seulement resté en mémoire (page rechargée, ou visite précédente dans le même
+  //   onglet avant de revenir par un lien général) : la date est cochée, mais le choix
+  //   reste affiché — on ne cache pas une date que la personne n'a pas choisie à l'instant.
+  // Sans identifiant, ou si la date n'est plus proposée, le choix reste à faire.
   var journee = form.querySelector('[data-ecran="journee"]');
   var journeeRetenue = null;
-  if (journee && adresse.get('evenement')) {
+  if (journee) {
+    var recu = (window.luminoseParametres || {}).notion_page_id || '';
+    var range = parametres.notion_page_id || '';
     journee.querySelectorAll('input[name="notion_page_id"]').forEach(function (radio) {
-      if (radio.value === adresse.get('evenement')) journeeRetenue = radio;
+      if (recu && radio.value === recu) journeeRetenue = radio;
+      else if (!recu && range && radio.value === range) radio.checked = true;
     });
     if (journeeRetenue) {
       journeeRetenue.checked = true;
