@@ -5,10 +5,13 @@
 
   Aujourd'hui, sur un téléphone, le logo, les deux boutons et le sous-menu en liste
   occupent environ 400px avant le premier titre. Ici :
-  - une barre de 60px, collée en haut : le logo horizontal, « Rendez-vous », « Menu » ;
-  - le sous-menu de la rubrique sur UNE ligne qui défile sur le côté, dans son vert ;
-  - un menu plein écran qui montre aussi les pages de chaque rubrique (aujourd'hui
-    masquées sur téléphone) et se referme par le même bouton, devenu « Fermer ».
+  - une barre de 60px, collée en haut : le logo horizontal, « Rendez-vous » (libellé
+    court, sur téléphone seulement), « Menu » ;
+  - le sous-menu de la rubrique sur UNE ligne qui défile sur le côté, la page en cours
+    en pastille verte ; il ne reste pas collé ;
+  - le menu actuel (premier niveau, fond pâle), ouvert sous la barre, qui se referme
+    par le même bouton, devenu « Fermer ».
+  Les boutons, les liens et les couleurs sont ceux du site.
 
   Paramètre : rubrique (la section de la page, pour le sous-menu et la page en cours) ;
   par défaut, page.section. Comportement : js/entete-mobile.js.
@@ -23,32 +26,19 @@
     </div>
   </div>
 
+  {% comment %} Le menu : le premier niveau seulement, comme aujourd'hui. Les pages d'une
+  rubrique se trouvent dans son sous-menu. {% endcomment %}
   <nav id="entete-menu" class="entete-menu" aria-label="Menu principal">
     <ul>
       <li><a href="{{ site.baseurl }}/"{% if r == "accueil" %} aria-current="page"{% endif %}>Accueil</a></li>
-      <li>
-        <span class="entete-menu-rubrique">L'accompagnement individuel</span>
-        <ul>
-          <li><a href="{{ site.baseurl }}/commencer-un-accompagnement.html"{% if r == "accompagnement" %} aria-current="page"{% endif %}>Le premier pas</a></li>
-          <li><a href="{{ site.baseurl }}/hypnotherapie.html"{% if r == "hypnotherapie" %} aria-current="page"{% endif %}>L'hypnose</a></li>
-          <li><a href="{{ site.baseurl }}/meditation.html"{% if r == "meditation" %} aria-current="page"{% endif %}>La méditation</a></li>
-          <li><a href="{{ site.baseurl }}/respiration-holotropique.html"{% if r == "holotropique" %} aria-current="page"{% endif %}>Le breathwork holotropique</a></li>
-        </ul>
-      </li>
-      <li>
-        <span class="entete-menu-rubrique">Ateliers &amp; stages</span>
-        <ul>
-          <li><a href="{{ site.baseurl }}/ateliers-stages.html"{% if r == "ateliers" %} aria-current="page"{% endif %}>Marcher ensemble</a></li>
-          <li><a href="{{ site.baseurl }}/evenements.html"{% if r == "evenements" %} aria-current="page"{% endif %}>L'agenda</a></li>
-        </ul>
-      </li>
+      <li><a href="{{ site.baseurl }}/commencer-un-accompagnement.html"{% if r == "accompagnement" or r == "hypnotherapie" or r == "meditation" or r == "holotropique" %} aria-current="true"{% endif %}>L'accompagnement individuel</a></li>
+      <li><a href="{{ site.baseurl }}/ateliers-stages.html"{% if r == "ateliers" or r == "evenements" %} aria-current="true"{% endif %}>Ateliers &amp; stages</a></li>
     </ul>
-    <ul class="entete-menu-second">
+    <ul>
       <li><a href="{{ site.baseurl }}/tarifs-seances-adresse.html"{% if r == "tarifs" %} aria-current="page"{% endif %}>Tarifs &amp; Infos pratiques</a></li>
       <li><a href="{{ site.baseurl }}/florent-jaouali.html"{% if r == "qui" %} aria-current="page"{% endif %}>Qui suis-je&nbsp;?</a></li>
       <li><a href="{{ site.baseurl }}/blog.html"{% if r == "blog" %} aria-current="page"{% endif %}>Blog</a></li>
     </ul>
-    <a class="button is-primary bt-prise-rdv entete-menu-rdv" href="" data-track="bt_prise_rdv">Prendre un rendez-vous</a>
   </nav>
 </div>
 

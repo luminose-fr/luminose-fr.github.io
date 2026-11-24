@@ -6,24 +6,30 @@
 // Le constat : sur un téléphone, le logo empilé, les deux boutons et le sous-menu en
 // liste prennent environ 400px avant le premier titre d'une page de rubrique.
 // La proposition : 60px de barre collée, 48px de sous-menu sur une ligne.
-// Le vocabulaire reste celui du site : boutons « Menu » en toutes lettres et bouton
-// violet de rendez-vous, sous-menu dans son vert, menu ouvert sur le fond pâle.
+//
+// Rien de neuf à l'œil : les boutons sont ceux de la navigation (.button.is-primary,
+// .button.is-white.is-purple-bordered, 44px), le menu ouvert reprend le fond pâle,
+// les liens et la page en cours sur fond blanc du menu actuel, la pastille du
+// sous-menu reprend le vert (et l'orange du thème sombre) de son élément actif.
+// Ne sont d'ici que la mise en rangée, le collage et le défilement du sous-menu.
 // ============================================
 @use "ui-variables" as v;
 @use "bulma-1.0.4/sass/utilities/mixins";
 
 $barre: 3.75rem;
-$medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
 
+// Les couleurs de la navigation du site, claires puis sombres (ui-critical, ui-dark).
 :root {
   --entete-fond: #FFFFFF;
   --entete-trait: #{v.$purple-light-border};
   --entete-menu-fond: #{v.$purple-light};
-  --entete-menu-trait: #{v.$purple-light-border};
-  --entete-titre: #{v.$purple-heavy};
-  --entete-texte: #{v.$purple};
-  --entete-sous-menu-texte: #{v.$green-heavy};
-  --entete-sous-menu-actif: #{v.$green-light};
+  --entete-menu-lien: #{v.$purple-heavy};
+  --entete-menu-actif-fond: #FFFFFF;
+  --entete-menu-actif-bord: transparent;
+  --entete-menu-actif-texte: #{v.$purple-heavy};
+  --entete-sous-menu-texte: #{v.$purple};
+  --entete-sous-menu-actif-fond: #{v.$green-light};
+  --entete-sous-menu-actif-texte: #{v.$green-heavy};
 }
 
 @include mixins.mobile {
@@ -80,41 +86,33 @@ $medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
     display: flex;
     gap: 0.5rem;
 
-    .button {
-      height: 2.75rem;
-      padding: 0 0.875rem;
-      border-radius: var(--bulma-radius-large);
-      font-family: $medium;
-      font-size: 0.9375rem;
-      letter-spacing: 0.02em;
-    }
+    // La hauteur des boutons de la navigation actuelle sur téléphone.
+    .button { height: 2.75rem; }
 
     // « Menu » et « Fermer » occupent la même largeur : rien ne bouge au changement.
-    [data-entete-menu] { min-width: 4.75rem; }
+    [data-entete-menu] { min-width: 5.25rem; }
   }
 
-  // --- Le menu, en plein écran sous la barre ---
+  // --- Le menu actuel, ouvert sous la barre ---
   .entete-menu {
     position: fixed;
     top: $barre;
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 0.5rem 1rem 2rem;
+    padding: 1.5rem;
     overflow-y: auto;
     overscroll-behavior: contain;
     background-color: var(--entete-menu-fond);
     // Fermé : hors de l'écran, du clavier et des lecteurs d'écran.
     visibility: hidden;
     opacity: 0;
-    transform: translateY(-0.5rem);
-    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+    transition: opacity 0.18s ease, visibility 0s linear 0.18s;
 
     &.est-ouvert {
       visibility: visible;
       opacity: 1;
-      transform: none;
-      transition: opacity 0.18s ease, transform 0.18s ease;
+      transition: opacity 0.18s ease;
     }
 
     ul {
@@ -123,62 +121,22 @@ $medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
       padding: 0;
     }
 
-    a:not(.button) {
+    // Les deux groupes du menu actuel, séparés par un blanc.
+    ul + ul { margin-top: 3rem; }
+
+    // Un lien : celui du menu actuel (.navbar-item), sa page en cours sur fond blanc.
+    a {
       display: block;
-      padding: 0.75rem 0;
-      font-size: 1.0625rem;
-      line-height: 1.5rem;
-      letter-spacing: 0.02em;
-      color: var(--entete-titre);
+      padding: 0.5rem 0.75rem;
+      border: 2px solid transparent;
+      border-radius: var(--bulma-radius);
+      color: var(--entete-menu-lien);
     }
 
-    // Le nom d'une rubrique : un titre, pas un lien (il doublait sa première page).
-    .entete-menu-rubrique {
-      display: block;
-      margin-top: 1rem;
-      font-family: v.$family-serif;
-      font-size: 1.25rem;
-      line-height: 1.75rem;
-      color: var(--entete-titre);
-    }
-
-    // Les pages d'une rubrique, en retrait le long d'un trait.
-    ul ul {
-      margin: 0.25rem 0 0.5rem;
-      padding-left: 1rem;
-      border-left: 2px solid var(--entete-menu-trait);
-
-      a:not(.button) {
-        padding: 0.625rem 0;
-        font-size: 1rem;
-        color: var(--entete-texte);
-      }
-    }
-
-    // La page en cours : le soulignement vert du site.
     a[aria-current] {
-      color: var(--entete-titre);
-      text-decoration: underline;
-      text-decoration-color: v.$green-light;
-      text-decoration-thickness: 0.3em;
-      text-underline-offset: -0.1em;
-      text-decoration-skip-ink: none;
-    }
-
-    .entete-menu-second {
-      margin-top: 1rem;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--entete-menu-trait);
-    }
-
-    .entete-menu-rdv {
-      display: flex;
-      height: 3rem;
-      margin-top: 1.5rem;
-      border-radius: var(--bulma-radius-large);
-      font-family: $medium;
-      font-size: 1rem;
-      letter-spacing: 0.02em;
+      border-color: var(--entete-menu-actif-bord);
+      background-color: var(--entete-menu-actif-fond);
+      color: var(--entete-menu-actif-texte);
     }
   }
 
@@ -199,18 +157,20 @@ $medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
 
     &::-webkit-scrollbar { display: none; }
 
+    // Un lien : la couleur du texte du site ; plus de vert, qui allait avec la bordure.
     a {
       flex: 0 0 auto;
       padding: 0.375rem 0.75rem;
       border-radius: var(--bulma-radius-large);
-      font-size: 0.9375rem;
-      line-height: 1.5rem;
-      letter-spacing: 0.02em;
       white-space: nowrap;
       color: var(--entete-sous-menu-texte);
     }
 
-    a[aria-current] { background-color: var(--entete-sous-menu-actif); }
+    // La page en cours : la pastille de l'élément actif du sous-menu actuel.
+    a[aria-current] {
+      background-color: var(--entete-sous-menu-actif-fond);
+      color: var(--entete-sous-menu-actif-texte);
+    }
 
     // Le dernier lien peut sortir de l'estompe en fin de défilement.
     a:last-child { margin-right: 1.5rem; }
@@ -218,13 +178,14 @@ $medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
 
   @media (prefers-reduced-motion: reduce) {
     .entete-menu,
-    .entete-menu.est-ouvert { transition: none; transform: none; }
+    .entete-menu.est-ouvert { transition: none; }
   }
 
   // Très petits écrans : des marges plus serrées, le logo rétrécit de lui-même.
   @media (max-width: 359px) {
     .entete-barre { gap: 0.5rem; padding: 0 0.75rem; }
-    .entete-actions .button { padding: 0 0.625rem; }
+    .entete-actions .button { padding-left: 0.625rem; padding-right: 0.625rem; }
+    .entete-actions [data-entete-menu] { min-width: 4.5rem; }
   }
 }
 
@@ -233,11 +194,13 @@ $medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
   --entete-fond: #{v.$dark-purple-heaviest};
   --entete-trait: #{v.$dark-purple-heavy};
   --entete-menu-fond: #{v.$dark-purple-heavy};
-  --entete-menu-trait: #{v.$purple-logo};
-  --entete-titre: #FFFFFF;
-  --entete-texte: #{v.$dark-purple};
-  --entete-sous-menu-texte: #{v.$dark-orange-lighter};
-  --entete-sous-menu-actif: #{v.$dark-orange-light};
+  --entete-menu-lien: #{v.$purple-light};
+  --entete-menu-actif-fond: #{v.$dark-purple-heaviest};
+  --entete-menu-actif-bord: #{v.$purple-logo};
+  --entete-menu-actif-texte: #{v.$purple-light};
+  --entete-sous-menu-texte: #{v.$dark-purple};
+  --entete-sous-menu-actif-fond: #{v.$dark-orange-light};
+  --entete-sous-menu-actif-texte: #{v.$dark-orange-lighter};
 }
 
 @media (prefers-color-scheme: dark) {
