@@ -5,13 +5,16 @@
 //
 // Le constat : sur un téléphone, le logo empilé, les deux boutons et le sous-menu en
 // liste prennent environ 400px avant le premier titre d'une page de rubrique.
-// La proposition : 60px de barre collée, 48px de sous-menu sur une ligne.
+// La proposition : 60px de barre collée, 52px de sous-menu sur une ligne.
 //
 // Rien de neuf à l'œil : les boutons sont ceux de la navigation (.button.is-primary,
 // .button.is-white.is-purple-bordered, 44px), le menu ouvert reprend le fond pâle,
 // les liens et la page en cours sur fond blanc du menu actuel, la pastille du
 // sous-menu reprend le vert (et l'orange du thème sombre) de son élément actif.
 // Ne sont d'ici que la mise en rangée, le collage et le défilement du sous-menu.
+// Après la relecture du 24/11 : la page en cours n'est plus centrée dans le sous-menu
+// (le lien précédent reste coupé, pour montrer qu'il défile), ses liens font 44px de
+// haut, et la page devient inerte quand le menu est ouvert (js/entete-mobile.js).
 // ============================================
 @use "ui-variables" as v;
 @use "bulma-1.0.4/sass/utilities/mixins";
@@ -144,24 +147,32 @@ $barre: 3.75rem;
 
   // --- Le sous-menu de la rubrique : une ligne, qui défile sur le côté ---
   .entete-sous-menu {
+    // Les liens se repèrent par rapport à lui (js/entete-mobile.js).
+    position: relative;
     display: flex;
     gap: 0.25rem;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 1rem;
     overflow-x: auto;
     scrollbar-width: none;
     background-color: var(--entete-fond);
     border-bottom: 1px solid var(--entete-trait);
-    // Les bords s'estompent : il reste des pages à faire défiler, d'un côté ou de l'autre.
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 2rem), transparent);
-    mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 2rem), transparent);
+    // Un bord ne s'estompe que s'il reste des pages à faire défiler de ce côté.
+    --entete-fondu-gauche: 0rem;
+    --entete-fondu-droite: 0rem;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--entete-fondu-gauche), #000 calc(100% - var(--entete-fondu-droite)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--entete-fondu-gauche), #000 calc(100% - var(--entete-fondu-droite)), transparent);
+
+    &.a-defiler-a-gauche { --entete-fondu-gauche: 2rem; }
+    &.a-defiler-a-droite { --entete-fondu-droite: 2rem; }
 
     &::-webkit-scrollbar { display: none; }
 
-    // Un lien : la couleur du texte du site ; plus de vert, qui allait avec la bordure.
+    // Un lien : la couleur du texte du site, et 44px de haut pour le doigt.
     a {
       flex: 0 0 auto;
-      padding: 0.375rem 0.75rem;
+      padding: 0.625rem 0.75rem;
       border-radius: var(--bulma-radius-large);
+      line-height: 1.5rem;
       white-space: nowrap;
       color: var(--entete-sous-menu-texte);
     }
@@ -173,7 +184,7 @@ $barre: 3.75rem;
     }
 
     // Le dernier lien peut sortir de l'estompe en fin de défilement.
-    a:last-child { margin-right: 1.5rem; }
+    a:last-child { margin-right: 1rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
