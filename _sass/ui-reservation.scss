@@ -33,6 +33,7 @@ $rayon: 8px;
   --res-titre: #{v.$purple-heavy};
   --res-texte: #{v.$purple};
   --res-accent: #{v.$purple};
+  --res-page: #FFFFFF;
   --res-fond: #FFFFFF;
   --res-fond-doux: #{v.$purple-light};
   --res-trait: #{v.$purple-light-border};
@@ -83,19 +84,39 @@ $rayon: 8px;
 // Chaque segment est une étape du parcours (rendez-vous, questionnaire, confirmation) ;
 // celui de l'étape en cours se remplit au fil des écrans du questionnaire. Pas de
 // second compteur dans la page.
+// Les traits restent collés en haut de l'écran quand la page défile ; les libellés,
+// eux, défilent : le repère tient en 4px et ne mange pas la hauteur qui reste quand
+// le clavier est ouvert.
+.res-parcours-traits,
 .res-parcours {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   gap: 0.375rem;
+}
+
+// Sur mobile, le site met « overflow-x: hidden » sur html ET sur body (ui-specifics) :
+// le body devient un conteneur de défilement qui ne défile jamais, et plus rien ne
+// peut se coller à l'écran. « clip » coupe le débordement de la même façon sans créer
+// ce conteneur. Limité aux pages qui portent la barre ; un navigateur qui ne connaît
+// pas :has() ou clip garde simplement une barre qui défile avec la page.
+body:has(.res-parcours-traits) { overflow-x: clip; }
+
+.res-parcours-traits {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 0.5rem 0 0.375rem;
+  // Opaque : le contenu passe dessous en défilant.
+  background-color: var(--res-page);
+}
+
+.res-parcours {
   list-style: none;
   margin: 0 0 2rem;
   padding: 0;
 
   li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
     min-width: 0;
     font-size: 0.875rem;
     line-height: 1.25;
@@ -103,6 +124,13 @@ $rayon: 8px;
   }
 
   .est-en-cours { color: var(--res-titre); }
+
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-right: 0.25rem;
+    vertical-align: -0.05em;
+  }
 }
 
 .res-parcours-trait {
@@ -120,15 +148,8 @@ $rayon: 8px;
     background-color: var(--res-accent);
     transition: width 0.3s ease;
   }
-}
 
-.res-parcours .est-faite .res-parcours-trait span { width: 100%; }
-
-.res-parcours-libelle svg {
-  width: 0.75rem;
-  height: 0.75rem;
-  margin-right: 0.25rem;
-  vertical-align: -0.05em;
+  &.est-fait span { width: 100%; }
 }
 
 // --- Un écran : il glisse et s'efface en changeant ---
@@ -533,6 +554,7 @@ $rayon: 8px;
   --res-titre: #FFFFFF;
   --res-texte: #{v.$dark-purple};
   --res-accent: #{v.$dark-purple};
+  --res-page: #{v.$dark-purple-heaviest};
   --res-fond: #{v.$dark-purple-heaviest};
   --res-fond-doux: #{v.$dark-purple-heavy};
   --res-trait: #{v.$dark-purple-heavy};

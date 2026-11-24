@@ -4,15 +4,22 @@
   questionnaire (js/reservation.js) : pas de second compteur dans la page.
   Paramètres : etape (numéro de l'étape en cours) ; libelles (séparés par « | ») ;
   avancement (facultatif, en %, pour une étape d'un seul écran — 50 par défaut).
+
+  Deux éléments, parce qu'ils ne défilent pas de la même façon : les traits restent
+  collés en haut de l'écran (un repère de 4px, sans prendre de place au clavier), les
+  libellés défilent avec la page. Les traits sont décoratifs ; la liste porte le sens.
 {% endcomment %}
 {% assign etape = include.etape | plus: 0 %}
 {% assign libelles = include.libelles | split: "|" %}
+<div class="res-parcours-traits" aria-hidden="true">
+  {% for libelle in libelles %}
+  {% assign n = forloop.index %}
+  <span class="res-parcours-trait{% if etape > n %} est-fait{% endif %}"><span{% if etape == n %} data-avancement style="width: {{ include.avancement | default: 50 }}%"{% endif %}></span></span>
+  {% endfor %}
+</div>
 <ol class="res-parcours" aria-label="Étapes">
   {% for libelle in libelles %}
   {% assign n = forloop.index %}
-  <li class="{% if etape > n %}est-faite{% elsif etape == n %}est-en-cours{% endif %}"{% if etape == n %} aria-current="step"{% endif %}>
-    <span class="res-parcours-trait"><span{% if etape == n %} data-avancement style="width: {{ include.avancement | default: 50 }}%"{% endif %}></span></span>
-    <span class="res-parcours-libelle">{% if etape > n %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span class="is-sr-only">Fait : </span>{% endif %}{{ libelle }}</span>
-  </li>
+  <li class="{% if etape > n %}est-faite{% elsif etape == n %}est-en-cours{% endif %}"{% if etape == n %} aria-current="step"{% endif %}>{% if etape > n %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span class="is-sr-only">Fait : </span>{% endif %}{{ libelle }}</li>
   {% endfor %}
 </ol>
