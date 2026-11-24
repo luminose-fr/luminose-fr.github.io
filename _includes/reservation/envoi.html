@@ -1,0 +1,13 @@
+{% comment %}
+  Ce que la personne lit pendant et après l'envoi, au-dessus du dernier bouton
+  (js/reservation.js les montre et les cache) :
+  - l'envoi qui dure : on le dit, pour qu'elle ne ferme pas la page ;
+  - l'envoi qui échoue : les réponses restent en place, le bouton devient « Réessayer »,
+    et l'adresse de Florent sert de recours, comme dans la fenêtre d'erreur du
+    questionnaire actuel.
+{% endcomment %}
+<p class="help res-envoi" data-envoi-lent role="status" hidden>L'envoi prend plus de temps que prévu. Gardez cette page ouverte.</p>
+<div class="res-envoi" data-envoi-erreur role="alert" tabindex="-1" hidden>
+  <p class="help is-danger">L'envoi n'a pas abouti.</p>
+  <p>Vos réponses sont toujours là&nbsp;: vous pouvez essayer une nouvelle fois. Si le problème persiste, écrivez-moi à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>.</p>
+</div>

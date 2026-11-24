@@ -1,82 +1,256 @@
 // Questionnaire de santé, un sujet par écran (_includes/reservation/questionnaire.html).
 //
-// Rien de ce que la personne répond ne quitte la page avant l'envoi, ni ne reste dans
-// le navigateur : pas de sessionStorage pour les réponses de santé. Seuls sont lus :
-// - les coordonnées que Calendly transmet en redirigeant (rangées par head.html) ;
-// - la date de la réservation (event_start_time), qui n'a rien de personnel.
+// Ce que la page reçoit :
+// - de Calendly, en redirigeant : l'identifiant de la réservation (invitee_uuid), le
+//   prénom, le nom, l'e-mail, le téléphone des rappels — retirés de l'adresse par
+//   head.html, lus ici dans window.luminoseParametres, à l'arrivée seulement ;
+// - d'un e-mail de rappel : l'identifiant de la réservation et la date, rien d'autre ;
+// - de la page d'un évènement : son identifiant (notion_page_id) ;
+// - la date de la réservation (event_start_time), qui reste dans l'adresse.
+//
+// Ce qu'elle garde : les réponses, dans l'onglet (sessionStorage), le temps de la
+// saisie — un téléphone recharge volontiers une page quittée un instant pour chercher
+// un numéro. Elles sont effacées à l'envoi, et à toute nouvelle arrivée qui n'est pas
+// la même réservation : une personne ne retrouve jamais les réponses ni l'identité
+// d'une autre. Rien n'est écrit ailleurs (décision du 24/11/2026).
 (function () {
   'use strict';
 
   var form = document.querySelector('[data-questionnaire]');
   if (!form) return;
 
-  var ecrans = Array.prototype.slice.call(form.querySelectorAll('[data-ecran]'));
+  function tous(selecteur, racine) {
+    return Array.prototype.slice.call((racine || form).querySelectorAll(selecteur));
+  }
+
+  var contexte = form.dataset.contexte || 'seance';
+  var ecrans = tous('[data-ecran]');
   var avancement = document.querySelector('[data-avancement]');
   var annonce = form.querySelector('[data-annonce]');
   var sansMouvement = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var DUREE = sansMouvement ? 0 : 180;
   var courant = null;
   var enTransition = false;
+  var minuterie = null;
+  var enEnvoi = false;
+  var envoye = false;
 
-  // --- Ce que la page reçoit ---
-  var parametres = {};
-  try {
-    parametres = JSON.parse(sessionStorage.getItem('luminose_parametres:' + location.pathname) || '{}') || {};
-  } catch (e) { parametres = {}; }
-  Object.assign(parametres, window.luminoseParametres || {});
+  // ——— Ce qui reste dans l'onglet pendant la saisie ———
+  var CLE = 'luminose_questionnaire:' + location.pathname;
+  function lire() {
+    try { return JSON.parse(sessionStorage.getItem(CLE) || 'null'); } catch (e) { return null; }
+  }
+  function oublier() {
+    try { sessionStorage.removeItem(CLE); } catch (e) { /* sans stockage, rien à effacer */ }
+  }
+
+  // ——— Qui arrive, et d'où ———
+  var recus = window.luminoseParametres || {};
   var adresse = new URLSearchParams(location.search);
+  var entree = (window.performance && performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+  // Rechargement, ou retour par l'historique : c'est la même personne, sur la même page.
+  var retourSurLaPage = entree.type === 'reload' || entree.type === 'back_forward';
+  var arrivee = {
+    uuid: recus.invitee_uuid || '',
+    prenom: recus.invitee_first_name || '',
+    nom: recus.invitee_last_name || '',
+    email: recus.invitee_email || '',
+    telephone: recus.text_reminder_number || '',
+    journee: recus.notion_page_id || ''
+  };
+  var arriveAvecDesDonnees = Object.keys(arrivee).some(function (cle) { return arrivee[cle]; });
+  var brouillon = lire();
+  var reservation;
+  if (arriveAvecDesDonnees) {
+    // La même réservation rouverte garde son brouillon ; toute autre arrivée repart de zéro.
+    if (brouillon && brouillon.reservation && arrivee.uuid && brouillon.reservation.uuid === arrivee.uuid) {
+      reservation = brouillon.reservation;
+    } else {
+      brouillon = null;
+      reservation = arrivee;
+    }
+  } else if (retourSurLaPage && brouillon) {
+    reservation = brouillon.reservation || arrivee;
+  } else {
+    // Une arrivée sans rien (lien nu, adresse tapée) ne reprend jamais ce qu'une
+    // réservation précédente a laissé dans l'onglet.
+    brouillon = null;
+    reservation = arrivee;
+  }
+  if (!brouillon) {
+    oublier();
+    // Le navigateur peut avoir remis de lui-même d'anciennes valeurs dans les champs
+    // (retour par l'historique après un envoi) : sans brouillon, on repart de rien.
+    form.reset();
+  }
 
-  // --- La date réservée, en toutes lettres, sur le premier écran seulement ---
-  var debut = adresse.get('event_start_time');
-  var champDate = form.querySelector('[data-reservation-date]');
-  if (debut && champDate) {
-    var date = new Date(debut);
-    if (!isNaN(date)) {
+  function nouvelIdentifiant() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'e-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+  }
+  // Un identifiant par envoi : un double appui ou une relance ne crée pas deux questionnaires.
+  var envoiId = (brouillon && brouillon.envoiId) || nouvelIdentifiant();
+
+  // Ce que la réservation apporte au formulaire : rejoué après toute remise à zéro.
+  function poserLaReservation() {
+    if (form.elements.envoi_id) form.elements.envoi_id.value = envoiId;
+    if (form.elements.invitee_uuid) form.elements.invitee_uuid.value = reservation.uuid;
+    if (contexte === 'seance' || contexte === 'decouverte') {
+      ['prenom', 'nom', 'email', 'telephone'].forEach(function (cle) {
+        var champ = form.querySelector('[data-identite="' + cle + '"] input');
+        if (champ && reservation[cle]) champ.value = reservation[cle];
+      });
+    }
+    tous('input[name="notion_page_id"][type="radio"]').forEach(function (radio) {
+      if (reservation.journee && radio.value === reservation.journee) radio.checked = true;
+    });
+  }
+  poserLaReservation();
+
+  // ——— Les réponses déjà données, si la page a été rechargée ———
+  function cleDe(champ) {
+    return champ.name || (champ.dataset.datePartie ? 'date:' + champ.id : '');
+  }
+  function champsARetenir() {
+    return tous('input, select, textarea').filter(function (c) { return c.type !== 'hidden' && cleDe(c); });
+  }
+  if (brouillon && brouillon.reponses) {
+    champsARetenir().forEach(function (c) {
+      var cle = cleDe(c);
+      if (!(cle in brouillon.reponses)) return;
+      if (c.type === 'radio') c.checked = brouillon.reponses[cle] === c.value;
+      else if (c.type === 'checkbox') c.checked = !!brouillon.reponses[cle];
+      else c.value = brouillon.reponses[cle];
+    });
+  }
+
+  var enregistrementPrevu = null;
+  function enregistrer() {
+    if (envoye) return;
+    var reponses = {};
+    champsARetenir().forEach(function (c) {
+      if (c.type === 'radio') { if (c.checked) reponses[cleDe(c)] = c.value; }
+      else if (c.type === 'checkbox') reponses[cleDe(c)] = c.checked;
+      else reponses[cleDe(c)] = c.value;
+    });
+    try {
+      sessionStorage.setItem(CLE, JSON.stringify({
+        reservation: reservation,
+        reponses: reponses,
+        ecran: courant ? courant.dataset.ecran : '',
+        envoiId: envoiId
+      }));
+    } catch (e) { /* sans stockage, les réponses vivent le temps de la page */ }
+  }
+  function prevoirEnregistrement() {
+    clearTimeout(enregistrementPrevu);
+    enregistrementPrevu = setTimeout(enregistrer, 250);
+  }
+
+  // ——— Ce qui vient d'être réservé, sur le premier écran seulement ———
+  var zoneReservation = form.querySelector('[data-reservation]');
+  if (zoneReservation) {
+    var debut = adresse.get('event_start_time');
+    var date = debut ? new Date(debut) : null;
+    if (date && !isNaN(date)) {
       var jour = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' }).format(date);
       var heures = new Intl.DateTimeFormat('fr-FR', { hour: 'numeric', minute: '2-digit', hour12: false, timeZone: 'Europe/Paris' }).format(date).split(':');
       var heure = Number(heures[0]) + ' h' + (heures[1] !== '00' ? ' ' + heures[1] : '');
-      champDate.textContent = jour.charAt(0).toUpperCase() + jour.slice(1) + ', à ' + heure;
-      champDate.hidden = false;
+      zoneReservation.querySelector('[data-reservation-date]').textContent = jour.charAt(0).toUpperCase() + jour.slice(1) + ', à ' + heure;
     }
+    // Le nom de la réservation est dit une fois : on sait pour qui l'on répond.
+    zoneReservation.querySelector('[data-reservation-nom]').textContent = (reservation.prenom + ' ' + reservation.nom).trim();
+    zoneReservation.hidden = !zoneReservation.textContent.trim();
   }
 
-  // --- Vérification, à l'endroit où l'erreur se corrige ---
+  // ——— Vérification, à l'endroit où l'erreur se corrige ———
   var formats = {
-    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    date: /^(0?[1-9]|[12]\d|3[01])\/(0?[1-9]|1[0-2])\/(19|20)\d\d$/
+    email: function (v) { return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v); },
+    telephone: function (v) { return /^\+?[\d\s().-]+$/.test(v) && v.replace(/\D/g, '').length >= 8; }
   };
 
-  function blocValide(bloc) {
-    var champs = Array.prototype.slice.call(bloc.querySelectorAll('input, select, textarea')).filter(function (c) { return !c.disabled; });
-    if (!champs.length) return true;
-    if (champs[0].type === 'radio') return champs.some(function (c) { return c.checked; });
-    if (champs[0].type === 'checkbox') return champs[0].checked;
-    var valeur = champs[0].value.trim();
-    if (!valeur) return false;
-    var format = champs[0].dataset.format;
-    return !format || formats[format].test(valeur);
+  function deuxChiffres(n) { return (n < 10 ? '0' : '') + n; }
+
+  // La date de naissance : trois champs, une vraie date du calendrier, et l'âge.
+  function lireDate(bloc) {
+    var p = {};
+    tous('[data-date-partie]', bloc).forEach(function (c) { p[c.dataset.datePartie] = c.value.trim(); });
+    if (!/^\d{1,2}$/.test(p.jour) || !/^\d{1,2}$/.test(p.mois) || !/^\d{4}$/.test(p.annee)) return null;
+    var j = Number(p.jour), m = Number(p.mois), a = Number(p.annee);
+    var d = new Date(a, m - 1, j);
+    var aujourdhui = new Date();
+    if (d.getFullYear() !== a || d.getMonth() !== m - 1 || d.getDate() !== j || d > aujourdhui || a < 1900) return null;
+    var age = aujourdhui.getFullYear() - a;
+    if (aujourdhui.getMonth() < m - 1 || (aujourdhui.getMonth() === m - 1 && aujourdhui.getDate() < j)) age -= 1;
+    return { texte: deuxChiffres(j) + '/' + deuxChiffres(m) + '/' + a, age: age };
   }
 
-  // L'erreur s'affiche avec les moyens du site : .is-danger sur le champ (son contour
-  // rouge) et une aide .help.is-danger dessous, que la feuille montre ou cache.
-  function marquer(bloc, enErreur) {
+  function reponduOuiA(noms) {
+    return tous('input[type="radio"]:checked').some(function (r) {
+      return !r.disabled && r.value === 'oui' && noms.indexOf(r.name) >= 0;
+    });
+  }
+
+  // '' si le bloc est en règle ; sinon true, ou le message propre à ce cas.
+  function erreurDe(bloc) {
+    if ('date' in bloc.dataset) {
+      var d = lireDate(bloc);
+      bloc.querySelector('[data-date-valeur]').value = d ? d.texte : '';
+      if (!d) return bloc.dataset.erreurFormat;
+      if (d.age < Number(bloc.dataset.ageMinimum || 0)) return bloc.dataset.erreurAge;
+      return '';
+    }
+    var champs = tous('input, select, textarea', bloc).filter(function (c) { return !c.disabled && c.type !== 'hidden'; });
+    if (!champs.length) return '';
+    if (champs[0].type === 'radio') return champs.some(function (c) { return c.checked; }) ? '' : true;
+    if (champs[0].type === 'checkbox') return champs[0].checked ? '' : true;
+    var valeur = champs[0].value.trim();
+    if (!valeur) {
+      if ('facultatif' in bloc.dataset) return '';
+      if (bloc.dataset.requisSi) return reponduOuiA(bloc.dataset.requisSi.split(',')) ? true : '';
+      return true;
+    }
+    var format = champs[0].dataset.format;
+    return !format || formats[format](valeur) ? '' : true;
+  }
+
+  // L'erreur s'affiche avec les moyens du site (.is-danger sur le champ, une aide
+  // .help.is-danger dessous) et se dit aux lecteurs d'écran : le champ, ou le groupe de
+  // réponses, est marqué invalide et relié à son message.
+  tous('.res-erreur').forEach(function (message, i) { message.id = 'res-erreur-' + (i + 1); });
+
+  function marquer(bloc, erreur) {
+    var enErreur = !!erreur;
+    var message = bloc.querySelector('.res-erreur');
+    if (message && typeof erreur === 'string') message.textContent = erreur;
     bloc.classList.toggle('est-en-erreur', enErreur);
-    bloc.querySelectorAll('input, select, textarea').forEach(function (champ) {
+    var cibles = bloc.getAttribute('role') === 'radiogroup' ? [bloc] : tous('input:not([type="hidden"]), select, textarea', bloc);
+    tous('input:not([type="hidden"]), select, textarea', bloc).forEach(function (champ) {
       champ.classList.toggle('is-danger', enErreur);
     });
+    cibles.forEach(function (cible) {
+      if (!('decrit' in cible.dataset)) cible.dataset.decrit = cible.getAttribute('aria-describedby') || '';
+      var decrit = cible.dataset.decrit + (enErreur && message ? ' ' + message.id : '');
+      if (decrit.trim()) cible.setAttribute('aria-describedby', decrit.trim());
+      else cible.removeAttribute('aria-describedby');
+      if (enErreur) cible.setAttribute('aria-invalid', 'true');
+      else cible.removeAttribute('aria-invalid');
+    });
   }
 
-  function verifier(ecran) {
+  // Sans « montrer », la vérification ne touche pas à l'affichage : elle sert à savoir
+  // si un écran déjà passé est toujours en règle.
+  function verifier(ecran, montrerLesErreurs) {
     var premier = null;
-    ecran.querySelectorAll('[data-requis]').forEach(function (bloc) {
-      if (bloc.closest('[hidden]')) return;
-      var ok = blocValide(bloc);
-      marquer(bloc, !ok);
-      if (!ok && !premier) premier = bloc;
+    tous('[data-requis]', ecran).forEach(function (bloc) {
+      if (bloc.closest('[hidden]') && bloc.closest('[hidden]') !== ecran) return;
+      var erreur = erreurDe(bloc);
+      if (montrerLesErreurs) marquer(bloc, erreur);
+      if (erreur && !premier) premier = bloc;
     });
-    if (premier) {
+    if (premier && montrerLesErreurs) {
       premier.scrollIntoView({ block: 'center' });
-      var champ = premier.querySelector('input:not([disabled]), select:not([disabled]), textarea:not([disabled])');
+      var champ = premier.querySelector('input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])');
       if (champ) champ.focus({ preventScroll: true });
     }
     return !premier;
@@ -85,129 +259,174 @@
   // L'erreur disparaît dès que la réponse est donnée.
   function effacer(e) {
     var bloc = e.target.closest('[data-requis]');
-    if (bloc && bloc.classList.contains('est-en-erreur') && blocValide(bloc)) marquer(bloc, false);
+    if (!bloc || !bloc.classList.contains('est-en-erreur')) return;
+    marquer(bloc, erreurDe(bloc));
   }
+
+  // La date : des chiffres seulement, et le champ suivant quand celui-ci est plein.
+  form.addEventListener('input', function (e) {
+    var partie = e.target.dataset && e.target.dataset.datePartie;
+    if (!partie) return;
+    var chiffres = e.target.value.replace(/\D/g, '');
+    if (chiffres !== e.target.value) e.target.value = chiffres;
+    if (chiffres.length === e.target.maxLength && e.inputType && e.inputType.indexOf('insert') === 0) {
+      var parties = tous('[data-date-partie]', e.target.closest('[data-date]'));
+      var suivante = parties[parties.indexOf(e.target) + 1];
+      if (suivante) suivante.focus();
+    }
+  });
   form.addEventListener('input', effacer);
   form.addEventListener('change', effacer);
+  form.addEventListener('input', prevoirEnregistrement);
+  form.addEventListener('change', prevoirEnregistrement);
 
-  // --- Les coordonnées venues de Calendly ne sont pas redemandées ---
-  // Seules celles qui manquent (le téléphone, si la personne n'a pas voulu de SMS) ou
-  // qui sont invalides restent à l'écran « identite » ; s'il n'en reste aucune, il saute.
-  var correspondances = {
-    prenom: 'invitee_first_name',
-    nom: 'invitee_last_name',
-    email: 'invitee_email',
-    telephone: 'text_reminder_number'
-  };
-  var identite = form.querySelector('[data-ecran="identite"]');
-  if (identite) {
-    var manquantes = 0;
-    Object.keys(correspondances).forEach(function (cle) {
-      var bloc = identite.querySelector('[data-identite="' + cle + '"]');
-      var valeur = parametres[correspondances[cle]];
-      if (valeur) bloc.querySelector('input').value = valeur;
-      if (valeur && blocValide(bloc)) bloc.hidden = true;
-      else manquantes += 1;
-    });
-    if (!manquantes) identite.dataset.inactif = '';
+  function ecranNomme(nom) {
+    return ecrans.filter(function (e) { return e.dataset.ecran === nom; });
   }
 
-  // --- La journée déjà choisie sur la page d'un évènement ---
-  // Le bouton « S'inscrire » d'une page d'évènement porte déjà ?notion_page_id=<id>
-  // (_plugins/page_drop.rb) ; head.html le retire de l'adresse et le range.
-  // - Reçu avec CETTE arrivée : la date est retenue et l'écran du choix ne s'ouvre pas.
-  // - Seulement resté en mémoire (page rechargée, ou visite précédente dans le même
-  //   onglet avant de revenir par un lien général) : la date est cochée, mais le choix
-  //   reste affiché — on ne cache pas une date que la personne n'a pas choisie à l'instant.
-  // Sans identifiant, ou si la date n'est plus proposée, le choix reste à faire.
-  var journee = form.querySelector('[data-ecran="journee"]');
-  var journeeRetenue = null;
-  if (journee) {
-    var recu = (window.luminoseParametres || {}).notion_page_id || '';
-    var range = parametres.notion_page_id || '';
-    journee.querySelectorAll('input[name="notion_page_id"]').forEach(function (radio) {
-      if (recu && radio.value === recu) journeeRetenue = radio;
-      else if (!recu && range && radio.value === range) radio.checked = true;
+  // ——— Les coordonnées que la réservation porte déjà ne sont pas redemandées ———
+  // Après une réservation Calendly, le nom et l'e-mail ne sont jamais demandés : la
+  // séance les porte, et Make rattache le questionnaire par l'identifiant. Seul le
+  // téléphone peut manquer (la personne n'a pas voulu de rappel par SMS).
+  // Sans identifiant — lien nu, inscription à une journée — tout est demandé.
+  var identite = ecranNomme('identite')[0];
+  if (identite && (contexte === 'seance' || contexte === 'decouverte')) {
+    var aDemander = 0;
+    ['prenom', 'nom', 'email', 'telephone'].forEach(function (cle) {
+      var bloc = identite.querySelector('[data-identite="' + cle + '"]');
+      var champ = bloc.querySelector('input');
+      var connu = !!reservation[cle] && !erreurDe(bloc);
+      if (connu || (reservation.uuid && cle !== 'telephone')) {
+        bloc.hidden = true;
+        // Un champ resté vide n'est pas envoyé : Make lit l'identité sur la séance.
+        if (!connu) champ.disabled = true;
+      } else {
+        aDemander += 1;
+      }
     });
-    if (journeeRetenue) {
-      journeeRetenue.checked = true;
+    if (!aDemander) identite.dataset.inactif = '';
+  }
+
+  // ——— La journée déjà choisie sur la page d'un évènement ———
+  // Le bouton « S'inscrire » d'une page d'évènement porte ?notion_page_id=<id>
+  // (_plugins/page_drop.rb). Reçue ainsi, la date est retenue : l'écran du choix cède
+  // la place à un accueil qui la rappelle. Sans identifiant, ou si la date n'est plus
+  // proposée, le choix reste à faire.
+  var journee = ecranNomme('journee')[0];
+  var accueilJournee = form.querySelector('[data-si-journee-retenue]');
+  if (journee) {
+    var retenue = null;
+    tous('input[name="notion_page_id"]', journee).forEach(function (radio) {
+      if (reservation.journee && radio.value === reservation.journee) retenue = radio;
+    });
+    if (retenue) {
       journee.dataset.inactif = '';
+      accueilJournee.querySelector('[data-journee-libelle]').textContent = retenue.dataset.libelle;
+    } else if (accueilJournee) {
+      accueilJournee.dataset.inactif = '';
     }
   }
 
-  // --- La version, et la suite d'écrans qui en découle ---
+  // ——— La version, et la suite d'écrans qui en découle ———
   function version() {
     if (form.dataset.versionFixe) return form.dataset.versionFixe;
     var choix = form.querySelector('input[name="version"]:checked');
     return choix ? choix.value : '';
   }
 
-  function miseAJour() {
+  function reprise() {
     var choix = form.querySelector('input[name="coordonnees_reprises"]:checked');
-    return !!choix && choix.value === 'mettre-a-jour';
+    return choix ? choix.value : '';
   }
 
-  function estActif(ecran) {
-    var v = version();
+  var blocNaissance = form.querySelector('[data-date]');
+  function estMineur() {
+    if (!blocNaissance || blocNaissance.querySelector('[data-date-partie]').disabled) return false;
+    var d = lireDate(blocNaissance);
+    return !!d && d.age < 18 && d.age >= Number(blocNaissance.dataset.ageMinimum || 0);
+  }
+
+  // « hypothese » remplace une réponse pas encore donnée, pour estimer la longueur du
+  // parcours (voir mesurer).
+  function estActif(ecran, hypothese) {
+    var v = (hypothese && hypothese.version) || version();
+    var miseAJour = hypothese && 'miseAJour' in hypothese ? hypothese.miseAJour : reprise() === 'mettre-a-jour';
     if ('inactif' in ecran.dataset) return false;
     if (ecran.dataset.version && ecran.dataset.version !== v) return false;
-    if ('siCoordonnees' in ecran.dataset) return v === 'complet' || (v === 'suivi' && miseAJour());
+    if ('siCoordonnees' in ecran.dataset) return v === 'complet' || (v === 'suivi' && miseAJour);
+    if ('siMineur' in ecran.dataset) return !hypothese && estMineur();
     return true;
   }
 
   function actifs() {
-    return ecrans.filter(estActif);
+    return ecrans.filter(function (e) { return estActif(e); });
   }
 
   // Une question d'une autre version, ou un écran hors de la suite, n'est ni vérifié
   // ni envoyé.
   function appliquerVersion() {
     var v = version();
-    form.querySelectorAll('[data-version]').forEach(function (el) {
+    tous('[data-version]').forEach(function (el) {
       var visible = el.dataset.version === v;
       if (!el.hasAttribute('data-ecran')) el.hidden = !visible;
-      el.querySelectorAll('input, select, textarea').forEach(function (champ) { champ.disabled = !visible; });
+      tous('input, select, textarea', el).forEach(function (champ) { champ.disabled = !visible; });
     });
-    form.querySelectorAll('[data-si-coordonnees]').forEach(function (el) {
+    tous('[data-si-coordonnees]').forEach(function (el) {
       var actif = estActif(el);
-      el.querySelectorAll('input, select, textarea').forEach(function (champ) { champ.disabled = !actif; });
+      tous('input, select, textarea', el).forEach(function (champ) { champ.disabled = !actif; });
     });
     mesurer();
   }
-  form.querySelectorAll('input[name="version"], input[name="coordonnees_reprises"]').forEach(function (radio) {
+  tous('input[name="version"], input[name="coordonnees_reprises"]').forEach(function (radio) {
     radio.addEventListener('change', appliquerVersion);
   });
 
-  // --- L'avancement : le segment de l'étape en cours, dans la barre du parcours ---
-  function mesurer() {
-    if (!courant) return;
-    var suite = actifs();
-    var rang = suite.indexOf(courant);
-    if (avancement) avancement.style.width = Math.round(((rang + 1) / (suite.length + 1)) * 100) + '%';
-    if (annonce) annonce.textContent = 'Écran ' + (rang + 1) + ' sur ' + suite.length;
+  // ——— L'avancement : le segment de l'étape en cours, dans la barre du parcours ———
+  // Tant qu'une réponse qui change la suite n'est pas donnée, on compte le parcours le
+  // plus long : la barre peut sauter en avant, elle ne recule pas.
+  function longueurPrevue() {
+    var hypotheses = [];
+    if (!version()) hypotheses = [{ version: 'complet' }, { version: 'suivi', miseAJour: true }];
+    else if (version() === 'suivi' && !reprise()) hypotheses = [{ version: 'suivi', miseAJour: true }];
+    var longueur = actifs().length;
+    hypotheses.forEach(function (h) {
+      longueur = Math.max(longueur, ecrans.filter(function (e) { return estActif(e, h); }).length);
+    });
+    return longueur;
   }
 
-  // --- Passer d'un écran à l'autre : il glisse dans le sens de la marche ---
+  function mesurer() {
+    if (!courant) return;
+    var position = actifs().indexOf(courant);
+    var longueur = longueurPrevue();
+    if (avancement) avancement.style.width = Math.round(((position + 1) / (longueur + 1)) * 100) + '%';
+    if (annonce) annonce.textContent = 'Écran ' + (position + 1) + ' sur ' + longueur;
+  }
+
+  // ——— Passer d'un écran à l'autre : il glisse dans le sens de la marche ———
   function montrer(cible, sens, sansEffet) {
     if (!cible || cible === courant) return;
+    // Un changement en cours est mené à son terme avant d'en commencer un autre.
+    clearTimeout(minuterie);
     var sortant = courant;
     courant = cible;
     enTransition = true;
 
     function entrer() {
-      if (sortant) {
-        sortant.hidden = true;
-        sortant.classList.remove('est-hors-champ');
-      }
+      ecrans.forEach(function (e) {
+        if (e === cible) return;
+        e.hidden = true;
+        e.classList.remove('est-hors-champ');
+      });
       cible.style.setProperty('--res-decalage', (sens >= 0 ? 12 : -12) + 'px');
       if (!sansEffet) cible.classList.add('est-hors-champ');
-      // Pas de « Retour » sur le premier écran de la suite, quel qu'il soit : quand la
-      // date vient de la page de l'évènement, c'est la question suivante qui ouvre.
+      // Pas de « Retour » sur le premier écran de la suite, quel qu'il soit.
       var retour = cible.querySelector('[data-precedent]');
       if (retour) retour.hidden = actifs()[0] === cible;
       cible.hidden = false;
       window.scrollTo(0, 0);
       mesurer();
+      enregistrer();
       // Deux images : la première pose l'état de départ, la seconde lance la transition.
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
@@ -222,30 +441,130 @@
     if (sortant && !sansEffet && DUREE) {
       sortant.style.setProperty('--res-decalage', (sens >= 0 ? -12 : 12) + 'px');
       sortant.classList.add('est-hors-champ');
-      setTimeout(entrer, DUREE);
+      minuterie = setTimeout(entrer, DUREE);
     } else {
       entrer();
     }
   }
 
-  function parNom(nom) {
-    return ecrans.filter(function (e) { return e.dataset.ecran === nom && estActif(e); })[0] || null;
+  // ——— L'historique ———
+  // Chaque écran entre dans l'historique : le bouton et le geste « retour » du
+  // navigateur reviennent à l'écran précédent sans quitter la page. Une entrée ne dit
+  // que son rang : « suivant » dans le navigateur vaut « Continuer » (l'écran quitté est
+  // vérifié), « précédent » vaut « Retour ». La suite d'écrans peut changer en route
+  // (version, mise à jour) : on ne se fie donc jamais au nom d'écran d'une vieille entrée.
+  var rang = 0;
+
+  function noter() {
+    history.replaceState({ ecran: courant.dataset.ecran, rang: rang }, '');
   }
 
-  function avancer() {
-    if (enTransition || !verifier(courant)) return;
+  function avancer(parLHistorique) {
+    if (enTransition || enEnvoi || !verifier(courant, true)) return;
     var suite = actifs();
     var suivant = suite[suite.indexOf(courant) + 1];
     if (!suivant) {
-      // Maquette : rien n'est envoyé.
-      if (form.dataset.suite) location.href = form.dataset.suite;
+      // Le dernier écran : on envoie — jamais par le bouton « suivant » du navigateur.
+      if (!parLHistorique) envoyer();
       return;
     }
-    // Chaque écran entre dans l'historique : le bouton et le geste « retour » du
-    // navigateur reviennent à l'écran précédent, sans quitter la page ni rien perdre.
-    history.pushState({ ecran: suivant.dataset.ecran }, '');
+    if (!parLHistorique) {
+      rang += 1;
+      history.pushState({ ecran: suivant.dataset.ecran, rang: rang }, '');
+    }
     montrer(suivant, 1);
   }
+
+  function reculer() {
+    var suite = actifs();
+    var precedent = suite[suite.indexOf(courant) - 1];
+    if (precedent) montrer(precedent, -1);
+  }
+
+  window.addEventListener('popstate', function (e) {
+    if (!e.state || typeof e.state.rang !== 'number' || enEnvoi) return;
+    var versLAvant = e.state.rang > rang;
+    rang = e.state.rang;
+    if (versLAvant) avancer(true);
+    else reculer();
+    noter();
+  });
+
+  // ——— L'envoi ———
+  // Tous les écrans de la suite sont revérifiés : un retour en arrière a pu vider une
+  // réponse, ou changer de version. Make refait le même contrôle de son côté.
+  function premierEcranEnDefaut() {
+    return actifs().filter(function (e) { return !verifier(e, false); })[0] || null;
+  }
+
+  function envoyer() {
+    if (enEnvoi) return;
+    var enDefaut = premierEcranEnDefaut();
+    if (enDefaut) {
+      montrer(enDefaut, -1, true);
+      noter();
+      verifier(enDefaut, true);
+      return;
+    }
+    var bouton = courant.querySelector('[type="submit"]');
+    var lent = courant.querySelector('[data-envoi-lent]');
+    var echec = courant.querySelector('[data-envoi-erreur]');
+    enEnvoi = true;
+    bouton.disabled = true;
+    bouton.classList.add('is-loading');
+    if (echec) echec.hidden = true;
+
+    // MAQUETTE : rien n'est envoyé. ?simuler=lent et ?simuler=echec montrent les deux
+    // états à prévoir ; l'intégration remplacera ce bloc par l'appel au webhook, avec
+    // les mêmes seuils (message d'attente après 8 s, échec déclaré après 30 s).
+    var mode = adresse.get('simuler');
+    var attente = setTimeout(function () { if (lent) lent.hidden = false; }, mode === 'lent' ? 1500 : 8000);
+    setTimeout(function () {
+      clearTimeout(attente);
+      if (lent) lent.hidden = true;
+      if (mode === 'echec') {
+        enEnvoi = false;
+        bouton.disabled = false;
+        bouton.classList.remove('is-loading');
+        bouton.textContent = 'Réessayer';
+        if (echec) { echec.hidden = false; echec.focus(); }
+        return;
+      }
+      envoye = true;
+      clearTimeout(enregistrementPrevu);
+      oublier();
+      location.href = form.dataset.suite;
+    }, mode === 'lent' ? 5000 : mode === 'echec' ? 1200 : 400);
+  }
+
+  // Revenir sur le questionnaire après l'envoi ne doit pas rendre les réponses lisibles
+  // (le navigateur peut ressortir la page telle qu'il l'a quittée).
+  var aRepondu = false;
+  function noterUneReponse(e) { if (e.isTrusted) aRepondu = true; }
+  form.addEventListener('input', noterUneReponse);
+  form.addEventListener('change', noterUneReponse);
+
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      if (!envoye) return;
+      form.reset();
+      oublier();
+      location.reload();
+      return;
+    }
+    // Page rouverte par l'historique : le navigateur remet de lui-même les anciennes
+    // valeurs dans les champs, après les scripts. Sans brouillon — donc après un envoi,
+    // ou pour une autre réservation — elles n'ont rien à faire là.
+    if (!brouillon && !aRepondu) {
+      form.reset();
+      poserLaReservation();
+      appliquerVersion();
+    }
+  });
+  window.addEventListener('pagehide', function () {
+    clearTimeout(enregistrementPrevu);
+    enregistrer();
+  });
 
   form.addEventListener('click', function (e) {
     // Un bouton qui déplie un texte (le texte complet de l'avertissement) et le replie.
@@ -260,7 +579,12 @@
       return;
     }
     if (e.target.closest('[data-suivant]')) avancer();
-    if (e.target.closest('[data-precedent]') && !enTransition) history.back();
+    if (e.target.closest('[data-precedent]') && !enTransition) {
+      // Sans entrée d'historique derrière soi (brouillon repris au milieu du parcours),
+      // « Retour » reste dans le questionnaire au lieu de quitter la page.
+      if (rang > 0) history.back();
+      else reculer();
+    }
   });
 
   // Entrée dans un champ, ou le bouton d'envoi du dernier écran.
@@ -269,23 +593,22 @@
     avancer();
   });
 
-  window.addEventListener('popstate', function (e) {
-    var cible = parNom(e.state && e.state.ecran) || actifs()[0];
-    var suite = actifs();
-    montrer(cible, suite.indexOf(cible) < suite.indexOf(courant) ? -1 : 1);
-  });
-
-  // --- Départ ---
+  // ——— Départ ———
   ecrans.forEach(function (ecran) { ecran.hidden = true; });
   appliquerVersion();
-  var premier = actifs()[0];
-  if (journeeRetenue) {
-    // Rappelée une fois, au-dessus du premier titre : on sait pour quelle date on s'inscrit.
-    var rappel = document.createElement('p');
-    rappel.className = 'res-contexte';
-    rappel.textContent = journeeRetenue.dataset.libelle;
-    premier.insertBefore(rappel, premier.firstElementChild);
+  var suiteDeDepart = actifs();
+  if (!suiteDeDepart.length) return;
+  var depart = suiteDeDepart[0];
+  if (brouillon && brouillon.ecran) {
+    // Page rechargée : on reprend à l'écran quitté, sans dépasser le premier écran qui
+    // ne serait plus en règle.
+    var voulu = ecranNomme(brouillon.ecran).filter(function (e) { return estActif(e); })[0];
+    for (var i = 0; voulu && i < suiteDeDepart.length; i += 1) {
+      depart = suiteDeDepart[i];
+      if (depart === voulu || !verifier(depart, false)) break;
+    }
   }
-  history.replaceState({ ecran: premier.dataset.ecran }, '');
-  montrer(premier, 1, true);
+  if (history.state && typeof history.state.rang === 'number') rang = history.state.rang;
+  montrer(depart, 1, true);
+  noter();
 })();
