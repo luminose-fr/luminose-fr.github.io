@@ -1,0 +1,250 @@
+// ============================================
+// PROPOSITION d'en-tête pour téléphone (24/11/2026) — _includes/maquettes/entete-mobile.html.
+// Montrée sur la seule page maquettes/reservation/ (body.maquette-entete) ; l'en-tête
+// actuel n'est pas touché.
+//
+// Le constat : sur un téléphone, le logo empilé, les deux boutons et le sous-menu en
+// liste prennent environ 400px avant le premier titre d'une page de rubrique.
+// La proposition : 60px de barre collée, 48px de sous-menu sur une ligne.
+// Le vocabulaire reste celui du site : boutons « Menu » en toutes lettres et bouton
+// violet de rendez-vous, sous-menu dans son vert, menu ouvert sur le fond pâle.
+// ============================================
+@use "ui-variables" as v;
+@use "bulma-1.0.4/sass/utilities/mixins";
+
+$barre: 3.75rem;
+$medium: 'Futura LT W05 Medium', 'Futura LT W05 Book', sans-serif;
+
+:root {
+  --entete-fond: #FFFFFF;
+  --entete-trait: #{v.$purple-light-border};
+  --entete-menu-fond: #{v.$purple-light};
+  --entete-menu-trait: #{v.$purple-light-border};
+  --entete-titre: #{v.$purple-heavy};
+  --entete-texte: #{v.$purple};
+  --entete-sous-menu-texte: #{v.$green-heavy};
+  --entete-sous-menu-actif: #{v.$green-light};
+}
+
+@include mixins.mobile {
+  // --- Sur la page de démonstration : l'en-tête actuel laisse la place ---
+  body.maquette-entete {
+    > header.section.header { display: none; }
+
+    // Le script de l'en-tête actuel compense sa barre fixe par un remplissage du body ;
+    // la barre proposée est collée (sticky) et n'en a pas besoin.
+    &.has-navbar-fixed-top { padding-top: 0; }
+  }
+
+  // Le site met « overflow-x: hidden » sur html ET body en mobile, ce qui empêche tout
+  // collage ; « clip » coupe le débordement de la même façon sans ce défaut.
+  body:has(.entete-mobile) { overflow-x: clip; }
+
+  // --- La barre : logo à gauche, rendez-vous et menu à droite ---
+  .entete-mobile {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background-color: var(--entete-fond);
+    border-bottom: 1px solid var(--entete-trait);
+  }
+
+  .entete-barre {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    height: $barre;
+    padding: 0 1rem;
+  }
+
+  .entete-logo {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+
+    // Aussi grand que la barre le permet ; il rétrécit de lui-même si la place manque.
+    img {
+      display: block;
+      height: 2.875rem;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: left center;
+    }
+  }
+
+  .entete-actions {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 0.5rem;
+
+    .button {
+      height: 2.75rem;
+      padding: 0 0.875rem;
+      border-radius: var(--bulma-radius-large);
+      font-family: $medium;
+      font-size: 0.9375rem;
+      letter-spacing: 0.02em;
+    }
+
+    // « Menu » et « Fermer » occupent la même largeur : rien ne bouge au changement.
+    [data-entete-menu] { min-width: 4.75rem; }
+  }
+
+  // --- Le menu, en plein écran sous la barre ---
+  .entete-menu {
+    position: fixed;
+    top: $barre;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0.5rem 1rem 2rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--entete-menu-fond);
+    // Fermé : hors de l'écran, du clavier et des lecteurs d'écran.
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+
+    &.est-ouvert {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    a:not(.button) {
+      display: block;
+      padding: 0.75rem 0;
+      font-size: 1.0625rem;
+      line-height: 1.5rem;
+      letter-spacing: 0.02em;
+      color: var(--entete-titre);
+    }
+
+    // Le nom d'une rubrique : un titre, pas un lien (il doublait sa première page).
+    .entete-menu-rubrique {
+      display: block;
+      margin-top: 1rem;
+      font-family: v.$family-serif;
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+      color: var(--entete-titre);
+    }
+
+    // Les pages d'une rubrique, en retrait le long d'un trait.
+    ul ul {
+      margin: 0.25rem 0 0.5rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--entete-menu-trait);
+
+      a:not(.button) {
+        padding: 0.625rem 0;
+        font-size: 1rem;
+        color: var(--entete-texte);
+      }
+    }
+
+    // La page en cours : le soulignement vert du site.
+    a[aria-current] {
+      color: var(--entete-titre);
+      text-decoration: underline;
+      text-decoration-color: v.$green-light;
+      text-decoration-thickness: 0.3em;
+      text-underline-offset: -0.1em;
+      text-decoration-skip-ink: none;
+    }
+
+    .entete-menu-second {
+      margin-top: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--entete-menu-trait);
+    }
+
+    .entete-menu-rdv {
+      display: flex;
+      height: 3rem;
+      margin-top: 1.5rem;
+      border-radius: var(--bulma-radius-large);
+      font-family: $medium;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  html.entete-menu-ouvert { overflow: hidden; }
+
+  // --- Le sous-menu de la rubrique : une ligne, qui défile sur le côté ---
+  .entete-sous-menu {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background-color: var(--entete-fond);
+    border-bottom: 1px solid var(--entete-trait);
+    // Les bords s'estompent : il reste des pages à faire défiler, d'un côté ou de l'autre.
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 2rem), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 2rem), transparent);
+
+    &::-webkit-scrollbar { display: none; }
+
+    a {
+      flex: 0 0 auto;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--bulma-radius-large);
+      font-size: 0.9375rem;
+      line-height: 1.5rem;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: var(--entete-sous-menu-texte);
+    }
+
+    a[aria-current] { background-color: var(--entete-sous-menu-actif); }
+
+    // Le dernier lien peut sortir de l'estompe en fin de défilement.
+    a:last-child { margin-right: 1.5rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .entete-menu,
+    .entete-menu.est-ouvert { transition: none; transform: none; }
+  }
+
+  // Très petits écrans : des marges plus serrées, le logo rétrécit de lui-même.
+  @media (max-width: 359px) {
+    .entete-barre { gap: 0.5rem; padding: 0 0.75rem; }
+    .entete-actions .button { padding: 0 0.625rem; }
+  }
+}
+
+// --- Thème sombre : les couleurs que le site donne déjà à sa navigation ---
+@mixin entete-sombre {
+  --entete-fond: #{v.$dark-purple-heaviest};
+  --entete-trait: #{v.$dark-purple-heavy};
+  --entete-menu-fond: #{v.$dark-purple-heavy};
+  --entete-menu-trait: #{v.$purple-logo};
+  --entete-titre: #FFFFFF;
+  --entete-texte: #{v.$dark-purple};
+  --entete-sous-menu-texte: #{v.$dark-orange-lighter};
+  --entete-sous-menu-actif: #{v.$dark-orange-light};
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { @include entete-sombre; }
+}
+
+[data-theme=dark],
+.theme-dark {
+  @include entete-sombre;
+}
