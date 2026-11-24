@@ -608,8 +608,7 @@ var App = {
         home: modalElement.querySelector("#panel-home"),
         nouveauClient: modalElement.querySelector("#panel-nouveau-client"),
         dejaClient: modalElement.querySelector("#panel-deja-client"),
-        adulteChoixLieu: modalElement.querySelector("#panel-seance-adulte"),
-        breathwork: modalElement.querySelector("#panel-breathwork")
+        adulteChoixLieu: modalElement.querySelector("#panel-seance-adulte")
       };
 
       // Pile de navigation pour gérer l'historique
@@ -675,28 +674,6 @@ var App = {
         e.preventDefault();
         navigateTo("adulteChoixLieu");
       });
-
-      // Breathwork : une question avant le calendrier. La réponse ouvre le questionnaire
-      // de santé dans la bonne version après la réservation (js/reservation.js la relit) ;
-      // elle ne contient rien de personnel, sessionStorage suffit.
-      const btChoixBreathwork = modalElement.querySelector("#bt-choix-breathwork");
-      if (btChoixBreathwork && panels.breathwork) {
-        btChoixBreathwork.addEventListener("click", (e) => {
-          e.preventDefault();
-          navigateTo("breathwork");
-        });
-        ['premiere', 'suivi'].forEach((reponse) => {
-          const bouton = modalElement.querySelector(`#bt-breathwork-${reponse}`);
-          if (!bouton) return;
-          bouton.addEventListener('click', (e) => {
-            e.preventDefault();
-            try { sessionStorage.setItem('luminose_breathwork', reponse); } catch (err) { /* le questionnaire posera la question */ }
-            modal.close();
-            this._typeRdv = 'respiration';
-            Calendly.initPopupWidget({ url: this._config.urls.calendly.respiration, utm: this._getUtmParams() });
-          });
-        });
-      }
 
       // Boutons retour
       buttonsRetour.forEach(btn => {
