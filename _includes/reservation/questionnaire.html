@@ -305,12 +305,13 @@
     {% include reservation/nav.html %}
   </section>
 
-  {% comment %} PROPOSITION, à valider : entre 16 et 17 ans, l'autorisation d'un parent.
-  L'écran prévient ; Make alerte Florent d'après la date de naissance. {% endcomment %}
+  {% comment %} Entre 16 et 17 ans, l'autorisation d'un parent (décision du 24/11/2026) :
+  l'écran prévient, Make alerte Florent d'après la date de naissance, et Florent s'en
+  occupe au cas par cas — il n'existe pas de formulaire. {% endcomment %}
   <section class="res-ecran" data-ecran="autorisation" data-si-mineur>
     <h1 tabindex="-1">Autorisation parentale</h1>
     <p>Vous avez moins de 18&nbsp;ans&nbsp;: une autorisation signée de l'un de vos parents, ou de votre représentant légal, est nécessaire.</p>
-    <p>Je vous l'envoie par e-mail. Elle est à me remettre avant la séance.</p>
+    <p>Je reviens vers vous à ce sujet avant la séance.</p>
     {% include reservation/nav.html %}
   </section>
 
@@ -382,9 +383,23 @@
     <div class="res-panneau">
       <div class="res-declaration" data-requis>
         <input class="is-checkradio" id="declaration-sante" type="checkbox" name="declaration-sante" value="on">
-        <label for="declaration-sante">Je confirme par la présente que j'ai lu et compris les informations ci-dessus, que j'ai répondu à toutes les questions de manière complète et honnête et que je n'ai dissimulé aucune information. Pour autant que je sache, mon état de santé générale est bon.</label>
+        <label for="declaration-sante">Je confirme par la présente que j'ai lu et compris les informations données au début de ce questionnaire, que j'ai répondu à toutes les questions de manière complète et honnête et que je n'ai dissimulé aucune information. Pour autant que je sache, mon état de santé générale est bon.</label>
         <p class="help is-danger res-erreur">Cochez la déclaration pour continuer.</p>
       </div>
+      {% comment %} L'accord pour conserver les réponses (décision du 24/11/2026) : une case à
+      part, non cochée. Le texte déplié résume l'article 14 des CGV — PROVISOIRE, à faire
+      relire par un professionnel avant la mise en ligne. {% endcomment %}
+      <div class="res-declaration" data-requis>
+        <input class="is-checkradio" id="consentement-donnees" type="checkbox" name="consentement-donnees" value="on">
+        <label for="consentement-donnees">J'accepte que Florent Jaouali conserve mes réponses pour préparer et suivre mes séances.</label>
+        <p class="help is-danger res-erreur">Cochez cette case pour continuer.</p>
+      </div>
+    </div>
+    <p><button type="button" class="button is-white is-purple-bordered" data-deplier="notice-donnees" data-libelle-ouvert="Masquer ces précisions" aria-expanded="false" aria-controls="notice-donnees">Ce que deviennent mes données</button></p>
+    <div id="notice-donnees" class="res-deplie" hidden>
+      <p>Vos coordonnées et vos réponses servent uniquement à gérer vos rendez-vous et à suivre vos séances. Elles ne sont jamais transmises à des tiers à des fins commerciales.</p>
+      <p>Elles sont conservées au plus 3&nbsp;ans après votre dernière séance.</p>
+      <p>Vous pouvez à tout moment les consulter, les faire corriger ou les faire effacer en m'écrivant à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>. Le détail figure à l'article&nbsp;14 des <a href="/conditions-generales-de-vente.html" target="_blank" rel="noopener">conditions générales de vente</a>.</p>
     </div>
     {% if contexte == "groupe" %}
     <p class="res-avant-envoi">Votre inscription est confirmée après relecture du questionnaire. Si je dois vous déconseiller la journée, vous êtes remboursé(e) en totalité.</p>

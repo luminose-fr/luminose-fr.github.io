@@ -288,6 +288,12 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 // --- La déclaration : la case du site dans un bloc blanc, comme aujourd'hui ---
 .res-declaration { padding: 0.25rem 0.75rem; }
 
+// La déclaration, puis l'accord pour conserver les réponses : deux blocs séparés.
+.res-declaration + .res-declaration { margin-top: 0.75rem; }
+
+// Le bouton qui déplie les précisions sur les données, sous le panneau.
+.res-panneau + p { margin-top: 1rem; }
+
 // --- Les champs : ceux du site (.input, .select, .textarea en .is-purple-bordered) ---
 // Seule la mise en place est d'ici : le libellé au-dessus du champ, jamais dedans.
 .res-champ {
