@@ -1,8 +1,10 @@
 {% comment %}
   L'avertissement du questionnaire de santé, au mot près (garde-fou de CLAUDE.md) :
   seul le découpage en paragraphes est nouveau. Il a son écran, avant les questions.
-  Paramètre : objet — ce que les réponses aident à préparer, en HTML.
+  Paramètre : objet — ce que les réponses aident à préparer. Sans lui, la dernière
+  phrase n'est pas écrite (texte relu depuis le rappel de la version de suivi, qui la
+  porte déjà).
 {% endcomment %}
 <p>La thérapie par la <a href="{{ site.baseurl }}/respiration-holotropique.html" target="_blank">respiration holotropique Grof® Legacy Training</a> peut impliquer des expériences intenses accompagnées d'une forte libération émotionnelle et physique.</p>
 <p>Cette pratique n'est pas recommandée pour les femmes enceintes, ni pour les personnes souffrant de problèmes cardiovasculaires, de certains troubles psychiatriques diagnostiqués, d'une chirurgie ou d'une fracture récente, d'une maladie infectieuse aiguë, d'épilepsie, d’antécédents d’AVC, d’asthme sévère, de glaucome ou d'une <a href="https://fr.wikipedia.org/wiki/Crise_spirituelle" target="_blank">urgence/crise spirituelle</a> active.</p>
-<p>Les réponses aux questions suivantes sont destinées à m'aider à préparer {{ include.objet }} et resteront strictement confidentielles.</p>
+{% if include.objet %}<p>Les réponses aux questions suivantes sont destinées à m'aider à préparer {{ include.objet }} et resteront strictement confidentielles.</p>{% endif %}

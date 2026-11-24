@@ -108,14 +108,28 @@
   </section>
   {% endunless %}
 
-  {% comment %} ——— L'avertissement : pour une première fois seulement. Décision de Florent du
-  24/11 : qui a déjà fait du breathwork avec lui l'a lu et en a parlé avec lui ; les
-  questions de santé, elles, restent posées à tout le monde. ——— {% endcomment %}
+  {% comment %} ——— L'avertissement. En entier pour une première fois. Pour qui a déjà fait
+  du breathwork avec Florent (décision du 24/11) : un rappel en deux phrases, la phrase
+  d'origine sur la confidentialité, et le texte complet à déplier pour qui veut le relire. ——— {% endcomment %}
   <section class="res-ecran" data-ecran="avertissement" data-version="complet">
     <h1 tabindex="-1">À lire avant de répondre</h1>
     {% include reservation/avertissement.html objet=objet %}
     {% include reservation/nav.html %}
   </section>
+
+  {% unless contexte == "decouverte" %}
+  <section class="res-ecran" data-ecran="rappel" data-version="suivi">
+    <h1 tabindex="-1">Un rappel avant de répondre</h1>
+    <p>Le breathwork holotropique peut impliquer des expériences intenses, et il n'est pas recommandé dans certaines situations de santé.</p>
+    <p>Votre situation a pu changer depuis votre dernière séance&nbsp;: répondez selon ce qu'elle est aujourd'hui.</p>
+    <p>Les réponses aux questions suivantes sont destinées à m'aider à préparer {% if contexte == "seance" %}votre séance{% else %}la journée{% endif %} et resteront strictement confidentielles.</p>
+    <details class="res-details">
+      <summary>Relire le texte complet</summary>
+      {% include reservation/avertissement.html %}
+    </details>
+    {% include reservation/nav.html %}
+  </section>
+  {% endunless %}
 
   <section class="res-ecran" data-ecran="sante-1">
     <h1 tabindex="-1">Votre santé</h1>

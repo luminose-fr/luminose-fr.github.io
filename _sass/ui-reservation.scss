@@ -82,6 +82,19 @@ $vert-confirmation: #39B66B;
   text-decoration: underline;
 }
 
+// Un texte à déplier, dans le fil du texte : il se présente comme un lien.
+.res-details {
+  margin-top: 1rem;
+
+  summary {
+    color: var(--res-titre);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  > p:first-of-type { margin-top: 1rem; }
+}
+
 // --- Le parcours : UNE barre pour deux niveaux ---
 // Chaque segment est une étape du parcours (rendez-vous, questionnaire, confirmation) ;
 // celui de l'étape en cours se remplit au fil des écrans du questionnaire. Pas de
