@@ -204,20 +204,19 @@ $rayon: 8px;
   outline-offset: 2px;
 }
 
-// --- Une question de santé : le texte à gauche, Oui / Non à droite ---
+// --- Une question de santé ---
+// Sur téléphone, Oui / Non passent SOUS le texte, comme sur le site aujourd'hui : la
+// question garde toute la largeur pour se lire. À côté, la colonne de texte tombait à
+// 170px et une question s'étirait sur sept lignes. À partir de la tablette, la place
+// ne manque plus : réponses à droite, alignées en colonne.
 .res-ligne {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  column-gap: 1rem;
-  padding: 0.5rem 0;
+  padding: 0.75rem 0 0.25rem;
   border-top: 1px solid var(--res-trait);
 
   &:last-of-type { border-bottom: 1px solid var(--res-trait); }
 
   .res-ligne-reponses { white-space: nowrap; }
-  .res-ligne-reponses label:last-of-type { padding-right: 0; }
-  .res-erreur { grid-column: 1 / -1; margin: 0 0 0.25rem; }
+  .res-erreur { margin: 0 0 0.5rem; }
 }
 
 // --- Un choix dans une liste : une réponse par ligne ---
@@ -480,6 +479,17 @@ $rayon: 8px;
   .campagne-section.res-section { padding-top: 1.5rem; }
   .res-page h1 { font-size: 2.25rem; }
   .res-nav .button.is-primary { flex: 0 1 auto; min-width: 12rem; }
+
+  .res-ligne {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 1.5rem;
+    padding: 0.5rem 0;
+
+    .res-ligne-reponses label:last-of-type { padding-right: 0; }
+    .res-erreur { grid-column: 1 / -1; margin: 0 0 0.25rem; }
+  }
   .res-actions { flex-direction: row; }
   .res-inscription .button { align-self: flex-start; }
 }
