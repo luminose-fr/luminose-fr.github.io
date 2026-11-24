@@ -11,7 +11,9 @@
     journee (questionnaire seul d'une journée inscrite chez l'organisateur) ;
   - suite : la page qui suit l'envoi ;
   - questionnaire : « non » pour une journée sans breathwork (date et coordonnées seules) ;
-  - evenements : pour un groupe, les dates proposées (id, date, heure, places) ;
+  - evenements : pour un groupe, les dates proposées (id, date, heure, places). Quand la
+    page s'ouvre depuis celle d'un évènement (?evenement=<id>), cette date est retenue,
+    l'écran du choix ne s'ouvre pas et la date est rappelée au-dessus du premier titre ;
   - intitule : pour un groupe ou une journée, la phrase qui la nomme.
 
   La suite des écrans dépend des réponses (js/reservation.js) :
@@ -73,7 +75,7 @@
       <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-journee">
         {% for e in include.evenements %}
         <div class="res-choix-option">
-          <input class="is-checkradio" id="journee-{{ forloop.index }}" type="radio" name="notion_page_id" value="{{ e.id }}">
+          <input class="is-checkradio" id="journee-{{ forloop.index }}" type="radio" name="notion_page_id" value="{{ e.id }}" data-libelle="{{ e.date }}, {{ e.heure }}">
           <label for="journee-{{ forloop.index }}">{{ e.date }}<span class="res-choix-detail">{{ e.heure }}{% if e.places %} · {{ e.places }}{% endif %}</span></label>
         </div>
         {% endfor %}

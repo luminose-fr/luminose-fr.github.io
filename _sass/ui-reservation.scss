@@ -183,6 +183,13 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   .res-ecran.est-hors-champ { transform: none; }
 }
 
+// Au-dessus du premier titre : ce pour quoi on s'inscrit, quand c'est déjà choisi.
+.res-contexte {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--res-accent);
+}
+
 // Le paragraphe qui suit le titre : la consigne de l'écran.
 .res-intro { margin-bottom: 1.5rem; }
 

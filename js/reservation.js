@@ -103,6 +103,22 @@
     if (!manquantes) identite.dataset.inactif = '';
   }
 
+  // --- La journée déjà choisie sur la page d'un évènement ---
+  // Le lien « S'inscrire » de cette page porte ?evenement=<id> : la date est retenue et
+  // l'écran du choix ne s'ouvre pas. Sans ce paramètre (lien général, arrivée directe),
+  // ou si la date n'est plus proposée, le choix reste à faire.
+  var journee = form.querySelector('[data-ecran="journee"]');
+  var journeeRetenue = null;
+  if (journee && adresse.get('evenement')) {
+    journee.querySelectorAll('input[name="notion_page_id"]').forEach(function (radio) {
+      if (radio.value === adresse.get('evenement')) journeeRetenue = radio;
+    });
+    if (journeeRetenue) {
+      journeeRetenue.checked = true;
+      journee.dataset.inactif = '';
+    }
+  }
+
   // --- La version, et la suite d'écrans qui en découle ---
   function version() {
     if (form.dataset.versionFixe) return form.dataset.versionFixe;
@@ -169,6 +185,10 @@
       }
       cible.style.setProperty('--res-decalage', (sens >= 0 ? 12 : -12) + 'px');
       if (!sansEffet) cible.classList.add('est-hors-champ');
+      // Pas de « Retour » sur le premier écran de la suite, quel qu'il soit : quand la
+      // date vient de la page de l'évènement, c'est la question suivante qui ouvre.
+      var retour = cible.querySelector('[data-precedent]');
+      if (retour) retour.hidden = actifs()[0] === cible;
       cible.hidden = false;
       window.scrollTo(0, 0);
       mesurer();
@@ -232,6 +252,13 @@
   ecrans.forEach(function (ecran) { ecran.hidden = true; });
   appliquerVersion();
   var premier = actifs()[0];
+  if (journeeRetenue) {
+    // Rappelée une fois, au-dessus du premier titre : on sait pour quelle date on s'inscrit.
+    var rappel = document.createElement('p');
+    rappel.className = 'res-contexte';
+    rappel.textContent = journeeRetenue.dataset.libelle;
+    premier.insertBefore(rappel, premier.firstElementChild);
+  }
   history.replaceState({ ecran: premier.dataset.ecran }, '');
   montrer(premier, 1, true);
 })();
