@@ -5,18 +5,15 @@ section: maquette-reservation
 sitemap: false
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      <div class="res-confirmation">
-        {% include reservation/coche.html %}
-        <h1>Votre questionnaire est bien arrivé</h1>
-        <p>Il vous reste à vous inscrire auprès de l'organisateur de la journée.</p>
-        <div class="res-actions">
-          <a class="button is-primary" href="https://www.helloasso.com/" target="_blank" rel="noopener">S'inscrire sur le site de l'organisateur</a>
-        </div>
+      {% include reservation/parcours.html etape=2 libelles="Questionnaire|Inscription" %}
+      {% include reservation/coche.html %}
+      <h1>Votre questionnaire est bien arrivé</h1>
+      <p>Il vous reste à vous inscrire auprès de l'organisateur de la journée.</p>
+      <div class="res-actions">
+        <a class="button is-primary" href="https://www.helloasso.com/" target="_blank" rel="noopener">S'inscrire chez l'organisateur</a>
       </div>
     </div>
   </div>

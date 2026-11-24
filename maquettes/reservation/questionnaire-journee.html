@@ -9,14 +9,11 @@ evenements_maquette:
     heure: de 9 h 30 à 18 h 30
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      <h1>Votre questionnaire de santé</h1>
-      <p class="res-chapo">Pour la journée de breathwork holotropique du samedi 30 janvier.</p>
-      {% include reservation/questionnaire.html contexte="groupe" paiement="non" evenements=page.evenements_maquette suite="/maquettes/reservation/questionnaire-journee-confirmation.html" %}
+      {% include reservation/parcours.html etape=1 libelles="Questionnaire|Inscription" %}
+      {% include reservation/questionnaire.html contexte="journee" intitule="Pour la journée de breathwork holotropique du samedi 30 janvier." evenements=page.evenements_maquette suite="/maquettes/reservation/questionnaire-journee-confirmation.html" %}
     </div>
   </div>
 </section>

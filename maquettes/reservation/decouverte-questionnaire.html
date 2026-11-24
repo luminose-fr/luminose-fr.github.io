@@ -5,14 +5,10 @@ section: maquette-reservation
 sitemap: false
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      {% include reservation/etapes.html etape=2 libelles="Rendez-vous|Questionnaire de santé|Confirmation" %}
-      <h1>Le questionnaire de santé</h1>
-      {% include reservation/bandeau.html etiquette="Entretien réservé" %}
+      {% include reservation/parcours.html etape=2 libelles="Rendez-vous|Questionnaire|Confirmation" %}
       {% include reservation/questionnaire.html contexte="decouverte" suite="/maquettes/reservation/decouverte-entretien-reserve.html" %}
     </div>
   </div>

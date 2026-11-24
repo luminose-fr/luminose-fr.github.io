@@ -13,15 +13,11 @@ evenements_maquette:
     heure: de 9 h 30 à 18 h 30
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      {% include reservation/etapes.html etape=1 libelles="Inscription|Paiement|Confirmation" %}
-      <h1>Votre inscription</h1>
-      <p class="res-chapo">Journée de méditation, en groupe.</p>
-      {% include reservation/questionnaire.html contexte="groupe" questionnaire="non" evenements=page.evenements_maquette suite="/maquettes/reservation/paiement.html" %}
+      {% include reservation/parcours.html etape=1 libelles="Inscription|Paiement|Confirmation" %}
+      {% include reservation/questionnaire.html contexte="groupe" questionnaire="non" intitule="Journée de méditation, en groupe." evenements=page.evenements_maquette suite="/maquettes/reservation/paiement.html" %}
     </div>
   </div>
 </section>

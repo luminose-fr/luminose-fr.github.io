@@ -5,15 +5,12 @@ section: maquette-reservation
 sitemap: false
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      {% include reservation/etapes.html etape=1 libelles="Rendez-vous|Questionnaire de santé|Confirmation" %}
+      {% include reservation/parcours.html etape=1 libelles="Rendez-vous|Questionnaire|Confirmation" %}
       <h1>Choisissez le moment de l'entretien</h1>
-      <p class="res-chapo">20 minutes offertes, pour faire connaissance avant la séance.</p>
-      <p class="res-encart">Juste après, le questionnaire de santé : une dizaine de minutes, obligatoire.</p>
+      <p>20 minutes offertes, pour faire connaissance avant la séance. Juste après, le questionnaire de santé.</p>
       <div class="res-calendrier-maquette">
         <p>Ici, le calendrier Calendly.</p>
         <a class="button is-primary" href="/maquettes/reservation/decouverte-questionnaire.html?invitee_first_name=Camille&invitee_last_name=Martin&invitee_email=camille.martin%40exemple.fr&text_reminder_number=%2B33%206%2012%2034%2056%2078&event_start_time=2026-12-03T18%3A00%3A00%2B01%3A00">Simuler une réservation</a>

@@ -5,12 +5,10 @@ section: maquette-reservation
 sitemap: false
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      {% include reservation/etapes.html etape=2 libelles="Inscription|Paiement|Confirmation" %}
+      {% include reservation/parcours.html etape=2 libelles="Inscription|Paiement|Confirmation" %}
       <h1>Paiement</h1>
       <p>Ici, la page de paiement actuelle, qui ne change pas.</p>
     </div>

@@ -5,13 +5,10 @@ section: maquette-reservation
 sitemap: false
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      <h1>Votre questionnaire de santé</h1>
-      {% include reservation/bandeau.html etiquette="Séance réservée" %}
+      {% include reservation/parcours.html etape=2 libelles="Rendez-vous|Questionnaire|Confirmation" %}
       {% include reservation/questionnaire.html contexte="seance" suite="/maquettes/reservation/confirmation-seance.html" %}
     </div>
   </div>

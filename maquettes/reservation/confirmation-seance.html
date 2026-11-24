@@ -1,26 +1,24 @@
 ---
 layout: campagne
-title: "Maquette — Séance réservée - Luminose"
+title: "Maquette — Tout est prêt - Luminose"
 section: maquette-reservation
 sitemap: false
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section res-section">
   <div class="campagne-conteneur">
     <div class="res-page">
-      <p class="res-maquette">Maquette : données fictives, rien n'est envoyé. <a href="/maquettes/reservation/">Toutes les maquettes</a></p>
-
-      <div class="res-confirmation">
-        {% include reservation/coche.html %}
-        <h1>Votre séance est réservée</h1>
-        <p>Votre questionnaire de santé est bien arrivé. Vous allez recevoir un e-mail de confirmation, avec la date, l'heure et l'adresse.</p>
-        <h2 class="res-sous-titre">La suite</h2>
-        <ol class="res-suite">
-          <li>Je relis votre questionnaire avant la séance. Si une réponse demande que nous en parlions, je vous appelle.</li>
-          <li>Le paiement se fait au moins 3 jours avant la séance.</li>
-          <li>Une séance d'intégration de 30 minutes suit, une à deux semaines après.</li>
-        </ol>
-        <p><a class="campagne-lien-secondaire" href="{{ site.baseurl }}/">Retour au site</a></p>
+      {% include reservation/parcours.html etape=3 libelles="Rendez-vous|Questionnaire|Confirmation" avancement=100 %}
+      {% include reservation/coche.html %}
+      <h1>Tout est prêt</h1>
+      <p>Votre questionnaire de santé est bien arrivé. Vous allez recevoir un e-mail de confirmation, avec la date, l'heure et l'adresse.</p>
+      <ol class="res-suite">
+        <li>Je relis votre questionnaire avant la séance. Si une réponse demande que nous en parlions, je vous appelle.</li>
+        <li>Le paiement se fait au moins 3 jours avant la séance.</li>
+        <li>Une séance d'intégration de 30 minutes suit, une à deux semaines après.</li>
+      </ol>
+      <div class="res-actions">
+        <a class="button is-purple-bordered" href="{{ site.baseurl }}/">Retour au site</a>
       </div>
     </div>
   </div>
