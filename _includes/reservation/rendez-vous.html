@@ -1,0 +1,232 @@
+{% comment %}
+  Prendre un rendez-vous, sans Calendly : le jour, l'heure, les coordonnées, puis une
+  vérification avant de confirmer. Un sujet par écran, comme le questionnaire, et le
+  même moteur d'écrans (js/reservation.js) ; js/reservation-rdv.js y ajoute les créneaux.
+
+  Paramètres :
+  - type : rencontre, rencontre_breathwork, seance, seance_distance, seance_enfant,
+    seance_breathwork — la clé du type dans gestion ;
+  - intro : la phrase qui dit ce qu'on réserve, sous le premier titre ;
+  - suite : la page qui suit une réservation réussie (le questionnaire, ou la confirmation) ;
+  - transmettre : « oui » quand la suite est le questionnaire, qui ne redemande pas l'identité.
+
+  MAQUETTE : la durée, le lieu, le tarif, les conditions et les questions sont écrits ici
+  en dur. À l'intégration, ils viennent de gestion (GET /v1/reservation/types), qui en
+  est la seule source ; le site n'envoie jamais de montant.
+
+  Ce que la page n'apprend à personne : elle ne dit jamais si une adresse e-mail est
+  connue. Elle ne montre que des créneaux libres.
+{% endcomment %}
+{% assign type = include.type | default: "seance" %}
+{% assign adresse_seance = "2 avenue de Verdun, 31290 Villefranche-de-Lauragais" %}
+{% assign payant = true %}
+{% assign liste_attente = false %}
+{% assign pour_qui = "vous" %}
+{% case type %}
+  {% when "rencontre" %}
+    {% assign payant = false %}
+    {% assign duree = "20 minutes" %}
+    {% assign lieu = "En visio ou par téléphone, selon votre choix" %}
+    {% assign tarif = "Offert" %}
+  {% when "rencontre_breathwork" %}
+    {% assign payant = false %}
+    {% assign duree = "20 minutes" %}
+    {% assign lieu = "En visio, avec Google Meet. Le lien est dans l'e-mail de confirmation." %}
+    {% assign tarif = "Offert" %}
+  {% when "seance_distance" %}
+    {% assign liste_attente = true %}
+    {% assign duree = "1 h 30" %}
+    {% assign lieu = "En visio, avec Google Meet. Le lien est dans l'e-mail de confirmation." %}
+    {% assign tarif = "80 €" %}
+  {% when "seance_enfant" %}
+    {% assign pour_qui = "enfant" %}
+    {% assign duree = "1 h" %}
+    {% assign lieu = adresse_seance %}
+    {% assign tarif = "60 €" %}
+  {% when "seance_breathwork" %}
+    {% assign duree = "1 h 45" %}
+    {% assign lieu = adresse_seance %}
+    {% assign tarif = "140 €" %}
+  {% else %}
+    {% assign liste_attente = true %}
+    {% assign duree = "1 h 30" %}
+    {% assign lieu = adresse_seance %}
+    {% assign tarif = "80 €" %}
+{% endcase %}
+
+<form class="res-formulaire" method="post" action="" onsubmit="return false" data-questionnaire data-contexte="rendez-vous" data-version-fixe="aucune" data-rendez-vous data-type="{{ type }}" data-suite="{{ include.suite }}"{% if include.transmettre == "oui" %} data-transmettre-identite="oui"{% endif %} novalidate>
+  <p class="is-sr-only" aria-live="polite" data-annonce></p>
+  {% comment %} La clé de l'envoi : un double appui ou une relance ne réserve qu'une fois. {% endcomment %}
+  <input type="hidden" name="envoi_id" value="">
+  <input type="hidden" name="type" value="{{ type }}">
+
+  {% comment %} ——— Le jour ——— {% endcomment %}
+  <section class="res-ecran" data-ecran="jour">
+    {% comment %} Sans créneau à proposer (aucun de libre, ou la réservation qui ne répond
+    pas), le titre ne demande plus de choisir un jour. {% endcomment %}
+    <h1 id="t-jour" tabindex="-1" data-rdv-titre data-titre="Choisissez un jour" data-titre-sans-creneau="Prendre rendez-vous">Choisissez un jour</h1>
+    <p class="res-intro">{{ include.intro }}</p>
+
+    <p class="res-etat" data-rdv-attente role="status">Recherche des créneaux libres…</p>
+
+    <div data-rdv-jours hidden>
+      <div class="res-panneau">
+        <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-jour" data-rdv-liste-jours>
+          <p class="help is-danger res-erreur" data-defaut="Choisissez un jour.">Choisissez un jour.</p>
+        </div>
+      </div>
+      <p class="res-plus"><button type="button" class="button is-white is-purple-bordered" data-rdv-plus>Voir plus de dates</button></p>
+      {% if liste_attente %}
+      <p class="help">Les premiers créneaux sont dans trois semaines. À la dernière étape, vous pourrez demander à être prévenu(e) si une place se libère plus tôt.</p>
+      {% endif %}
+      {% include reservation/nav.html retour="non" %}
+    </div>
+
+    {% comment %} Aucun créneau dans la fenêtre : on le dit, et on donne le moyen de joindre Florent. {% endcomment %}
+    <div class="res-etat" data-rdv-vide hidden>
+      <p>Aucun créneau n'est libre pour le moment.</p>
+      <p>Appelez-moi au <a href="tel:+33637332655">06&nbsp;37&nbsp;33&nbsp;26&nbsp;55</a>, ou écrivez-moi à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>&nbsp;: nous trouverons un moment.</p>
+    </div>
+
+    {% comment %} La réservation ne répond pas : le téléphone, écrit dans la page — elle doit
+    pouvoir l'afficher sans rien demander à personne. {% endcomment %}
+    <div class="res-etat" data-rdv-panne role="alert" hidden>
+      <p class="help is-danger">La réservation en ligne ne répond pas pour le moment.</p>
+      <p>Appelez-moi au <a href="tel:+33637332655">06&nbsp;37&nbsp;33&nbsp;26&nbsp;55</a>, ou écrivez-moi à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>&nbsp;: nous fixerons le rendez-vous ensemble.</p>
+      <p><button type="button" class="button is-white is-purple-bordered" data-rdv-reessayer>Réessayer</button></p>
+    </div>
+  </section>
+
+  {% comment %} ——— L'heure ——— {% endcomment %}
+  <section class="res-ecran" data-ecran="heure">
+    <h1 id="t-heure" tabindex="-1">Choisissez une heure</h1>
+    <p class="res-date" data-rdv-jour-choisi></p>
+    <div class="res-panneau">
+      <div class="res-heures" data-requis role="radiogroup" aria-labelledby="t-heure" data-rdv-liste-heures>
+        <p class="help is-danger res-erreur" data-rdv-erreur-heure data-defaut="Choisissez une heure.">Choisissez une heure.</p>
+      </div>
+    </div>
+    <p class="help" data-rdv-fuseau hidden>Les heures sont celles de Paris.</p>
+    {% include reservation/nav.html %}
+  </section>
+
+  {% comment %} ——— Les coordonnées ——— {% endcomment %}
+  <section class="res-ecran" data-ecran="identite">
+    <h1 tabindex="-1">{% if pour_qui == "enfant" %}L'enfant et son parent{% else %}Vos coordonnées{% endif %}</h1>
+    <div class="res-panneau">
+      <div class="res-champ" data-requis>
+        <label for="rdv-prenom">{% if pour_qui == "enfant" %}Prénom de l'enfant{% else %}Prénom{% endif %}</label>
+        <input class="input is-purple-bordered" id="rdv-prenom" type="text" name="identite[prenom]"{% unless pour_qui == "enfant" %} autocomplete="given-name"{% endunless %}>
+        <p class="help is-danger res-erreur">Indiquez {% if pour_qui == "enfant" %}le prénom de l'enfant{% else %}votre prénom{% endif %}.</p>
+      </div>
+      <div class="res-champ" data-requis>
+        <label for="rdv-nom">{% if pour_qui == "enfant" %}Nom de l'enfant{% else %}Nom{% endif %}</label>
+        <input class="input is-purple-bordered" id="rdv-nom" type="text" name="identite[nom]"{% unless pour_qui == "enfant" %} autocomplete="family-name"{% endunless %}>
+        <p class="help is-danger res-erreur">Indiquez {% if pour_qui == "enfant" %}le nom de l'enfant{% else %}votre nom{% endif %}.</p>
+      </div>
+      {% if pour_qui == "enfant" %}
+      <div class="res-champ res-champ-court" data-requis>
+        <label for="rdv-age">Âge de l'enfant</label>
+        <input class="input is-purple-bordered" id="rdv-age" type="text" inputmode="numeric" name="reponses[age-enfant]">
+        <p class="help is-danger res-erreur">Indiquez l'âge de l'enfant.</p>
+      </div>
+      <div class="res-champ" data-requis>
+        <label for="rdv-parent">Prénom et nom du parent</label>
+        <input class="input is-purple-bordered" id="rdv-parent" type="text" name="reponses[parent]" autocomplete="name">
+        <p class="help is-danger res-erreur">Indiquez le prénom et le nom du parent.</p>
+      </div>
+      {% endif %}
+      <div class="res-champ" data-requis>
+        <label for="rdv-email">{% if pour_qui == "enfant" %}E-mail du parent{% else %}E-mail{% endif %}</label>
+        <input class="input is-purple-bordered" id="rdv-email" type="email" name="identite[email]" autocomplete="email" data-format="email">
+        <p class="help is-danger res-erreur">Indiquez une adresse e-mail valide.</p>
+      </div>
+      <div class="res-champ" data-requis>
+        <label for="rdv-telephone">{% if pour_qui == "enfant" %}Téléphone portable du parent{% else %}Téléphone portable{% endif %}</label>
+        <p class="help" id="rdv-telephone-aide">Pour le rappel par SMS, deux jours avant.</p>
+        <input class="input is-purple-bordered" id="rdv-telephone" type="tel" name="identite[telephone]" autocomplete="tel" data-format="telephone" aria-describedby="rdv-telephone-aide">
+        <p class="help is-danger res-erreur">Indiquez un numéro de téléphone valide.</p>
+      </div>
+    </div>
+    {% if type == "rencontre" %}
+    <div class="res-panneau res-panneau-suite">
+      <p class="res-intro" id="t-mode">Comment préférez-vous échanger&nbsp;?</p>
+      <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-mode">
+        <div class="res-choix-option">
+          <input class="is-checkradio" id="rdv-mode-visio" type="radio" name="mode" value="visio">
+          <label for="rdv-mode-visio">En visio<span class="res-choix-detail">Avec Google Meet. Le lien est dans l'e-mail de confirmation.</span></label>
+        </div>
+        <div class="res-choix-option">
+          <input class="is-checkradio" id="rdv-mode-appel" type="radio" name="mode" value="appel">
+          <label for="rdv-mode-appel">Par téléphone<span class="res-choix-detail">Je vous appelle au numéro indiqué.</span></label>
+        </div>
+        <p class="help is-danger res-erreur">Choisissez la visio ou le téléphone.</p>
+      </div>
+    </div>
+    {% endif %}
+    {% include reservation/nav.html %}
+  </section>
+
+  {% if type == "rencontre" %}
+  {% comment %} ——— Les trois questions de la rencontre, mot pour mot celles d'aujourd'hui ——— {% endcomment %}
+  <section class="res-ecran" data-ecran="questions">
+    <h1 tabindex="-1">Avant notre échange</h1>
+    <div class="res-panneau">
+      <div class="res-champ" data-requis>
+        <label for="rdv-q1">Qu'est-ce qui vous amène à vouloir entamer un travail thérapeutique en ce moment&nbsp;?</label>
+        <textarea class="textarea is-purple-bordered" id="rdv-q1" name="reponses[1]" rows="4"></textarea>
+        <p class="help is-danger res-erreur">Dites-m'en quelques mots.</p>
+      </div>
+      <div class="res-champ" data-requis>
+        <label for="rdv-q2">Avez-vous déjà exploré d'autres approches et qu'attendez-vous de différent dans notre future collaboration&nbsp;?</label>
+        <textarea class="textarea is-purple-bordered" id="rdv-q2" name="reponses[2]" rows="4"></textarea>
+        <p class="help is-danger res-erreur">Dites-m'en quelques mots.</p>
+      </div>
+    </div>
+    <div class="res-panneau res-panneau-suite">
+      <p class="res-intro" id="t-q3">Le travail que je propose demande un engagement sur plusieurs séances (cycle de 5 minimum). Est-ce une démarche qui vous semble juste pour vous aujourd'hui&nbsp;?</p>
+      <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-q3">
+        <div class="res-choix-option">
+          <input class="is-checkradio" id="rdv-q3-oui" type="radio" name="reponses[3]" value="Oui">
+          <label for="rdv-q3-oui">Oui</label>
+        </div>
+        <div class="res-choix-option">
+          <input class="is-checkradio" id="rdv-q3-discuter" type="radio" name="reponses[3]" value="J'ai besoin d'en discuter">
+          <label for="rdv-q3-discuter">J'ai besoin d'en discuter</label>
+        </div>
+        <p class="help is-danger res-erreur">Choisissez une réponse.</p>
+      </div>
+    </div>
+    {% include reservation/nav.html %}
+  </section>
+  {% endif %}
+
+  {% comment %} ——— Vérifier, accepter, confirmer ——— {% endcomment %}
+  <section class="res-ecran" data-ecran="recapitulatif">
+    <h1 tabindex="-1">Vérifiez et confirmez</h1>
+    <div class="res-panneau">
+      <dl class="res-recap">
+        <div><dt>Rendez-vous</dt><dd data-rdv-recap-quand></dd></div>
+        <div><dt>Durée</dt><dd>{{ duree }}{% if type == "seance_breathwork" %}<span class="res-recap-detail">Une séance d'intégration de 30&nbsp;minutes suit, une à deux semaines après.</span>{% endif %}</dd></div>
+        <div><dt>Lieu</dt><dd>{{ lieu }}</dd></div>
+        <div><dt>Tarif</dt><dd>{{ tarif }}{% if payant %}<span class="res-recap-detail">À régler au moins 3&nbsp;jours avant la séance.</span>{% endif %}</dd></div>
+      </dl>
+      {% if payant %}
+      <div class="res-declaration" data-requis>
+        <input class="is-checkradio" id="rdv-conditions" type="checkbox" name="conditions" value="on">
+        <label for="rdv-conditions">Toute séance oubliée, déplacée ou annulée moins de 48h avant (sauf en cas de force majeure) est due en totalité.</label>
+        <p class="help is-danger res-erreur">Cochez cette case pour confirmer.</p>
+      </div>
+      {% endif %}
+      {% if liste_attente %}
+      <div class="res-declaration">
+        <input class="is-checkradio" id="rdv-attente" type="checkbox" name="liste_attente" value="on">
+        <label for="rdv-attente">Je souhaite être informé(e) si un créneau se libère avant mon rendez-vous.</label>
+      </div>
+      {% endif %}
+    </div>
+    {% include reservation/envoi.html objet="rendez-vous" %}
+    {% include reservation/nav.html envoi="oui" libelle="Confirmer le rendez-vous" %}
+    <p class="help">Vous recevrez une confirmation par e-mail. Pour déplacer ou annuler un rendez-vous, il suffit de m'écrire ou de m'appeler.</p>
+  </section>
+</form>

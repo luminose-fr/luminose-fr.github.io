@@ -410,22 +410,54 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 // Fin de parcours : les boutons s'empilent, le principal d'abord.
 .res-actions { flex-direction: column; }
 
-// --- Calendly : réserve sa place dans la maquette (n'ira pas en ligne) ---
-.res-calendrier-maquette {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  min-height: 20rem;
-  margin-top: 1.5rem;
-  padding: 1.5rem;
-  border: 1px dashed var(--res-accent);
-  border-radius: var(--bulma-radius-large);
-  text-align: center;
+// --- Prendre un rendez-vous : les jours, les heures, le récapitulatif ---
+// Rien de neuf à dessiner : un jour, une heure, c'est un radio du site dans un bloc
+// .res-choix, comme le choix d'une journée. Ne vivent ici que la mise en place : la
+// grille des heures, les lignes du récapitulatif, les marges des états d'attente.
+.res-etat,
+.res-plus { margin-top: 1.5rem; }
+.res-plus + .help { margin-top: 1rem; }
+.res-panneau-suite { margin-top: 1rem; }
+
+.res-heures > .res-erreur { margin: 0.75rem 0 0; }
+.res-heures-moment {
+  margin-bottom: 0.5rem;
+  color: var(--res-titre);
+}
+.res-choix + .res-heures-moment { margin-top: 1rem; }
+
+// Les heures sur deux colonnes : le trait pâle qui sépare les lignes d'un .res-choix
+// devient un contour de case, pour qu'une case vide reste blanche.
+.res-choix-grille {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  .res-choix-option {
+    box-shadow: 0 0 0 1px var(--res-fond-doux);
+    & + .res-choix-option { border-top: 0; }
+  }
 }
 
-// --- Tablette et ordinateur ---
+.res-recap {
+  margin: 0 0 0.75rem;
+  border-radius: var(--bulma-radius-large);
+  background-color: var(--res-fond);
+  overflow: hidden;
+  > div {
+    padding: 0.625rem 0.75rem;
+    & + div { border-top: 2px solid var(--res-fond-doux); }
+  }
+  dt { font-size: 0.875rem; }
+  dd {
+    margin: 0;
+    color: var(--res-titre);
+  }
+  .res-recap-detail {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--res-texte);
+  }
+}
+
 @include mixins.tablet {
   .campagne-section.res-section { padding-top: 1.5rem; }
   .res-nav .button.is-primary { flex: 0 1 auto; min-width: 12rem; }
@@ -443,6 +475,14 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
   }
 
   .res-actions { flex-direction: row; }
+
+  .res-choix-grille { grid-template-columns: repeat(3, 1fr); }
+  .res-recap > div {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    column-gap: 1rem;
+    align-items: baseline;
+  }
 }
 
 // --- Thème sombre : les couleurs que le site donne à .light-bg et .white-bg ---

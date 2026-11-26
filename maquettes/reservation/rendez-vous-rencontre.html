@@ -1,0 +1,17 @@
+---
+layout: campagne
+title: "Maquette — Rendez-vous, premier échange - Luminose"
+section: maquette-reservation
+sitemap: false
+---
+
+<section class="campagne-section campagne-etape res-section">
+  <div class="campagne-conteneur">
+    <div class="res-page">
+      {% include reservation/parcours.html etape=1 libelles="Rendez-vous|Confirmation" %}
+      {% include reservation/rendez-vous.html type="rencontre" intro="Un échange de 20&nbsp;minutes, offert, pour faire connaissance et vérifier que je peux vous aider." suite="/maquettes/reservation/confirmation-rendez-vous.html" %}
+    </div>
+  </div>
+</section>
+<script defer src="{{ site.baseurl }}/js/reservation-rdv.js"></script>
+<script defer src="{{ site.baseurl }}/js/reservation.js"></script>

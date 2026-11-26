@@ -5,9 +5,19 @@
   - l'envoi qui échoue : les réponses restent en place, le bouton devient « Réessayer »,
     et l'adresse de Florent sert de recours, comme dans la fenêtre d'erreur du
     questionnaire actuel.
+  Paramètre : objet (« rendez-vous » pour une réservation : on dit que rien n'est
+  réservé, et le recours est le téléphone).
 {% endcomment %}
+{% if include.objet == "rendez-vous" %}
+<p class="help res-envoi" data-envoi-lent role="status" hidden>La réservation prend plus de temps que prévu. Gardez cette page ouverte.</p>
+<div class="res-envoi" data-envoi-erreur role="alert" tabindex="-1" hidden>
+  <p class="help is-danger">La réservation n'a pas abouti&nbsp;: votre rendez-vous n'est pas enregistré.</p>
+  <p>Vous pouvez essayer une nouvelle fois. Si le problème persiste, appelez-moi au <a href="tel:+33637332655">06&nbsp;37&nbsp;33&nbsp;26&nbsp;55</a> ou écrivez-moi à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>.</p>
+</div>
+{% else %}
 <p class="help res-envoi" data-envoi-lent role="status" hidden>L'envoi prend plus de temps que prévu. Gardez cette page ouverte.</p>
 <div class="res-envoi" data-envoi-erreur role="alert" tabindex="-1" hidden>
   <p class="help is-danger">L'envoi n'a pas abouti.</p>
   <p>Vos réponses sont toujours là&nbsp;: vous pouvez essayer une nouvelle fois. Si le problème persiste, écrivez-moi à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>.</p>
 </div>
+{% endif %}

@@ -9,12 +9,9 @@ sitemap: false
   <div class="campagne-conteneur">
     <div class="res-page">
       {% include reservation/parcours.html etape=1 libelles="Rendez-vous|Questionnaire|Confirmation" %}
-      <h1>Choisissez le moment de l'entretien</h1>
-      <p>20 minutes offertes, pour faire connaissance avant la séance. Juste après, le questionnaire de santé.</p>
-      <div class="res-calendrier-maquette">
-        <p>Ici, le calendrier Calendly.</p>
-        <a class="button is-primary" href="/maquettes/reservation/decouverte-questionnaire.html?invitee_uuid=maquette-entretien-1&invitee_first_name=Camille&invitee_last_name=Martin&invitee_email=camille.martin%40exemple.fr&text_reminder_number=%2B33%206%2012%2034%2056%2078&event_start_time=2026-12-03T18%3A00%3A00%2B01%3A00">Simuler une réservation</a>
-      </div>
+      {% include reservation/rendez-vous.html type="rencontre_breathwork" intro="20&nbsp;minutes offertes, en visio, pour faire connaissance avant la séance. Juste après la réservation, le questionnaire de santé." suite="/maquettes/reservation/decouverte-questionnaire.html" transmettre="oui" %}
     </div>
   </div>
 </section>
+<script defer src="{{ site.baseurl }}/js/reservation-rdv.js"></script>
+<script defer src="{{ site.baseurl }}/js/reservation.js"></script>

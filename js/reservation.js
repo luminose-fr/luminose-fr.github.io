@@ -514,9 +514,9 @@
     bouton.classList.add('is-loading');
     if (echec) echec.hidden = true;
 
-    // MAQUETTE : rien n'est envoyé. ?simuler=lent et ?simuler=echec montrent les deux
-    // états à prévoir ; l'intégration remplacera ce bloc par l'appel au webhook, avec
-    // les mêmes seuils (message d'attente après 8 s, échec déclaré après 30 s).
+    // MAQUETTE : rien n'est envoyé. ?simuler=lent, ?simuler=echec et ?simuler=pris
+    // montrent les états à prévoir ; l'intégration remplacera ce bloc par l'appel à
+    // gestion, avec les mêmes seuils (message d'attente après 8 s, échec déclaré après 30 s).
     var mode = adresse.get('simuler');
     var attente = setTimeout(function () { if (lent) lent.hidden = false; }, mode === 'lent' ? 1500 : 8000);
     setTimeout(function () {
@@ -530,10 +530,29 @@
         if (echec) { echec.hidden = false; echec.focus(); }
         return;
       }
+      // Un refus (le créneau vient d'être pris) n'est pas une panne : la page qui porte
+      // le formulaire dit pourquoi (res:refus) et retire ce qui n'est plus valable ; on
+      // revient alors au premier écran qui n'est plus en règle, réponses conservées.
+      if (mode === 'pris') {
+        enEnvoi = false;
+        bouton.disabled = false;
+        bouton.classList.remove('is-loading');
+        form.dispatchEvent(new CustomEvent('res:refus', { detail: { motif: 'creneau_pris' } }));
+        var aReprendre = premierEcranEnDefaut();
+        if (aReprendre) {
+          montrer(aReprendre, -1, true);
+          noter();
+          verifier(aReprendre, true);
+        }
+        return;
+      }
+      // La page peut compléter l'adresse de la suite (res:envoye) avant qu'on n'y parte.
+      var depart = { suite: form.dataset.suite };
+      form.dispatchEvent(new CustomEvent('res:envoye', { detail: depart }));
       envoye = true;
       clearTimeout(enregistrementPrevu);
       oublier();
-      location.href = form.dataset.suite;
+      location.href = depart.suite;
     }, mode === 'lent' ? 5000 : mode === 'echec' ? 1200 : 400);
   }
 
