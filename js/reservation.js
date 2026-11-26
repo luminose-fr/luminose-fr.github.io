@@ -455,8 +455,10 @@
   // (version, mise à jour) : on ne se fie donc jamais au nom d'écran d'une vieille entrée.
   var rang = 0;
 
-  function noter() {
-    history.replaceState({ ecran: courant.dataset.ecran, rang: rang }, '');
+  // « etat » : ce que l'entrée portait déjà et qu'il faut lui laisser (la vue ouverte à
+  // l'intérieur d'un écran — le jour choisi, sur téléphone).
+  function noter(etat) {
+    history.replaceState(Object.assign({}, etat, { ecran: courant.dataset.ecran, rang: rang }), '');
   }
 
   function avancer(parLHistorique) {
@@ -483,10 +485,22 @@
 
   window.addEventListener('popstate', function (e) {
     if (!e.state || typeof e.state.rang !== 'number' || enEnvoi) return;
+    // Une entrée de même rang est une vue à l'intérieur de l'écran : il ne change pas,
+    // et la page qui a posé cette entrée s'en occupe.
+    if (e.state.rang === rang) return;
     var versLAvant = e.state.rang > rang;
     rang = e.state.rang;
     if (versLAvant) avancer(true);
     else reculer();
+    noter(e.state);
+  });
+
+  // La page qui porte le formulaire peut ramener à un écran nommé (res:aller) : ce qui
+  // y avait été choisi n'est plus valable. Les réponses restent en place.
+  form.addEventListener('res:aller', function (e) {
+    var cible = ecranNomme(e.detail.ecran).filter(function (x) { return estActif(x); })[0];
+    if (!cible || cible === courant || enEnvoi) return;
+    montrer(cible, -1, true);
     noter();
   });
 
@@ -629,5 +643,5 @@
   }
   if (history.state && typeof history.state.rang === 'number') rang = history.state.rang;
   montrer(depart, 1, true);
-  noter();
+  noter(history.state);
 })();

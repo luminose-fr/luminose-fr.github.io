@@ -16,6 +16,11 @@
 // que le site n'a pas — la barre du parcours, l'enchaînement des écrans, le panneau
 // d'un écran (qui reprend le fond pâle et les blocs blancs de .light-bg / .white-bg).
 // Les actions sont des boutons ; les liens restent au texte courant.
+//
+// UNE EXCEPTION, décidée par Florent le 26/11/2026 : le choix du créneau reprend le
+// modèle de Calendly — un calendrier du mois, puis les heures du jour. Le calendrier
+// est donc un quatrième élément propre à cette feuille ; il se dessine avec les
+// couleurs du panneau, et les heures restent des boutons du site.
 // ============================================
 @use "ui-variables" as v;
 @use "bulma-1.0.4/sass/utilities/mixins";
@@ -365,30 +370,35 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 
 .res-nav {
   .button.is-primary { flex: 1 1 auto; }
+  .res-nav-retour { flex: 0 0 auto; }
+}
 
-  // La flèche du bouton « Retour » de la modale de rendez-vous (ui-shared).
-  .res-nav-retour {
-    flex: 0 0 auto;
-    position: relative;
-    padding-left: 1.6rem;
+// La flèche du site (police « luminose »), celle du bouton « Retour » de la modale de
+// rendez-vous (ui-shared) : elle pointe à droite, on la retourne pour revenir.
+@mixin fleche-du-site {
+  content: '\0042';
+  font-size: var(--bulma-size-7);
+  font-family: 'luminose';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    &::before {
-      content: '\0042';
-      rotate: 180deg;
-      position: absolute;
-      display: flex;
-      align-items: center;
-      left: 0.5rem;
-      top: 0;
-      bottom: 0;
-      font-size: var(--bulma-size-7);
-      font-family: 'luminose';
-      font-style: normal;
-      font-weight: normal;
-      line-height: 1;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+.res-nav-retour {
+  position: relative;
+  padding-left: 1.6rem;
+
+  &::before {
+    @include fleche-du-site;
+    rotate: 180deg;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
   }
 }
 
@@ -410,31 +420,168 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 // Fin de parcours : les boutons s'empilent, le principal d'abord.
 .res-actions { flex-direction: column; }
 
-// --- Prendre un rendez-vous : les jours, les heures, le récapitulatif ---
-// Rien de neuf à dessiner : un jour, une heure, c'est un radio du site dans un bloc
-// .res-choix, comme le choix d'une journée. Ne vivent ici que la mise en place : la
-// grille des heures, les lignes du récapitulatif, les marges des états d'attente.
-.res-etat,
-.res-plus { margin-top: 1.5rem; }
-.res-plus + .help { margin-top: 1rem; }
+// --- Prendre un rendez-vous : le calendrier, les heures, le récapitulatif ---
+// Le modèle de Calendly : les jours libres ressortent dans le mois ; un jour choisi
+// montre ses heures ; une heure choisie fait apparaître « Suivant » à côté d'elle.
+// Sur téléphone, les heures prennent la place du calendrier (data-vue, posé par
+// js/reservation-rdv.js) ; à partir de la tablette, elles viennent à sa droite.
+.res-etat { margin-top: 1.5rem; }
 .res-panneau-suite { margin-top: 1rem; }
 
-.res-heures > .res-erreur { margin: 0.75rem 0 0; }
-.res-heures-moment {
-  margin-bottom: 0.5rem;
+// Le mois et ses deux flèches.
+.res-cal-tete {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.res-cal-mois {
+  flex: 1 1 auto;
+  padding-left: 0.25rem;
   color: var(--res-titre);
 }
-.res-choix + .res-heures-moment { margin-top: 1rem; }
 
-// Les heures sur deux colonnes : le trait pâle qui sépare les lignes d'un .res-choix
-// devient un contour de case, pour qu'une case vide reste blanche.
-.res-choix-grille {
+.res-page .button.res-cal-fleche {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+
+  &::before { @include fleche-du-site; }
+  &.res-cal-fleche-avant::before { rotate: 180deg; }
+}
+
+// Sept colonnes, du lundi au dimanche.
+.res-cal-semaine,
+.res-cal-jours {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  .res-choix-option {
-    box-shadow: 0 0 0 1px var(--res-fond-doux);
-    & + .res-choix-option { border-top: 0; }
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.res-cal-semaine {
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+// Un jour : un rond. Sans créneau, il n'est qu'un repère ; libre, il ressort en blanc
+// sur le fond pâle, comme tout ce qui se remplit dans un panneau ; choisi, il se remplit.
+.res-cal-jour {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 3rem;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  font: inherit;
+  line-height: 1;
+  color: var(--res-texte);
+}
+
+span.res-cal-jour { opacity: 0.5; }
+
+button.res-cal-jour {
+  background-color: var(--res-fond);
+  font-weight: bold;
+  color: var(--res-titre);
+  cursor: pointer;
+
+  // Au doigt, le survol resterait accroché au jour qu'on vient de toucher.
+  @media (hover: hover) {
+    &:hover { box-shadow: inset 0 0 0 2px var(--res-accent); }
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--res-titre);
+    outline-offset: 2px;
+  }
+
+  &[aria-pressed="true"] {
+    background-color: var(--res-titre);
+    color: var(--res-page);
+  }
+}
+
+// Aujourd'hui : un point sous le chiffre.
+.res-cal-jour.est-aujourdhui::after {
+  content: '';
+  position: absolute;
+  bottom: 14%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.res-cal .help { margin-top: 0.75rem; }
+
+// Les heures du jour choisi : une par ligne, un bouton du site chacune.
+.res-heures-retour { margin-bottom: 0.75rem; }
+
+.res-heures-jour {
+  margin: 0 0 0.75rem;
+  color: var(--res-titre);
+
+  &:focus { outline: none; }
+}
+
+.res-heures-liste > .res-erreur { margin: 0 0 0.75rem; }
+
+.res-heure {
+  display: flex;
+  gap: 0.5rem;
+
+  & + & { margin-top: 0.5rem; }
+
+  .button {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 2.75rem;
+  }
+
+  // L'heure est un radio du formulaire, et son libellé un bouton du site. Le site
+  // n'habille en blanc à bord violet que ses <a> et ses <button> : mêmes valeurs ici.
+  .res-heure-bouton {
+    border: 2px solid var(--res-trait);
+    box-shadow: none;
+    background-color: var(--res-fond);
+    color: var(--res-titre);
+
+    &:hover { border-color: var(--res-accent); }
+  }
+
+  // « Suivant » n'existe qu'à côté de l'heure choisie, qui se remplit comme le jour.
+  .res-heure-suivant { display: none; }
+  input:checked ~ .res-heure-suivant { display: inline-flex; }
+
+  input:checked + .res-heure-bouton {
+    border-color: var(--res-titre);
+    background-color: var(--res-titre);
+    color: var(--res-page);
+  }
+
+  input:focus-visible + .res-heure-bouton {
+    outline: 2px solid var(--res-titre);
+    outline-offset: 2px;
+  }
+}
+
+// Sur téléphone, un seul des deux à la fois ; et devant les heures, les phrases
+// d'introduction ont déjà été lues.
+@include mixins.mobile {
+  .res-creneau[data-vue="jour"] .res-heures,
+  .res-creneau[data-vue="heure"] .res-cal,
+  .res-creneau[data-vue="heure"] .res-intro { display: none; }
 }
 
 .res-recap {
@@ -476,7 +623,17 @@ body:has(.res-parcours-traits) { overflow-x: clip; }
 
   .res-actions { flex-direction: row; }
 
-  .res-choix-grille { grid-template-columns: repeat(3, 1fr); }
+  // Le calendrier et les heures, côte à côte. La colonne des heures est là dès le
+  // départ : rien ne bouge quand un jour est choisi.
+  .res-creneau-choix {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 13rem;
+    gap: 0.75rem;
+    align-items: start;
+
+    .res-panneau { padding: 1rem; }
+  }
+  .res-heures-retour { display: none; }
   .res-recap > div {
     display: grid;
     grid-template-columns: 8rem 1fr;

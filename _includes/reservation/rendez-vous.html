@@ -1,7 +1,7 @@
 {% comment %}
-  Prendre un rendez-vous, sans Calendly : le jour, l'heure, les coordonnées, puis une
+  Prendre un rendez-vous, sans Calendly : le créneau, les coordonnées, puis une
   vérification avant de confirmer. Un sujet par écran, comme le questionnaire, et le
-  même moteur d'écrans (js/reservation.js) ; js/reservation-rdv.js y ajoute les créneaux.
+  même moteur d'écrans (js/reservation.js) ; js/reservation-rdv.js y ajoute le calendrier.
 
   Paramètres :
   - type : rencontre, rencontre_breathwork, seance, seance_distance, seance_enfant,
@@ -60,26 +60,50 @@
   <input type="hidden" name="envoi_id" value="">
   <input type="hidden" name="type" value="{{ type }}">
 
-  {% comment %} ——— Le jour ——— {% endcomment %}
-  <section class="res-ecran" data-ecran="jour">
+  {% comment %} ——— Le créneau : un calendrier du mois, puis les heures du jour choisi ———
+  Le modèle est celui de Calendly, que les personnes connaissent (Florent, 26/11) : les
+  jours libres ressortent dans le mois ; un jour choisi montre ses heures ; une heure
+  choisie fait apparaître « Suivant » à côté d'elle. Sur téléphone, les heures prennent
+  la place du calendrier ; à partir de la tablette, elles viennent à sa droite. {% endcomment %}
+  <section class="res-ecran res-creneau" data-ecran="creneau" data-vue="jour">
     {% comment %} Sans créneau à proposer (aucun de libre, ou la réservation qui ne répond
-    pas), le titre ne demande plus de choisir un jour. {% endcomment %}
-    <h1 id="t-jour" tabindex="-1" data-rdv-titre data-titre="Choisissez un jour" data-titre-sans-creneau="Prendre rendez-vous">Choisissez un jour</h1>
+    pas), le titre ne demande plus de choisir. {% endcomment %}
+    <h1 id="t-creneau" tabindex="-1" data-rdv-titre data-titre="Choisissez un créneau" data-titre-sans-creneau="Prendre rendez-vous">Choisissez un créneau</h1>
     <p class="res-intro">{{ include.intro }}</p>
+    {% if payant %}
+    <p class="res-intro">Les premiers créneaux sont dans trois semaines.{% if liste_attente %} À la dernière étape, vous pourrez demander à être prévenu(e) si une place se libère plus tôt.{% endif %}</p>
+    {% endif %}
 
     <p class="res-etat" data-rdv-attente role="status">Recherche des créneaux libres…</p>
 
-    <div data-rdv-jours hidden>
-      <div class="res-panneau">
-        <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-jour" data-rdv-liste-jours>
-          <p class="help is-danger res-erreur" data-defaut="Choisissez un jour.">Choisissez un jour.</p>
+    <div class="res-creneau-choix" data-rdv-choix hidden>
+      <div class="res-panneau res-cal">
+        <div class="res-cal-tete">
+          <p class="res-cal-mois" id="t-mois" data-rdv-mois aria-live="polite"></p>
+          <button type="button" class="button is-white is-purple-bordered res-cal-fleche res-cal-fleche-avant" data-rdv-mois-precedent aria-label="Mois précédent"></button>
+          <button type="button" class="button is-white is-purple-bordered res-cal-fleche" data-rdv-mois-suivant aria-label="Mois suivant"></button>
+        </div>
+        <div class="res-cal-semaine" aria-hidden="true">
+          <span>lun.</span><span>mar.</span><span>mer.</span><span>jeu.</span><span>ven.</span><span>sam.</span><span>dim.</span>
+        </div>
+        <div class="res-cal-jours" role="group" aria-labelledby="t-mois" data-rdv-jours></div>
+        <p class="help" data-rdv-mois-vide hidden>Aucun créneau libre ce mois-ci.</p>
+        <p class="help is-danger" data-rdv-erreur-creneau role="alert" hidden></p>
+        <p class="help" data-rdv-fuseau hidden>Les heures sont celles de Paris.</p>
+      </div>
+
+      <div class="res-panneau res-heures">
+        {% comment %} Côte à côte, la colonne des heures est là dès le départ : le calendrier
+        ne change pas de place quand un jour est choisi. {% endcomment %}
+        <p class="res-heures-vide" data-rdv-sans-jour>Choisissez un jour pour voir les heures libres.</p>
+        <div data-rdv-heures hidden>
+          <p class="res-heures-retour"><button type="button" class="button is-white is-purple-bordered res-nav-retour" data-rdv-autre-jour>Autre jour</button></p>
+          <p class="res-heures-jour" id="t-heures" tabindex="-1" data-rdv-jour-choisi></p>
+          <div class="res-heures-liste" data-requis role="radiogroup" aria-labelledby="t-heures" data-rdv-liste-heures>
+            <p class="help is-danger res-erreur" data-rdv-erreur-heure data-defaut="Choisissez une heure.">Choisissez une heure.</p>
+          </div>
         </div>
       </div>
-      <p class="res-plus"><button type="button" class="button is-white is-purple-bordered" data-rdv-plus>Voir plus de dates</button></p>
-      {% if liste_attente %}
-      <p class="help">Les premiers créneaux sont dans trois semaines. À la dernière étape, vous pourrez demander à être prévenu(e) si une place se libère plus tôt.</p>
-      {% endif %}
-      {% include reservation/nav.html retour="non" %}
     </div>
 
     {% comment %} Aucun créneau dans la fenêtre : on le dit, et on donne le moyen de joindre Florent. {% endcomment %}
@@ -95,19 +119,6 @@
       <p>Appelez-moi au <a href="tel:+33637332655">06&nbsp;37&nbsp;33&nbsp;26&nbsp;55</a>, ou écrivez-moi à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a>&nbsp;: nous fixerons le rendez-vous ensemble.</p>
       <p><button type="button" class="button is-white is-purple-bordered" data-rdv-reessayer>Réessayer</button></p>
     </div>
-  </section>
-
-  {% comment %} ——— L'heure ——— {% endcomment %}
-  <section class="res-ecran" data-ecran="heure">
-    <h1 id="t-heure" tabindex="-1">Choisissez une heure</h1>
-    <p class="res-date" data-rdv-jour-choisi></p>
-    <div class="res-panneau">
-      <div class="res-heures" data-requis role="radiogroup" aria-labelledby="t-heure" data-rdv-liste-heures>
-        <p class="help is-danger res-erreur" data-rdv-erreur-heure data-defaut="Choisissez une heure.">Choisissez une heure.</p>
-      </div>
-    </div>
-    <p class="help" data-rdv-fuseau hidden>Les heures sont celles de Paris.</p>
-    {% include reservation/nav.html %}
   </section>
 
   {% comment %} ——— Les coordonnées ——— {% endcomment %}

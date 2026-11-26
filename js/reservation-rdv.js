@@ -1,10 +1,14 @@
-// Prendre un rendez-vous (_includes/reservation/rendez-vous.html) : les créneaux.
+// Prendre un rendez-vous (_includes/reservation/rendez-vous.html) : le choix du créneau.
 //
 // Le moteur d'écrans est celui du questionnaire (js/reservation.js) : il vérifie, garde
 // les réponses dans l'onglet, gère « Retour » et l'historique, et envoie. Ce script, chargé
 // AVANT lui, n'apporte que ce qui est propre à la réservation : lire les créneaux libres,
-// en faire des jours puis des heures à cocher, tenir le récapitulatif à jour, et dire quoi
-// faire quand le créneau vient d'être pris.
+// dessiner le calendrier du mois et les heures du jour choisi, tenir le récapitulatif à
+// jour, et dire quoi faire quand le créneau vient d'être pris.
+//
+// Le modèle est celui de Calendly (Florent, 26/11) : les jours libres ressortent dans le
+// mois ; un jour choisi montre ses heures ; une heure choisie fait apparaître « Suivant »
+// à côté d'elle. Sur téléphone, les heures prennent la place du calendrier.
 //
 // Ce que la page demandera à gestion (contrat /v1) :
 // - GET  /v1/reservation/creneaux?type=…&du=…&au=…  → les débuts libres, rien d'autre ;
@@ -20,25 +24,33 @@
   var adresse = new URLSearchParams(location.search);
   var simuler = adresse.get('simuler');
 
+  var ecran = form.querySelector('[data-ecran="creneau"]');
   var attente = form.querySelector('[data-rdv-attente]');
-  var blocJours = form.querySelector('[data-rdv-jours]');
+  var blocChoix = form.querySelector('[data-rdv-choix]');
   var blocVide = form.querySelector('[data-rdv-vide]');
   var blocPanne = form.querySelector('[data-rdv-panne]');
-  var listeJours = form.querySelector('[data-rdv-liste-jours]');
-  var listeHeures = form.querySelector('[data-rdv-liste-heures]');
-  var boutonPlus = form.querySelector('[data-rdv-plus]');
-  var erreurHeure = form.querySelector('[data-rdv-erreur-heure]');
-  var erreurJour = listeJours.querySelector('.res-erreur');
-  var jourChoisi = form.querySelector('[data-rdv-jour-choisi]');
-  var recapQuand = form.querySelector('[data-rdv-recap-quand]');
-  var fuseau = form.querySelector('[data-rdv-fuseau]');
   var titre = form.querySelector('[data-rdv-titre]');
+  var libelleMois = form.querySelector('[data-rdv-mois]');
+  var boutonAvant = form.querySelector('[data-rdv-mois-precedent]');
+  var boutonApres = form.querySelector('[data-rdv-mois-suivant]');
+  var grille = form.querySelector('[data-rdv-jours]');
+  var moisVide = form.querySelector('[data-rdv-mois-vide]');
+  var erreurCreneau = form.querySelector('[data-rdv-erreur-creneau]');
+  var fuseau = form.querySelector('[data-rdv-fuseau]');
+  var blocHeures = form.querySelector('[data-rdv-heures]');
+  var sansJour = form.querySelector('[data-rdv-sans-jour]');
+  var jourChoisi = form.querySelector('[data-rdv-jour-choisi]');
+  var listeHeures = form.querySelector('[data-rdv-liste-heures]');
+  var erreurHeure = form.querySelector('[data-rdv-erreur-heure]');
+  var recapQuand = form.querySelector('[data-rdv-recap-quand]');
 
-  // Combien de jours on montre d'un coup : assez pour choisir, pas assez pour s'y perdre.
-  var PAR_PAGE = 6;
-  var joursMontres = PAR_PAGE;
   var creneaux = [];   // débuts libres, en texte ISO avec décalage
   var pret = false;
+  var mois = '';       // le mois affiché, « AAAA-MM »
+  var jour = '';       // le jour choisi, « AAAA-MM-JJ »
+
+  // À partir de la tablette, le calendrier et les heures tiennent côte à côte.
+  var coteACote = window.matchMedia('(min-width: 769px)');
 
   // ——— L'heure de Paris, quel que soit le réglage de l'appareil ———
   var FUSEAU = 'Europe/Paris';
@@ -50,20 +62,23 @@
     }).formatToParts(instant).forEach(function (x) { p[x.type] = x.value; });
     return p;
   }
+  function deux(n) { return (n < 10 ? '0' : '') + n; }
+  function majuscule(texte) { return texte.charAt(0).toUpperCase() + texte.slice(1); }
   function cleDuJour(iso) { return iso.slice(0, 10); }
-  function libelleJour(iso, avecAnnee) {
+  // Midi, en temps universel : le même jour à Paris, été comme hiver.
+  function midi(cleJour) { return new Date(cleJour + 'T12:00:00Z'); }
+  function libelleJour(instant, avecAnnee) {
     var options = { weekday: 'long', day: 'numeric', month: 'long', timeZone: FUSEAU };
     if (avecAnnee) options.year = 'numeric';
-    var texte = new Intl.DateTimeFormat('fr-FR', options).format(new Date(iso));
-    return texte.charAt(0).toUpperCase() + texte.slice(1);
+    return majuscule(new Intl.DateTimeFormat('fr-FR', options).format(instant));
   }
   function libelleHeure(iso) {
     var p = parties(new Date(iso));
     return Number(p.hour) + ' h' + (p.minute !== '00' ? ' ' + p.minute : '');
   }
-  function minutesDe(iso) {
-    var p = parties(new Date(iso));
-    return Number(p.hour) * 60 + Number(p.minute);
+  function aujourdhui() {
+    var p = parties(new Date());
+    return p.year + '-' + p.month + '-' + p.day;
   }
 
   // ——— MAQUETTE : des créneaux inventés, à la place de l'appel à gestion ———
@@ -80,28 +95,26 @@
   var PLAGES = [[9 * 60 + 30, 11 * 60 + 30], [13 * 60, 16 * 60], [16 * 60 + 30, 19 * 60 + 30]];
   var JOURS_OUVERTS = [1, 4];   // lundi, jeudi
 
-  function deux(n) { return (n < 10 ? '0' : '') + n; }
   function isoParis(a, m, j, minutes) {
     // Le décalage de Paris ce jour-là (heure d'été ou d'hiver), lu sur midi.
-    var midi = new Date(Date.UTC(a, m - 1, j, 12));
-    var p = parties(midi);
-    var decalage = Math.round((Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute) - midi.getTime()) / 60000);
-    var signe = decalage >= 0 ? '+' : '-';
+    var repere = new Date(Date.UTC(a, m - 1, j, 12));
+    var p = parties(repere);
+    var decalage = Math.round((Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute) - repere.getTime()) / 60000);
     var d = Math.abs(decalage);
     return a + '-' + deux(m) + '-' + deux(j) + 'T' + deux(Math.floor(minutes / 60)) + ':' + deux(minutes % 60) + ':00' +
-      signe + deux(Math.floor(d / 60)) + ':' + deux(d % 60);
+      (decalage >= 0 ? '+' : '-') + deux(Math.floor(d / 60)) + ':' + deux(d % 60);
   }
   function inventer() {
     var regle = TYPES[type] || TYPES.seance;
     var maintenant = Date.now();
     var ouverture = maintenant + regle.debutH * 3600000;
     var fermeture = maintenant + regle.finH * 3600000;
-    var aujourdhui = parties(new Date(maintenant));
+    var depart = parties(new Date(maintenant));
     var liste = [];
     for (var n = 0; n <= 190; n += 1) {
-      var jour = new Date(Date.UTC(+aujourdhui.year, +aujourdhui.month - 1, +aujourdhui.day + n));
-      if (JOURS_OUVERTS.indexOf(jour.getUTCDay()) < 0) continue;
-      var a = jour.getUTCFullYear(), m = jour.getUTCMonth() + 1, j = jour.getUTCDate();
+      var date = new Date(Date.UTC(+depart.year, +depart.month - 1, +depart.day + n));
+      if (JOURS_OUVERTS.indexOf(date.getUTCDay()) < 0) continue;
+      var a = date.getUTCFullYear(), m = date.getUTCMonth() + 1, j = date.getUTCDate();
       PLAGES.forEach(function (plage) {
         for (var t = plage[0]; t + regle.duree + regle.marge <= plage[1]; t += regle.pas) {
           var iso = isoParis(a, m, j, t);
@@ -122,9 +135,9 @@
     }, 500);
   }
 
-  // ——— Ce que la personne avait déjà coché, si la page a été rechargée ———
+  // ——— Ce que la personne avait déjà choisi, si la page a été rechargée ———
   // Lu tout de suite : le moteur d'écrans, en démarrant, réécrit le brouillon avec les
-  // champs présents — et les jours n'y sont pas encore. Même règle que lui : on ne
+  // champs présents — et les heures n'y sont pas encore. Même règle que lui : on ne
   // reprend un brouillon qu'après un rechargement ou un retour par l'historique.
   var garde = (function () {
     var entree = (window.performance && performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
@@ -135,116 +148,119 @@
     } catch (e) { return {}; }
   })();
 
-  // ——— Les jours ———
-  function jours() {
-    var vus = {};
-    return creneaux.map(cleDuJour).filter(function (cle) {
-      if (vus[cle]) return false;
-      vus[cle] = true;
-      return true;
-    });
-  }
-  function creneauxDu(jour) {
-    return creneaux.filter(function (iso) { return cleDuJour(iso) === jour; });
-  }
-  function option(nom, id, valeur, libelle, detail) {
-    var bloc = document.createElement('div');
-    bloc.className = 'res-choix-option';
-    var radio = document.createElement('input');
-    radio.className = 'is-checkradio';
-    radio.type = 'radio';
-    radio.name = nom;
-    radio.id = id;
-    radio.value = valeur;
-    var etiquette = document.createElement('label');
-    etiquette.htmlFor = id;
-    etiquette.textContent = libelle;
-    if (detail) {
-      var precision = document.createElement('span');
-      precision.className = 'res-choix-detail';
-      precision.textContent = detail;
-      etiquette.appendChild(precision);
-    }
-    bloc.appendChild(radio);
-    bloc.appendChild(etiquette);
-    return bloc;
-  }
-  function jourCoche() {
-    var radio = form.querySelector('input[name="jour"]:checked');
-    return radio ? radio.value : '';
+  function creneauxDu(cleJour) {
+    return creneaux.filter(function (iso) { return cleDuJour(iso) === cleJour; });
   }
   function heureCochee() {
     var radio = form.querySelector('input[name="debut"]:checked');
     return radio ? radio.value : '';
   }
+  function decaler(cleMois, de) {
+    var date = new Date(Date.UTC(+cleMois.slice(0, 4), +cleMois.slice(5, 7) - 1 + de, 1));
+    return date.getUTCFullYear() + '-' + deux(date.getUTCMonth() + 1);
+  }
 
-  function dessinerLesJours(aCocher) {
-    var coche = aCocher || jourCoche();
-    var tous = jours();
-    // Un jour déjà choisi plus loin dans la liste reste visible.
-    var rang = tous.indexOf(coche);
-    if (rang >= joursMontres) joursMontres = (Math.floor(rang / PAR_PAGE) + 1) * PAR_PAGE;
-    var message = listeJours.querySelector('.res-erreur');
-    Array.prototype.slice.call(listeJours.querySelectorAll('.res-choix-option')).forEach(function (o) { o.remove(); });
-    tous.slice(0, joursMontres).forEach(function (jour, i) {
-      var nombre = creneauxDu(jour).length;
-      var bloc = option('jour', 'rdv-jour-' + i, jour, libelleJour(jour + 'T12:00:00Z'), nombre + (nombre > 1 ? ' créneaux libres' : ' créneau libre'));
-      if (jour === coche) bloc.querySelector('input').checked = true;
-      listeJours.insertBefore(bloc, message);
-    });
-    boutonPlus.parentNode.hidden = joursMontres >= tous.length;
+  // ——— Le calendrier du mois ———
+  function dessinerLeMois() {
+    var annee = +mois.slice(0, 4), rang = +mois.slice(5, 7);
+    libelleMois.textContent = majuscule(new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(annee, rang - 1, 1))));
+    // On ne remonte pas avant le mois en cours, on ne dépasse pas le dernier créneau.
+    boutonAvant.disabled = mois <= aujourdhui().slice(0, 7);
+    boutonApres.disabled = !creneaux.length || mois >= creneaux[creneaux.length - 1].slice(0, 7);
+
+    grille.textContent = '';
+    // Les semaines commencent le lundi.
+    var vides = (new Date(Date.UTC(annee, rang - 1, 1)).getUTCDay() + 6) % 7;
+    for (var v = 0; v < vides; v += 1) grille.appendChild(document.createElement('span'));
+    var dernier = new Date(Date.UTC(annee, rang, 0)).getUTCDate();
+    var libres = 0;
+    for (var j = 1; j <= dernier; j += 1) {
+      var cle = mois + '-' + deux(j);
+      var nombre = creneauxDu(cle).length;
+      var caseJour;
+      if (nombre) {
+        libres += 1;
+        caseJour = document.createElement('button');
+        caseJour.type = 'button';
+        caseJour.dataset.jour = cle;
+        caseJour.setAttribute('aria-pressed', cle === jour ? 'true' : 'false');
+        caseJour.setAttribute('aria-label', libelleJour(midi(cle)) + ', ' + nombre + (nombre > 1 ? ' créneaux libres' : ' créneau libre'));
+      } else {
+        // Un jour sans créneau n'est qu'un repère : il ne se lit pas, il ne se choisit pas.
+        caseJour = document.createElement('span');
+        caseJour.setAttribute('aria-hidden', 'true');
+      }
+      caseJour.className = 'res-cal-jour' + (cle === aujourdhui() ? ' est-aujourdhui' : '');
+      caseJour.textContent = j;
+      grille.appendChild(caseJour);
+    }
+    moisVide.hidden = libres > 0;
   }
 
   // ——— Les heures du jour choisi ———
   function dessinerLesHeures(aCocher) {
-    var jour = jourCoche();
-    var message = erreurHeure;
     Array.prototype.slice.call(listeHeures.children).forEach(function (enfant) {
-      if (enfant !== message) enfant.remove();
+      if (enfant !== erreurHeure) enfant.remove();
     });
-    if (!jour) return;
-    jourChoisi.textContent = libelleJour(jour + 'T12:00:00Z');
-    var libres = creneauxDu(jour);
-    // Au-delà de huit créneaux, on les range par moment de la journée (en minutes
-    // depuis minuit : la fin de journée commence à 16 h 30, avec la dernière plage).
-    var moments = libres.length > 8
-      ? [['Le matin', function (m) { return m < 720; }], ['L\'après-midi', function (m) { return m >= 720 && m < 990; }], ['En fin de journée', function (m) { return m >= 990; }]]
-      : [['', function () { return true; }]];
-    var n = 0;
-    moments.forEach(function (moment) {
-      var duMoment = libres.filter(function (iso) { return moment[1](minutesDe(iso)); });
-      if (!duMoment.length) return;
-      if (moment[0]) {
-        var titre = document.createElement('p');
-        titre.className = 'res-heures-moment';
-        titre.textContent = moment[0];
-        listeHeures.insertBefore(titre, message);
-      }
-      var grille = document.createElement('div');
-      grille.className = 'res-choix res-choix-grille';
-      duMoment.forEach(function (iso) {
-        n += 1;
-        var bloc = option('debut', 'rdv-heure-' + n, iso, libelleHeure(iso));
-        if (iso === aCocher) bloc.querySelector('input').checked = true;
-        grille.appendChild(bloc);
-      });
-      listeHeures.insertBefore(grille, message);
+    blocHeures.hidden = !jour;
+    sansJour.hidden = !!jour;
+    if (!jour) return ecrireLeRecapitulatif();
+    jourChoisi.textContent = libelleJour(midi(jour));
+    creneauxDu(jour).forEach(function (iso, i) {
+      var ligne = document.createElement('div');
+      ligne.className = 'res-heure';
+      var radio = document.createElement('input');
+      radio.className = 'is-sr-only';
+      radio.type = 'radio';
+      radio.name = 'debut';
+      radio.id = 'rdv-heure-' + i;
+      radio.value = iso;
+      radio.checked = iso === aCocher;
+      var etiquette = document.createElement('label');
+      etiquette.className = 'button is-white is-purple-bordered res-heure-bouton';
+      etiquette.htmlFor = radio.id;
+      etiquette.textContent = libelleHeure(iso);
+      // « Suivant » n'apparaît qu'à côté de l'heure choisie (feuille de style).
+      var suivant = document.createElement('button');
+      suivant.type = 'button';
+      suivant.className = 'button is-primary res-heure-suivant';
+      suivant.setAttribute('data-suivant', '');
+      suivant.textContent = 'Suivant';
+      ligne.appendChild(radio);
+      ligne.appendChild(etiquette);
+      ligne.appendChild(suivant);
+      listeHeures.appendChild(ligne);
     });
     ecrireLeRecapitulatif();
   }
 
   function ecrireLeRecapitulatif() {
     var debut = heureCochee();
-    recapQuand.textContent = debut ? libelleJour(debut, true) + ', à ' + libelleHeure(debut) : '';
+    recapQuand.textContent = debut ? libelleJour(new Date(debut), true) + ', à ' + libelleHeure(debut) : '';
+  }
+
+  // Sur téléphone, un seul des deux se voit : le calendrier (« jour ») ou les heures.
+  function montrerLaVue(vue) {
+    ecran.dataset.vue = vue === 'heure' && jour ? 'heure' : 'jour';
+  }
+  function choisirLeJour(cleJour, aCocher) {
+    jour = cleJour;
+    if (jour) mois = jour.slice(0, 7);
+    dessinerLeMois();
+    dessinerLesHeures(aCocher || '');
+  }
+  function direUneErreur(message) {
+    erreurCreneau.textContent = message || '';
+    erreurCreneau.hidden = !message;
   }
 
   function montrerLEtat(etat) {
     attente.hidden = etat !== 'attente';
-    blocJours.hidden = etat !== 'jours';
+    blocChoix.hidden = etat !== 'choix';
     blocVide.hidden = etat !== 'vide';
     blocPanne.hidden = etat !== 'panne';
     titre.textContent = etat === 'vide' || etat === 'panne' ? titre.dataset.titreSansCreneau : titre.dataset.titre;
-    pret = etat === 'jours';
+    pret = etat === 'choix';
   }
 
   function charger() {
@@ -253,52 +269,98 @@
       if (!liste) return montrerLEtat('panne');
       creneaux = liste;
       if (!creneaux.length) return montrerLEtat('vide');
-      // Un jour ou une heure retenus avant le rechargement, s'ils sont toujours libres.
-      var jour = jours().indexOf(garde.jour) >= 0 ? garde.jour : '';
-      dessinerLesJours(jour);
-      dessinerLesHeures(creneaux.indexOf(garde.debut) >= 0 ? garde.debut : '');
+      // Le calendrier s'ouvre sur le mois du premier créneau libre.
+      mois = creneaux[0].slice(0, 7);
+      var etat = history.state || {};
+      if (garde.debut && creneaux.indexOf(garde.debut) >= 0) {
+        // L'heure retenue avant le rechargement est toujours libre.
+        choisirLeJour(cleDuJour(garde.debut), garde.debut);
+        montrerLaVue('heure');
+        // Le moteur a réécrit le brouillon sans elle : ce signal la lui fait reprendre.
+        form.querySelector('input[name="debut"]:checked').dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        choisirLeJour(etat.jour && creneauxDu(etat.jour).length ? etat.jour : '');
+        montrerLaVue(etat.vue);
+        // Une heure avait été retenue, et elle n'est plus libre : on le dit là où l'on
+        // choisit, pas trois écrans plus loin.
+        if (garde.debut) {
+          montrerLaVue('jour');
+          direUneErreur('Le créneau que vous aviez choisi n\'est plus libre. Choisissez-en un autre.');
+          form.dispatchEvent(new CustomEvent('res:aller', { detail: { ecran: 'creneau' } }));
+        }
+      }
       garde = {};
-      montrerLEtat('jours');
+      montrerLEtat('choix');
     });
   }
 
-  // Tant que les créneaux ne sont pas là, la touche Entrée ne fait rien avancer.
+  // Tant que les créneaux ne sont pas là, rien n'avance ; et rien ne part sans créneau.
   form.addEventListener('submit', function (e) {
-    if (pret) return;
+    if (pret && heureCochee()) return;
+    // Un jour est ouvert, sans heure choisie : le moteur le dira au-dessus des heures.
+    if (pret && !ecran.hidden && jour) return;
     e.preventDefault();
     e.stopImmediatePropagation();
+    if (!pret) return;
+    montrerLaVue('jour');
+    direUneErreur('Choisissez un jour, puis une heure.');
+    form.dispatchEvent(new CustomEvent('res:aller', { detail: { ecran: 'creneau' } }));
+  });
+
+  form.addEventListener('click', function (e) {
+    var caseJour = e.target.closest('[data-jour]');
+    if (caseJour) {
+      direUneErreur('');
+      erreurHeure.textContent = erreurHeure.dataset.defaut;
+      // Le même jour, rouvert, garde l'heure déjà choisie.
+      choisirLeJour(caseJour.dataset.jour, caseJour.dataset.jour === jour ? heureCochee() : '');
+      if (!coteACote.matches) {
+        // Sur téléphone, les heures remplacent le calendrier : une entrée d'historique
+        // de même rang que l'écran, pour que le retour du navigateur y ramène.
+        history.pushState(Object.assign({}, history.state, { vue: 'heure', jour: jour }), '');
+        montrerLaVue('heure');
+        window.scrollTo(0, 0);
+      }
+      jourChoisi.focus({ preventScroll: coteACote.matches });
+      return;
+    }
+    if (e.target.closest('[data-rdv-mois-precedent]')) { mois = decaler(mois, -1); dessinerLeMois(); }
+    if (e.target.closest('[data-rdv-mois-suivant]')) { mois = decaler(mois, 1); dessinerLeMois(); }
+    if (e.target.closest('[data-rdv-autre-jour]')) {
+      if ((history.state || {}).vue === 'heure') history.back();
+      else montrerLaVue('jour');
+    }
+    if (e.target.closest('[data-rdv-reessayer]')) {
+      // MAQUETTE : un second essai aboutit.
+      simuler = '';
+      charger();
+    }
+  });
+
+  // Le retour et l'avance du navigateur, entre le calendrier et les heures d'un jour.
+  window.addEventListener('popstate', function (e) {
+    if (!pret) return;
+    var etat = e.state || {};
+    if (etat.vue === 'heure' && etat.jour && etat.jour !== jour && creneauxDu(etat.jour).length) choisirLeJour(etat.jour);
+    var avant = ecran.dataset.vue;
+    montrerLaVue(etat.vue);
+    // Revenu au calendrier : le regard — et le clavier — retrouvent le jour quitté.
+    if (avant === 'heure' && ecran.dataset.vue === 'jour' && !ecran.hidden) {
+      var quitte = grille.querySelector('[aria-pressed="true"]');
+      if (quitte) quitte.focus({ preventScroll: true });
+    }
   });
 
   form.addEventListener('change', function (e) {
-    if (e.target.name === 'jour') {
-      erreurJour.textContent = erreurJour.dataset.defaut;
-      erreurHeure.textContent = erreurHeure.dataset.defaut;
-      dessinerLesHeures('');
-    }
-    if (e.target.name === 'debut') {
-      // Le message « ce créneau vient d'être pris » a fait son temps.
-      erreurHeure.textContent = erreurHeure.dataset.defaut;
-      ecrireLeRecapitulatif();
-    }
+    if (e.target.name !== 'debut') return;
+    // Le message « ce créneau vient d'être pris » a fait son temps.
+    erreurHeure.textContent = erreurHeure.dataset.defaut;
+    direUneErreur('');
+    ecrireLeRecapitulatif();
   });
 
-  boutonPlus.addEventListener('click', function () {
-    var avant = joursMontres;
-    joursMontres += PAR_PAGE;
-    dessinerLesJours();
-    // Le clavier et les lecteurs d'écran arrivent sur la première date ajoutée.
-    var premiere = listeJours.querySelectorAll('input[name="jour"]')[avant];
-    if (premiere) premiere.focus();
-  });
-
-  form.querySelector('[data-rdv-reessayer]').addEventListener('click', function () {
-    // MAQUETTE : un second essai aboutit.
-    simuler = '';
-    charger();
-  });
-
-  // Le créneau vient d'être pris par quelqu'un d'autre : il disparaît de la liste, et la
-  // personne revient choisir une heure — ses coordonnées restent en place.
+  // Le créneau vient d'être pris par quelqu'un d'autre : il disparaît, et la personne
+  // revient choisir — ses coordonnées restent en place.
   form.addEventListener('res:refus', function (e) {
     if (e.detail.motif !== 'creneau_pris') return;
     var pris = heureCochee();
@@ -306,12 +368,16 @@
     // MAQUETTE : le refus ne se produit qu'une fois.
     adresse.delete('simuler');
     history.replaceState(history.state, '', location.pathname + (adresse.toString() ? '?' + adresse : ''));
-    var jour = cleDuJour(pris);
-    var resteCeJour = creneauxDu(jour).length > 0;
-    dessinerLesJours(resteCeJour ? jour : '');
-    dessinerLesHeures('');
-    if (resteCeJour) erreurHeure.textContent = 'Ce créneau vient d\'être pris. Choisissez une autre heure.';
-    else erreurJour.textContent = 'Ce créneau vient d\'être pris, et ce jour n\'a plus de place. Choisissez un autre jour.';
+    var memeJour = cleDuJour(pris);
+    if (creneauxDu(memeJour).length) {
+      choisirLeJour(memeJour);
+      erreurHeure.textContent = 'Ce créneau vient d\'être pris. Choisissez une autre heure.';
+    } else {
+      choisirLeJour('');
+      direUneErreur('Ce créneau vient d\'être pris, et ce jour n\'a plus de place. Choisissez un autre jour.');
+    }
+    form.dispatchEvent(new CustomEvent('res:aller', { detail: { ecran: 'creneau' } }));
+    montrerLaVue(jour ? 'heure' : 'jour');
   });
 
   // La réservation a abouti : la page suivante reçoit de quoi dire ce qui est réservé.
@@ -320,8 +386,7 @@
   // l'identité par l'onglet — plus rien de personnel dans l'adresse.
   form.addEventListener('res:envoye', function (e) {
     var suite = new URL(e.detail.suite, location.origin);
-    var debut = heureCochee();
-    suite.searchParams.set('event_start_time', debut);
+    suite.searchParams.set('event_start_time', heureCochee());
     suite.searchParams.set('type', type);
     if (form.dataset.transmettreIdentite === 'oui') {
       suite.searchParams.set('invitee_uuid', 'maquette-' + type);
