@@ -33,6 +33,10 @@
 
   method="post" et le onsubmit en ligne : si le script ne se charge pas, le navigateur
   ne doit jamais envoyer les réponses dans l'adresse de la page.
+
+  data-api : l'origine de l'API de gestion (site.api_origine, posée par la configuration
+  de recette, CLAUDE.md). Avec elle, le questionnaire part vraiment vers la porte
+  publique (POST /v1/questionnaires) ; sans elle, l'envoi reste simulé, comme une maquette.
 {% endcomment %}
 {% assign contexte = include.contexte | default: "seance" %}
 {% assign avec_questionnaire = true %}
@@ -53,7 +57,7 @@
   {% assign prestation = "seance" %}
 {% endif %}
 
-<form class="res-formulaire" method="post" action="" onsubmit="return false" data-questionnaire data-contexte="{{ contexte }}" data-suite="{{ include.suite }}"{% if contexte == "decouverte" %} data-version-fixe="complet"{% endif %}{% unless avec_questionnaire %} data-version-fixe="aucune"{% endunless %} novalidate>
+<form class="res-formulaire" method="post" action="" onsubmit="return false" data-questionnaire data-contexte="{{ contexte }}" data-suite="{{ include.suite }}"{% if site.api_origine %} data-api="{{ site.api_origine }}"{% endif %}{% if contexte == "decouverte" %} data-version-fixe="complet"{% endif %}{% unless avec_questionnaire %} data-version-fixe="aucune"{% endunless %} novalidate>
   <p class="is-sr-only" aria-live="polite" data-annonce></p>
   <input type="hidden" name="prestation" value="{{ prestation }}">
   <input type="hidden" name="envoi_id" value="">

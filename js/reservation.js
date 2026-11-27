@@ -47,6 +47,14 @@
   // ——— Qui arrive, et d'où ———
   var recus = window.luminoseParametres || {};
   var adresse = new URLSearchParams(location.search);
+  // Le lien d'un questionnaire (envoyé par gestion) porte sa référence après le # :
+  // lue une fois, retirée aussitôt de l'adresse et de l'historique, gardée en mémoire
+  // seulement — jamais dans le stockage de l'onglet (gestion, §14.5).
+  var reference = null;
+  if (/^#[A-Za-z0-9._-]{1,512}$/.test(location.hash)) {
+    reference = location.hash.slice(1);
+    try { history.replaceState(history.state, '', location.pathname + location.search); } catch (e) { /* l'adresse garde le jeton ; il ne part nulle part ailleurs */ }
+  }
   var entree = (window.performance && performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
   // Rechargement, ou retour par l'historique : c'est la même personne, sur la même page.
   var retourSurLaPage = entree.type === 'reload' || entree.type === 'back_forward';
@@ -528,15 +536,20 @@
     bouton.classList.add('is-loading');
     if (echec) echec.hidden = true;
 
-    // MAQUETTE : rien n'est envoyé. ?simuler=lent, ?simuler=echec et ?simuler=pris
-    // montrent les états à prévoir ; l'intégration remplacera ce bloc par l'appel à
-    // gestion, avec les mêmes seuils (message d'attente après 8 s, échec déclaré après 30 s).
+    // Avec l'origine de l'API (data-api, posée par la configuration de recette), le
+    // questionnaire part vers la porte publique de gestion ; sans elle — et toujours
+    // pour la prise de rendez-vous, que gestion ne reçoit pas encore —, l'envoi reste
+    // simulé : ?simuler=lent, ?simuler=echec et ?simuler=pris montrent les états à
+    // prévoir. Mêmes seuils dans les deux cas : message d'attente après 8 s, échec
+    // déclaré après 30 s.
     var mode = adresse.get('simuler');
+    var reel = !!form.dataset.api && !form.hasAttribute('data-rendez-vous');
     var attente = setTimeout(function () { if (lent) lent.hidden = false; }, mode === 'lent' ? 1500 : 8000);
-    setTimeout(function () {
+
+    function issue(resultat) {
       clearTimeout(attente);
       if (lent) lent.hidden = true;
-      if (mode === 'echec') {
+      if (resultat === 'echec') {
         enEnvoi = false;
         bouton.disabled = false;
         bouton.classList.remove('is-loading');
@@ -547,7 +560,7 @@
       // Un refus (le créneau vient d'être pris) n'est pas une panne : la page qui porte
       // le formulaire dit pourquoi (res:refus) et retire ce qui n'est plus valable ; on
       // revient alors au premier écran qui n'est plus en règle, réponses conservées.
-      if (mode === 'pris') {
+      if (resultat === 'pris') {
         enEnvoi = false;
         bouton.disabled = false;
         bouton.classList.remove('is-loading');
@@ -567,7 +580,111 @@
       clearTimeout(enregistrementPrevu);
       oublier();
       location.href = depart.suite;
-    }, mode === 'lent' ? 5000 : mode === 'echec' ? 1200 : 400);
+    }
+
+    if (!reel) {
+      setTimeout(function () { issue(mode === 'echec' ? 'echec' : mode === 'pris' ? 'pris' : 'ok'); },
+        mode === 'lent' ? 5000 : mode === 'echec' ? 1200 : 400);
+      return;
+    }
+
+    // Le vrai envoi. Le même envoiId sert de clé : une relance après un échec rend le
+    // même reçu, sans second questionnaire (règle 5 de gestion). Un refus « invalide »
+    // est une panne pour la personne : la page a déjà tout vérifié, c'est un écart de
+    // contrat à corriger, pas une saisie à reprendre.
+    var abandon = new AbortController();
+    var delai = setTimeout(function () { abandon.abort(); }, 30000);
+    fetch(form.dataset.api.replace(/\/$/, '') + '/v1/questionnaires', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(versLeContrat()),
+      signal: abandon.signal,
+      credentials: 'omit',
+    }).then(function (r) {
+      return r.status === 200 ? r.json() : null;
+    }).then(function (reponse) {
+      clearTimeout(delai);
+      issue(reponse && reponse.ok === true ? 'ok' : 'echec');
+    }).catch(function () {
+      clearTimeout(delai);
+      issue('echec');
+    });
+  }
+
+  // ——— Le contrat de gestion (packages/contrat, questionnaire) ———
+  // Les noms des champs restent ceux des scénarios Make ; ce qui part vers gestion est
+  // composé ici, à l'envoi. Une valeur vide part comme null, jamais comme "".
+  var VERSION_FORMULAIRE = 'site-2026-11';
+  var CONTEXTES = { seance: 'seance', decouverte: 'decouverte', groupe: 'groupe', journee: 'journee_externe' };
+
+  function valeur(nom) {
+    var champ = form.elements[nom];
+    if (!champ) return null;
+    var v = champ.value !== undefined ? champ.value : '';
+    v = String(v || '').trim();
+    return v === '' ? null : v;
+  }
+  function civilite(v) { return v === 'Mme' || v === 'M.' ? v : null; }
+
+  function versLeContrat() {
+    var version = valeur('version');
+    var reponses = [];
+    var vues = {};
+    tous('input[name^="sante["], input[name^="sante_suite["], textarea[name^="sante"]').forEach(function (champ) {
+      var nom = champ.name;
+      if (vues[nom]) return;
+      if (champ.closest('[data-ecran]') && !estActif(champ.closest('[data-ecran]'))) return;
+      var ligne = champ.closest('.res-ligne, .field');
+      var question = ligne && ligne.querySelector('.res-ligne-question, label');
+      var choisi = champ.type === 'radio' ? form.querySelector('input[name="' + nom + '"]:checked') : champ;
+      var texte = choisi ? String(choisi.value || '').trim() : '';
+      vues[nom] = true;
+      if (!texte) return;
+      reponses.push({
+        cle: nom.replace(/\]$/, '').replace('[', '.').toLowerCase().replace(/[^a-z0-9._-]/g, '-').slice(0, 80),
+        libelle: ((question && question.textContent) || nom).trim().replace(/\s+/g, ' ').slice(0, 500),
+        reponse: texte.slice(0, 2000),
+      });
+    });
+
+    var envoi = {
+      cle: envoiId.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64),
+      contexte: CONTEXTES[contexte] || 'seance',
+      version: version === 'suivi' ? 'suivi' : 'complet',
+      version_formulaire: VERSION_FORMULAIRE,
+      identite: {
+        prenom: valeur('coordonnees_participant[prenom]') || '',
+        nom: valeur('coordonnees_participant[nom]') || '',
+        email: valeur('coordonnees_participant[email]') || '',
+        telephone: valeur('coordonnees_participant[telephone]'),
+      },
+      reponses: reponses,
+      declaration: true,
+      accord: { accepte: true, version: 1 },
+    };
+    if (version !== 'suivi' || valeur('coordonnees_reprises') === 'oui') {
+      envoi.coordonnees = {
+        civilite: civilite(valeur('coordonnees_participant[genre]')),
+        date_naissance: valeur('coordonnees_participant[date-naissance]'),
+        profession: valeur('coordonnees_participant[profession]'),
+        adresse: valeur('coordonnees_participant[adresse]'),
+        code_postal: valeur('coordonnees_participant[code_postal]'),
+        ville: valeur('coordonnees_participant[ville]'),
+      };
+      envoi.confiance = {
+        civilite: civilite(valeur('coordonnees_secours[genre]')),
+        prenom: valeur('coordonnees_secours[prenom]'),
+        nom: valeur('coordonnees_secours[nom]'),
+        telephone: valeur('coordonnees_secours[telephone]'),
+        email: valeur('coordonnees_secours[email]'),
+      };
+    }
+    var informations = valeur('informations-complementaires');
+    if (informations) envoi.informations = informations;
+    // Le lien d'un questionnaire porte sa référence après le # (gestion, §14.5).
+    if (reference) envoi.reference = reference;
+    else if (contexte === 'journee' && valeur('notion_page_id')) envoi.evenement = valeur('notion_page_id').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
+    return envoi;
   }
 
   // Revenir sur le questionnaire après l'envoi ne doit pas rendre les réponses lisibles
