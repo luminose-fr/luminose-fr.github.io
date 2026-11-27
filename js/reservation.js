@@ -51,8 +51,9 @@
   // lue une fois, retirée aussitôt de l'adresse et de l'historique, gardée en mémoire
   // seulement — jamais dans le stockage de l'onglet (gestion, §14.5).
   var reference = null;
-  if (/^#[A-Za-z0-9._-]{1,512}$/.test(location.hash)) {
-    reference = location.hash.slice(1);
+  var marque = /^#(?:r=)?([A-Za-z0-9._-]{1,512})$/.exec(location.hash);
+  if (marque) {
+    reference = marque[1];
     try { history.replaceState(history.state, '', location.pathname + location.search); } catch (e) { /* l'adresse garde le jeton ; il ne part nulle part ailleurs */ }
   }
   var entree = (window.performance && performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
@@ -543,7 +544,8 @@
     // prévoir. Mêmes seuils dans les deux cas : message d'attente après 8 s, échec
     // déclaré après 30 s.
     var mode = adresse.get('simuler');
-    var reel = !!form.dataset.api && !form.hasAttribute('data-rendez-vous');
+    var reel = !!form.dataset.api;
+    var rendezVous = form.hasAttribute('data-rendez-vous');
     var attente = setTimeout(function () { if (lent) lent.hidden = false; }, mode === 'lent' ? 1500 : 8000);
 
     function issue(resultat) {
@@ -594,16 +596,23 @@
     // contrat à corriger, pas une saisie à reprendre.
     var abandon = new AbortController();
     var delai = setTimeout(function () { abandon.abort(); }, 30000);
-    fetch(form.dataset.api.replace(/\/$/, '') + '/v1/questionnaires', {
+    fetch(form.dataset.api.replace(/\/$/, '') + (rendezVous ? '/v1/reservation' : '/v1/questionnaires'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(versLeContrat()),
+      body: JSON.stringify(rendezVous ? laReservation() : versLeContrat()),
       signal: abandon.signal,
       credentials: 'omit',
     }).then(function (r) {
       return r.status === 200 ? r.json() : null;
     }).then(function (reponse) {
       clearTimeout(delai);
+      if (reponse && reponse.ok === true && rendezVous) form.dataset.reference = reponse.reference;
+      // Le créneau n'est plus disponible (pris entre-temps, ou sorti de la fenêtre) : un refus,
+      // pas une panne — la page le dit et fait choisir une autre heure.
+      if (reponse && reponse.ok === false && (reponse.motif === 'creneau_pris' || reponse.motif === 'hors_fenetre')) {
+        envoiId = nouvelIdentifiant();
+        return issue('pris');
+      }
       issue(reponse && reponse.ok === true ? 'ok' : 'echec');
     }).catch(function () {
       clearTimeout(delai);
@@ -625,6 +634,39 @@
     return v === '' ? null : v;
   }
   function civilite(v) { return v === 'Mme' || v === 'M.' ? v : null; }
+
+  // La réservation (contrat §3.1) : le type, le début choisi, l'identité, et ce que le type
+  // demande en plus. Les questions partent avec leur libellé, dans l'ordre de la page.
+  function laReservation() {
+    var reponses = [];
+    tous('[name^="reponses["]').forEach(function (champ) {
+      if (champ.type === 'radio' && !champ.checked) return;
+      if (champ.closest('[data-ecran]') && !estActif(champ.closest('[data-ecran]'))) return;
+      var texte = String(champ.value || '').trim();
+      if (!texte || reponses.some(function (r) { return r.nom === champ.name; })) return;
+      var groupe = champ.closest('[role="radiogroup"]');
+      var etiquette = groupe ? document.getElementById(groupe.getAttribute('aria-labelledby')) : form.querySelector('label[for="' + champ.id + '"]');
+      reponses.push({ nom: champ.name, question: ((etiquette && etiquette.textContent) || champ.name).trim().replace(/\s+/g, ' ').slice(0, 500), reponse: texte.slice(0, 2000) });
+    });
+    var choisi = form.querySelector('input[name="debut"]:checked');
+    var mode = form.querySelector('input[name="mode"]:checked');
+    var envoi = {
+      cle: envoiId.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64),
+      type: form.dataset.type,
+      debut: choisi ? choisi.value : '',
+      identite: {
+        prenom: valeur('identite[prenom]') || '',
+        nom: valeur('identite[nom]') || '',
+        email: valeur('identite[email]') || '',
+        telephone: valeur('identite[telephone]'),
+      },
+      reponses: reponses.map(function (r, i) { return { rang: i + 1, question: r.question, reponse: r.reponse }; }),
+    };
+    if (mode) envoi.mode = mode.value;
+    if (form.elements.conditions && form.elements.conditions.checked) envoi.conditions = { acceptees: true, version: 1 };
+    if (form.elements.liste_attente) envoi.liste_attente = !!form.elements.liste_attente.checked;
+    return envoi;
+  }
 
   function versLeContrat() {
     var version = valeur('version');

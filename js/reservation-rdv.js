@@ -128,7 +128,29 @@
     }
     return liste;
   }
+  // Avec l'origine de l'API (data-api, la configuration de recette) : les vrais créneaux,
+  // lus chez gestion par tranches de 62 jours (contrat §2), sur la fenêtre la plus longue
+  // des types (183 jours). Une tranche en panne : la page dit la panne.
+  function lireChezGestion(suite) {
+    var base = form.dataset.api.replace(/\/$/, '');
+    var depart = midi(aujourdhui());
+    var tranches = [];
+    for (var n = 0; n < 4; n += 1) {
+      var du = new Date(depart.getTime() + n * 62 * 86400000);
+      var au = new Date(du.getTime() + 61 * 86400000);
+      tranches.push([du.toISOString().slice(0, 10), au.toISOString().slice(0, 10)]);
+    }
+    Promise.all(tranches.map(function (t) {
+      var adresse = base + '/v1/reservation/creneaux?type=' + encodeURIComponent(type) + '&du=' + t[0] + '&au=' + t[1];
+      return fetch(adresse, { credentials: 'omit' }).then(function (r) { return r.status === 200 ? r.json() : null; });
+    })).then(function (reponses) {
+      if (reponses.some(function (r) { return !r || r.ok !== true; })) return suite(null);
+      suite(reponses.reduce(function (tous, r) { return tous.concat(r.creneaux); }, []));
+    }).catch(function () { suite(null); });
+  }
+
   function lireLesCreneaux(suite) {
+    if (form.dataset.api) return lireChezGestion(suite);
     setTimeout(function () {
       if (simuler === 'panne') return suite(null);
       suite(simuler === 'vide' ? [] : inventer());
@@ -386,6 +408,8 @@
   // l'identité par l'onglet — plus rien de personnel dans l'adresse.
   form.addEventListener('res:envoye', function (e) {
     var suite = new URL(e.detail.suite, location.origin);
+    // Réservée chez gestion : la référence du questionnaire de cette séance voyage après le #.
+    if (form.dataset.reference) suite.hash = 'r=' + form.dataset.reference;
     suite.searchParams.set('event_start_time', heureCochee());
     suite.searchParams.set('type', type);
     if (form.dataset.transmettreIdentite === 'oui') {
@@ -395,7 +419,7 @@
       suite.searchParams.set('invitee_email', form.elements['identite[email]'].value.trim());
       suite.searchParams.set('text_reminder_number', form.elements['identite[telephone]'].value.trim());
     }
-    e.detail.suite = suite.pathname + suite.search;
+    e.detail.suite = suite.pathname + suite.search + suite.hash;
   });
 
   // Les heures affichées sont celles de Paris : on ne le précise qu'à qui est ailleurs.
