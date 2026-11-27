@@ -67,9 +67,14 @@ dire "Contrôle de $origine"
 
 # ─── 1. Fermée ──────────────────────────────────────────────────────────────
 dire "Fermée"
-for chemin in / /robots.txt /favicon.ico /florent-jaouali /n-existe-pas; do
+for chemin in / /favicon.ico /florent-jaouali /n-existe-pas; do
   attendre 401 "$(nu "$origine$chemin")" "sans mot de passe : $chemin → 401"
 done
+# robots.txt, sans mot de passe : le Worker répond 401, sauf si le « robots.txt géré » de la zone
+# Cloudflare répond avant lui (décision de Florent du 27/11/2026 : on le garde, il protège aussi
+# la production). Il ne sert alors que son propre fichier, jamais une page du site.
+statut=$(nu "$origine/robots.txt")
+if [[ "$statut" == 401 ]] || grep -q 'BEGIN Cloudflare Managed' "$travail/corps"; then ok "sans mot de passe : /robots.txt → 401, ou le fichier géré par Cloudflare ($statut)"; else ko "sans mot de passe : /robots.txt → $statut, et ce n'est pas le fichier géré par Cloudflare"; fi
 attendre 401 "$(printf 'user = "recette:faux-%s"\n' "$RANDOM" | nu -K - "$origine/")" "mauvais mot de passe → 401"
 attendre 401 "$(printf 'user = "autre:%s"\n' "$(echapper "$mdp")" | nu -K - "$origine/")" "mauvais identifiant → 401"
 attendre 401 "$(nu "$origine/favicon.ico")" "le même fichier, sans le mot de passe → 401"
@@ -104,7 +109,9 @@ adresse /css/main.css/ 404 - ''
 # ─── 3. robots.txt et sitemap ───────────────────────────────────────────────
 dire "Indexation"
 avec "$origine/robots.txt" >/dev/null
-attendre "$(printf 'User-agent: *\nDisallow: /')" "$(cat "$travail/corps")" "robots.txt interdit tout"
+# Le nôtre, seul ; ou derrière le bloc du « robots.txt géré » de Cloudflare, qui le précède.
+finit_par() { [[ "$(cat "$1")" == *"$2" ]]; }
+if finit_par "$travail/corps" "$(printf 'User-agent: *\nDisallow: /\n')"; then ok "robots.txt finit par « User-agent: * / Disallow: / »"; else ko "robots.txt ne finit pas par notre interdiction"; fi
 attendre 404 "$(avec "$origine/sitemap.xml")" "sitemap.xml → 404"
 
 # ─── 4. En-têtes, balise robots, marque ─────────────────────────────────────
@@ -165,7 +172,8 @@ else
   if [[ -z "$(entete x-robots-tag)" ]]; then ok "la production n'a pas d'X-Robots-Tag"; else ko "la production porte un X-Robots-Tag : $(entete x-robots-tag)"; fi
   if grep -q 'luminose-recette\|recette\.luminose\.fr' "$travail/corps"; then ko "la production mentionne la recette"; else ok "la production ne mentionne pas la recette"; fi
   nu https://www.luminose.fr/robots.txt >/dev/null
-  if cmp -s "$travail/corps" "$ici/../robots.txt"; then ok "le robots.txt de la production est celui du dépôt"; else ko "le robots.txt de la production a changé"; fi
+  # Celui du dépôt, derrière le bloc que le « robots.txt géré » de Cloudflare ajoute devant.
+  if [[ "$(cat "$travail/corps")" == *"$(cat "$ici/../robots.txt")" ]]; then ok "le robots.txt de la production finit par celui du dépôt"; else ko "le robots.txt de la production a changé"; fi
 fi
 
 # ─── Le mot de passe ne paraît nulle part ───────────────────────────────────

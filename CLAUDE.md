@@ -70,7 +70,11 @@ Cloudflare (`_recette/`) qui le ferme, le rend inerte et le signale.
    partout aussi. Ni workers.dev, ni aperçu, ni adresse de version.
 2. **Jamais indexée.** 401, plus `X-Robots-Tag: noindex, nofollow` sur toute
    réponse, la balise robots dans chaque page, un `robots.txt` qui interdit tout,
-   pas de sitemap.
+   pas de sitemap. Un écart, décidé par Florent le 27/11/2026 : le « robots.txt
+   géré » de la zone Cloudflare reste activé (il bloque les robots d'IA, production
+   comprise). Il place son bloc — dont `User-agent: *` / `Allow: /` — devant le
+   nôtre, et répond même sans mot de passe. Les pages, elles, restent en 401 et
+   noindex ; `controler.sh` vérifie que notre `Disallow: /` suit ce bloc.
 3. **Inerte.** Rien ne part vers Make, Calendly, Stripe, Stancer, Brevo, Tag
    Manager, Google Ads ni Mixpanel : la politique de sécurité du contenu du
    Worker les bloque, et les liens vers ces services sont rendus inertes. Rien
