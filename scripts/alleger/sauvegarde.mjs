@@ -53,4 +53,7 @@ export const SANS_USAGE = [
   'tile', 'is-ancestor', 'navbar-link', 'has-tooltip-right', 'is-half-desktop',
   // Des utilitaires du site restés sans usage.
   'heavy-purple-border', 'no-padding-right',
+  // Le parcours de réservation : un bandeau de contexte prévu par les maquettes, qu'aucun
+  // écran n'emploie plus.
+  'res-contexte',
 ];
