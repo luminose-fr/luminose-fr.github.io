@@ -1,0 +1,11 @@
+{
+  "name": "alleger-feuilles",
+  "private": true,
+  "description": "Retire des feuilles publiées les règles que le site n'utilise pas, puis vérifie qu'aucune classe utilisée n'a perdu sa règle. Appelé par scripts/construire.sh.",
+  "type": "module",
+  "dependencies": {
+    "postcss": "8.5.33",
+    "postcss-selector-parser": "7.2.1",
+    "purgecss": "9.1.0"
+  }
+}

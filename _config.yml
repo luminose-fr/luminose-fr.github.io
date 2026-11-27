@@ -34,7 +34,8 @@ exclude: [
           "Gemfile",
           "Gemfile.lock",
           "CLAUDE.md",
-          "TODO"
+          "TODO",
+          "scripts"
          ]
 
 plugins:
