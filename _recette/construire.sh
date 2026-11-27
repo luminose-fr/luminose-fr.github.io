@@ -52,6 +52,11 @@ fi
 (
   cd "$jetable"
   export JEKYLL_ENV=production
+  # La construction de la révision peut demander ses propres outils (l'allègement
+  # des feuilles : scripts/alleger/) : ils s'installent dans le jetable.
+  if [[ -f scripts/alleger/package-lock.json && ! -d scripts/alleger/node_modules ]]; then
+    npm ci --prefix scripts/alleger --no-audit --no-fund
+  fi
   if [[ -x scripts/construire.sh ]]; then
     scripts/construire.sh "${options[@]}"
   else
