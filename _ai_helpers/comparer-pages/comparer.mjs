@@ -160,11 +160,11 @@ const charger = async (page, url) => {
  */
 const ETATS = [
   { nom: 'menu-ouvert', largeurs: [390], parGabarit: true, existe: '#bt-navigation', jouer: (p) => p.click('#bt-navigation') },
-  { nom: 'bandeau-cookies', parGabarit: true, sansCookie: true, existe: '#md-cookies', jouer: async () => {} },
-  { nom: 'rdv-accueil', parGabarit: true, existe: '.bt-prise-rdv', jouer: (p) => p.locator('.bt-prise-rdv').first().click() },
-  { nom: 'rdv-nouveau-client', parGabarit: true, existe: '.bt-prise-rdv', jouer: async (p) => { await p.locator('.bt-prise-rdv').first().click(); await p.click('#bt-choix-nouveau-client'); } },
-  { nom: 'rdv-deja-client', parGabarit: true, existe: '.bt-prise-rdv', jouer: async (p) => { await p.locator('.bt-prise-rdv').first().click(); await p.click('#bt-choix-deja-client'); } },
-  { nom: 'rdv-seance-adulte', parGabarit: true, existe: '.bt-prise-rdv', jouer: async (p) => { await p.locator('.bt-prise-rdv').first().click(); await p.click('#bt-choix-deja-client'); await p.click('#bt-choix-lieu-adulte'); } },
+  { nom: 'bandeau-cookies', parGabarit: true, zone: 'fenetre', sansCookie: true, existe: '#md-cookies', jouer: async () => {} },
+  { nom: 'rdv-accueil', parGabarit: true, zone: 'fenetre', existe: '.bt-prise-rdv', jouer: (p) => p.locator('.bt-prise-rdv').first().click() },
+  { nom: 'rdv-nouveau-client', parGabarit: true, zone: 'fenetre', existe: '.bt-prise-rdv', jouer: async (p) => { await p.locator('.bt-prise-rdv').first().click(); await p.click('#bt-choix-nouveau-client'); } },
+  { nom: 'rdv-deja-client', parGabarit: true, zone: 'fenetre', existe: '.bt-prise-rdv', jouer: async (p) => { await p.locator('.bt-prise-rdv').first().click(); await p.click('#bt-choix-deja-client'); } },
+  { nom: 'rdv-seance-adulte', parGabarit: true, zone: 'fenetre', existe: '.bt-prise-rdv', jouer: async (p) => { await p.locator('.bt-prise-rdv').first().click(); await p.click('#bt-choix-deja-client'); await p.click('#bt-choix-lieu-adulte'); } },
   // Sans envoyer : la bulle de validation du navigateur n'est pas du CSS, et son apparition n'est pas stable.
   // Une saisie invalide puis la sortie du champ : la validation du site, et :user-invalid, prennent la main.
   { nom: 'formulaire-en-erreur', existe: 'form input[type=email], form input[required]', jouer: async (p) => {
@@ -176,10 +176,10 @@ const ETATS = [
   { nom: 'onglets', existe: '#hypnotherapy-tabs .tabs a', jouer: (p) => p.locator('#hypnotherapy-tabs .tabs a').last().click() },
   { nom: 'details-ouverts', existe: 'details', jouer: (p) => p.evaluate(() => document.querySelectorAll('details').forEach((d) => { d.open = true; })) },
   { nom: 'image-agrandie', existe: 'img[data-action=zoom]', jouer: (p) => p.locator('img[data-action=zoom]').first().click() },
-  { nom: 'survol-bouton', parGabarit: true, existe: '.button', zone: '.button', jouer: (p) => p.locator('.button:visible').first().hover() },
-  { nom: 'focus-bouton', parGabarit: true, existe: '.button', zone: '.button', jouer: (p) => p.evaluate(() => { const b = [...document.querySelectorAll('.button')].find((x) => x.offsetParent); b?.focus({ focusVisible: true }); }) },
-  { nom: 'survol-lien', parGabarit: true, existe: 'a', zone: 'main a, .content a, a', jouer: (p) => p.locator('main a:visible, .content a:visible').first().hover() },
-  { nom: 'focus-lien', parGabarit: true, existe: 'a', zone: 'a', jouer: (p) => p.evaluate(() => { const a = [...document.querySelectorAll('main a, .content a')].find((x) => x.offsetParent); a?.focus({ focusVisible: true }); }) },
+  { nom: 'survol-bouton', parGabarit: true, existe: '.button', zone: 'element', jouer: async (p) => { const b = p.locator('.button:visible').first(); await b.evaluate((e) => e.scrollIntoView({ block: 'center' })); await b.hover(); } },
+  { nom: 'focus-bouton', parGabarit: true, existe: '.button', zone: 'element', jouer: (p) => p.evaluate(() => { const b = [...document.querySelectorAll('.button')].find((x) => x.offsetParent); b?.scrollIntoView({ block: 'center' }); b?.focus({ focusVisible: true }); }) },
+  { nom: 'survol-lien', parGabarit: true, existe: 'a', zone: 'element', jouer: async (p) => { const a = p.locator('main a:visible, .content a:visible').first(); await a.evaluate((e) => e.scrollIntoView({ block: 'center' })); await a.hover(); } },
+  { nom: 'focus-lien', parGabarit: true, existe: 'a', zone: 'element', jouer: (p) => p.evaluate(() => { const a = [...document.querySelectorAll('main a, .content a')].find((x) => x.offsetParent); a?.scrollIntoView({ block: 'center' }); a?.focus({ focusVisible: true }); }) },
 ];
 export const ETATS_NON_REJOUABLES = [
   'la fenêtre Calendly chargée (elle demande le réseau de Calendly)',
@@ -243,25 +243,37 @@ const main = async () => {
     for (const p of [pa, pb]) p.setDefaultTimeout(5000);
     try {
       await Promise.all([charger(pa, sa.origine + t.chemin), charger(pb, sb.origine + t.chemin)]);
-      let zone = null;
       if (t.etat) {
         for (const p of [pa, pb]) {
           await t.etat.jouer(p).catch(() => {});
           await p.waitForTimeout(300);
         }
-        if (t.etat.zone) {
-          const boite = await pa.evaluate(() => {
-            const el = document.activeElement && document.activeElement !== document.body ? document.activeElement : document.querySelector(':hover:not(html):not(body)');
-            const r = (el ?? document.body).getBoundingClientRect();
-            return { x: Math.max(r.x - 24, 0), y: Math.max(r.y - 24, 0), width: r.width + 48, height: r.height + 48 };
-          });
-          zone = { ...boite, width: Math.min(boite.width, t.largeur - boite.x), height: Math.min(boite.height, 900 - boite.y) };
-          if (!(zone.width > 0 && zone.height > 0)) zone = null;
-        }
       }
-      const options = t.etat ? (zone ? { clip: zone } : {}) : { fullPage: true };
+      /**
+       * La zone d'un état, mesurée sur CHAQUE page : l'élément survolé ou qui a le focus
+       * (avec la marge de son contour), ou la fenêtre ouverte. Le fond d'une fenêtre est déjà
+       * comparé page par page ; un survol peut faire défiler la page, chacune à son rythme.
+       */
+      const zoneDe = (p) => p.evaluate(({ zone, largeur }) => {
+        let el = null;
+        // Une liste de sélecteurs rend le premier élément du document : la fenêtre entière passerait avant sa carte.
+        if (zone === 'fenetre') el = document.querySelector('.modal.is-active .modal-card') ?? document.querySelector('.modal.is-active .modal-content') ?? document.querySelector('.modal.is-active');
+        else if (zone) el = document.activeElement && document.activeElement !== document.body ? document.activeElement : [...document.querySelectorAll(':hover')].pop();
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        const x = Math.max(Math.floor(r.x) - 24, 0);
+        const y = Math.max(Math.floor(r.y) - 24, 0);
+        const b = { x, y, width: Math.min(Math.ceil(r.width) + 48, largeur - x), height: Math.min(Math.ceil(r.height) + 48, window.innerHeight - y) };
+        return b.width > 0 && b.height > 0 ? b : null;
+      }, { zone: t.etat?.zone ?? null, largeur: t.largeur });
+      const optionsDe = async (p) => {
+        if (!t.etat) return { fullPage: true, timeout: 120_000 };
+        const zone = t.etat.zone ? await zoneDe(p) : null;
+        return zone ? { clip: zone, timeout: 60_000 } : { timeout: 60_000 };
+      };
       // Une photo n'est retenue que lorsque la page ne bouge plus : deux photos de suite identiques.
       const stable = async (p) => {
+        const options = await optionsDe(p);
         let precedente = await p.screenshot(options);
         for (let i = 0; i < 6; i++) {
           await p.waitForTimeout(200);
