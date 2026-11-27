@@ -19,7 +19,7 @@
  * un arbre git. Le rapport (rapport.md, et une image de chaque écart) y est écrit.
  */
 import http from 'node:http';
-import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs';
+import { createReadStream, existsSync, mkdirSync, readdirSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 import { chromium } from 'playwright';
 import pixelmatch from 'pixelmatch';
@@ -206,7 +206,11 @@ const nomDeFichier = (s) => s.replace(/^\//, '').replace(/[^a-zA-Z0-9.-]+/g, '_'
 
 const main = async () => {
   const [sa, sb] = await Promise.all([servir(AVANT), servir(APRES)]);
-  const navigateur = await chromium.launch(existsSync('/opt/pw-browsers/chromium') ? { executablePath: '/opt/pw-browsers/chromium' } : {});
+  // Un rendu déterministe : pas de rastérisation partielle ni de GPU, une seule gamme de couleurs,
+  // pas de lissage sous-pixel. Sans eux, deux rendus de la même page diffèrent de quelques pixels.
+  const ARGUMENTS = ['--disable-gpu', '--disable-gpu-rasterization', '--disable-partial-raster', '--force-color-profile=srgb',
+    '--disable-lcd-text', '--font-render-hinting=none', '--disable-skia-runtime-opts'];
+  const navigateur = await chromium.launch({ args: ARGUMENTS, ...(existsSync('/opt/pw-browsers/chromium') ? { executablePath: '/opt/pw-browsers/chromium' } : {}) });
   const resultats = [];
   const rejoues = new Map();
   const gabaritsVus = new Map();
@@ -218,7 +222,23 @@ const main = async () => {
     }
   }
 
+  /**
+   * Un écart se confirme : la paire est rechargée et rephotographiée, jusqu'à trois fois.
+   * Une différence due au CSS revient à chaque fois ; un pixel de rastérisation, non.
+   */
   const photographier = async (ctxA, ctxB, t) => {
+    for (let essai = 1; ; essai++) {
+      const r = await unePaire(ctxA, ctxB, t, essai === 1);
+      if (!r.ecart || essai === 3) {
+        // Un écart qui ne s'est pas confirmé ne laisse pas d'image derrière lui.
+        if (!r.ecart && essai > 1) rmSync(join(SORTIE, 'ecarts', `${nomDeFichier(t.chemin)}__${t.largeur}__${t.theme.nom}${t.etat ? `__${t.etat.nom}` : ''}.png`), { force: true });
+        resultats.push(r.ligne);
+        return;
+      }
+    }
+  };
+
+  const unePaire = async (ctxA, ctxB, t, premiere) => {
     const [pa, pb] = await Promise.all([ctxA.newPage(), ctxB.newPage()]);
     for (const p of [pa, pb]) p.setDefaultTimeout(5000);
     try {
@@ -240,16 +260,28 @@ const main = async () => {
         }
       }
       const options = t.etat ? (zone ? { clip: zone } : {}) : { fullPage: true };
-      const [ia, ib] = await Promise.all([pa.screenshot(options), pb.screenshot(options)]);
+      // Une photo n'est retenue que lorsque la page ne bouge plus : deux photos de suite identiques.
+      const stable = async (p) => {
+        let precedente = await p.screenshot(options);
+        for (let i = 0; i < 6; i++) {
+          await p.waitForTimeout(200);
+          const courante = await p.screenshot(options);
+          if (courante.equals(precedente)) return courante;
+          precedente = courante;
+        }
+        return precedente;
+      };
+      const [ia, ib] = await Promise.all([stable(pa), stable(pb)]);
       const r = comparerImages(ia, ib);
       const libelle = `${t.chemin} · ${t.largeur} px · ${t.theme.nom}${t.etat ? ` · ${t.etat.nom}` : ''}`;
+      let ligne = { libelle, ecart: 0 };
       if (r.ecart) {
         const nom = `${nomDeFichier(t.chemin)}__${t.largeur}__${t.theme.nom}${t.etat ? `__${t.etat.nom}` : ''}.png`;
         writeFileSync(join(SORTIE, 'ecarts', nom), r.image);
-        resultats.push({ libelle, ecart: r.ecart, raison: r.raison, image: `ecarts/${nom}` });
-      } else resultats.push({ libelle, ecart: 0 });
+        ligne = { libelle, ecart: r.ecart, raison: r.raison, image: `ecarts/${nom}` };
+      }
       // Les états qui existent sur cette page, pour la passe suivante.
-      if (!t.etat && !SANS_ETATS) {
+      if (premiere && !t.etat && !SANS_ETATS) {
         const signature = await pa.evaluate(() => `${document.body.className}|${!!document.getElementById('main-navbar')}|${!!document.getElementById('md-prise-rdv')}|${!!document.getElementById('md-cookies')}`);
         for (const etat of ETATS) {
           if (etat.largeurs && !etat.largeurs.includes(t.largeur)) continue;
@@ -266,6 +298,7 @@ const main = async () => {
           rejoues.set(etat.nom, (rejoues.get(etat.nom) ?? 0) + 1);
         }
       }
+      return { ecart: r.ecart, ligne };
     } finally {
       await Promise.all([pa.close(), pb.close()]);
     }
