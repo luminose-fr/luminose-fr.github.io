@@ -30,3 +30,27 @@ export const MOTIFS = [
   // Bulma s'en sert aussi pour ses variables de thème.
   /data-theme/,
 ];
+
+/**
+ * Les classes que les feuilles du site (_sass/ui-*.scss) stylent, et qu'aucune
+ * page n'emploie aujourd'hui : leurs règles sont retirées, et c'est voulu.
+ * Le contrôle exige qu'une classe stylée par le site soit employée, sauvée
+ * ci-dessus, ou déclarée ici : retirer de CLASSES une classe posée par un outil
+ * extérieur fait donc échouer la construction, en la nommant.
+ */
+export const SANS_USAGE = [
+  // Composées par les gabarits Liquid (« evenement-{{ type }} ») : dès qu'un évènement de
+  // ce type est publié, la classe est dans le HTML construit et ses règles restent d'elles-mêmes.
+  'evenement-hypnose', 'evenement-meditation', 'evenement-respiration-holotropique',
+  // Le calendrier des évènements (mois, année) et son bouton, absents des pages actuelles.
+  'annee', 'mois-annee', 'bt-evenements',
+  // Les formulaires d'inscription et de paiement d'avant la refonte.
+  'amount-input', 'inscription-rapide', 'with-push-confirmation',
+  // Des icônes de la police du site qu'aucune page n'affiche.
+  'icon-chevron-droite', 'icon-etoile', 'icon-relations',
+  // Des retouches de composants Bulma que le site n'emploie plus (tuiles, liens de menu
+  // déroulant, infobulle à droite, demi-colonne sur ordinateur).
+  'tile', 'is-ancestor', 'navbar-link', 'has-tooltip-right', 'is-half-desktop',
+  // Des utilitaires du site restés sans usage.
+  'heavy-purple-border', 'no-padding-right',
+];
