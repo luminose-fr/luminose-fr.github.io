@@ -15,3 +15,7 @@ images/**/*-*w.jpg
 images/**/*-*w.png
 images/**/*-*w.webp
 images/**/*.webp
+
+# Outils de construction et de comparaison : leurs dépendances s'installent (npm ci)
+scripts/alleger/node_modules/
+_ai_helpers/comparer-pages/node_modules/

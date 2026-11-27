@@ -1,0 +1,14 @@
+{
+  "name": "comparer-pages",
+  "private": true,
+  "description": "Compare deux sites construits, page par page, pixel par pixel. Outil de travail : rien de ce dossier n'est publié ni chargé par le site.",
+  "type": "module",
+  "scripts": {
+    "comparer": "node comparer.mjs"
+  },
+  "dependencies": {
+    "pixelmatch": "7.1.0",
+    "playwright": "1.61.1",
+    "pngjs": "7.0.0"
+  }
+}

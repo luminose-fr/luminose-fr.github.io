@@ -37,15 +37,23 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.9' # Not needed with a .ruby-version file
+          ruby-version: '3.3.14' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           cache-version: 0 # Increment this number if you need to re-download cached gems
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v6
-      - name: Build with Jekyll
-        # Outputs to the './_site' directory by default
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install CSS tools
+        # Versions exactes : scripts/alleger/package-lock.json
+        run: npm ci --prefix scripts/alleger
+      - name: Build with Jekyll, then lighten the stylesheets
+        # Un seul chemin : le même script qu'en local (scripts/construire.sh).
+        # Il échoue, et la publication avec, si une classe utilisée a perdu sa règle.
+        run: ./scripts/construire.sh --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
       - name: Upload artifact

@@ -49,6 +49,10 @@ Florent est psychopraticien, pas professionnel de santé. Par rigueur et conform
 - Images du blog : `/images/blog/{image_name}.jpg` + variante `@2x`.
 - Encodage **UTF-8** partout. Vérifier qu'aucune modification n'introduit de caractères mal encodés.
 - Après toute modification : `jekyll build` (ou `bundle exec jekyll build`) doit passer sans erreur ni warning nouveau.
+- **Les feuilles publiées sont allégées à la construction.** `scripts/construire.sh` (celui qu'appelle le workflow de publication) fait `jekyll build`, puis retire de `css/critical.css` et `css/main.css` les règles qu'aucune page ni aucun script de `js/` n'emploie. Les sources Sass ne changent pas.
+- Une classe qu'un script compose sans l'écrire en clair, ou qu'un outil extérieur pose dans la page (Calendly, reCAPTCHA…), s'ajoute à la liste de sauvegarde, `scripts/alleger/sauvegarde.mjs`, avec sa raison. Une classe stylée dans `_sass/ui-*.scss` qu'aucune page n'emploie plus s'y déclare sans usage.
+- Sinon, le contrôle de la construction échoue, et la publication avec : son message nomme la classe et dit quoi faire.
+- `./run.sh` sert les feuilles complètes, sans retrait. Pour voir le site tel qu'il sera publié : `./scripts/construire.sh` (outils : `npm ci --prefix scripts/alleger`). Pour comparer deux constructions page par page : `_ai_helpers/comparer-pages/`.
 
 ## Workflow Git
 
