@@ -1,0 +1,29 @@
+// La recette du site : un Worker devant les fichiers construits (CLAUDE.md, « Recette »).
+//
+// Une seule adresse : recette.luminose.fr. Ni workers.dev, ni aperçu, ni adresse
+// de version — `workers_dev: false` ne coupe pas les adresses de version, d'où
+// `preview_urls: false`. Aucune base, aucun stockage, aucun autre secret que
+// RECETTE_MOT_DE_PASSE (posé par `wrangler secret put`, jamais ici).
+//
+// `site/` est la construction de la branche mise en recette : écrite par
+// mettre-en-recette.sh dans un dossier jetable, jamais versionnée.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "luminose-site-recette",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "recette.luminose.fr", "custom_domain": true }],
+  "assets": {
+    "directory": "./site",
+    "binding": "ASSETS",
+    // Le Worker reçoit tout, avant les fichiers : sans quoi un fichier existant
+    // serait servi sans mot de passe ni en-têtes.
+    "run_worker_first": true,
+    // Les adresses se résolvent dans le Worker, comme GitHub Pages les résout.
+    "html_handling": "none",
+    "not_found_handling": "none"
+  },
+  "observability": { "enabled": false }
+}
