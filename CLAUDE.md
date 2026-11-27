@@ -57,6 +57,51 @@ Florent est psychopraticien, pas professionnel de santé. Par rigueur et conform
 - La refonte structurelle (navigation, nouvelles pages) vit sur une branche longue durée : elle n'est mergée qu'après validation visuelle complète par Florent (desktop et mobile, thèmes clair et sombre).
 - À la fin de chaque session : `bundle exec jekyll build` sans erreur, puis pousser la branche et résumer les changements — ne pas merger soi-même sauf instruction explicite.
 
+## Recette
+
+Une branche se regarde avant d'être fusionnée sur **https://recette.luminose.fr** :
+le site construit comme la production le construit, servi par un Worker
+Cloudflare (`_recette/`) qui le ferme, le rend inerte et le signale.
+
+**Ses quatre garanties**, que tout changement doit garder :
+
+1. **Fermée par défaut.** 401 partout sans le mot de passe (secret
+   `RECETTE_MOT_DE_PASSE`, posé par `wrangler secret put`). Secret absent : 401
+   partout aussi. Ni workers.dev, ni aperçu, ni adresse de version.
+2. **Jamais indexée.** 401, plus `X-Robots-Tag: noindex, nofollow` sur toute
+   réponse, la balise robots dans chaque page, un `robots.txt` qui interdit tout,
+   pas de sitemap.
+3. **Inerte.** Rien ne part vers Make, Calendly, Stripe, Stancer, Brevo, Tag
+   Manager, Google Ads ni Mixpanel : la politique de sécurité du contenu du
+   Worker les bloque, et les liens vers ces services sont rendus inertes. Rien
+   n'est mesuré en recette.
+4. **Reconnaissable.** La pastille « Recette » sur chaque page ; la toucher
+   montre la branche, le commit, et les appels bloqués.
+
+**Qui la met en recette : Florent seul**, depuis la VM, dans une copie de
+`master` à jour et propre : `_recette/mettre-en-recette.sh <branche>`
+(`--essai` pour tout voir sans rien déployer). Une session ne lance jamais
+`wrangler deploy` ni `wrangler secret`.
+
+**Pas de « si recette » dans le site.** Le site ne sait pas qu'il est en
+recette : `_config.recette.yml`, chargé en second, ne change que des adresses,
+et `_recette/comparer.sh` le prouve. Ses clés :
+
+- `url` : `https://recette.luminose.fr` ;
+- `environnement` : `recette` (absente en production) ;
+- `api_origine` : l'origine de l'API de gestion, `https://api-recette.luminose.fr`
+  en recette. Un template qui appelle l'API écrit
+  `{{ site.api_origine | default: "https://api.luminose.fr" }}`, jamais une
+  adresse en dur.
+
+**Une origine nouvelle, nécessaire à l'affichage** (une police, un lecteur, des
+images d'un tiers), s'ajoute dans `_recette/src/regles.js`, dans sa seule
+directive, avec ses essais. Sans quoi la recette la bloque, et c'est voulu : un
+service ne s'y ajoute jamais.
+
+Le détail : `_recette/RELEVE.md` (ce qui sort du site), et les essais de
+`_recette/test/` (`npm test` dans `_recette/`, sur la VM).
+
 ## Garde-fous absolus
 
 1. **Ne jamais casser une URL existante.** Tout renommage ou déplacement exige une redirection 301 (ou équivalent selon l'hébergeur).
