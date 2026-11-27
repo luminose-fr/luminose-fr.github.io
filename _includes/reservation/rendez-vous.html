@@ -70,9 +70,6 @@
     pas), le titre ne demande plus de choisir. {% endcomment %}
     <h1 id="t-creneau" tabindex="-1" data-rdv-titre data-titre="Choisissez un créneau" data-titre-sans-creneau="Prendre rendez-vous">Choisissez un créneau</h1>
     <p class="res-intro">{{ include.intro }}</p>
-    {% if payant %}
-    <p class="res-intro">Les premiers créneaux sont dans trois semaines.{% if liste_attente %} À la dernière étape, vous pourrez demander à être prévenu(e) si une place se libère plus tôt.{% endif %}</p>
-    {% endif %}
 
     <p class="res-etat" data-rdv-attente role="status">Recherche des créneaux libres…</p>
 
