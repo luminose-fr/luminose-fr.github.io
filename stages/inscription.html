@@ -1,0 +1,33 @@
+---
+layout: campagne
+title: "Inscription - Journée en groupe - Luminose"
+section: evenements
+sitemap: false
+---
+{% comment %}
+  L'inscription à une journée sans breathwork (méditation…), organisée sur le site :
+  la date, les coordonnées, puis le paiement. Un évènement y mène quand son
+  url_inscription est /stages/inscription.html?notion_page_id=<son identifiant>.
+  Gestion ne reçoit pas encore les inscriptions : l'envoi et le paiement restent simulés.
+{% endcomment %}
+{% assign futures = site.evenements | where_exp: "e", "e.date > site.time" | where_exp: "e", "e.nombre_places_libres > 0" | sort: "date" %}
+{% assign journees_site = "" | split: "" %}
+{% for e in futures %}{% if e.url_inscription contains "/stages/inscription.html" %}{% assign journees_site = journees_site | push: e %}{% endif %}{% endfor %}
+
+<section class="campagne-section campagne-etape res-section">
+  <div class="campagne-conteneur">
+    <div class="res-page">
+      {% if journees_site.size > 0 %}
+      {% include reservation/parcours.html etape=1 libelles="Inscription|Paiement|Confirmation" %}
+      {% include reservation/questionnaire.html contexte="groupe" questionnaire="non" intitule="Méditation en groupe." evenements=journees_site suite="/maquettes/reservation/paiement.html?stage=sans-breathwork" reel="oui" %}
+      {% else %}
+      <h1>Inscription à une journée</h1>
+      <p>L'inscription est impossible pour l'instant&nbsp;: aucune journée n'est ouverte sur le site.</p>
+      <div class="res-actions">
+        <a class="button is-primary" href="{{ site.baseurl }}/evenements.html">Voir l'agenda</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% if journees_site.size > 0 %}<script defer src="{{ site.baseurl }}/js/reservation.js"></script>{% endif %}

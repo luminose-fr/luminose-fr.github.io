@@ -14,12 +14,12 @@ sitemap: false
             <div class="block">
               <h1 class="icon-text"><i class="icon icon-confirmation"></i> Votre inscription est terminée&nbsp;!</h1>
               <p>Vous allez recevoir un e-mail de confirmation.</p>
-              <p>Je relis votre questionnaire avant la journée. Si une réponse demande que nous en parlions, je vous écris ou je vous appelle.</p>
+              <p data-si-breathwork>Je relis votre questionnaire avant la journée. Si une réponse demande que nous en parlions, je vous écris ou je vous appelle.</p>
               <p>Vous recevrez un rappel par e-mail, avec plus de détails sur les aspects pratiques, une semaine avant la journée.</p>
-              <div class="light-bg">
+              <div class="light-bg" data-si-breathwork>
                 <h3>Important</h3>
                 <p>S'il s'agit de <strong>votre première journée de breathwork holotropique avec moi</strong>, nous faisons d'abord un entretien d'environ 20 minutes (téléphone ou visio).</p>
-                <p><a class="button is-primary" href="#">Réserver l'entretien de 20 minutes</a></p>
+                <p><a class="button is-primary" href="/rendez-vous/entretien-breathwork.html">Réserver l'entretien de 20 minutes</a></p>
               </div>
             </div>
           </div>
@@ -28,3 +28,10 @@ sitemap: false
     </div>
   </div>
 </section>
+<script>
+  // Une journée sans breathwork (?stage=sans-breathwork) : ni questionnaire, ni entretien.
+  (function () {
+    if (new URLSearchParams(location.search).get('stage') !== 'sans-breathwork') return;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-si-breathwork]'), function (el) { el.remove(); });
+  })();
+</script>

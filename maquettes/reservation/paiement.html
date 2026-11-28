@@ -10,10 +10,17 @@ sitemap: false
     <div class="res-page">
       {% include reservation/parcours.html etape=2 libelles="Inscription|Paiement|Confirmation" %}
       <h1>Paiement</h1>
-      <p>Ici, la page de paiement actuelle, qui ne change pas.</p>
+      <p>Ici, la page de paiement actuelle, qui ne change pas. Le paiement d'un stage n'est pas encore relié à gestion&nbsp;: il est simulé.</p>
       <div class="res-actions">
-        <a class="button is-primary" href="/maquettes/reservation/inscription-confirmee.html">Simuler le paiement</a>
+        <a class="button is-primary" href="/maquettes/reservation/inscription-confirmee.html" data-paiement-suite>Simuler le paiement</a>
       </div>
     </div>
   </div>
 </section>
+<script>
+  // Une journée sans breathwork (?stage=sans-breathwork) le dit à la confirmation.
+  (function () {
+    var stage = new URLSearchParams(location.search).get('stage');
+    if (stage === 'sans-breathwork') document.querySelector('[data-paiement-suite]').href += '?stage=sans-breathwork';
+  })();
+</script>
