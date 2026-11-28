@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Maquettes — réservation et questionnaire - Luminose"
+title: "Les parcours plus rares - Luminose"
 section: maquette-entete
 layout_remove_florent: true
 layout_remove_newsletter: true
@@ -12,58 +12,42 @@ sitemap: false
 <section class="section article">
   <div class="container">
     <div class="content">
-      <h1>Maquettes : réservation et questionnaire</h1>
-      <p>Données fictives : les formulaires n'envoient rien.</p>
-      <p class="is-hidden-tablet">Sur téléphone, cette page porte aussi une proposition d'en-tête : la barre, le sous-menu de la rubrique et le menu.</p>
+      <h1>Les parcours plus rares</h1>
+      <p>Les parcours courants se font sur les pages du site&nbsp;: le bouton «&nbsp;Prendre un rendez-vous&nbsp;», la découverte du breathwork, l'agenda des stages. Cette page montre les écrans qu'on ne voit qu'en cas de souci, ou par un chemin peu fréquent. Ici, rien n'est envoyé&nbsp;: les créneaux sont inventés et chaque situation est simulée.</p>
+      <p class="is-hidden-tablet">Sur téléphone, cette page porte aussi une proposition d'en-tête&nbsp;: la barre, le sous-menu de la rubrique et le menu.</p>
 
-      <h2>Prendre un rendez-vous, sans Calendly</h2>
-      <p>Les créneaux sont inventés : lundi et jeudi, à partir de dans trois semaines pour une séance, de demain pour un échange.</p>
+      <h2>Les parcours courants, sur le site</h2>
+      <ul>
+        <li><a href="/rendez-vous/rencontre.html">Premier échange de 20 minutes</a>, <a href="/rendez-vous/seance.html">séance</a>, <a href="/rendez-vous/seance-distance.html">séance à distance</a>, <a href="/rendez-vous/seance-enfant.html">séance enfant</a>, <a href="/rendez-vous/breathwork.html">séance de breathwork, suivie du questionnaire</a></li>
+        <li><a href="/respiration-holotropique/decouverte.html">Découverte du breathwork</a> (la landing de campagne)</li>
+        <li><a href="/evenements.html">L'agenda</a>, avec deux stages d'essai&nbsp;: une journée de breathwork (inscription avec questionnaire) et une méditation (inscription sans questionnaire)</li>
+      </ul>
+
+      <h2>Prendre un rendez-vous</h2>
       <ol>
-        <li><a href="/maquettes/reservation/rendez-vous-seance.html">Séance</a></li>
-        <li><a href="/maquettes/reservation/rendez-vous-seance-distance.html">Séance à distance</a></li>
-        <li><a href="/maquettes/reservation/rendez-vous-seance-enfant.html">Séance enfant</a></li>
-        <li><a href="/maquettes/reservation/rendez-vous-breathwork.html">Séance de breathwork, suivie du questionnaire</a></li>
-        <li><a href="/maquettes/reservation/rendez-vous-rencontre.html">Premier échange de 20 minutes (nouveau client)</a></li>
         <li><a href="/maquettes/reservation/rendez-vous-seance.html?simuler=pris">Le créneau est pris pendant la saisie (au dernier écran)</a></li>
         <li><a href="/maquettes/reservation/rendez-vous-seance.html?simuler=vide">Aucun créneau libre</a></li>
         <li><a href="/maquettes/reservation/rendez-vous-seance.html?simuler=panne">La réservation ne répond pas : le téléphone</a></li>
         <li><a href="/maquettes/reservation/rendez-vous-seance.html?simuler=lent">Réservation qui dure (au dernier écran)</a></li>
         <li><a href="/maquettes/reservation/rendez-vous-seance.html?simuler=echec">Réservation qui échoue (au dernier écran)</a></li>
-        <li><a href="/maquettes/reservation/confirmation-rendez-vous.html?type=seance&event_start_time=2026-12-17T14%3A30%3A00%2B01%3A00">Confirmation d'un rendez-vous</a></li>
       </ol>
 
-      <h2>Séance de breathwork, déjà client</h2>
+      <h2>Le questionnaire d'une séance de breathwork</h2>
       <ol>
-        <li><a href="/maquettes/reservation/questionnaire-seance.html?invitee_uuid=maquette-seance-1&invitee_first_name=Camille&invitee_last_name=Martin&invitee_email=camille.martin%40exemple.fr&text_reminder_number=%2B33%206%2012%2034%2056%2078&event_start_time=2026-12-10T14%3A00%3A00%2B01%3A00">Questionnaire, juste après la réservation</a></li>
-        <li><a href="/maquettes/reservation/questionnaire-seance.html?invitee_uuid=maquette-seance-2&event_start_time=2026-12-17T10%3A30%3A00%2B01%3A00">Questionnaire ouvert depuis l'e-mail de rappel (identifiant et date seulement)</a></li>
-        <li><a href="/maquettes/reservation/questionnaire-seance.html">Questionnaire ouvert par un lien nu (coordonnées demandées)</a></li>
+        <li><a href="/maquettes/reservation/questionnaire-seance.html?invitee_uuid=maquette-seance-2&event_start_time=2026-12-17T10%3A30%3A00%2B01%3A00">Ouvert depuis l'e-mail de rappel (identifiant et date seulement)</a></li>
+        <li><a href="/maquettes/reservation/questionnaire-seance.html">Ouvert par un lien nu (coordonnées demandées)</a></li>
         <li><a href="/maquettes/reservation/questionnaire-seance.html?simuler=lent&invitee_uuid=maquette-seance-1&invitee_first_name=Camille&invitee_last_name=Martin&invitee_email=camille.martin%40exemple.fr&text_reminder_number=%2B33%206%2012%2034%2056%2078&event_start_time=2026-12-10T14%3A00%3A00%2B01%3A00">Envoi qui dure (message d'attente au dernier écran)</a></li>
         <li><a href="/maquettes/reservation/questionnaire-seance.html?simuler=echec&invitee_uuid=maquette-seance-1&invitee_first_name=Camille&invitee_last_name=Martin&invitee_email=camille.martin%40exemple.fr&text_reminder_number=%2B33%206%2012%2034%2056%2078&event_start_time=2026-12-10T14%3A00%3A00%2B01%3A00">Envoi qui échoue (message et « Réessayer » au dernier écran)</a></li>
-        <li><a href="/maquettes/reservation/confirmation-seance.html">Confirmation</a></li>
       </ol>
 
-      <h2>Découverte du breathwork</h2>
+      <h2>Les journées en groupe</h2>
       <ol>
-        <li><a href="/maquettes/reservation/decouverte-chemin.html">La landing : « Comment ça se passe »</a></li>
-        <li><a href="/maquettes/reservation/decouverte-rendez-vous.html">Le rendez-vous (pris sur le site)</a></li>
-        <li><a href="/maquettes/reservation/decouverte-questionnaire.html?invitee_uuid=maquette-entretien-1&invitee_first_name=Camille&invitee_last_name=Martin&invitee_email=camille.martin%40exemple.fr&text_reminder_number=%2B33%206%2012%2034%2056%2078&event_start_time=2026-12-03T18%3A00%3A00%2B01%3A00">Le questionnaire</a></li>
-        <li><a href="/maquettes/reservation/decouverte-entretien-reserve.html">La confirmation</a></li>
-      </ol>
-
-      <h2>Journées en groupe</h2>
-      <ol>
-        <li><a href="/maquettes/reservation/evenement-questionnaire.html">Page de l'évènement, avec questionnaire</a></li>
-        <li><a href="/maquettes/reservation/evenement-sans-questionnaire.html">Page de l'évènement, sans questionnaire</a></li>
-        <li><a href="/maquettes/reservation/evenement-externe.html">Page de l'évènement, inscription chez l'organisateur</a></li>
-        <li><a href="/maquettes/reservation/evenement-externe-questionnaire.html">Page de l'évènement, chez l'organisateur avec questionnaire</a></li>
-        <li><a href="/maquettes/reservation/evenement-complet.html">Page de l'évènement, complet (comme aujourd'hui)</a></li>
-        <li><a href="/maquettes/reservation/inscription-etape-1.html?notion_page_id=maquette-1">Inscription avec questionnaire, depuis la page de l'évènement (date déjà choisie)</a></li>
         <li><a href="/maquettes/reservation/inscription-etape-1.html">Inscription avec questionnaire, depuis un lien général (date à choisir)</a></li>
-        <li><a href="/maquettes/reservation/inscription-etape-1-sans-questionnaire.html?notion_page_id=maquette-1">Inscription sans questionnaire, depuis la page de l'évènement</a></li>
         <li><a href="/maquettes/reservation/inscription-etape-1-sans-questionnaire.html">Inscription sans questionnaire, depuis un lien général</a></li>
-        <li><a href="/maquettes/reservation/inscription-confirmee.html">Après le paiement : inscription terminée, entretien à réserver</a></li>
-        <li><a href="/maquettes/reservation/inscription-complet.html">Plus de place à l'envoi</a></li>
-        <li><a href="/maquettes/reservation/questionnaire-journee.html">Questionnaire d'une journée chez l'organisateur</a></li>
+        <li><a href="/maquettes/reservation/inscription-complet.html">Plus de place au moment de l'envoi</a></li>
+        <li><a href="/maquettes/reservation/evenement-complet.html">Page d'une journée complète</a></li>
+        <li><a href="/maquettes/reservation/evenement-externe.html">Page d'une journée chez un organisateur</a></li>
+        <li><a href="/maquettes/reservation/evenement-externe-questionnaire.html">Page d'une journée chez un organisateur, avec questionnaire</a>, puis <a href="/maquettes/reservation/questionnaire-journee.html">son questionnaire</a></li>
       </ol>
     </div>
   </div>

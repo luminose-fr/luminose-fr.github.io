@@ -26,6 +26,9 @@
 		          <a href="{{ site.baseurl }}/ateliers-stages.html" class="navbar-item {% if page.section == "ateliers" or page.section == "evenements" %}is-active{% endif %}">Ateliers & stages</a>
 		          <a href="{{ site.baseurl }}/ateliers-stages.html" class="navbar-item navbar-sub-item is-hidden-mobile is-hidden-tablet {% if page.section == "ateliers" %}is-active{% endif %}">Marcher ensemble</a>
 		          <a href="{{ site.baseurl }}/evenements.html" class="navbar-item navbar-sub-item is-hidden-mobile is-hidden-tablet {% if page.section == "evenements" %}is-active{% endif %}">L'agenda</a>
+		          {% comment %} RECETTE SEULEMENT (Florent, 28/11/2026) : les écrans des parcours de
+		          réservation plus rares. À retirer avant la publication. {% endcomment %}
+		          <a href="{{ site.baseurl }}/maquettes/reservation/" class="navbar-item {% if page.section == "maquette-entete" %}is-active{% endif %}">Parcours rares</a>
 	  		    </div>
 				<div class="navbar-start is-hidden-tablet is-hidden-mobile">
 					<a href="{{ site.baseurl }}/tarifs-seances-adresse.html" class="navbar-item {% if page.section == "tarifs" %}is-active{% endif %}">Tarifs & Infos pratiques</a>
