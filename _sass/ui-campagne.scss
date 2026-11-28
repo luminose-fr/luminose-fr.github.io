@@ -316,65 +316,12 @@ body.campagne {
   #introduction-questionnaire-sante,
   .campagne-encart { max-width: 46rem; }
 
-  .campagne-etapes,
-  form,
-  .campagne-calendrier { max-width: 56rem; }
+  form { max-width: 56rem; }
 
   h1 {
     font-size: 2.6rem;
     margin-bottom: 1rem;
   }
-}
-
-.campagne-etapes {
-  list-style: none;
-  margin: 0 0 2.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 2rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 2px solid v.$purple-light-border;
-
-  li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    color: v.$purple;
-    opacity: 0.6;
-  }
-
-  li.est-en-cours,
-  li.est-faite { opacity: 1; }
-
-  li.est-en-cours { color: v.$purple-heavy; }
-
-  .campagne-etapes-numero {
-    width: 1.9rem;
-    height: 1.9rem;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid currentColor;
-    font-size: 0.95rem;
-  }
-
-  li.est-en-cours .campagne-etapes-numero {
-    background-color: v.$purple;
-    border-color: v.$purple;
-    color: #FFFFFF;
-  }
-
-  li.est-faite .campagne-etapes-numero {
-    background-color: v.$green-light;
-    border-color: v.$green-light;
-    color: v.$green-heavy;
-  }
-}
-
-.campagne-calendrier {
-  min-width: 320px;
-  height: 720px;
 }
 
 .campagne-encart {
@@ -456,22 +403,6 @@ body.campagne {
   .campagne-temoignage blockquote { font-size: 1.2rem; }
 
   .campagne-etape h1 { font-size: 2rem; }
-
-  // Sur mobile, seul le libellé de l'étape en cours reste visible (les autres restent lus).
-  .campagne-etapes {
-    gap: 0.5rem 1rem;
-
-    li:not(.est-en-cours) .campagne-etapes-libelle {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-  }
-
-  .campagne-calendrier { height: 1000px; }
 }
 
 // --- Thème sombre ---
@@ -486,7 +417,6 @@ body.campagne {
   .campagne-vecu dt,
   .campagne-vecu p,
   .campagne-temoignage blockquote,
-  .campagne-etapes li.est-en-cours,
   .campagne-encart,
   .campagne-lien-secondaire { color: #FFFFFF; }
 
@@ -494,8 +424,7 @@ body.campagne {
   .campagne-pied a,
   .campagne-chemin li,
   .campagne-vecu dd,
-  .campagne-temoignage figcaption,
-  .campagne-etapes li { color: v.$dark-purple; }
+  .campagne-temoignage figcaption { color: v.$dark-purple; }
 
   .campagne-section-claire,
   .campagne-encart { background-color: v.$dark-purple-heavy; }
@@ -512,8 +441,7 @@ body.campagne {
     color: #FFFFFF;
   }
 
-  .campagne-chemin::before,
-  .campagne-etapes { border-color: v.$dark-purple-heavy; }
+  .campagne-chemin::before { border-color: v.$dark-purple-heavy; }
   .campagne-chemin::before { background-color: v.$dark-purple-heavy; }
 
   .campagne-chemin-numero {

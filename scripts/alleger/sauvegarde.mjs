@@ -46,6 +46,9 @@ export const SANS_USAGE = [
   'annee', 'mois-annee', 'bt-evenements',
   // Les formulaires d'inscription et de paiement d'avant la refonte.
   'amount-input', 'inscription-rapide', 'with-push-confirmation',
+  // Le tableau de l'ancien questionnaire de santé (_includes/formulaires/respiration-holotropique/),
+  // remplacé par celui du parcours de réservation.
+  'no-wrap',
   // Des icônes de la police du site qu'aucune page n'affiche.
   'icon-chevron-droite', 'icon-etoile', 'icon-relations',
   // Des retouches de composants Bulma que le site n'emploie plus (tuiles, liens de menu
