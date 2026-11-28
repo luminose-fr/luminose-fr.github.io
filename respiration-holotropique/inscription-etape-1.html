@@ -1,100 +1,33 @@
 ---
-layout: default
-title: Inscription journée de Respiration Holotropique
+layout: campagne
+title: "Inscription - Journée de respiration holotropique - Luminose"
 section: evenements
-layout_remove_florent: true
-layout_remove_newsletter: true
 sitemap: false
 ---
-{% if site.evenements %}
-    {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" | where_exp: "evenements", "evenements.category == 'respiration-holotropique'" %}
-{% endif %}
+{% comment %}
+  L'inscription à une journée de breathwork holotropique organisée sur le site : la date
+  (déjà retenue quand on arrive de la page de l'évènement, ?notion_page_id=…), le
+  questionnaire de santé, puis le paiement. Le questionnaire part vers gestion ;
+  l'inscription et le paiement, que gestion ne reçoit pas encore, restent simulés.
+{% endcomment %}
+{% assign journees = site.evenements | where_exp: "e", "e.date > site.time" | where_exp: "e", "e.category == 'respiration-holotropique'" | where_exp: "e", "e.nombre_places_libres > 0" | sort: "date" %}
+{% assign journees_site = "" | split: "" %}
+{% for e in journees %}{% if e.url_inscription == nil or e.url_inscription == "" %}{% assign journees_site = journees_site | push: e %}{% endif %}{% endfor %}
 
-<section class="section article questionnaire-sante">
-    <div class="container">
-        <div class="content">
-            <h1>Inscription à la journée de Respiration Holotropique</h1>
-            <p class="subtitle">Formulaire d'inscription et questionnaire préalable à la pratique</p>
-            {% if evenements_futurs.size > 0 %}
-            <div id="introduction-questionnaire-sante">
-                <p>La thérapie par la <a href="{{ site.baseurl }}/respiration-holotropique.html" target="_blank">respiration holotropique Grof® Legacy Training</a> peut impliquer des expériences intenses accompagnées d'une forte libération émotionnelle et physique. Cette pratique n'est pas recommandée pour les femmes enceintes, ni pour les personnes souffrant de problèmes cardiovasculaires, de certains troubles psychiatriques diagnostiqués, d'une chirurgie ou d'une fracture récente, d'une maladie infectieuse aiguë, d'épilepsie, d’antécédents d’AVC, d’asthme sévère, de glaucome ou d'une <a href="https://fr.wikipedia.org/wiki/Crise_spirituelle" target="_blank">urgence/crise spirituelle</a> active.</p>
-                <p>Les réponses aux questions suivantes sont destinées à m'aider à préparer notre entretien préalable et resteront strictement confidentielles.</p>
-            </div>
-            <form id="form-questionnaire-sante" class="inscription-etape-1" action="https://hook.eu1.make.com/sre5jmabxxhfragenripulx84dqsyfb2" method="POST" novalidate>
-                <input type="hidden" name="utm_term" value="">
-                <div class="columns light-bg field is-horizontal">
-                    <div class="column is-3">
-                        <label class="label">Date choisie</label>
-                    </div>
-                    <div class="column is-9">
-                        <div class="field-body">
-                            <div class="field is-narrow">
-                                <div class="control">
-                                    <div class="select is-fullwidth">
-                                        <select class="is-purple-bordered" name="notion_page_id" required>
-                                            {% for evenement in evenements_futurs %}
-                                            <option value="{{ evenement.notion_page_id }}">{{ evenement.date | dateEvenementTexte }} (de {{ evenement.date | heure }} à {{ evenement.date_fin | heure }})</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                {% include formulaires/respiration-holotropique/coordonnees.html %}
-                {% include formulaires/respiration-holotropique/coordonnees-personne-confiance.html %}
-                {% include formulaires/respiration-holotropique/sante.html %}
-                {% include formulaires/respiration-holotropique/informations-complementaires.html %}
-                {% include formulaires/respiration-holotropique/declaration.html %}
-                
-                <div class="columns boutons field is-horizontal">
-                    <div class="column is-3">
-                
-                    </div>
-                    <div class="column is-9">
-                        <div class="field-body">
-                            <div class="control">
-                                <button type="submit" class="button is-primary is-medium" data-track="bt_inscription_breathwork_vers_paiement" tabindex="0">
-                                    Valider et passer au paiement
-                                </button>
-                            </div>
-                        </div>
-                        <p class="help">Vous recevrez une copie de vos réponses par e-mail.</p>
-                    </div>
-                </div>
-            </form>
-
-            <div id="message-success-questionnaire-sante" class="confirmation columns is-centered is-hidden">
-                <div class="column is-12-mobile is-7-tablet is-6-desktop is-5-widescreen is-5-fullhd ">
-                    <div class="purple-border">
-                        <div class="block has-text-centered">
-                            <div class="illustration"><i class="icon icon-confirmation"></i></div>
-                            <h1>Votre questionnaire a bien été envoyé !</h1>
-                            <p>Vous allez recevoir un e-mail avec une copie de votre questionnaire.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="md-erreur-questionnaire-sante" class="modal">
-                <div class="modal-background"></div>
-                <div class="modal-content">
-                    <div class="illustration"><i class="icon fas fa-exclamation-triangle"></i></div>
-                    <div class="title">Erreur technique</div>
-                    <p class="content">Le site a rencontré une erreur technique et le questionnaire n'a pas été envoyé (<span id="error-details" class="small"></span>).</p>
-                    <p class="content">Vous pouvez essayer d'envoyer le questionnaire une nouvelle fois.</p>
-                    <p class="content">Si le problème persiste, vous pourrez <a href="/documents/Questionnaire-sante-respiration-holotropique.pdf" target="_blank">télécharger et remplir le questionnaire</a> puis me l'envoyer par e-mail à <a href="mailto:florent@luminose.fr?subject=Questionnaire de santé - Respiration Holotropique">florent@luminose.fr</a> en précisant la date de la journée de respiration holotropique à laquelle vous souhaitez participer.</p>
-                </div>
-
-                <button class="modal-close is-large" aria-label="close" data-bulma-modal="close"></button>
-            </div>
-
-            {% else %}
-                <p class="notification is-warning is-light">L'inscription est impossible car aucun évènement n'est planifié pour l'instant.</p>
-            {% endif %}
-        </div>
+<section class="campagne-section campagne-etape res-section">
+  <div class="campagne-conteneur">
+    <div class="res-page">
+      {% if journees_site.size > 0 %}
+      {% include reservation/parcours.html etape=1 libelles="Inscription|Paiement|Confirmation" %}
+      {% include reservation/questionnaire.html contexte="groupe" intitule="Journée de breathwork holotropique, en groupe." evenements=journees_site suite="/maquettes/reservation/paiement.html" reel="oui" %}
+      {% else %}
+      <h1>Inscription à une journée de breathwork holotropique</h1>
+      <p>L'inscription est impossible pour l'instant&nbsp;: aucune journée n'est planifiée.</p>
+      <div class="res-actions">
+        <a class="button is-primary" href="{{ site.baseurl }}/evenements.html">Voir l'agenda</a>
+      </div>
+      {% endif %}
     </div>
+  </div>
 </section>
-
+{% if journees_site.size > 0 %}<script defer src="{{ site.baseurl }}/js/reservation.js"></script>{% endif %}

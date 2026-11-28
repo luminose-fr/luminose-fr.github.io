@@ -12,7 +12,8 @@
     journée dont l'inscription se fait chez l'organisateur) ;
   - suite : la page qui suit l'envoi ;
   - questionnaire : « non » pour une journée sans breathwork (date et coordonnées seules) ;
-  - evenements : pour un groupe, les dates proposées (id, date, heure, places). Quand la
+  - evenements : pour un groupe, les dates proposées : des évènements du site, ou, dans
+    une maquette, des dates écrites (id, date, heure, places). Quand la
     page s'ouvre depuis celle d'un évènement (?notion_page_id=<id>, que son bouton
     « S'inscrire » porte déjà aujourd'hui), cette date est retenue et l'écran du choix
     est remplacé par un écran d'accueil qui la rappelle ;
@@ -34,9 +35,11 @@
   method="post" et le onsubmit en ligne : si le script ne se charge pas, le navigateur
   ne doit jamais envoyer les réponses dans l'adresse de la page.
 
-  data-api : l'origine de l'API de gestion (site.api_origine, posée par la configuration
-  de recette, CLAUDE.md). Avec elle, le questionnaire part vraiment vers la porte
-  publique (POST /v1/questionnaires) ; sans elle, l'envoi reste simulé, comme une maquette.
+  reel : « oui » sur une page du site. Le formulaire porte alors data-api, l'origine de
+  l'API de gestion (site.api_origine, celle de la production par défaut, CLAUDE.md), et le
+  questionnaire part vraiment vers la porte publique (POST /v1/questionnaires). Sans lui —
+  les maquettes —, l'envoi reste simulé. Une inscription sans questionnaire n'envoie rien :
+  la porte n'a pas encore d'entrée pour les inscriptions.
 {% endcomment %}
 {% assign contexte = include.contexte | default: "seance" %}
 {% assign avec_questionnaire = true %}
@@ -57,7 +60,7 @@
   {% assign prestation = "seance" %}
 {% endif %}
 
-<form class="res-formulaire" method="post" action="" onsubmit="return false" data-questionnaire data-contexte="{{ contexte }}" data-suite="{{ include.suite }}"{% if site.api_origine %} data-api="{{ site.api_origine }}"{% endif %}{% if contexte == "decouverte" %} data-version-fixe="complet"{% endif %}{% unless avec_questionnaire %} data-version-fixe="aucune"{% endunless %} novalidate>
+<form class="res-formulaire" method="post" action="" onsubmit="return false" data-questionnaire data-contexte="{{ contexte }}" data-suite="{{ include.suite }}"{% if include.reel == "oui" and avec_questionnaire %} data-api="{{ site.api_origine | default: "https://api.luminose.fr" }}"{% endif %}{% if contexte == "decouverte" %} data-version-fixe="complet"{% endif %}{% unless avec_questionnaire %} data-version-fixe="aucune"{% endunless %} novalidate>
   <p class="is-sr-only" aria-live="polite" data-annonce></p>
   <input type="hidden" name="prestation" value="{{ prestation }}">
   <input type="hidden" name="envoi_id" value="">
@@ -97,9 +100,22 @@
     <div class="res-panneau">
       <div class="res-choix" data-requis role="radiogroup" aria-labelledby="t-journee">
         {% for e in include.evenements %}
+        {% comment %} Un évènement du site (collection _evenements), ou une date de maquette
+        déjà écrite en texte. {% endcomment %}
+        {% if e.notion_page_id %}
+          {% assign e_id = e.notion_page_id %}
+          {% capture e_date %}{{ e.date | jourEvenement | strip }}{% endcapture %}
+          {% capture e_heure %}de {{ e.date | heure }} à {{ e.date_fin | heure }}{% endcapture %}
+          {% capture e_places %}{% if e.nombre_places_libres == 1 %}il reste 1 place{% elsif e.nombre_places_libres > 1 and e.nombre_places_libres <= 3 %}il reste {{ e.nombre_places_libres }} places{% endif %}{% endcapture %}
+        {% else %}
+          {% assign e_id = e.id %}
+          {% assign e_date = e.date %}
+          {% assign e_heure = e.heure %}
+          {% assign e_places = e.places %}
+        {% endif %}
         <div class="res-choix-option">
-          <input class="is-checkradio" id="journee-{{ forloop.index }}" type="radio" name="notion_page_id" value="{{ e.id }}" data-libelle="{{ e.date }}, {{ e.heure }}">
-          <label for="journee-{{ forloop.index }}">{{ e.date }}<span class="res-choix-detail">{{ e.heure }}{% if e.places %} · {{ e.places }}{% endif %}</span></label>
+          <input class="is-checkradio" id="journee-{{ forloop.index }}" type="radio" name="notion_page_id" value="{{ e_id }}" data-libelle="{{ e_date }}, {{ e_heure }}">
+          <label for="journee-{{ forloop.index }}">{{ e_date }}<span class="res-choix-detail">{{ e_heure }}{% if e_places and e_places != "" %} · {{ e_places }}{% endif %}</span></label>
         </div>
         {% endfor %}
         <p class="help is-danger res-erreur">Choisissez une date.</p>

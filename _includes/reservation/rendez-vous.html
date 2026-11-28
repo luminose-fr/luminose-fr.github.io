@@ -8,7 +8,11 @@
     seance_breathwork — la clé du type dans gestion ;
   - intro : la phrase qui dit ce qu'on réserve, sous le premier titre ;
   - suite : la page qui suit une réservation réussie (le questionnaire, ou la confirmation) ;
-  - transmettre : « oui » quand la suite est le questionnaire, qui ne redemande pas l'identité.
+  - transmettre : « oui » quand la suite est le questionnaire, qui ne redemande pas l'identité ;
+  - reel : « oui » sur une page du site — les créneaux et la réservation sont ceux de
+    gestion, à l'adresse de l'API (site.api_origine, celle de la production par défaut,
+    CLAUDE.md). Sans lui — les maquettes —, créneaux inventés et envoi simulé, pour que
+    ?simuler= montre les états rares, en recette aussi.
 
   MAQUETTE : la durée, le lieu, le tarif, les conditions et les questions sont écrits ici
   en dur. À l'intégration, ils viennent de gestion (GET /v1/reservation/types), qui en
@@ -54,7 +58,7 @@
     {% assign tarif = "80 €" %}
 {% endcase %}
 
-<form class="res-formulaire" method="post" action="" onsubmit="return false" data-questionnaire data-contexte="rendez-vous" data-version-fixe="aucune" data-rendez-vous data-type="{{ type }}" data-suite="{{ include.suite }}"{% if site.api_origine %} data-api="{{ site.api_origine }}"{% endif %}{% if include.transmettre == "oui" %} data-transmettre-identite="oui"{% endif %} novalidate>
+<form class="res-formulaire" method="post" action="" onsubmit="return false" data-questionnaire data-contexte="rendez-vous" data-version-fixe="aucune" data-rendez-vous data-type="{{ type }}" data-suite="{{ include.suite }}"{% if include.reel == "oui" %} data-api="{{ site.api_origine | default: "https://api.luminose.fr" }}"{% endif %}{% if include.transmettre == "oui" %} data-transmettre-identite="oui"{% endif %} novalidate>
   <p class="is-sr-only" aria-live="polite" data-annonce></p>
   {% comment %} La clé de l'envoi : un double appui ou une relance ne réserve qu'une fois. {% endcomment %}
   <input type="hidden" name="envoi_id" value="">

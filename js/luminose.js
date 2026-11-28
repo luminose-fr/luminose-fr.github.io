@@ -683,19 +683,8 @@ var App = {
       // Reset à la fermeture de la modale
       modal.on('modal:close', () => resetNavigation());
 
-      // Gestion des liens Calendly
-      Object.entries(this._config.urls.calendly).forEach(([key, url]) => {
-        const button = document.querySelector(`#bt-seance-${key}`);
-        if (button) {
-          button.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.close();
-            this._typeRdv = key; // pour la mesure des étapes du calendrier (setupEvenementsMesure)
-            // Calculés au clic : le visiteur a pu faire son choix de cookies depuis le chargement.
-            Calendly.initPopupWidget({ url, utm: this._getUtmParams() });
-          });
-        }
-      });
+      // Les rendez-vous se prennent sur le site (rendez-vous/*.html) : les boutons des
+      // séances sont des liens, plus des fenêtres Calendly.
 
       // Ouverture automatique depuis l'URL
       if (window.location.hash === '#prise-rdv') {

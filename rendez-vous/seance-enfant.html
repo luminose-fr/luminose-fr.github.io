@@ -1,0 +1,17 @@
+---
+layout: campagne
+title: "Prendre rendez-vous - Séance enfant - Luminose"
+section: reservation
+sitemap: false
+---
+
+<section class="campagne-section campagne-etape res-section">
+  <div class="campagne-conteneur">
+    <div class="res-page">
+      {% include reservation/parcours.html etape=1 libelles="Rendez-vous|Confirmation" %}
+      {% include reservation/rendez-vous.html type="seance_enfant" intro="Séance d'1&nbsp;h pour un enfant de 10 à 14&nbsp;ans, à Villefranche-de-Lauragais. Elle se déroule sans le ou les parents." suite="/rendez-vous/confirmation.html" reel="oui" %}
+    </div>
+  </div>
+</section>
+<script defer src="{{ site.baseurl }}/js/reservation-rdv.js"></script>
+<script defer src="{{ site.baseurl }}/js/reservation.js"></script>

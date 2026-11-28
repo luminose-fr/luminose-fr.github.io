@@ -1,0 +1,69 @@
+---
+layout: default
+title: "Rendez-vous réservé - Luminose"
+layout_remove_florent: true
+layout_remove_newsletter: true
+sitemap: false
+---
+{% comment %}
+  La confirmation d'un rendez-vous pris sur le site, pour les types sans questionnaire
+  (séance, séance à distance, séance enfant, premier échange). La date et le type
+  arrivent dans l'adresse : rien de personnel. Structure de la confirmation actuelle.
+{% endcomment %}
+{% if site.evenements %}
+  {% assign evenements_futurs = site.evenements | where_exp: "evenements", "evenements.date_fin > site.time" %}
+{% endif %}
+{% if evenements_futurs.size >= 1 %}
+  {% assign contient_evenements_futurs = true %}
+  {% assign purple_border_extra_css_class = "with-push-confirmation" %}
+{% else %}
+  {% assign columns_extra_css_class = "is-centered" %}
+{% endif %}
+<section class="section article confirmation">
+  <div class="container">
+    <div class="content">
+      <div class="columns is-multiline {{ columns_extra_css_class }}">
+        <div class="column is-12-mobile is-12-tablet is-7-desktop is-7-widescreen is-7-fullhd ">
+          <div class="purple-border {{ purple_border_extra_css_class }}">
+            <div class="block" data-confirmation-rdv>
+              <h1 class="icon-text"><i class="icon icon-confirmation"></i> Votre rendez-vous est réservé</h1>
+              <p data-rdv-date hidden><strong data-rdv-date-texte></strong></p>
+              <p>Vous allez recevoir un e-mail de confirmation, avec le rendez-vous à ajouter à votre agenda.</p>
+              <div class="light-bg">
+                <h3>La suite</h3>
+                <ol>
+                  <li data-si-type="seance seance_distance seance_enfant">Le paiement se fait au moins 3 jours avant la séance.</li>
+                  <li data-si-type="seance_distance rencontre_breathwork">Le lien de la visio est dans l'e-mail de confirmation.</li>
+                  <li data-si-type="rencontre">En visio, le lien est dans l'e-mail de confirmation. Par téléphone, je vous appelle à l'heure du rendez-vous.</li>
+                  <li>Un rappel vous est envoyé par e-mail trois jours avant, puis par SMS deux jours avant.</li>
+                  <li>Pour déplacer ou annuler le rendez-vous, écrivez-moi à <a href="mailto:florent@luminose.fr">florent@luminose.fr</a> ou appelez-moi au <a href="tel:+33637332655">06&nbsp;37&nbsp;33&nbsp;26&nbsp;55</a>.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% if contient_evenements_futurs %}
+        {% include push-confirmation.html %}
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  // La date et le type viennent de l'adresse ; sans eux, la page reste juste, en plus court.
+  (function () {
+    var bloc = document.querySelector('[data-confirmation-rdv]');
+    var adresse = new URLSearchParams(location.search);
+    var type = adresse.get('type') || '';
+    Array.prototype.forEach.call(bloc.querySelectorAll('[data-si-type]'), function (ligne) {
+      if (ligne.dataset.siType.split(' ').indexOf(type) < 0) ligne.remove();
+    });
+    var debut = adresse.get('event_start_time');
+    var date = debut ? new Date(debut) : null;
+    if (!date || isNaN(date)) return;
+    var jour = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }).format(date);
+    var heures = new Intl.DateTimeFormat('fr-FR', { hour: 'numeric', minute: '2-digit', hour12: false, timeZone: 'Europe/Paris' }).format(date).split(':');
+    bloc.querySelector('[data-rdv-date-texte]').textContent = jour.charAt(0).toUpperCase() + jour.slice(1) + ', à ' + Number(heures[0]) + ' h' + (heures[1] !== '00' ? ' ' + heures[1] : '');
+    bloc.querySelector('[data-rdv-date]').hidden = false;
+  })();
+</script>

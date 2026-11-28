@@ -5,15 +5,16 @@ section: decouverte-breathwork
 sitemap: false
 ---
 
-<section class="campagne-section campagne-etape">
+<section class="campagne-section campagne-etape res-section">
   <div class="campagne-conteneur">
-    {% include campagne/etapes.html etape=3 %}
-
-    <div class="content">
-      <h1>Votre entretien est réservé</h1>
-      <p>Vous allez recevoir un e-mail de confirmation, avec la date, l'heure et tous les détails.</p>
+    <div class="res-page">
+      {% include reservation/parcours.html etape=3 libelles="Rendez-vous|Questionnaire|Confirmation" avancement=100 %}
+      <h1 class="res-titre-coche"><i class="icon icon-confirmation" aria-hidden="true"></i><span>Votre questionnaire est bien arrivé</span></h1>
+      <p>Vous avez reçu l'e-mail de confirmation, avec la date et l'heure de l'entretien&nbsp;; il permet aussi de le déplacer.</p>
       <p>Pendant l'entretien, nous parlons de ce qui vous amène et de vos réponses au questionnaire. Si c'est le bon moment, nous fixons ensemble la date de la séance.</p>
-      <p><a class="campagne-lien-secondaire" href="{{ site.baseurl }}/respiration-holotropique.html">En attendant, en savoir plus sur le breathwork holotropique</a></p>
+      <div class="res-actions">
+        <a class="button is-white is-purple-bordered" href="{{ site.baseurl }}/respiration-holotropique.html">Découvrir le breathwork holotropique</a>
+      </div>
     </div>
   </div>
 </section>

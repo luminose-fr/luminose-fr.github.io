@@ -723,9 +723,10 @@
     }
     var informations = valeur('informations-complementaires');
     if (informations) envoi.informations = informations;
-    // Le lien d'un questionnaire porte sa référence après le # (gestion, §14.5).
+    // Le lien d'un questionnaire porte sa référence après le # (gestion, §14.5) ; sinon,
+    // pour une journée, l'évènement choisi (une inscription, ou chez l'organisateur).
     if (reference) envoi.reference = reference;
-    else if (contexte === 'journee' && valeur('notion_page_id')) envoi.evenement = valeur('notion_page_id').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
+    else if ((contexte === 'journee' || contexte === 'groupe') && valeur('notion_page_id')) envoi.evenement = valeur('notion_page_id').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
     return envoi;
   }
 

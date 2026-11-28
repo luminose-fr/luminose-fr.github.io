@@ -1,0 +1,17 @@
+---
+layout: campagne
+title: "Prendre rendez-vous - Séance à distance - Luminose"
+section: reservation
+sitemap: false
+---
+
+<section class="campagne-section campagne-etape res-section">
+  <div class="campagne-conteneur">
+    <div class="res-page">
+      {% include reservation/parcours.html etape=1 libelles="Rendez-vous|Confirmation" %}
+      {% include reservation/rendez-vous.html type="seance_distance" intro="Séance d'1&nbsp;h&nbsp;30 pour adulte ou adolescent, à distance, en visio." suite="/rendez-vous/confirmation.html" reel="oui" %}
+    </div>
+  </div>
+</section>
+<script defer src="{{ site.baseurl }}/js/reservation-rdv.js"></script>
+<script defer src="{{ site.baseurl }}/js/reservation.js"></script>
