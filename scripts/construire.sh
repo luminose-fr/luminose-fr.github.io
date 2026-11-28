@@ -6,7 +6,7 @@
 #
 #   ./scripts/construire.sh [options de jekyll build]      ex. --baseurl "" -d /tmp/site
 #
-# Les outils de l'allègement s'installent une fois : npm ci --prefix scripts/alleger
+# Les outils de l'allègement s'installent une fois, d'eux-mêmes s'ils manquent.
 # `./run.sh` reste le serveur de travail : il sert les feuilles complètes, sans retrait.
 set -eu
 
@@ -22,9 +22,13 @@ for argument in "$@"; do
   precedent="$argument"
 done
 
+# Absents (une copie neuve, la construction de la recette), ils s'installent ici,
+# à la version que leur package-lock.json fixe.
 if [ ! -d scripts/alleger/node_modules ]; then
-  echo "Les outils de l'allègement manquent : npm ci --prefix scripts/alleger" >&2
-  exit 1
+  npm ci --prefix scripts/alleger --no-audit --no-fund >&2 || {
+    echo "Les outils de l'allègement manquent : npm ci --prefix scripts/alleger" >&2
+    exit 1
+  }
 fi
 
 bundle exec jekyll build "$@"
