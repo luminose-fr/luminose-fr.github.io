@@ -1,0 +1,13 @@
+{
+  "name": "luminose-site-recette",
+  "private": true,
+  "type": "module",
+  "description": "La recette du site : un Worker fermé, inerte et non indexé devant une branche construite.",
+  "scripts": {
+    "test": "node --test test/worker.test.js",
+    "dev": "wrangler dev --ip 127.0.0.1 --port 8790"
+  },
+  "devDependencies": {
+    "wrangler": "4.156.0"
+  }
+}

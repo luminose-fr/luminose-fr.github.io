@@ -1,0 +1,10 @@
+# La recette du site (CLAUDE.md, « Recette »), chargée APRÈS _config.yml :
+#
+#   bundle exec jekyll build --config _config.yml,_config.recette.yml
+#
+# Elle ne change que des adresses : celle du site, et celle de l'API de gestion.
+# Le site n'a aucun « si recette » ; c'est le Worker de _recette/ qui ferme la
+# recette, la rend inerte et la signale.
+url: "https://recette.luminose.fr"
+environnement: recette
+api_origine: "https://api-recette.luminose.fr"
