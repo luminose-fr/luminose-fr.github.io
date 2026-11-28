@@ -634,6 +634,11 @@
     return v === '' ? null : v;
   }
   function civilite(v) { return v === 'Mme' || v === 'M.' ? v : null; }
+  // Le champ caché garde la date comme Make la lit (jj/mm/aaaa) ; gestion la veut en aaaa-mm-jj.
+  function dateIso(v) {
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(v || '');
+    return m ? m[3] + '-' + m[2] + '-' + m[1] : null;
+  }
 
   // La réservation (contrat §3.1) : le type, le début choisi, l'identité, et ce que le type
   // demande en plus. Les questions partent avec leur libellé, dans l'ordre de la page.
@@ -707,7 +712,7 @@
     if (version !== 'suivi' || valeur('coordonnees_reprises') === 'oui') {
       envoi.coordonnees = {
         civilite: civilite(valeur('coordonnees_participant[genre]')),
-        date_naissance: valeur('coordonnees_participant[date-naissance]'),
+        date_naissance: dateIso(valeur('coordonnees_participant[date-naissance]')),
         profession: valeur('coordonnees_participant[profession]'),
         adresse: valeur('coordonnees_participant[adresse]'),
         code_postal: valeur('coordonnees_participant[code_postal]'),
